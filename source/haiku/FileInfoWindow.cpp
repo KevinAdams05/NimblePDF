@@ -161,7 +161,7 @@ BString* FileInfoWindow::GetProperty(Dict* dict, const char* key, time_t* time)
 	if ((item = dict->lookup((char*)key, &obj)) != NULL) {
 		ObjType type = item->getType();
 		if (type == objString) {
-			GooString* string = item->getString();
+			const GooString* string = item->getString();
 			const char* s = string->c_str();
 			const char* date = ToDate(s, time);
 			if (date != s) {

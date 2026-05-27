@@ -117,12 +117,14 @@ void PDFFont::SetRef(Ref ref)
 
 void PDFFont::SetName(const char* name)
 {
-	fName.clear()->append(name);
+	fName.clear();
+	fName.append(name);
 }
 
 void PDFFont::SetShortName(const char* name)
 {
-	fShortName.clear()->append(name);
+	fShortName.clear();
+	fShortName.append(name);
 }
 
 void PDFFont::Print()
@@ -537,14 +539,16 @@ void Annotation::SetRef(const Ref ref)
 
 void Annotation::SetContents(GooString* c)
 {
-	fContents.clear()->append(c);
+	fContents.clear();
+	fContents.append(c);
 }
 
 void Annotation::SetString(GooString*& s, const char* t)
 {
 	if (t) {
 		if (s) {
-			s->clear()->append(t);
+			s->clear();
+			s->append(t);
 		} else {
 			s = new GooString(t);
 		}
@@ -562,7 +566,8 @@ void Annotation::SetDate(const char* date)
 void Annotation::SetTitle(GooString* title)
 {
 	if (fTitle) {
-		fTitle->clear()->append(title);
+		fTitle->clear();
+		fTitle->append(title);
 	} else {
 		fTitle = new GooString(title);
 	}
@@ -619,7 +624,8 @@ TextAnnot::TextAnnot(Dict* d)
 	obj.free();
 
 	if (d->lookup("Name", &obj) && obj.isName()) {
-		fName.clear()->append(obj.getName());
+		fName.clear();
+		fName.append(obj.getName());
 		fType = unknown_type;
 		for (int i = 0; i < no_of_types - 1; i++) {
 			if (strcmp(obj.getName(), fTypeNames[i]) == 0) {
@@ -795,7 +801,8 @@ void FreeTextAnnot::Print()
 
 void FreeTextAnnot::SetAppearance(GooString* ap)
 {
-	fAppearance.clear()->append(ap);
+	fAppearance.clear();
+	fAppearance.append(ap);
 }
 
 void FreeTextAnnot::SetJustification(free_text_justification j)
@@ -1069,7 +1076,8 @@ StampAnnot::StampAnnot(Dict* d)
 {
 	Object obj;
 	if (d->lookup("Name", &obj) && obj.isName()) {
-		fName.clear()->append(obj.getName());
+		fName.clear();
+		fName.append(obj.getName());
 	}
 	obj.free();
 }
@@ -1196,7 +1204,8 @@ FileAttachmentAnnot::FileAttachmentAnnot(Dict* annot)
 
 	Object obj;
 	if (annot->lookup("Name", &obj) && obj.isName()) {
-		fName.clear()->append(obj.getName());
+		fName.clear();
+		fName.append(obj.getName());
 		fType = unknown_type;
 		for (int i = 0; i < no_of_types - 1; i++) {
 			if (strcmp(obj.getName(), fTypeNames[i]) == 0) {
@@ -1690,7 +1699,8 @@ AppearanceStringParser::AppearanceStringParser(const char* as)
 			if (strcmp(s, "Tf") == 0 && operands.size() >= 2) {
 				fFontSize = atof(operands.top());
 				operands.pop();
-				fFontName.clear()->append(operands.top());
+				fFontName.clear();
+				fFontName.append(operands.top());
 				operands.pop();
 				fOK = true;
 			} else if (strcmp(s, "rg") == 0 && operands.size() >= 3) {
@@ -1717,7 +1727,7 @@ AppearanceStringParser::AppearanceStringParser(const char* as)
 
 // Implementation of AnnotUtils
 
-bool AnnotUtils::InUCS2(GooString* s)
+bool AnnotUtils::InUCS2(const GooString* s)
 {
 	if (s->size() < 2) {
 		return false;
@@ -1726,7 +1736,7 @@ bool AnnotUtils::InUCS2(GooString* s)
 	return t[0] == 0xfe && t[1] == 0xff;
 }
 
-GooString* AnnotUtils::EscapeString(GooString* text)
+GooString* AnnotUtils::EscapeString(const GooString* text)
 {
 	const char* t = text->c_str();
 	int len = text->size();

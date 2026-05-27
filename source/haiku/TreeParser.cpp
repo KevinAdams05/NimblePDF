@@ -98,7 +98,7 @@ bool TreeParser::Parse(Object* tree)
 bool NameTreeParser::DoEntry(Object* key, Object* value)
 {
 	if (key->isString() && key->getString() != NULL) {
-		GooString* string = key->getString();
+		const GooString* string = key->getString();
 		BString* utf8 = TextToUtf8(string->c_str(), string->size());
 		bool ok = utf8 != NULL;
 		if (ok) {

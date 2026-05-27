@@ -704,7 +704,7 @@ public:
 	void SetRef(Ref ref) { fRef = ref; }
 
 	const char* GetAppearance() { return fAppearance.c_str(); }
-	void SetAppearance(const char* a) { fAppearance.clear()->append(a); }
+	void SetAppearance(const char* a) { fAppearance.clear(); fAppearance.append(a); }
 
 	free_text_justification GetJustification() const { return fJustification; }
 	void SetJustification(free_text_justification j) { fJustification = j; }
@@ -778,8 +778,8 @@ private:
 class AnnotUtils {
 public:
 	// helper functions
-	static bool InUCS2(GooString* s);
-	static GooString* EscapeString(GooString* text);
+	static bool InUCS2(const GooString* s);
+	static GooString* EscapeString(const GooString* text);
 	static GooString* EscapeName(const char* text);
 	static void CurrentDate(GooString* date);
 };

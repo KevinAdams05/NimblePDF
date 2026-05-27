@@ -390,7 +390,7 @@ bool AnnotWriter::WriteXRefTable()
 
 // Copy a dictionary excluding specified keys
 
-bool AnnotWriter::IsInList(char* s, char* list[])
+bool AnnotWriter::IsInList(const char* s, const char* list[])
 {
 	for (int i = 0; list[i] != NULL; i++) {
 		if (strcmp(list[i], s) == 0)
@@ -399,7 +399,7 @@ bool AnnotWriter::IsInList(char* s, char* list[])
 	return false;
 }
 
-void AnnotWriter::CopyDict(Object* in, Object* out, char* excludeKeys[])
+void AnnotWriter::CopyDict(Object* in, Object* out, const char* excludeKeys[])
 {
 	ASSERT(in->isDict());
 	out->initDict(fXRef);
@@ -438,7 +438,7 @@ Ref AnnotWriter::GetInfoDictRef()
 	return ref;
 }
 
-static char* infoDictExcludeKeys[] = {"ModDate", NULL};
+static const char* infoDictExcludeKeys[] = {"ModDate", NULL};
 
 void AnnotWriter::CopyInfoDict(Object* dict)
 {
@@ -480,7 +480,7 @@ void AnnotWriter::UpdateInfoDict()
 	WriteModDate(modDate);
 }
 
-static char* fileTrailerExcludeKeys[] = {"Size", "Prev", "Root", "Info", NULL};
+static const char* fileTrailerExcludeKeys[] = {"Size", "Prev", "Root", "Info", NULL};
 
 bool AnnotWriter::WriteFileTrailer()
 {
@@ -541,7 +541,7 @@ bool AnnotWriter::CopyContentStream(Object* page)
 	return false;
 }
 
-static char* pageDictExcludeKeys[] = {"Annots", NULL};
+static const char* pageDictExcludeKeys[] = {"Annots", NULL};
 
 bool AnnotWriter::CopyPage(Object* page, Ref pageRef, Ref arrayRef)
 {
@@ -1179,9 +1179,9 @@ void AnnotWriter::AddFonts(Object* dict, std::list<PDFFont*>* fonts)
 	}
 }
 
-static char* acroFormExcludeKeys[] = {"DR", NULL};
+static const char* acroFormExcludeKeys[] = {"DR", NULL};
 
-static char* drExcludeKeys[] = {"Font", NULL};
+static const char* drExcludeKeys[] = {"Font", NULL};
 
 void AnnotWriter::UpdateBePDFAcroForm()
 {

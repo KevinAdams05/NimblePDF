@@ -137,8 +137,8 @@ class AnnotWriter : public AnnotVisitor {
 	void InsertWhiteSpace(Object* o);
 	void WriteObject(Object* o);
 	void WriteObject(Ref ref, Object* obj, GooString* stream = NULL);
-	bool IsInList(char* s, char* list[]);
-	void CopyDict(Object* in, Object* out, char* excludeKeys[] = NULL);
+	bool IsInList(const char* s, const char* list[]);
+	void CopyDict(Object* in, Object* out, const char* excludeKeys[] = NULL);
 	bool WriteXRefTable();
 
 	Ref GetModDateRef(Ref infoDictRef);
