@@ -20,8 +20,8 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#ifndef _ANNOTATION_WINDOW_H
-#define _ANNOTATION_WINDOW_H
+#ifndef ANNOTATION_WINDOW_H
+#define ANNOTATION_WINDOW_H
 
 #include <Looper.h>
 #include <Rect.h>

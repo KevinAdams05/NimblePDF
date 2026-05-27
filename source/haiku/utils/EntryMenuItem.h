@@ -17,8 +17,8 @@
     Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-#ifndef _EntryMenuItem_h
-#define _EntryMenuItem_h
+#ifndef ENTRY_MENU_ITEM_H
+#define ENTRY_MENU_ITEM_H
 
 #include <Bitmap.h>
 #include <Entry.h>

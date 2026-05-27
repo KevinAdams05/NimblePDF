@@ -20,8 +20,8 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#ifndef _BE_PDFAPPLICATION_
-#define _BE_PDFAPPLICATION_
+#ifndef BEPDF_APPLICATION_H
+#define BEPDF_APPLICATION_H
 
 #include <Application.h>
 #include <Cursor.h>

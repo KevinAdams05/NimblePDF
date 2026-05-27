@@ -20,8 +20,8 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#ifndef _BEPDF_H
-#define _BEPDF_H
+#ifndef BE_PDF_H
+#define BE_PDF_H
 
 #include <Locker.h>
 #include <Screen.h>

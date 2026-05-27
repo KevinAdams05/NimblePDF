@@ -16,7 +16,7 @@
     Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 #ifndef RESOURCE_LOADER_H
-#define RESOURCE_LAODER_H
+#define RESOURCE_LOADER_H
 
 #include <Bitmap.h>
 #include <Cursor.h>

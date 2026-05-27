@@ -20,8 +20,8 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#ifndef FILE_SPECIFICATION_H
-#define FILE_SPECIFICATION_H
+#ifndef FILE_SPEC_H
+#define FILE_SPEC_H
 
 // xpdf
 #include <GString.h>

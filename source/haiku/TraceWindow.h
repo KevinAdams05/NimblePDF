@@ -20,8 +20,8 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#ifndef _TRACE_WINDOW_H
-#define _TRACE_WINDOW_H
+#ifndef TRACE_WINDOW_H
+#define TRACE_WINDOW_H
 
 #include <Locker.h>
 #include <Looper.h>

@@ -20,8 +20,8 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#ifndef WRITE_ANNOTATION_H
-#define WRITE_ANNOT_H
+#ifndef ANNOT_WRITER_H
+#define ANNOT_WRITER_H
 
 // xpdf
 #include <Object.h>

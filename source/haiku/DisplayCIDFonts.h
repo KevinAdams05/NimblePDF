@@ -20,8 +20,8 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#ifndef _DISPLAY_CID_FONTS_H
-#define _DISPLAY_CID_FONTS_H
+#ifndef DISPLAY_CID_FONTS_H
+#define DISPLAY_CID_FONTS_H
 
 #include <List.h>
 #include <Message.h>

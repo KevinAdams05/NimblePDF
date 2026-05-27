@@ -20,8 +20,8 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#ifndef _BITMAP_POOL_H
-#define _BITMAP_POOL_H
+#ifndef BITMAP_POOL_H
+#define BITMAP_POOL_H
 
 #include <List.h>
 #include <GraphicsDefs.h>

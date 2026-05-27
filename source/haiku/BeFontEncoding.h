@@ -20,8 +20,8 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#ifndef BE_FONT_ENCODING
-#define BE_FONT_ENCODING
+#ifndef BE_FONT_ENCODING_H
+#define BE_FONT_ENCODING_H
 
 typedef char utf8char[5];
 

@@ -20,8 +20,8 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#ifndef _PAGE_RENDERER_H
-#define _PAGE_RENDERER_H
+#ifndef PAGE_RENDERER_H
+#define PAGE_RENDERER_H
 
 #include <Bitmap.h>
 #include <Looper.h>
@@ -68,9 +68,6 @@ protected:
 	BLooper* fLooper;
 	BHandler* fHandler;
 	color_space fColorSpace;
-#if 0
-	PageMode       fPageMode;
-#endif
 	// temporary fields valid while rendering
 	struct {
 		bool valid;
@@ -130,16 +127,6 @@ public:
 	float GetWidth() const { return fWidth; }
 	float GetHeight() const { return fHeight; }
 	BeSplashOutputDev* GetOutputDev() const { return fOutputDev; }
-
-#if 0
-	enum PageMode {
-		ONE_PAGE,
-		TWO_PAGES
-	};
-
-	void SetPageMode(PageMode mode);
-	PageMode GetPageMode() const;
-#endif
 };
 
 #endif

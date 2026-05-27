@@ -96,7 +96,6 @@ PageRenderer::PageRenderer()
       fPage(NULL),
       fBitmap(NULL),
       fBePDFAcroForm(NULL)
-/* fPageMode(ONE_PAGE) */
 {
 	fOutputDev->startDoc(NULL);
 }
@@ -137,18 +136,6 @@ void PageRenderer::StartDoc(color_space colorSpace)
 	}
 }
 
-
-#if 0
-///////////////////////////////////////////////////////////////////////////
-void PageRenderer::SetPageMode(PageMode mode) {
-	fPageMode = mode;
-}
-
-///////////////////////////////////////////////////////////////////////////
-PageRenderer::PageMode PageRenderer::GetPageMode() const {
-	return fPageMode;
-}
-#endif
 
 ///////////////////////////////////////////////////////////////////////////
 void PageRenderer::SetListener(BLooper* looper, BHandler* handler)
@@ -224,16 +211,6 @@ void PageRenderer::Start(CachedPage* page, int pageNo, int zoom, int rotation, t
 	GetSize(pageNo, &fWidth, &fHeight, fZoom);
 
 	SetPDFPage(0, true, fWidth, fHeight);
-#if 0
-	if ((fPageMode == TWO_PAGES) && (pageNo + 1 <= fDoc->getNumPages())) {
-		float width, height;
-		GetSize(pageNo + 1, &width, &height);
-		SetPDFPage(1, true, width, height);
-		fWidth += width; fHeight = max_c(fHeight, height);
-	} else {
-		SetPDFPage(1, false, 0, 0);
-	}
-#endif
 	ResizeBitmap(fWidth, fHeight);
 
 	fPage->MakeEmpty();
@@ -370,11 +347,6 @@ void PageRenderer::Render()
 	fPage->SetLinks(CreateLinks(fPageNo));
 	fPage->SetText(fOutputDev->acquireText());
 	DrawAnnotations();
-#if 0
-	if (fDoRendering && fPDFPage[1].valid) {
-		Draw(1, fPageNo+1, fPDFPage[0].width, 0);
-	}
-#endif
 	fBitmap->Unlock();
 
 	// notify listener

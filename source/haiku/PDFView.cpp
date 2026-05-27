@@ -74,15 +74,7 @@
 #define B_TRANSLATION_CONTEXT "PDFView"
 
 // zoom factor is 1.2 (similar to DVI magsteps)
-#if 0
-static const int kZoomDPI[MAX_ZOOM - MIN_ZOOM + 1] = {
-	29, 35, 42, 50, 60,
-	72,
-	86, 104, 124, 149, 179
-};
-#else
 static const int kZoomDPI[MAX_ZOOM - MIN_ZOOM + 1] = {18, 24, 36, 48, 54, 72, 90, 108, 127, 144, 216};
-#endif
 
 #define OPEN_FILE_MSG 'open'
 #define COPY_LINK_MSG 'cplk'

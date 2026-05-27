@@ -29,11 +29,7 @@
 
 #include "Annotation.h"
 
-#if 0
-#define LOG(text) fprintf(stderr, "%s\n", text)
-#else
 #define LOG(text)
-#endif
 
 
 #define COPYN(N)                   \

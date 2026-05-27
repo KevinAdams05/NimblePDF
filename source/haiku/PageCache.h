@@ -20,8 +20,8 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#ifndef _PAGE_CACHE_H
-#define _PAGE_CACHE_H
+#ifndef PAGE_CACHE_H
+#define PAGE_CACHE_H
 
 // xpdf
 #include <XRef.h>

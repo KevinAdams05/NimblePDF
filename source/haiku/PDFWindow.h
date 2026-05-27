@@ -20,8 +20,8 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#ifndef _PDF_WINDOW_
-#define _PDF_WINDOW_
+#ifndef PDF_WINDOW_H
+#define PDF_WINDOW_H
 
 
 #include <ListView.h>

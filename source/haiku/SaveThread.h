@@ -20,8 +20,8 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#ifndef _SAVE_THREAD_H
-#define _SAVE_THREAD_H
+#ifndef SAVE_THREAD_H
+#define SAVE_THREAD_H
 
 #include "StatusWindow.h"
 #include "Thread.h"
