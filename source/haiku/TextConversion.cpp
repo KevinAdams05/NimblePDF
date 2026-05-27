@@ -78,11 +78,11 @@ BString* TextToUtf8(const char* string, int32 len)
 
 bool TextToUtf8(GooString* string, BString* result)
 {
-	if (string->getCString() == NULL) {
+	if (string->c_str() == NULL) {
 		return false;
 	}
 
-	BString* utf8 = TextToUtf8(string->getCString(), string->getLength());
+	BString* utf8 = TextToUtf8(string->c_str(), string->size());
 	if (utf8 == NULL) {
 		return false;
 	}
@@ -126,7 +126,7 @@ Unicode* Utf8ToUnicode(const char* string, int32* length)
 		return NULL;
 	}
 
-	*length = ucs2->getLength() / 2;
+	*length = ucs2->size() / 2;
 	Unicode* unicode = new Unicode[*length];
 	if (unicode == NULL) {
 		return NULL;
@@ -136,7 +136,7 @@ Unicode* Utf8ToUnicode(const char* string, int32* length)
 		uchar low;
 		uchar high;
 	};
-	Char* ucs2Ptr = reinterpret_cast<Char*>(ucs2->getCString());
+	Char* ucs2Ptr = reinterpret_cast<Char*>(ucs2->c_str());
 	for (int i = 0; i < *length; i++) {
 		unicode[i] = 256 * ucs2Ptr[i].low + ucs2Ptr[i].high;
 	}

@@ -192,7 +192,7 @@ void OutlinesView::ReadOutlines(Object* o, uint32 level)
 
 			OutlineListItem* item;
 			if (title.isString()) {
-				BString* s = TextToUtf8(title.getString()->getCString(), title.getString()->getLength());
+				BString* s = TextToUtf8(title.getString()->c_str(), title.getString()->size());
 				if (s && s->Length() > 0) {
 					// end string at first newline character
 					char* str = s->LockBuffer(s->Length());
@@ -551,7 +551,7 @@ void OutlinesView::MessageReceived(BMessage* msg)
 					msgSent = true;
 				} else if (item->isString()) {
 					BMessage msg(STRING_NOTIFY);
-					msg.AddString("string", item->getString()->getCString());
+					msg.AddString("string", item->getString()->c_str());
 					fLooper->PostMessage(&msg);
 					msgSent = true;
 				} else if (link && link->isPageRef()) {

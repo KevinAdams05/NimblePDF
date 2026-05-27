@@ -441,7 +441,7 @@ void AnnotationRenderer::DoFreeText(FreeTextAnnot* a)
 		font.SetFamilyAndStyle(family, style);
 	}
 
-	BString* text = TextToUtf8(a->GetContents()->getCString(), a->GetContents()->getLength());
+	BString* text = TextToUtf8(a->GetContents()->c_str(), a->GetContents()->size());
 
 	// calculate font size
 	float size;

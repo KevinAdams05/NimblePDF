@@ -24,7 +24,7 @@
 #define FILE_SPEC_H
 
 // xpdf
-#include <GooString.h>
+#include <goo/GooString.h>
 #include <Object.h>
 #include <XRef.h>
 

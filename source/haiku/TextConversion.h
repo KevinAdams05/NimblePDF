@@ -25,7 +25,7 @@
 
 #include <String.h>
 #include <support/UTF8.h>  // bypass xpdf UTF8.h shadowing; revert after poppler migration
-#include <GooString.h>
+#include <goo/GooString.h>
 
 #include "CharTypes.h" // from xpdf
 

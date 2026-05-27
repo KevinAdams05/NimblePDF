@@ -226,7 +226,7 @@ void AnnotWriter::Write(const char* s)
 
 void AnnotWriter::Write(GooString* s)
 {
-	fwrite(s->getCString(), s->getLength(), 1, fFile);
+	fwrite(s->c_str(), s->size(), 1, fFile);
 }
 
 void AnnotWriter::Write(Ref r)
@@ -294,12 +294,12 @@ void AnnotWriter::WriteObject(Object* obj)
 			Write(")");
 		} else {
 			s = AnnotUtils::EscapeString(obj->getString());
-			fprintf(fFile, "(%s)", s->getCString());
+			fprintf(fFile, "(%s)", s->c_str());
 		}
 		break;
 	case objName:
 		s = AnnotUtils::EscapeName(obj->getName());
-		fprintf(fFile, "/%s", s->getCString());
+		fprintf(fFile, "/%s", s->c_str());
 		break;
 	case objNull:
 		Write("null");
@@ -655,7 +655,7 @@ bool AnnotWriter::WriteAS(Ref& ref, Annotation* a)
 	xobj.dictAdd(copyString("Resources"), &resources);
 
 	// create appearance stream
-	AnnotAppearance as;
+	BePDFAnnotAppearance as;
 	a->Visit(&as);
 
 	// set length
@@ -857,7 +857,7 @@ void AnnotWriter::AddAnnotContents(Annotation* a)
 
 bool AnnotWriter::HasAppearanceStream(Annotation* a)
 {
-	AnnotAppearance ap;
+	BePDFAnnotAppearance ap;
 	a->Visit(&ap);
 	return ap.GetLength() > 0;
 }
@@ -1135,7 +1135,7 @@ void AnnotWriter::AssignShortFontNames()
 			}
 			sprintf(number, "%d", id);
 			shortName.append(number);
-			font->SetShortName(shortName.getCString());
+			font->SetShortName(shortName.c_str());
 			fTemporaryFonts.push_back(font);
 			id++;
 		}

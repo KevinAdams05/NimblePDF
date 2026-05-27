@@ -33,7 +33,7 @@ class TreeParser {
 	bool ParseKids(Array* kids);
 
 	GooString entryKey;
-	char* GetEntryKey() { return entryKey.getCString(); };
+	char* GetEntryKey() { return entryKey.c_str(); };
 
 public:
 	TreeParser(const char* entryKey) { this->entryKey.append(entryKey); };

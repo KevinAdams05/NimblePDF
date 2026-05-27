@@ -27,7 +27,7 @@
 /* TreeParser */
 bool TreeParser::ParseEntries(Array* entries)
 {
-	int len = entries->getLength();
+	int len = entries->size();
 	bool ok = true;
 	for (int i = 0; ok && i < len; i++) {
 		Object key;
@@ -49,7 +49,7 @@ bool TreeParser::ParseEntries(Array* entries)
 
 bool TreeParser::ParseKids(Array* kids)
 {
-	int len = kids->getLength();
+	int len = kids->size();
 	Object kid;
 	Object sub;
 	bool ok = true;
@@ -99,7 +99,7 @@ bool NameTreeParser::DoEntry(Object* key, Object* value)
 {
 	if (key->isString() && key->getString() != NULL) {
 		GooString* string = key->getString();
-		BString* utf8 = TextToUtf8(string->getCString(), string->getLength());
+		BString* utf8 = TextToUtf8(string->c_str(), string->size());
 		bool ok = utf8 != NULL;
 		if (ok) {
 			ok = DoName(utf8->String(), value);

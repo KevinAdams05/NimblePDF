@@ -800,7 +800,7 @@ void PDFView::CurrentDate(BString& date)
 {
 	GooString s;
 	AnnotUtils::CurrentDate(&s);
-	date = s.getCString();
+	date = s.c_str();
 }
 
 ///////////////////////////////////////////////////////////////////////////
@@ -1340,23 +1340,23 @@ bool PDFView::IsLinkToPDF(LinkAction* action, BString* path)
 			dest = dest->copy();
 		else if ((namedDest = ((LinkGoToR*)action)->getNamedDest()))
 			namedDest = namedDest->copy();
-		s = ((LinkGoToR*)action)->getFileName()->getCString();
+		s = ((LinkGoToR*)action)->getFileName()->c_str();
 		if (isAbsolutePath(s))
 			fileName = new GooString(s);
 		else
-			fileName = appendToPath(grabPath(fDoc->getFileName()->getCString()), s);
-		*path = fileName->getCString();
+			fileName = appendToPath(grabPath(fDoc->getFileName()->c_str()), s);
+		*path = fileName->c_str();
 		delete fileName;
 		return true;
 	} else if (action->getKind() == actionLaunch) {
 		fileName = ((LinkLaunch*)action)->getFileName();
-		s = fileName->getCString();
-		if (!strcmp(s + fileName->getLength() - 4, ".pdf") || !strcmp(s + fileName->getLength() - 4, ".PDF")) {
+		s = fileName->c_str();
+		if (!strcmp(s + fileName->size() - 4, ".pdf") || !strcmp(s + fileName->size() - 4, ".PDF")) {
 			if (isAbsolutePath(s))
 				fileName = fileName->copy();
 			else
-				fileName = appendToPath(grabPath(fDoc->getFileName()->getCString()), s);
-			*path = fileName->getCString();
+				fileName = appendToPath(grabPath(fDoc->getFileName()->c_str()), s);
+			*path = fileName->c_str();
 			delete fileName;
 			return true;
 		}
@@ -1437,11 +1437,11 @@ bool PDFView::HandleLink(BPoint point)
 			fileName->append(" &");
 
 			BString string(B_TRANSLATE("Execute the command:"));
-			string += fileName->getCString();
+			string += fileName->c_str();
 			string += "?";
 			BAlert* dialog = new BAlert(B_TRANSLATE("BePDF: Launch"), string.String(), B_TRANSLATE("OK"), B_TRANSLATE("Cancel"));
 			if (dialog->Go() == 0)
-				system(fileName->getCString());
+				system(fileName->c_str());
 			delete dialog;
 			delete fileName;
 			return true;
@@ -1450,7 +1450,7 @@ bool PDFView::HandleLink(BPoint point)
 		// URI action
 		case actionURI:
 			if (GetPDFWindow()) {
-				GetPDFWindow()->LaunchHTMLBrowser(((LinkURI*)action)->getURI()->getCString());
+				GetPDFWindow()->LaunchHTMLBrowser(((LinkURI*)action)->getURI()->c_str());
 			}
 			return true;
 
@@ -1472,14 +1472,14 @@ bool PDFView::HandleLink(BPoint point)
 			} else if (!actionName->cmp("Quit")) {
 				Window()->PostMessage(B_QUIT_REQUESTED);
 			} else {
-				// error(-1, "Unknown named action: '%s'", actionName->getCString());
+				// error(-1, "Unknown named action: '%s'", actionName->c_str());
 			}
 			break;
 		// TODO
 		case actionMovie: // fall through
 		// unknown action type
 		case actionUnknown:
-			fprintf(stdout, B_TRANSLATE("Unknown link action type: '%s'"), ((LinkUnknown*)action)->getAction()->getCString());
+			fprintf(stdout, B_TRANSLATE("Unknown link action type: '%s'"), ((LinkUnknown*)action)->getAction()->c_str());
 			break;
 		}
 	}
@@ -1644,16 +1644,16 @@ void PDFView::LinkToString(LinkAction* action, BString* string)
 		s = str.String();
 		break;
 	case actionGoToR:
-		s = ((LinkGoToR*)action)->getFileName()->getCString();
+		s = ((LinkGoToR*)action)->getFileName()->c_str();
 		break;
 	case actionLaunch:
-		s = ((LinkLaunch*)action)->getFileName()->getCString();
+		s = ((LinkLaunch*)action)->getFileName()->c_str();
 		break;
 	case actionURI:
-		s = ((LinkURI*)action)->getURI()->getCString();
+		s = ((LinkURI*)action)->getURI()->c_str();
 		break;
 	case actionNamed:
-		s = ((LinkNamed*)fLinkAction)->getName()->getCString();
+		s = ((LinkNamed*)fLinkAction)->getName()->c_str();
 		break;
 	case actionMovie:
 		// TODO
@@ -2181,7 +2181,7 @@ BString* PDFView::GetSelectedText()
 	if (!fRendering && (fSelected == SELECTED) && (fSelection.left < fSelection.right) && (fSelection.top < fSelection.bottom)) {
 		GooString* s = fPage->GetText(fSelection.left, fSelection.top, fSelection.right, fSelection.bottom);
 		if (s) {
-			BString* str = new BString(s->getCString());
+			BString* str = new BString(s->c_str());
 			delete s;
 			return str;
 		}
@@ -2551,12 +2551,12 @@ void PDFView::ShowAnnotWindow(bool editable, bool updateOnly)
 	char buffer[80];
 	const char* d = to_date(annotation->GetDate(), buffer);
 	if (annotation->GetTitle()) {
-		label = TextToUtf8(annotation->GetTitle()->getCString(), annotation->GetTitle()->getLength());
+		label = TextToUtf8(annotation->GetTitle()->c_str(), annotation->GetTitle()->size());
 	} else {
 		label = new BString();
 	}
 	date = TextToUtf8(d, strlen(d));
-	contents = TextToUtf8(annotation->GetContents()->getCString(), annotation->GetContents()->getLength());
+	contents = TextToUtf8(annotation->GetContents()->c_str(), annotation->GetContents()->size());
 	AnnotationWindow* w = NULL;
 	PDFWindow* win = GetPDFWindow();
 	if (win) {

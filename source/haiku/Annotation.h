@@ -289,7 +289,7 @@ public:
 	Ref GetRef() { return fRef; }
 	GooString* GetContents() { return &fContents; }
 	PDFRectangle* GetRect() { return &fRect; }
-	const char* GetDate() { return fDate ? fDate->getCString() : ""; }
+	const char* GetDate() { return fDate ? fDate->c_str() : ""; }
 	AnnotFlags* GetFlags() { return &fFlags; }
 	bool HasAppearanceStream() { return fHasAppearanceStream; }
 	GfxRGB* GetColor() { return &fColor; }
@@ -355,7 +355,7 @@ public:
 	Annotation* Clone() { return new TextAnnot(this); }
 
 	bool IsOpen() { return fOpen; }
-	const char* GetName() { return fName.getCString(); }
+	const char* GetName() { return fName.c_str(); }
 	enum text_annot_type GetType() { return fType; }
 
 	virtual void Visit(AnnotVisitor* v) { v->DoText(this); }
@@ -556,7 +556,7 @@ public:
 	StampAnnot(Dict* annot);
 	Annotation* Clone() { return new StampAnnot(this); }
 
-	const char* GetName() { return fName.getCString(); }
+	const char* GetName() { return fName.c_str(); }
 
 	virtual void Visit(AnnotVisitor* v) { v->DoStamp(this); }
 	virtual void Print();
@@ -611,10 +611,10 @@ public:
 	FileAttachmentAnnot(Dict* annot);
 	Annotation* Clone() { return new FileAttachmentAnnot(this); }
 
-	const char* GetName() { return fName.getCString(); }
+	const char* GetName() { return fName.c_str(); }
 	enum attachment_type GetType() { return fType; }
 	// Return file name
-	const char* GetFileName() { return fFileSpec.GetFileName()->getCString(); }
+	const char* GetFileName() { return fFileSpec.GetFileName()->c_str(); }
 	// Save file
 	bool Save(XRef* xref, const char* file);
 
@@ -703,7 +703,7 @@ public:
 	Ref GetRef() { return fRef; }
 	void SetRef(Ref ref) { fRef = ref; }
 
-	const char* GetAppearance() { return fAppearance.getCString(); }
+	const char* GetAppearance() { return fAppearance.c_str(); }
 	void SetAppearance(const char* a) { fAppearance.clear()->append(a); }
 
 	free_text_justification GetJustification() const { return fJustification; }
@@ -764,7 +764,7 @@ public:
 	AppearanceStringParser(const char* as);
 
 	bool IsOK() const { return fOK; }
-	const char* GetFontName() { return fFontName.getCString(); }
+	const char* GetFontName() { return fFontName.c_str(); }
 	float GetFontSize() const { return fFontSize; }
 	GfxRGB* GetColor() { return &fColor; }
 

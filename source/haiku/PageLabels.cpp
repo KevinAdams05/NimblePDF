@@ -60,7 +60,7 @@ PageLabel::PageLabel(int page, Dict* leaf)
 
 	// Prefix
 	if (leaf->lookup("P", &obj) && obj.isString()) {
-		BString* s = TextToUtf8(obj.getString()->getCString(), obj.getString()->getLength());
+		BString* s = TextToUtf8(obj.getString()->c_str(), obj.getString()->size());
 		prefix = *s;
 		delete s;
 	}

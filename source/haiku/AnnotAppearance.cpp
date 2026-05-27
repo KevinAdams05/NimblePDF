@@ -220,9 +220,9 @@ void GraphicsStream::Fill()
 	AddCr("f");
 }
 
-// Implementation of AnnotAppearance
+// Implementation of BePDFAnnotAppearance
 
-void AnnotAppearance::Init(Annotation* annot)
+void BePDFAnnotAppearance::Init(Annotation* annot)
 {
 	fBBox = *annot->GetRect();
 	double swap;
@@ -250,12 +250,12 @@ void AnnotAppearance::Init(Annotation* annot)
 }
 
 // Coordinate transformation from user to form
-PDFPoint AnnotAppearance::UserToForm(PDFPoint p)
+PDFPoint BePDFAnnotAppearance::UserToForm(PDFPoint p)
 {
 	return p - fDelta;
 }
 
-PDFPoint AnnotAppearance::PointBetween(PDFPoint p1, PDFPoint p2, float f)
+PDFPoint BePDFAnnotAppearance::PointBetween(PDFPoint p1, PDFPoint p2, float f)
 {
 	PDFPoint p(p2.x - p1.x, p2.y - p1.y);
 	p.x *= f;
@@ -265,7 +265,7 @@ PDFPoint AnnotAppearance::PointBetween(PDFPoint p1, PDFPoint p2, float f)
 	return p;
 }
 
-void AnnotAppearance::DoStyledAnnot(StyledAnnot* a)
+void BePDFAnnotAppearance::DoStyledAnnot(StyledAnnot* a)
 {
 	float w = a->GetBorderStyle()->GetWidth();
 	if (w != 1.0) {
@@ -273,7 +273,7 @@ void AnnotAppearance::DoStyledAnnot(StyledAnnot* a)
 	}
 }
 
-void AnnotAppearance::Stroke(PDFQuadPoints& qp, float f)
+void BePDFAnnotAppearance::Stroke(PDFQuadPoints& qp, float f)
 {
 	PDFPoint p1 = PointBetween(qp[0], qp[2], f);
 	PDFPoint p2 = PointBetween(qp[1], qp[3], f);
@@ -282,7 +282,7 @@ void AnnotAppearance::Stroke(PDFQuadPoints& qp, float f)
 	fAS.Stroke();
 }
 
-void AnnotAppearance::DoMarkupAnnot(MarkupAnnot* a, float f)
+void BePDFAnnotAppearance::DoMarkupAnnot(MarkupAnnot* a, float f)
 {
 	DoStyledAnnot(a);
 	for (int i = 0; i < a->QuadPointsLength(); i++) {
@@ -290,7 +290,7 @@ void AnnotAppearance::DoMarkupAnnot(MarkupAnnot* a, float f)
 	}
 }
 
-void AnnotAppearance::Stroke(PDFQuadPoints& qp)
+void BePDFAnnotAppearance::Stroke(PDFQuadPoints& qp)
 {
 	fAS.MoveTo(UserToForm(qp[0]));
 	fAS.LineTo(UserToForm(qp[1]));
@@ -300,15 +300,15 @@ void AnnotAppearance::Stroke(PDFQuadPoints& qp)
 	fAS.Stroke();
 }
 
-AnnotAppearance::AnnotAppearance()
+BePDFAnnotAppearance::BePDFAnnotAppearance()
     : fEncoder(fAS.GetString())
 {}
 
-AnnotAppearance::~AnnotAppearance()
+BePDFAnnotAppearance::~BePDFAnnotAppearance()
 {}
 
 // Annotation visitor implementation
-void AnnotAppearance::DoText(TextAnnot* a)
+void BePDFAnnotAppearance::DoText(TextAnnot* a)
 {
 #if defined(__BEOS__) || defined(__HAIKU__)
 	Init(a);
@@ -368,16 +368,16 @@ void AnnotAppearance::DoText(TextAnnot* a)
 }
 
 
-void AnnotAppearance::DoLink(LinkAnnot* a)
+void BePDFAnnotAppearance::DoLink(LinkAnnot* a)
 {}
 
 
-void AnnotAppearance::DoFreeText(FreeTextAnnot* a)
+void BePDFAnnotAppearance::DoFreeText(FreeTextAnnot* a)
 {
 	/* Acrobat 5 does not require it
 	Init(a);
 	fAS.Add("BT");
-		fAS.AddCr(a->GetAppearance()->getCString());
+		fAS.AddCr(a->GetAppearance()->c_str());
 		fAS.AddCr("0 0 Td");
 		GooString* s = AnnotUtils::EscapeString(a->GetContents());
 		fAS.Append("(");
@@ -389,7 +389,7 @@ void AnnotAppearance::DoFreeText(FreeTextAnnot* a)
 }
 
 
-void AnnotAppearance::DoLine(LineAnnot* a)
+void BePDFAnnotAppearance::DoLine(LineAnnot* a)
 {
 	Init(a);
 	DoStyledAnnot(a);
@@ -398,7 +398,7 @@ void AnnotAppearance::DoLine(LineAnnot* a)
 }
 
 
-void AnnotAppearance::DoSquare(SquareAnnot* a)
+void BePDFAnnotAppearance::DoSquare(SquareAnnot* a)
 {
 	Init(a);
 	DoStyledAnnot(a);
@@ -415,7 +415,7 @@ void AnnotAppearance::DoSquare(SquareAnnot* a)
 }
 
 
-void AnnotAppearance::DoCircle(CircleAnnot* a)
+void BePDFAnnotAppearance::DoCircle(CircleAnnot* a)
 {
 	Init(a);
 	DoStyledAnnot(a);
@@ -437,7 +437,7 @@ void AnnotAppearance::DoCircle(CircleAnnot* a)
 }
 
 
-void AnnotAppearance::DoHighlight(HighlightAnnot* a)
+void BePDFAnnotAppearance::DoHighlight(HighlightAnnot* a)
 {
 	Init(a);
 	fAS.SetLineWidth(3.0);
@@ -447,14 +447,14 @@ void AnnotAppearance::DoHighlight(HighlightAnnot* a)
 }
 
 
-void AnnotAppearance::DoUnderline(UnderlineAnnot* a)
+void BePDFAnnotAppearance::DoUnderline(UnderlineAnnot* a)
 {
 	Init(a);
 	DoMarkupAnnot(a, 0.85);
 }
 
 
-void AnnotAppearance::StrokeSquiggly(PDFPoint p1, PDFPoint p2, float height)
+void BePDFAnnotAppearance::StrokeSquiggly(PDFPoint p1, PDFPoint p2, float height)
 {
 	if (height <= 0.001)
 		return;
@@ -485,7 +485,7 @@ void AnnotAppearance::StrokeSquiggly(PDFPoint p1, PDFPoint p2, float height)
 	fAS.Stroke();
 }
 
-void AnnotAppearance::DoSquiggly(SquigglyAnnot* a)
+void BePDFAnnotAppearance::DoSquiggly(SquigglyAnnot* a)
 {
 	Init(a);
 	DoStyledAnnot(a);
@@ -500,61 +500,61 @@ void AnnotAppearance::DoSquiggly(SquigglyAnnot* a)
 }
 
 
-void AnnotAppearance::DoStrikeOut(StrikeOutAnnot* a)
+void BePDFAnnotAppearance::DoStrikeOut(StrikeOutAnnot* a)
 {
 	Init(a);
 	DoMarkupAnnot(a, 0.55);
 }
 
-void AnnotAppearance::DoStamp(StampAnnot* a)
+void BePDFAnnotAppearance::DoStamp(StampAnnot* a)
 {
 	// not implemented yet
 }
 
 
-void AnnotAppearance::DoInk(InkAnnot* a)
+void BePDFAnnotAppearance::DoInk(InkAnnot* a)
 {
 	// not implemented yet
 }
 
 
-void AnnotAppearance::DoPopup(PopupAnnot* a)
+void BePDFAnnotAppearance::DoPopup(PopupAnnot* a)
 {
 	// has no appearance stream
 }
 
 
-void AnnotAppearance::DoFileAttachment(FileAttachmentAnnot* a)
+void BePDFAnnotAppearance::DoFileAttachment(FileAttachmentAnnot* a)
 {
 	// not implemented yet
 }
 
 
-void AnnotAppearance::DoSound(SoundAnnot* a)
+void BePDFAnnotAppearance::DoSound(SoundAnnot* a)
 {
 	// not implemented yet
 }
 
 
-void AnnotAppearance::DoMovie(MovieAnnot* a)
+void BePDFAnnotAppearance::DoMovie(MovieAnnot* a)
 {
 	// not implemented yet
 }
 
 
-void AnnotAppearance::DoWidget(WidgetAnnot* a)
+void BePDFAnnotAppearance::DoWidget(WidgetAnnot* a)
 {
 	// not implemented yet
 }
 
 
-void AnnotAppearance::DoPrinterMark(PrinterMarkAnnot* a)
+void BePDFAnnotAppearance::DoPrinterMark(PrinterMarkAnnot* a)
 {
 	// not implemented yet
 }
 
 
-void AnnotAppearance::DoTrapNet(TrapNetAnnot* a)
+void BePDFAnnotAppearance::DoTrapNet(TrapNetAnnot* a)
 {
 	// not implemented yet
 }

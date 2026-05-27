@@ -102,12 +102,12 @@ Ref PDFFont::GetRef() const
 
 const char* PDFFont::GetName()
 {
-	return fName.getCString();
+	return fName.c_str();
 }
 
 const char* PDFFont::GetShortName()
 {
-	return fShortName.getCString();
+	return fShortName.c_str();
 }
 
 void PDFFont::SetRef(Ref ref)
@@ -399,7 +399,7 @@ Annotation::Annotation(Dict* d)
 	obj.free();
 
 	if (d->lookup("M", &obj) && obj.isString()) {
-		fDate = new GooString(obj.getString()->getCString());
+		fDate = new GooString(obj.getString()->c_str());
 	}
 	obj.free();
 
@@ -499,7 +499,7 @@ void Annotation::Print()
 		Trace(LOG_DEBUG, "Empty Ref\n");
 	else
 		Trace(LOG_DEBUG, "Ref num %d gen %d\n", fRef.num, fRef.gen);
-	Trace(LOG_DEBUG, "Contents:\n%s\n", GetContents()->getCString());
+	Trace(LOG_DEBUG, "Contents:\n%s\n", GetContents()->c_str());
 	Trace(LOG_DEBUG, "Date: %s\n", GetDate());
 	Trace(LOG_DEBUG, "Rect: %f %f %f %f\n", GetRect()->x1, GetRect()->y1, GetRect()->x2, GetRect()->y2);
 	Trace(LOG_DEBUG, "Flags: ");
@@ -523,7 +523,7 @@ void Annotation::Print()
 	Trace(LOG_DEBUG, "Color: %f %f %f\n", float(GetColor()->r), float(GetColor()->g), float(GetColor()->b));
 	Trace(LOG_DEBUG, "Opacity: %d\n", int(GetOpacity() * 255));
 	Trace(LOG_DEBUG, "\n");
-	Trace(LOG_DEBUG, "Title: %s\n", GetTitle() ? GetTitle()->getCString() : "NULL");
+	Trace(LOG_DEBUG, "Title: %s\n", GetTitle() ? GetTitle()->c_str() : "NULL");
 	if (fPopup) {
 		Trace(LOG_DEBUG, "---Popup:\n");
 		fPopup->Print();
@@ -751,7 +751,7 @@ FreeTextAnnot::FreeTextAnnot(Dict* d, BePDFAcroForm* acroForm)
 	// use appearance string to extract font short name and size
 	const char* appearance;
 	if (fAppearance.cmp("") != 0) {
-		appearance = fAppearance.getCString();
+		appearance = fAppearance.c_str();
 	} else {
 		// inherit it from BePDFAcroForm if it is not defined in annotation
 		appearance = acroForm->GetAppearance();
@@ -782,7 +782,7 @@ void FreeTextAnnot::Print()
 {
 	Trace(LOG_DEBUG, "FreeText\n");
 	Annotation::Print();
-	Trace(LOG_DEBUG, "Appearance: %s\n", GetAppearance()->getCString());
+	Trace(LOG_DEBUG, "Appearance: %s\n", GetAppearance()->c_str());
 	Trace(LOG_DEBUG, "Justification: %s", ToString(fJustification));
 	Trace(LOG_DEBUG, "Font: ");
 	if (fFont) {
@@ -1104,7 +1104,7 @@ InkAnnot::InkAnnot(Dict* d)
 	Object obj;
 	if (d->lookup("InkList", &obj) && obj.isArray()) {
 		Array* a = obj.getArray();
-		fLength = a->getLength();
+		fLength = a->size();
 		fInkList = new PDFPoints[fLength];
 		for (int i = 0; i < fLength; i++) {
 			PDFPoints* p = PathAt(i);
@@ -1302,7 +1302,7 @@ BePDFAcroForm::BePDFAcroForm(XRef* xref, Object* acroFormRef)
 		Object obj2;
 		if (resources->lookup("Font", &obj2) && obj2.isDict()) {
 			Dict* font = obj2.getDict();
-			for (int i = 0; i < font->getLength(); i++) {
+			for (int i = 0; i < font->size(); i++) {
 				Object obj3, obj4;
 				if (font->getVal(i, &obj3) && obj3.isDict() && font->getValNF(i, &obj4) && obj4.isRef()) {
 					ParseFont(font->getKey(i), obj4.getRef(), obj3.getDict());
@@ -1372,14 +1372,14 @@ void BePDFAcroForm::ParseFont(const char* shortName, Ref ref, Dict* dict)
 	// add font to list
 	font = new PDFFont();
 	font->SetRef(ref);
-	font->SetName(baseFont.getCString());
+	font->SetName(baseFont.c_str());
 	font->SetShortName(shortName);
 	fFonts.push_back(font);
 
 	// If it is a standard font set reference to it and its short name
 	// Note: AnnotWriter must not write a referenced standard font.
 	if (isType1 && lastChar - firstChar == 255 && hasSupportedEncoding) {
-		font = GetStandardFonts()->FindByName(baseFont.getCString());
+		font = GetStandardFonts()->FindByName(baseFont.c_str());
 		if (font != NULL) {
 			if (is_empty_ref(font->GetRef())) {
 				font->SetRef(ref);
@@ -1719,17 +1719,17 @@ AppearanceStringParser::AppearanceStringParser(const char* as)
 
 bool AnnotUtils::InUCS2(GooString* s)
 {
-	if (s->getLength() < 2) {
+	if (s->size() < 2) {
 		return false;
 	}
-	const unsigned char* t = (const unsigned char*)s->getCString();
+	const unsigned char* t = (const unsigned char*)s->c_str();
 	return t[0] == 0xfe && t[1] == 0xff;
 }
 
 GooString* AnnotUtils::EscapeString(GooString* text)
 {
-	const char* t = text->getCString();
-	int len = text->getLength();
+	const char* t = text->c_str();
+	int len = text->size();
 	GooString* s = new GooString();
 	while (len > 0) {
 		len--;

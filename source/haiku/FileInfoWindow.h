@@ -72,7 +72,7 @@ class FileInfoWindow : public BWindow {
 		{
 			ref = r;
 			if (s) {
-				name = s->getCString();
+				name = s->c_str();
 			}
 		};
 	};

@@ -162,12 +162,12 @@ BString* FileInfoWindow::GetProperty(Dict* dict, const char* key, time_t* time)
 		ObjType type = item->getType();
 		if (type == objString) {
 			GooString* string = item->getString();
-			const char* s = string->getCString();
+			const char* s = string->c_str();
 			const char* date = ToDate(s, time);
 			if (date != s) {
 				result = TextToUtf8(date, strlen(date));
 			} else {
-				result = TextToUtf8(s, string->getLength());
+				result = TextToUtf8(s, string->size());
 			}
 		}
 	}
@@ -207,7 +207,7 @@ bool FileInfoWindow::AddFont(BList* list, GfxFont* font)
 static void GetGString(BString& s, GooString* g)
 {
 	if (g) {
-		BString* utf8 = TextToUtf8(g->getCString(), g->getLength());
+		BString* utf8 = TextToUtf8(g->c_str(), g->size());
 		s = *utf8;
 		delete utf8;
 	}
@@ -236,8 +236,8 @@ BRow* FileInfoWindow::FontItem(GfxFont* font)
 
 	BString embName;
 	if (font->getEmbeddedFontName()) {
-		const char* name = font->getEmbeddedFontName()->getCString();
-		BString* utf8 = TextToUtf8(name, font->getEmbeddedFontName()->getLength());
+		const char* name = font->getEmbeddedFontName()->c_str();
+		BString* utf8 = TextToUtf8(name, font->getEmbeddedFontName()->size());
 		embName = *utf8;
 		delete utf8;
 	}
@@ -370,7 +370,7 @@ void FileInfoWindow::Refresh(BEntry* file, PDFDoc* doc, int page)
 		CreateProperty(document, dict, creationDateKey, B_TRANSLATE("Created:"));
 		CreateProperty(document, dict, modDateKey, B_TRANSLATE("Modified:"));
 
-		for (int i = 0; i < dict->getLength(); i++) {
+		for (int i = 0; i < dict->size(); i++) {
 			if (!IsSystemKey(dict->getKey(i))) {
 				BString title(dict->getKey(i));
 				title << ":";

@@ -37,8 +37,8 @@ class GraphicsStream {
 	GooString fStream;
 
 public:
-	int GetLength() { return fStream.getLength(); }
-	const char* GetStream() { return fStream.getCString(); }
+	int GetLength() { return fStream.size(); }
+	const char* GetStream() { return fStream.c_str(); }
 	GooString* GetString() { return &fStream; }
 
 	void Append(const char* s);
@@ -87,10 +87,10 @@ public:
 };
 
 // Appearance Stream Creator
-class AnnotAppearance : public AnnotVisitor {
+class BePDFAnnotAppearance : public AnnotVisitor {
 public:
-	AnnotAppearance();
-	~AnnotAppearance();
+	BePDFAnnotAppearance();
+	~BePDFAnnotAppearance();
 
 	int GetLength() { return fAS.GetLength(); }
 	GooString* GetStream() { return fAS.GetString(); }

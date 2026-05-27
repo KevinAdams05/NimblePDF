@@ -84,7 +84,7 @@ bool FileSpec::ReadFileName(Dict* fileSpec)
 		Object obj;
 		char* key = gFileAttachmentFileNameKeys[i];
 		if (fileSpec->lookup(key, &obj) != NULL && obj.isString()) {
-			fFileName.append(obj.getString()->getCString());
+			fFileName.append(obj.getString()->c_str());
 			return true;
 		}
 		obj.free();
@@ -115,7 +115,7 @@ bool FileSpec::ReadEmbeddedFileRef(Dict* fileSpec)
 
 bool FileSpec::IsValid()
 {
-	return fFileName.getLength() > 0 && !is_empty_ref(fRef);
+	return fFileName.size() > 0 && !is_empty_ref(fRef);
 }
 
 GooString* FileSpec::GetDescription()

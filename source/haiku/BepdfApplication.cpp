@@ -197,7 +197,7 @@ BepdfApplication::BepdfApplication()
 #include <vector>
 
 #include <GlobalParams.h>
-#include <GooString.h>
+#include <goo/GooString.h>
 #include "DisplayCIDFonts.h"
 
 static void setGlobalParameter(const char* type, const char* arg1, const char* arg2 = NULL)
@@ -211,7 +211,7 @@ static void setGlobalParameter(const char* type, const char* arg1, const char* a
 		line.append(arg2);
 	}
 	GooString name("BepdfApplication");
-	globalParams->parseLine(line.getCString(), &name, 0);
+	globalParams->parseLine(line.c_str(), &name, 0);
 }
 
 /*
@@ -282,11 +282,11 @@ void BepdfApplication::Initialize()
 		std::vector<GooString*>* list = getCIDToUnicodeNames(globalParams);
 		for (size_t i = 0; i < list->size(); i++) {
 			GooString* name = list->at(i);
-			if (displayNames.Contains(name->getCString())) {
+			if (displayNames.Contains(name->c_str())) {
 				continue;
 			}
 			// record name
-			displayNames.Set(name->getCString());
+			displayNames.Set(name->c_str());
 			foundNewName = true;
 		}
 
@@ -298,20 +298,20 @@ void BepdfApplication::Initialize()
 		}
 
 		// set CID fonts
-		for (int i = 0; i < list->getLength(); i++) {
+		for (int i = 0; i < list->size(); i++) {
 			GooString* name = (GooString*)list->get(i);
 			BString file;
 			DisplayCIDFonts::Type type;
 
-			displayNames.Get(name->getCString(), file, type);
+			displayNames.Get(name->c_str(), file, type);
 			if (type == DisplayCIDFonts::kUnknownType || file.Length() == 0) {
 				continue;
 			}
 
 			if (type == DisplayCIDFonts::kTrueType) {
-				setGlobalParameter("displayCIDFontTT", name->getCString(), file.String());
+				setGlobalParameter("displayCIDFontTT", name->c_str(), file.String());
 			} else {
-				setGlobalParameter("displayCIDFontT1", name->getCString(), file.String());
+				setGlobalParameter("displayCIDFontT1", name->c_str(), file.String());
 			}
 		}
 
