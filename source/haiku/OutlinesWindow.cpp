@@ -182,10 +182,10 @@ void OutlinesView::ReadOutlines(Object* o, uint32 level)
 	Object child;
 	bool loop;
 	do {
-		if (current->dictLookup("Title", &title) && !title.isNull()) {
+		if (!(title = current->dictLookup("Title")).isNull()) {
 			bool open = true;
 			Object count;
-			if (current->dictLookup("Count", &count) && count.isInt()) {
+			if ((count = current->dictLookup("Count")).isInt()) {
 				open = count.getInt() > 0;
 			}
 
@@ -211,7 +211,7 @@ void OutlinesView::ReadOutlines(Object* o, uint32 level)
 			fList->AddItem(item);
 
 			Object dest;
-			if (current->dictLookup("Dest", &dest)) {
+			if (!(dest = current->dictLookup("Dest")).isNull()) {
 				if (dest.isName()) {
 					item->SetLink(new GooString(dest.getName()));
 				} else if (dest.isArray()) {
@@ -222,12 +222,12 @@ void OutlinesView::ReadOutlines(Object* o, uint32 level)
 			}
 
 			Object dict;
-			if (current->dictLookup("A", &dict) && dict.isDict()) {
+			if ((dict = current->dictLookup("A")).isDict()) {
 				Object s;
-				dict.dictLookup("S", &s);
+				s = dict.dictLookup("S");
 				// GoTo action
 				if (s.isName("GoTo")) {
-					dict.dictLookup("D", &dest);
+					dest = dict.dictLookup("D");
 					if (dest.isName()) {
 						item->SetLink(new GooString(dest.getName()));
 					} else if (dest.isArray()) {
@@ -241,14 +241,14 @@ void OutlinesView::ReadOutlines(Object* o, uint32 level)
 			// PDF 1.4
 			rgb_color item_color = {0, 0, 0, 0};
 			Object color;
-			if (current->dictLookup("C", &color) && color.isArray() && color.arrayGetLength() == 3) {
+			if ((color = current->dictLookup("C")).isArray() && color.arrayGetLength() == 3) {
 				Object c;
 				rgb_color rgb;
-				if (color.arrayGet(0, &c) && c.isReal()) {
+				if ((c = color.arrayGet(0)).isReal()) {
 					rgb.red = (int)(255 * c.getReal());
-					if (color.arrayGet(1, &c) && c.isReal()) {
+					if ((c = color.arrayGet(1)).isReal()) {
 						rgb.green = (int)(255 * c.getReal());
-						if (color.arrayGet(2, &c) && c.isReal()) {
+						if ((c = color.arrayGet(2)).isReal()) {
 							rgb.blue = (int)(255 * c.getReal());
 							// set font color
 							item_color = rgb;
@@ -259,7 +259,7 @@ void OutlinesView::ReadOutlines(Object* o, uint32 level)
 
 			Object style;
 			int item_style = OutlineStyleList::PLAIN_STYLE;
-			if (current->dictLookup("F", &style) && style.isInt()) {
+			if ((style = current->dictLookup("F")).isInt()) {
 				int s = style.getInt();
 				bool bold = (s & 1) != 0;
 				bool italic = (s & 2) != 0;
@@ -274,17 +274,17 @@ void OutlinesView::ReadOutlines(Object* o, uint32 level)
 			item->SetStyle(fOutlineStyleList.GetStyle(item_style, item_color));
 			/*
 			Object aa;
-			if (current->dictLookup("AA", &aa) && !aa.isNull()) {
+			if (!(aa = current->dictLookup("AA")).isNull()) {
 				Trace(LOG_DEBUG, " <AA>\n");
 			}
 
 			Object se;
-			if (current->dictLookup("SE", &se) && !se.isNull()) {
+			if (!(se = current->dictLookup("SE")).isNull()) {
 				Trace(LOG_DEBUG, " <SE>\n");
 			}
 */
 			// traverse child
-			if (current->dictLookup("First", &child) && child.isDict() && !child.isNull()) {
+			if ((child = current->dictLookup("First")).isDict() && !child.isNull()) {
 				ReadOutlines(&child, level + 1);
 			}
 
@@ -362,7 +362,7 @@ void OutlinesView::Activate()
 		Object obj;
 		fList->AddItem(new OutlineListItem(B_TRANSLATE("Document"), 0, true, GetDefaultStyle()));
 		gPdfLock->Lock();
-		if (fCatalog->getOutline()->isDict() && fCatalog->getOutline()->dictLookup("First", &obj) && !obj.isNull()) {
+		if (fCatalog->getOutline()->isDict() && !(obj = fCatalog->getOutline()->dictLookup("First")).isNull()) {
 			ReadOutlines(&obj, 1);
 		}
 		gPdfLock->Unlock();

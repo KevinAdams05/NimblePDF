@@ -275,7 +275,7 @@ void BorderStyle::Set(Dict* d, bool check_type)
 	fStyle = solid_style;
 
 	// sanity check
-	if (check_type && d->lookup("Type", &obj) && !obj.isNull()) {
+	if (check_type && !(obj = d->lookup("Type")).isNull()) {
 		if (!obj.isName() || strcmp(obj.getName(), "Border") != 0) {
 			LOG("Dict is not of type Border!\n");
 			return;
@@ -283,13 +283,13 @@ void BorderStyle::Set(Dict* d, bool check_type)
 	}
 
 	// border width in points
-	if (d->lookup("W", &obj) && obj.isNum()) {
+	if ((obj = d->lookup("W")).isNum()) {
 		fWidth = (int)obj.getNum();
 	} else {
 	}
 
 	// border style
-	if (d->lookup("S", &obj) && obj.isName()) {
+	if ((obj = d->lookup("S")).isName()) {
 		const char* n = obj.getName();
 		switch (n[0]) {
 		case 'S':
@@ -391,15 +391,15 @@ Annotation::Annotation(Dict* d)
 	fColor.r = fColor.g = fColor.b = 0;
 
 	Object obj;
-	if (d->lookup("Contents", &obj) && obj.isString()) {
+	if ((obj = d->lookup("Contents")).isString()) {
 		fContents.append(obj.getString());
 	}
 
-	if (d->lookup("M", &obj) && obj.isString()) {
+	if ((obj = d->lookup("M")).isString()) {
 		fDate = new GooString(obj.getString()->c_str());
 	}
 
-	if (d->lookup("Rect", &obj) && obj.isArray() && obj.arrayGetLength() == 4) {
+	if ((obj = d->lookup("Rect")).isArray() && obj.arrayGetLength() == 4) {
 		Array* a = obj.getArray();
 
 		if (ReadNum(a, 0, fRect.x1) && ReadNum(a, 1, fRect.y1) && ReadNum(a, 2, fRect.x2) && ReadNum(a, 3, fRect.y2)) {
@@ -408,13 +408,13 @@ Annotation::Annotation(Dict* d)
 	} else
 		goto error;
 
-	if (d->lookup("F", &obj) && obj.isInt()) {
+	if ((obj = d->lookup("F")).isInt()) {
 		fFlags.Set(obj.getInt());
 	}
 
-	fHasAppearanceStream = d->lookup("AP", &obj) && !obj.isNull();
+	obj = d->lookup("AP"); fHasAppearanceStream = !obj.isNull();
 
-	if (d->lookup("C", &obj) && obj.isArray() && obj.arrayGetLength() == 3) {
+	if ((obj = d->lookup("C")).isArray() && obj.arrayGetLength() == 3) {
 		Array* a = obj.getArray();
 		double r, g, b;
 		if (ReadNum(a, 0, r) && ReadNum(a, 1, g) && ReadNum(a, 2, b)) {
@@ -426,15 +426,15 @@ Annotation::Annotation(Dict* d)
 		}
 	}
 
-	if (d->lookup("CA", &obj) && obj.isNum()) {
+	if ((obj = d->lookup("CA")).isNum()) {
 		fOpacity = obj.getNum();
 	}
 
-	if (d->lookup("T", &obj) && obj.isString()) {
+	if ((obj = d->lookup("T")).isString()) {
 		fTitle = new GooString(obj.getString());
 	}
 
-	if (d->lookup("Popup", &obj) && obj.isDict()) {
+	if ((obj = d->lookup("Popup")).isDict()) {
 		PopupAnnot* popup = new PopupAnnot(obj.getDict());
 		if (popup->IsValid())
 			LOG("Popup is valid\n");
@@ -602,11 +602,11 @@ TextAnnot::TextAnnot(Dict* d)
       fType(note_type)
 {
 	Object obj;
-	if (d->lookup("Open", &obj) && obj.isBool()) {
+	if ((obj = d->lookup("Open")).isBool()) {
 		fOpen = obj.getBool();
 	}
 
-	if (d->lookup("Name", &obj) && obj.isName()) {
+	if ((obj = d->lookup("Name")).isName()) {
 		fName.clear();
 		fName.append(obj.getName());
 		fType = unknown_type;
@@ -640,10 +640,10 @@ LinkAnnot::LinkAnnot(Dict* d)
 	Object obj;
 
 	// look for destination
-	if (d->lookup("Dest", &obj) && !obj.isNull()) {
+	if (!(obj = d->lookup("Dest")).isNull()) {
 		fLinkAction = LinkAction::parseDest(&obj);
 		// look for action
-	} else if (d->lookup("A", &obj) && obj.isDict()) {
+	} else if ((obj = d->lookup("A")).isDict()) {
 		fLinkAction = LinkAction::parseAction(&obj /*, baseURI*/);
 	}
 }
@@ -722,12 +722,12 @@ FreeTextAnnot::FreeTextAnnot(Dict* d, BePDFAcroForm* acroForm)
 	Init();
 
 	Object obj;
-	if (d->lookup("DA", &obj) && obj.isString()) {
+	if ((obj = d->lookup("DA")).isString()) {
 		fAppearance.append(obj.getString());
 	}
 
 	fJustification = acroForm->GetJustification(); // inherit property from BePDFAcroForm
-	if (d->lookup("Q", &obj) && obj.isInt()) {
+	if ((obj = d->lookup("Q")).isInt()) {
 		int j = obj.getInt();
 		if (j >= left_justify && j <= right_justify)
 			fJustification = (free_text_justification)j;
@@ -813,7 +813,7 @@ StyledAnnot::StyledAnnot(Dict* d)
     : Annotation(d)
 {
 	Object obj;
-	if (d->lookup("BS", &obj) && obj.isDict()) {
+	if ((obj = d->lookup("BS")).isDict()) {
 		fStyle.Set(obj.getDict());
 	}
 }
@@ -869,7 +869,7 @@ LineAnnot::LineAnnot(Dict* d)
 		return;
 
 	Object obj;
-	if (d->lookup("L", &obj) && obj.isArray() && obj.arrayGetLength() == 4) {
+	if ((obj = d->lookup("L")).isArray() && obj.arrayGetLength() == 4) {
 		Array* a = obj.getArray();
 		if (ReadPoint(a, 0, &fLine[0]) && ReadPoint(a, 2, &fLine[1])) {
 		} else
@@ -931,7 +931,7 @@ MarkupAnnot::MarkupAnnot(Dict* d)
 		return;
 
 	Object qp;
-	if (d->lookup("QuadPoints", &qp) && qp.isArray() && qp.arrayGetLength() % 8 == 0) {
+	if ((qp = d->lookup("QuadPoints")).isArray() && qp.arrayGetLength() % 8 == 0) {
 		fLength = qp.arrayGetLength() / 8;
 		if (fLength == 0)
 			goto error;
@@ -1049,7 +1049,7 @@ StampAnnot::StampAnnot(Dict* d)
       fName("Draft")
 {
 	Object obj;
-	if (d->lookup("Name", &obj) && obj.isName()) {
+	if ((obj = d->lookup("Name")).isName()) {
 		fName.clear();
 		fName.append(obj.getName());
 	}
@@ -1083,7 +1083,7 @@ InkAnnot::InkAnnot(Dict* d)
 	if (CheckInvalid())
 		return;
 	Object obj;
-	if (d->lookup("InkList", &obj) && obj.isArray()) {
+	if ((obj = d->lookup("InkList")).isArray()) {
 		Array* a = obj.getArray();
 		fLength = a->size();
 		fInkList = new PDFPoints[fLength];
@@ -1171,7 +1171,7 @@ FileAttachmentAnnot::FileAttachmentAnnot(Dict* annot)
 		return;
 
 	Object obj;
-	if (annot->lookup("Name", &obj) && obj.isName()) {
+	if ((obj = annot->lookup("Name")).isName()) {
 		fName.clear();
 		fName.append(obj.getName());
 		fType = unknown_type;
@@ -1184,7 +1184,7 @@ FileAttachmentAnnot::FileAttachmentAnnot(Dict* annot)
 	}
 
 	// File specification
-	if (annot->lookup("FS", &obj) && obj.isDict() && obj.dictIs("Filespec")) {
+	if ((obj = annot->lookup("FS")).isDict() && obj.dictIs("Filespec")) {
 		fFileSpec.SetTo(obj.getDict());
 	}
 
@@ -1258,21 +1258,21 @@ BePDFAcroForm::BePDFAcroForm(XRef* xref, Object* acroFormRef)
 	Dict* d = acroForm.getDict();
 
 	// default appearance string
-	if (d->lookup("DA", &obj) && obj.isString()) {
+	if ((obj = d->lookup("DA")).isString()) {
 		fAppearance.append(obj.getString());
 	}
 
 	// default quadding
-	if (d->lookup("Q", &obj) && obj.isInt()) {
+	if ((obj = d->lookup("Q")).isInt()) {
 		int j = obj.getInt();
 		if (j >= left_justify && j <= right_justify)
 			fJustification = (free_text_justification)j;
 	}
 
-	if (d->lookup("DR", &obj) && obj.isDict()) {
+	if ((obj = d->lookup("DR")).isDict()) {
 		Dict* resources = obj.getDict();
 		Object obj2;
-		if (resources->lookup("Font", &obj2) && obj2.isDict()) {
+		if ((obj2 = resources->lookup("Font")).isDict()) {
 			Dict* font = obj2.getDict();
 			for (int i = 0; i < font->size(); i++) {
 				Object obj3, obj4;
@@ -1304,17 +1304,17 @@ void BePDFAcroForm::ParseFont(const char* shortName, Ref ref, Dict* dict)
 	int lastChar = 255;
 
 	Object obj;
-	if (dict->lookup("Type", &obj) == NULL || !obj.isName() || strcmp(obj.getName(), "Font") != 0) {
+	obj = dict->lookup("Type"); if (obj.isNull() || !obj.isName() || strcmp(obj.getName(), "Font") != 0) {
 		goto error;
 	}
 
-	isType1 = dict->lookup("Subtype", &obj) && obj.isName() && strcmp(obj.getName(), "Type1") == 0;
+	obj = dict->lookup("Subtype"); isType1 = obj.isName() && strcmp(obj.getName(), "Type1") == 0;
 
-	if (dict->lookup("FirstChar", &obj) && obj.isNum()) {
+	if ((obj = dict->lookup("FirstChar")).isNum()) {
 		firstChar = (int)obj.getNum();
 	}
 
-	if (dict->lookup("LastChar", &obj) && obj.isNum()) {
+	if ((obj = dict->lookup("LastChar")).isNum()) {
 		lastChar = (int)obj.getNum();
 	}
 
@@ -1325,7 +1325,7 @@ void BePDFAcroForm::ParseFont(const char* shortName, Ref ref, Dict* dict)
 		}
 	}
 
-	if (dict->lookup("BaseFont", &obj) && obj.isName()) {
+	if ((obj = dict->lookup("BaseFont")).isName()) {
 		baseFont.append(obj.getName());
 	} else {
 		goto error;
@@ -1398,15 +1398,15 @@ Annotations::Annotations(Object* annots, BePDFAcroForm* acroForm)
 	for (int i = 0; i < annots->arrayGetLength(); i++) {
 		Ref ref = empty_ref;
 		Object r;
-		if (annots->arrayGetNF(i, &r) && r.isRef()) {
+		if ((r = annots->arrayGetNF(i)).isRef()) {
 			ref = r.getRef();
 		}
 		Object annot;
-		if (annots->arrayGet(i, &annot) && annot.isDict()) {
+		if ((annot = annots->arrayGet(i)).isDict()) {
 			Object type; // optional, "Annot" if present
-			if (annot.dictLookup("Type", &type) && (type.isNull() || type.isName()) && type.isName("Annot")) {
+			type = annot.dictLookup("Type"); if ((type.isNull() || type.isName()) && type.isName("Annot")) {
 				Object subType;
-				if (annot.dictLookup("Subtype", &subType) && subType.isName()) {
+				if ((subType = annot.dictLookup("Subtype")).isName()) {
 					Annotation* a = NULL;
 					if (subType.isName("Text")) {
 						a = new TextAnnot(annot.getDict());

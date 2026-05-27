@@ -53,11 +53,11 @@ bool TreeParser::ParseKids(Array* kids)
 	bool ok = true;
 	for (int i = 0; ok && i < len; i++) {
 		if (kids->get(i, &kid) && kid.isDict()) {
-			if (kid.dictLookup("Kids", &sub) && sub.isArray()) {
+			if ((sub = kid.dictLookup("Kids")).isArray()) {
 				ok = ParseKids(sub.getArray());
 			}
 
-			if (ok && kid.dictLookup(GetEntryKey(), &sub) && sub.isArray()) {
+			if (ok && (sub = kid.dictLookup(GetEntryKey())).isArray()) {
 				ok = ParseEntries(sub.getArray());
 			}
 		}
@@ -70,13 +70,13 @@ bool TreeParser::Parse(Object* tree)
 	if (tree->isDict()) {
 		Object o;
 		// nodes or leafs
-		if (tree->dictLookup("Kids", &o) && o.isArray()) {
+		if ((o = tree->dictLookup("Kids")).isArray()) {
 			bool ok = ParseKids(o.getArray());
 			return ok;
 		} else {
 
 			// leafs
-			if (tree->dictLookup(GetEntryKey(), &o) && o.isArray()) {
+			if ((o = tree->dictLookup(GetEntryKey())).isArray()) {
 				bool ok = ParseEntries(o.getArray());
 				return ok;
 			}

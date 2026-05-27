@@ -56,7 +56,7 @@ bool FileSpec::SetTo(Dict* fileSpec)
 
 	// optional PDF 1.6 description for files in EmbeddedFiles name tree
 	Object obj;
-	if (fileSpec->lookup("Desc", &obj) != NULL && obj.isString()) {
+	if (!(obj = fileSpec->lookup("Desc")).isNull() && obj.isString()) {
 		fDescription.append(obj.getString());
 	}
 
@@ -82,7 +82,7 @@ bool FileSpec::ReadFileName(Dict* fileSpec)
 	for (int i = 0; gFileAttachmentFileNameKeys[i] != NULL; i++) {
 		Object obj;
 		char* key = gFileAttachmentFileNameKeys[i];
-		if (fileSpec->lookup(key, &obj) != NULL && obj.isString()) {
+		if (!(obj = fileSpec->lookup(key)).isNull() && obj.isString()) {
 			fFileName.append(obj.getString()->c_str());
 			return true;
 		}
@@ -94,7 +94,7 @@ bool FileSpec::ReadEmbeddedFileRef(Dict* fileSpec)
 {
 	bool found = false;
 	Object obj;
-	if (fileSpec->lookup("EF", &obj) != NULL && obj.isDict()) {
+	if (!(obj = fileSpec->lookup("EF")).isNull() && obj.isDict()) {
 		for (int i = 0; (!found) && gFileAttachmentFileNameKeys[i] != NULL; i++) {
 			Object stream;
 			char* key = gFileAttachmentFileNameKeys[i];

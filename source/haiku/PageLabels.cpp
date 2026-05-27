@@ -33,7 +33,7 @@ PageLabel::PageLabel(int page, Dict* leaf)
 	Object obj;
 	this->page = page;
 	// Style
-	if (leaf->lookup("S", &obj) && obj.isName()) {
+	if ((obj = leaf->lookup("S")).isName()) {
 		switch (*obj.getName()) {
 		case 'D':
 			style = DECIMAL;
@@ -58,14 +58,14 @@ PageLabel::PageLabel(int page, Dict* leaf)
 	}
 
 	// Prefix
-	if (leaf->lookup("P", &obj) && obj.isString()) {
+	if ((obj = leaf->lookup("P")).isString()) {
 		BString* s = TextToUtf8(obj.getString()->c_str(), obj.getString()->size());
 		prefix = *s;
 		delete s;
 	}
 
 	// StartAt
-	if (leaf->lookup("St", &obj) && obj.isInt()) {
+	if ((obj = leaf->lookup("St")).isInt()) {
 		start = obj.getInt();
 		if (start < 1) {
 			start = 1;

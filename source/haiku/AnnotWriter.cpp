@@ -309,7 +309,7 @@ void AnnotWriter::WriteObject(Object* obj)
 	case objArray:
 		Write("[");
 		for (i = 0; i < obj->arrayGetLength(); i++) {
-			obj->arrayGetNF(i, &o);
+			o = obj->arrayGetNF(i);
 			if (i > 0)
 				InsertWhiteSpace(&o);
 			WriteObject(&o);
@@ -322,7 +322,7 @@ void AnnotWriter::WriteObject(Object* obj)
 			if (i > 0)
 				WriteCr();
 			fprintf(fFile, "/%s", obj->dictGetKey(i));
-			obj->dictGetValNF(i, &o);
+			o = obj->dictGetValNF(i);
 			InsertWhiteSpace(&o);
 			WriteObject(&o);
 		}
@@ -408,7 +408,7 @@ void AnnotWriter::CopyDict(Object* in, Object* out, const char* excludeKeys[])
 		char* key = in->dictGetKey(i);
 		if (excludeKeys == NULL || !IsInList(key, excludeKeys)) {
 			Object val;
-			in->dictGetValNF(i, &val);
+			val = in->dictGetValNF(i);
 			out->dictAdd(copyString(key), &val);
 		}
 	}
@@ -442,7 +442,7 @@ void AnnotWriter::CopyInfoDict(Object* dict)
 {
 	ASSERT(!is_empty_ref(fInfoRef));
 	Object info;
-	fXRef->getTrailerDict()->dictLookup("Info", &info);
+	info = fXRef->getTrailerDict()->dictLookup("Info");
 	CopyDict(&info, dict, infoDictExcludeKeys);
 }
 
@@ -1199,7 +1199,7 @@ void AnnotWriter::UpdateBePDFAcroForm()
 		ref.initRef(fBePDFAcroFormRef.num, fBePDFAcroFormRef.gen);
 		ref.fetch(fXRef, &oldForm);
 		CopyDict(&oldForm, &acroForm, acroFormExcludeKeys);
-		oldForm.dictLookup("DR", &oldDR);
+		oldDR = oldForm.dictLookup("DR");
 	}
 	// Add DR to BePDFAcroForm
 	Object dr;
