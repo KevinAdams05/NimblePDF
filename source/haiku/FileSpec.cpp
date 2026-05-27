@@ -31,8 +31,8 @@ FileSpec::FileSpec()
 {}
 
 FileSpec::FileSpec(FileSpec* copy)
-    : fDescription(copy->fDescription),
-      fFileName(copy->fFileName),
+    : fDescription(copy->fDescription.toStr()),
+      fFileName(copy->fFileName.toStr()),
       fRef(copy->fRef)
 {}
 

@@ -761,7 +761,7 @@ void AnnotWriter::AddName(Object* dict, char* key, char* name)
 void AnnotWriter::AddString(Object* dict, char* key, GooString* string)
 {
 	ASSERT(dict->isDict());
-	Object n(std::make_unique<GooString>(string));
+	Object n(std::make_unique<GooString>(string->toStr()));
 	dict->dictAdd(key, std::move(n));
 }
 

@@ -322,6 +322,18 @@ template <class C> static C* Copy(C* s)
 	}
 }
 
+// Poppler's GooString has its copy constructor deleted and no ctor
+// taking a `GooString*` directly; provide a specialization that copies
+// via the underlying std::string.
+template <> GooString* Copy<GooString>(GooString* s)
+{
+	if (s) {
+		return new GooString(s->toStr());
+	} else {
+		return NULL;
+	}
+}
+
 // Implementation of AnnotVisitor
 AnnotVisitor::AnnotVisitor()
 {
@@ -355,7 +367,7 @@ Annotation::Annotation(PDFRectangle r)
 
 Annotation::Annotation(Annotation* copy)
     : fRef(copy->fRef),
-      fContents(copy->fContents),
+      fContents(copy->fContents.toStr()),
       fRect(copy->fRect),
       fDate(Copy(copy->fDate)),
       fFlags(copy->fFlags),
@@ -431,7 +443,7 @@ Annotation::Annotation(Dict* d)
 	}
 
 	if ((obj = d->lookup("T")).isString()) {
-		fTitle = new GooString(obj.getString());
+		fTitle = new GooString(obj.getString()->toStr());
 	}
 
 	if ((obj = d->lookup("Popup")).isDict()) {
@@ -557,7 +569,7 @@ void Annotation::SetTitle(GooString* title)
 		fTitle->clear();
 		fTitle->append(title);
 	} else {
-		fTitle = new GooString(title);
+		fTitle = new GooString(title->toStr());
 	}
 }
 
@@ -593,7 +605,7 @@ TextAnnot::TextAnnot(PDFRectangle rect, text_annot_type type)
 TextAnnot::TextAnnot(TextAnnot* copy)
     : Annotation(copy),
       fOpen(copy->fOpen),
-      fName(copy->fName),
+      fName(copy->fName.toStr()),
       fType(copy->fType)
 {}
 
@@ -709,7 +721,7 @@ FreeTextAnnot::FreeTextAnnot(PDFRectangle rect, PDFFont* font)
 
 FreeTextAnnot::FreeTextAnnot(FreeTextAnnot* copy)
     : StyledAnnot(copy),
-      fAppearance(copy->fAppearance),
+      fAppearance(copy->fAppearance.toStr()),
       fJustification(copy->fJustification),
       fFont(copy->fFont),
       fFontColor(copy->fFontColor),
@@ -1045,7 +1057,7 @@ StrikeOutAnnot::StrikeOutAnnot(PDFRectangle rect)
 // Implementation of StampAnnot
 StampAnnot::StampAnnot(StampAnnot* copy)
     : Annotation(copy),
-      fName(copy->fName)
+      fName(copy->fName.toStr())
 {}
 
 StampAnnot::StampAnnot(Dict* d)
@@ -1161,8 +1173,8 @@ const char* FileAttachmentAnnot::fTypeNames[FileAttachmentAnnot::no_of_types - 1
 
 FileAttachmentAnnot::FileAttachmentAnnot(FileAttachmentAnnot* copy)
     : Annotation(copy),
-      fName(copy->fName),
-      fFileName(copy->fFileName),
+      fName(copy->fName.toStr()),
+      fFileName(copy->fFileName.toStr()),
       fType(copy->fType)
 {}
 
