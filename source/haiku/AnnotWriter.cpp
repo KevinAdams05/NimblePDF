@@ -23,6 +23,8 @@
 #include "Logging.h"
 #include "AnnotWriter.h"
 
+#include <memory>
+
 #include <Debug.h>
 #include <stdlib.h>
 #include <ctype.h>
@@ -421,7 +423,7 @@ Ref AnnotWriter::GetModDateRef(Ref infoDictRef)
 	Ref dateRef = empty_ref;
 	if (!is_empty_ref(infoDictRef)) {
 		Object ref, dict;
-		ref.initRef(infoDictRef.num, infoDictRef.gen);
+		ref = Object(Ref{infoDictRef.num, infoDictRef.gen});
 		ref.fetch(fXRef, &dict);
 		if (dict.isDict())
 			HasRef(&dict, "ModDate", dateRef);
@@ -448,11 +450,10 @@ void AnnotWriter::CopyInfoDict(Object* dict)
 
 void AnnotWriter::WriteModDate(Ref ref)
 {
-	GooString* date = new GooString();
-	AnnotUtils::CurrentDate(date);
+	std::unique_ptr<GooString> date = std::make_unique<GooString>();
+	AnnotUtils::CurrentDate(date.get());
 
-	Object obj;
-	obj.initString(date);
+	Object obj(std::move(date));
 	WriteObject(ref, &obj);
 }
 
@@ -465,11 +466,11 @@ void AnnotWriter::UpdateInfoDict()
 		Object info, val;
 		if (is_empty_ref(fInfoRef)) {
 			fInfoRef = fXRefTable.GetNewRef(xrefEntryUncompressed);
-			info.initDict(fXRef);
+			info = Object(new Dict(fXRef));
 		} else {
 			CopyInfoDict(&info);
 		}
-		info.dictAdd(copyString("ModDate"), val.initRef(modDate.num, modDate.gen));
+		info.dictAdd(copyString("ModDate"), val = Object(Ref{modDate.num, modDate.gen}));
 		WriteObject(fInfoRef, &info);
 	}
 	WriteModDate(modDate);
@@ -483,10 +484,10 @@ bool AnnotWriter::WriteFileTrailer()
 	Object trailer;
 	Object val;
 	CopyDict(fXRef->getTrailerDict(), &trailer, fileTrailerExcludeKeys);
-	trailer.dictAdd(copyString("Size"), val.initInt(fXRefTable.GetSize()));
-	trailer.dictAdd(copyString("Prev"), val.initInt(fXRef->getLastXRefPos()));
-	trailer.dictAdd(copyString("Root"), val.initRef(fXRef->getRootNum(), fXRef->getRootGen()));
-	trailer.dictAdd(copyString("Info"), val.initRef(fInfoRef.num, fInfoRef.gen));
+	trailer.dictAdd(copyString("Size"), val = Object(fXRefTable.GetSize()));
+	trailer.dictAdd(copyString("Prev"), val = Object(fXRef->getLastXRefPos()));
+	trailer.dictAdd(copyString("Root"), val = Object(Ref{fXRef->getRootNum(), fXRef->getRootGen(})));
+	trailer.dictAdd(copyString("Info"), val = Object(Ref{fInfoRef.num, fInfoRef.gen}));
 	WriteObject(&trailer);
 	Write("\rstartxref\r");
 	fprintf(fFile, "%d\r", fXRefOffset);
@@ -540,7 +541,7 @@ bool AnnotWriter::CopyPage(Object* page, Ref pageRef, Ref arrayRef)
 	Object copy;
 	Object ar;
 
-	ar.initRef(arrayRef.num, arrayRef.gen);
+	ar = Object(Ref{arrayRef.num, arrayRef.gen});
 	CopyDict(page, &copy, pageDictExcludeKeys);
 	copy.dictAdd(copyString("Annots"), &ar);
 
@@ -596,7 +597,7 @@ void AnnotWriter::AddToAnnots(Object* array, Annotation* a)
 		}
 	}
 	Object ref;
-	ref.initRef(r.num, r.gen);
+	ref = Object(Ref{r.num, r.gen});
 	array->arrayAdd(&ref);
 }
 
@@ -604,7 +605,7 @@ bool AnnotWriter::UpdateAnnotArray(int pageNo, Annotations* annots, Ref annotArr
 {
 	ASSERT(annots->HasChanged());
 	Object array;
-	array.initArray(fXRef);
+	array = Object(new Array(fXRef));
 	for (int i = 0; i < annots->Length(); i++) {
 		Annotation* a = annots->At(i);
 		if (!a->IsDeleted()) {
@@ -624,7 +625,7 @@ bool AnnotWriter::WriteAS(Ref& ref, Annotation* a)
 		return true;
 
 	Object xobj;
-	xobj.initDict(fXRef);
+	xobj = Object(new Dict(fXRef));
 	// setup XObject dictionary
 	AddName(&xobj, "Type", "XObject");
 	AddName(&xobj, "Subtype", "Form");
@@ -636,9 +637,9 @@ bool AnnotWriter::WriteAS(Ref& ref, Annotation* a)
 	AddRect(&xobj, "BBox", &r);
 	// setup resource dictionary
 	Object resources, array, name;
-	resources.initDict(fXRef);
-	array.initArray(fXRef);
-	name.initName("PDF");
+	resources = Object(new Dict(fXRef));
+	array = Object(new Array(fXRef));
+	name = Object(objName, "PDF");
 	array.arrayAdd(&name);
 	resources.dictAdd(copyString("ProcSet"), &array);
 	xobj.dictAdd(copyString("Resources"), &resources);
@@ -664,7 +665,7 @@ bool AnnotWriter::UpdateAnnot(Annotation* annot)
 		Ref ref = annot->GetRef();
 		ASSERT(!is_empty_ref(ref));
 		fASRef = empty_ref;
-		fAnnot.initDict(fXRef);
+		fAnnot = Object(new Dict(fXRef));
 		AddName(&fAnnot, "Type", "Annot");
 		annot->Visit(this);
 		DoAnnotation(annot);
@@ -733,7 +734,7 @@ void AnnotWriter::AddRef(Object* dict, char* key, Ref ref)
 {
 	ASSERT(dict->isDict());
 	Object n;
-	n.initRef(ref.num, ref.gen);
+	n = Object(Ref{ref.num, ref.gen});
 	dict->dictAdd(copyString(key), &n);
 }
 
@@ -742,7 +743,7 @@ void AnnotWriter::AddBool(Object* dict, char* key, bool b)
 {
 	ASSERT(dict->isDict());
 	Object n;
-	n.initBool(b);
+	n = Object(static_cast<bool>(b));
 	dict->dictAdd(copyString(key), &n);
 }
 
@@ -751,7 +752,7 @@ void AnnotWriter::AddName(Object* dict, char* key, char* name)
 {
 	ASSERT(dict->isDict());
 	Object n;
-	n.initName(name);
+	n = Object(objName, name);
 	dict->dictAdd(copyString(key), &n);
 }
 
@@ -759,8 +760,7 @@ void AnnotWriter::AddName(Object* dict, char* key, char* name)
 void AnnotWriter::AddString(Object* dict, char* key, GooString* string)
 {
 	ASSERT(dict->isDict());
-	Object n;
-	n.initString(new GooString(string));
+	Object n(std::make_unique<GooString>(string));
 	dict->dictAdd(copyString(key), &n);
 }
 
@@ -768,8 +768,7 @@ void AnnotWriter::AddString(Object* dict, char* key, GooString* string)
 void AnnotWriter::AddString(Object* dict, char* key, char* string)
 {
 	ASSERT(dict->isDict());
-	Object n;
-	n.initString(new GooString(string));
+	Object n(std::make_unique<GooString>(string));
 	dict->dictAdd(copyString(key), &n);
 }
 
@@ -778,7 +777,7 @@ void AnnotWriter::AddInteger(Object* dict, char* key, int i)
 {
 	ASSERT(dict->isDict());
 	Object n;
-	n.initInt(i);
+	n = Object(i);
 	dict->dictAdd(copyString(key), &n);
 }
 
@@ -787,7 +786,7 @@ void AnnotWriter::AddReal(Object* dict, char* key, double r)
 {
 	ASSERT(dict->isDict());
 	Object n;
-	n.initReal(r);
+	n = Object(static_cast<double>(r));
 	dict->dictAdd(copyString(key), &n);
 }
 
@@ -796,7 +795,7 @@ void AnnotWriter::AddReal(Object* array, double r)
 {
 	ASSERT(array->isArray());
 	Object n;
-	n.initReal(r);
+	n = Object(static_cast<double>(r));
 	array->arrayAdd(&n);
 }
 
@@ -805,7 +804,7 @@ void AnnotWriter::AddRect(Object* dict, char* key, PDFRectangle* rect)
 {
 	ASSERT(dict->isDict());
 	Object a;
-	a.initArray(fXRef);
+	a = Object(new Array(fXRef));
 	AddReal(&a, rect->x1);
 	AddReal(&a, rect->y1);
 	AddReal(&a, rect->x2);
@@ -817,7 +816,7 @@ void AnnotWriter::AddRect(Object* dict, char* key, PDFRectangle* rect)
 void AnnotWriter::AddColor(Object* dict, char* key, GfxRGB* c)
 {
 	Object a;
-	a.initArray(fXRef);
+	a = Object(new Array(fXRef));
 	AddReal(&a, colToDbl(c->r));
 	AddReal(&a, colToDbl(c->g));
 	AddReal(&a, colToDbl(c->b));
@@ -876,7 +875,7 @@ void AnnotWriter::DoAnnotation(Annotation* a)
 	if (HasAppearanceStream(a)) {
 		fASRef = fXRefTable.GetNewRef(xrefEntryUncompressed);
 		Object ap;
-		ap.initDict(fXRef);
+		ap = Object(new Dict(fXRef));
 		AddRef(&ap, "N", fASRef);
 		AddDict(&fAnnot, "AP", &ap);
 	}
@@ -891,7 +890,7 @@ void AnnotWriter::DoStyledAnnot(StyledAnnot* s)
 	// border style
 	char* style = NULL;
 	Object bs;
-	bs.initDict(fXRef);
+	bs = Object(new Dict(fXRef));
 	AddName(&bs, "Type", "Border");
 	AddInteger(&bs, "W", (float)s->GetBorderStyle()->GetWidth()); // width
 	switch (s->GetBorderStyle()->GetStyle()) {
@@ -916,14 +915,14 @@ void AnnotWriter::DoMarkupAnnot(MarkupAnnot* m)
 {
 	DoStyledAnnot(m);
 	Object array;
-	array.initArray(fXRef);
+	array = Object(new Array(fXRef));
 	for (int i = 0; i < m->QuadPointsLength(); i++) {
 		PDFQuadPoints* q = m->QuadPointsAt(i);
 		for (int j = 0; j < 4; j++) {
 			PDFPoint p = (*q)[j];
 			Object val;
-			array.arrayAdd(val.initReal(p.x));
-			array.arrayAdd(val.initReal(p.y));
+			array.arrayAdd(val = Object(static_cast<double>(p.x)));
+			array.arrayAdd(val = Object(static_cast<double>(p.y)));
 		}
 	}
 	fAnnot.dictAdd(copyString("QuadPoints"), &array);
@@ -980,13 +979,13 @@ void AnnotWriter::DoLine(LineAnnot* a)
 	AddAnnotSubtype("Line");
 	DoStyledAnnot(a);
 	Object array;
-	array.initArray(fXRef);
+	array = Object(new Array(fXRef));
 	Object val;
 	PDFPoint* line = a->GetLine();
-	array.arrayAdd(val.initReal(line[0].x));
-	array.arrayAdd(val.initReal(line[0].y));
-	array.arrayAdd(val.initReal(line[1].x));
-	array.arrayAdd(val.initReal(line[1].y));
+	array.arrayAdd(val = Object(static_cast<double>(line[0].x)));
+	array.arrayAdd(val = Object(static_cast<double>(line[0].y)));
+	array.arrayAdd(val = Object(static_cast<double>(line[1].x)));
+	array.arrayAdd(val = Object(static_cast<double>(line[1].y)));
 	fAnnot.dictAdd(copyString("L"), &array);
 }
 
@@ -1147,7 +1146,7 @@ void AnnotWriter::WriteFont(PDFFont* font)
 	font->SetRef(fXRefTable.GetNewRef(xrefEntryUncompressed));
 	fWrittenFonts.push_back(font);
 	Object dict;
-	dict.initDict(fXRef);
+	dict = Object(new Dict(fXRef));
 	AddName(&dict, "Type", "Font");
 	AddName(&dict, "Subtype", "Type1");
 	AddName(&dict, "BaseFont", (char*)font->GetName());
@@ -1177,14 +1176,14 @@ void AnnotWriter::UpdateBePDFAcroForm()
 	Object acroForm;
 	Object oldDR;
 
-	acroForm.initDict(fXRef);
-	oldDR.initNull();
+	acroForm = Object(new Dict(fXRef));
+	oldDR = Object(objNull);
 
 	if (is_empty_ref(fBePDFAcroForm->GetRef())) {
 		Ref fieldsRef = fXRefTable.GetNewRef(xrefEntryUncompressed);
 		// create empty array for fields
 		Object fields;
-		fields.initArray(fXRef);
+		fields = Object(new Array(fXRef));
 		WriteObject(fieldsRef, &fields);
 
 		// create new BePDFAcroForm
@@ -1196,20 +1195,20 @@ void AnnotWriter::UpdateBePDFAcroForm()
 		fBePDFAcroFormRef = fBePDFAcroForm->GetRef();
 		Object ref;
 		Object oldForm;
-		ref.initRef(fBePDFAcroFormRef.num, fBePDFAcroFormRef.gen);
+		ref = Object(Ref{fBePDFAcroFormRef.num, fBePDFAcroFormRef.gen});
 		ref.fetch(fXRef, &oldForm);
 		CopyDict(&oldForm, &acroForm, acroFormExcludeKeys);
 		oldDR = oldForm.dictLookup("DR");
 	}
 	// Add DR to BePDFAcroForm
 	Object dr;
-	dr.initDict(fXRef);
+	dr = Object(new Dict(fXRef));
 	if (oldDR.isDict()) {
 		CopyDict(&oldDR, &dr, drExcludeKeys);
 	}
 	// Add font dict
 	Object font;
-	font.initDict(fXRef);
+	font = Object(new Dict(fXRef));
 	// add old fonts
 	AddFonts(&font, fBePDFAcroForm->GetFonts());
 	// add new fonts
@@ -1231,9 +1230,9 @@ void AnnotWriter::UpdateCatalog()
 	Object catalog;
 	root.num = fXRef->getRootNum();
 	root.gen = fXRef->getRootGen();
-	oldCatalogRef.initRef(root.num, root.gen);
+	oldCatalogRef = Object(Ref{root.num, root.gen});
 	oldCatalogRef.fetch(fXRef, &oldCatalog);
-	catalog.initDict(fXRef);
+	catalog = Object(new Dict(fXRef));
 	CopyDict(&oldCatalog, &catalog);
 	AddRef(&catalog, "BePDFAcroForm", fBePDFAcroFormRef);
 	WriteObject(root, &catalog);

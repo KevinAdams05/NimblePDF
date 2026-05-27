@@ -131,7 +131,7 @@ FileSpec::SaveReturnCode FileSpec::Save(XRef* xref, const char* file)
 	}
 
 	Object ref;
-	ref.initRef(fRef.num, fRef.gen);
+	ref = Object(Ref{fRef.num, fRef.gen});
 	Object obj;
 	if (ref.fetch(xref, &obj) != NULL && obj.isStream()) {
 		Stream* stream = obj.getStream();
