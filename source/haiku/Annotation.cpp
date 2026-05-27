@@ -442,8 +442,12 @@ Annotation::Annotation(Dict* d)
 			LOG("Popup is invalid\n");
 		if (popup->IsValid()) {
 			fPopup = popup;
-			Object ref;
-			if (d->lookupNF("Popup", &ref) && obj.isRef()) {
+			// Note: the original BePDF code here checked obj.isRef(),
+			// which appears to be a copy-paste bug (obj was the outer
+			// lookup result, not the Popup-specific one). Corrected to
+			// ref.isRef() during the poppler migration.
+			const Object& ref = d->lookupNF("Popup");
+			if (ref.isRef()) {
 				Ref r = ref.getRef();
 				popup->SetRef(r);
 			}
@@ -466,8 +470,8 @@ Annotation::~Annotation()
 
 bool Annotation::ReadNum(Array* a, int i, double& d)
 {
-	Object n;
-	bool ok = a->get(i, &n) && n.isNum();
+	Object n = a->get(i);
+	bool ok = n.isNum();
 	if (ok) {
 		d = n.getNum();
 	}
@@ -1089,8 +1093,8 @@ InkAnnot::InkAnnot(Dict* d)
 		fInkList = new PDFPoints[fLength];
 		for (int i = 0; i < fLength; i++) {
 			PDFPoints* p = PathAt(i);
-			Object obj2;
-			if (a->get(i, &obj2) && obj2.isArray() && obj2.arrayGetLength() % 2 == 0) {
+			Object obj2 = a->get(i);
+			if (obj2.isArray() && obj2.arrayGetLength() % 2 == 0) {
 				const int n = obj2.arrayGetLength() / 2;
 				p->SetLength(n);
 				for (int j = 0; j < n; j++) {
@@ -1243,8 +1247,8 @@ BePDFAcroForm::BePDFAcroForm(XRef* xref, Object* acroFormRef)
 	if (!acroFormRef->isRef())
 		return;
 
-	Object acroForm;
-	if (acroFormRef->fetch(xref, &acroForm) == NULL)
+	Object acroForm = acroFormRef->fetch(xref);
+	if (acroForm.isNull())
 		return;
 
 
@@ -1318,8 +1322,8 @@ void BePDFAcroForm::ParseFont(const char* shortName, Ref ref, Dict* dict)
 		lastChar = (int)obj.getNum();
 	}
 
-	if (dict->lookupNF("Encoding", &obj) && obj.isName()) {
-		encoding.append(obj.getName());
+	if (const Object& enc = dict->lookupNF("Encoding"); enc.isName()) {
+		encoding.append(enc.getName());
 		if (encoding.cmp("WinAnsiEncoding") == 0) {
 			hasSupportedEncoding = true;
 		}
@@ -1397,8 +1401,8 @@ Annotations::Annotations(Object* annots, BePDFAcroForm* acroForm)
 
 	for (int i = 0; i < annots->arrayGetLength(); i++) {
 		Ref ref = empty_ref;
-		Object r;
-		if ((r = annots->arrayGetNF(i)).isRef()) {
+		const Object& r = annots->arrayGetNF(i);
+		if (r.isRef()) {
 			ref = r.getRef();
 		}
 		Object annot;

@@ -130,10 +130,9 @@ FileSpec::SaveReturnCode FileSpec::Save(XRef* xref, const char* file)
 		return kMissingEmbeddedStreamError;
 	}
 
-	Object ref;
-	ref = Object(Ref{fRef.num, fRef.gen});
-	Object obj;
-	if (ref.fetch(xref, &obj) != NULL && obj.isStream()) {
+	Object ref = Object(Ref{fRef.num, fRef.gen});
+	Object obj = ref.fetch(xref);
+	if (!obj.isNull() && obj.isStream()) {
 		Stream* stream = obj.getStream();
 
 		FILE* f = fopen(file, "wb");

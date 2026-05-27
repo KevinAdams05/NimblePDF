@@ -309,11 +309,9 @@ void FileInfoWindow::QueryFonts(PDFDoc* doc, int page)
 		Page* page = catalog->getPage(pg);
 		Dict* resDict;
 		if ((resDict = page->getResourceDict()) != NULL) {
-			Object obj1;
-			resDict->lookupNF("Font", &obj1);
+			const Object& obj1 = resDict->lookupNF("Font");
 			if (obj1.isRef()) {
-				Object obj2;
-				obj1.fetch(doc->getXRef(), &obj2);
+				Object obj2 = obj1.fetch(doc->getXRef());
 				if (obj2.isDict()) {
 					Ref r = obj1.getRef();
 					GfxFontDict* gfxFontDict = new GfxFontDict(doc->getXRef(), &r, obj2.getDict());

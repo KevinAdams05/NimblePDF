@@ -296,8 +296,8 @@ void OutlinesView::ReadOutlines(Object* o, uint32 level)
 		}
 
 
-		Object* next = new Object();
-		if (current->dictLookup("Next", next) && next->isDict() && !next->isNull()) {
+		Object* next = new Object(current->dictLookup("Next"));
+		if (next->isDict() && !next->isNull()) {
 			delete current;
 			current = next;
 			loop = true;

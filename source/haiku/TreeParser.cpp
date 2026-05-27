@@ -30,12 +30,12 @@ bool TreeParser::ParseEntries(Array* entries)
 	int len = entries->size();
 	bool ok = true;
 	for (int i = 0; ok && i < len; i++) {
-		Object key;
-		if (entries->get(i, &key)) {
+		Object key = entries->get(i);
+		if (!key.isNull()) {
 			i++;
-			Object value;
-			if (i < len && entries->get(i, &value)) {
-				ok = DoEntry(&key, &value);
+			if (i < len) {
+				Object value = entries->get(i);
+				ok = !value.isNull() && DoEntry(&key, &value);
 			} else {
 				// missing value
 				ok = false;
@@ -52,7 +52,8 @@ bool TreeParser::ParseKids(Array* kids)
 	Object sub;
 	bool ok = true;
 	for (int i = 0; ok && i < len; i++) {
-		if (kids->get(i, &kid) && kid.isDict()) {
+		kid = kids->get(i);
+		if (kid.isDict()) {
 			if ((sub = kid.dictLookup("Kids")).isArray()) {
 				ok = ParseKids(sub.getArray());
 			}
