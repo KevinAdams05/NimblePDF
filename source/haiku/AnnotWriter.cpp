@@ -423,10 +423,8 @@ Ref AnnotWriter::GetModDateRef(Ref infoDictRef)
 		Object ref, dict;
 		ref.initRef(infoDictRef.num, infoDictRef.gen);
 		ref.fetch(fXRef, &dict);
-		ref.free();
 		if (dict.isDict())
 			HasRef(&dict, "ModDate", dateRef);
-		dict.free();
 	}
 	return dateRef;
 }
@@ -446,7 +444,6 @@ void AnnotWriter::CopyInfoDict(Object* dict)
 	Object info;
 	fXRef->getTrailerDict()->dictLookup("Info", &info);
 	CopyDict(&info, dict, infoDictExcludeKeys);
-	info.free();
 }
 
 void AnnotWriter::WriteModDate(Ref ref)
@@ -457,7 +454,6 @@ void AnnotWriter::WriteModDate(Ref ref)
 	Object obj;
 	obj.initString(date);
 	WriteObject(ref, &obj);
-	obj.free(); // frees date
 }
 
 void AnnotWriter::UpdateInfoDict()
@@ -475,7 +471,6 @@ void AnnotWriter::UpdateInfoDict()
 		}
 		info.dictAdd(copyString("ModDate"), val.initRef(modDate.num, modDate.gen));
 		WriteObject(fInfoRef, &info);
-		info.free();
 	}
 	WriteModDate(modDate);
 }
@@ -496,7 +491,6 @@ bool AnnotWriter::WriteFileTrailer()
 	Write("\rstartxref\r");
 	fprintf(fFile, "%d\r", fXRefOffset);
 	Write("%%EOF\r");
-	trailer.free();
 	return true;
 }
 
@@ -517,7 +511,6 @@ bool AnnotWriter::HasRef(Object* dict, const char* key, Ref& ref)
 		ref = empty_ref;
 		ok = false;
 	}
-	obj.free();
 	return ok;
 }
 
@@ -531,7 +524,6 @@ bool AnnotWriter::HasEmbeddedContent(Object* page)
 	ASSERT(page && page->isDict());
 	Object obj;
 	bool embedded = !(page->dictLookupNF("Contents", &obj) && (obj.isArray() || obj.isRef() || obj.isNull()));
-	obj.free();
 	return embedded;
 }
 
@@ -554,7 +546,6 @@ bool AnnotWriter::CopyPage(Object* page, Ref pageRef, Ref arrayRef)
 
 	// write to file
 	WriteObject(pageRef, &copy);
-	copy.free();
 	return true;
 }
 
@@ -582,7 +573,6 @@ bool AnnotWriter::UpdatePage(int pageNo, Annotations* annots, Ref& annotArray)
 		Trace(LOG_ERR, "Could not get page dict for page %d", pageNo + 1);
 	}
 error:
-	page.free();
 	return ok;
 }
 
@@ -625,7 +615,6 @@ bool AnnotWriter::UpdateAnnotArray(int pageNo, Annotations* annots, Ref annotArr
 	}
 	// write to file
 	WriteObject(annotArray, &array);
-	array.free();
 	return true;
 }
 
@@ -664,7 +653,6 @@ bool AnnotWriter::WriteAS(Ref& ref, Annotation* a)
 
 	// write form XObject
 	WriteObject(ref, &xobj, as.GetStream());
-	xobj.free();
 	ref = empty_ref;
 	return true;
 }
@@ -681,7 +669,6 @@ bool AnnotWriter::UpdateAnnot(Annotation* annot)
 		annot->Visit(this);
 		DoAnnotation(annot);
 		WriteObject(ref, &fAnnot);
-		fAnnot.free();
 		WriteAS(fASRef, annot);
 	}
 	if (annot->GetPopup() != NULL) {
@@ -1166,7 +1153,6 @@ void AnnotWriter::WriteFont(PDFFont* font)
 	AddName(&dict, "BaseFont", (char*)font->GetName());
 	AddName(&dict, "Encoding", "WinAnsiEncoding");
 	WriteObject(font->GetRef(), &dict);
-	dict.free();
 }
 
 void AnnotWriter::AddFonts(Object* dict, std::list<PDFFont*>* fonts)
@@ -1200,7 +1186,6 @@ void AnnotWriter::UpdateBePDFAcroForm()
 		Object fields;
 		fields.initArray(fXRef);
 		WriteObject(fieldsRef, &fields);
-		fields.free();
 
 		// create new BePDFAcroForm
 		fBePDFAcroFormRef = fXRefTable.GetNewRef(xrefEntryUncompressed);
@@ -1215,15 +1200,12 @@ void AnnotWriter::UpdateBePDFAcroForm()
 		ref.fetch(fXRef, &oldForm);
 		CopyDict(&oldForm, &acroForm, acroFormExcludeKeys);
 		oldForm.dictLookup("DR", &oldDR);
-		oldForm.free();
-		ref.free();
 	}
 	// Add DR to BePDFAcroForm
 	Object dr;
 	dr.initDict(fXRef);
 	if (oldDR.isDict()) {
 		CopyDict(&oldDR, &dr, drExcludeKeys);
-		oldDR.free();
 	}
 	// Add font dict
 	Object font;
@@ -1235,7 +1217,6 @@ void AnnotWriter::UpdateBePDFAcroForm()
 	AddDict(&dr, "Font", &font);
 	AddDict(&acroForm, "DR", &dr);
 	WriteObject(fBePDFAcroFormRef, &acroForm);
-	acroForm.free();
 }
 
 void AnnotWriter::UpdateCatalog()
@@ -1256,7 +1237,4 @@ void AnnotWriter::UpdateCatalog()
 	CopyDict(&oldCatalog, &catalog);
 	AddRef(&catalog, "BePDFAcroForm", fBePDFAcroFormRef);
 	WriteObject(root, &catalog);
-	catalog.free();
-	oldCatalog.free();
-	oldCatalogRef.free();
 }

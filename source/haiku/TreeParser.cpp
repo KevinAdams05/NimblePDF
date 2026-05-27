@@ -40,9 +40,7 @@ bool TreeParser::ParseEntries(Array* entries)
 				// missing value
 				ok = false;
 			}
-			value.free();
 		}
-		key.free();
 	}
 	return ok;
 }
@@ -58,14 +56,11 @@ bool TreeParser::ParseKids(Array* kids)
 			if (kid.dictLookup("Kids", &sub) && sub.isArray()) {
 				ok = ParseKids(sub.getArray());
 			}
-			sub.free();
 
 			if (ok && kid.dictLookup(GetEntryKey(), &sub) && sub.isArray()) {
 				ok = ParseEntries(sub.getArray());
 			}
-			sub.free();
 		}
-		kid.free();
 	}
 	return ok;
 }
@@ -77,18 +72,14 @@ bool TreeParser::Parse(Object* tree)
 		// nodes or leafs
 		if (tree->dictLookup("Kids", &o) && o.isArray()) {
 			bool ok = ParseKids(o.getArray());
-			o.free();
 			return ok;
 		} else {
-			o.free();
 
 			// leafs
 			if (tree->dictLookup(GetEntryKey(), &o) && o.isArray()) {
 				bool ok = ParseEntries(o.getArray());
-				o.free();
 				return ok;
 			}
-			o.free();
 		}
 	}
 	return false;

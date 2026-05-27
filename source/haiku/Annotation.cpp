@@ -278,18 +278,15 @@ void BorderStyle::Set(Dict* d, bool check_type)
 	if (check_type && d->lookup("Type", &obj) && !obj.isNull()) {
 		if (!obj.isName() || strcmp(obj.getName(), "Border") != 0) {
 			LOG("Dict is not of type Border!\n");
-			obj.free();
 			return;
 		}
 	}
-	obj.free();
 
 	// border width in points
 	if (d->lookup("W", &obj) && obj.isNum()) {
 		fWidth = (int)obj.getNum();
 	} else {
 	}
-	obj.free();
 
 	// border style
 	if (d->lookup("S", &obj) && obj.isName()) {
@@ -312,7 +309,6 @@ void BorderStyle::Set(Dict* d, bool check_type)
 			break;
 		}
 	}
-	obj.free();
 
 	// dash array not supported yet!
 }
@@ -398,12 +394,10 @@ Annotation::Annotation(Dict* d)
 	if (d->lookup("Contents", &obj) && obj.isString()) {
 		fContents.append(obj.getString());
 	}
-	obj.free();
 
 	if (d->lookup("M", &obj) && obj.isString()) {
 		fDate = new GooString(obj.getString()->c_str());
 	}
-	obj.free();
 
 	if (d->lookup("Rect", &obj) && obj.isArray() && obj.arrayGetLength() == 4) {
 		Array* a = obj.getArray();
@@ -413,15 +407,12 @@ Annotation::Annotation(Dict* d)
 			goto error;
 	} else
 		goto error;
-	obj.free();
 
 	if (d->lookup("F", &obj) && obj.isInt()) {
 		fFlags.Set(obj.getInt());
 	}
-	obj.free();
 
 	fHasAppearanceStream = d->lookup("AP", &obj) && !obj.isNull();
-	obj.free();
 
 	if (d->lookup("C", &obj) && obj.isArray() && obj.arrayGetLength() == 3) {
 		Array* a = obj.getArray();
@@ -434,17 +425,14 @@ Annotation::Annotation(Dict* d)
 			goto error;
 		}
 	}
-	obj.free();
 
 	if (d->lookup("CA", &obj) && obj.isNum()) {
 		fOpacity = obj.getNum();
 	}
-	obj.free();
 
 	if (d->lookup("T", &obj) && obj.isString()) {
 		fTitle = new GooString(obj.getString());
 	}
-	obj.free();
 
 	if (d->lookup("Popup", &obj) && obj.isDict()) {
 		PopupAnnot* popup = new PopupAnnot(obj.getDict());
@@ -459,17 +447,14 @@ Annotation::Annotation(Dict* d)
 				Ref r = ref.getRef();
 				popup->SetRef(r);
 			}
-			ref.free();
 		} else
 			delete popup;
 	}
-	obj.free();
 
 	SetValid();
 	return;
 
 error:
-	obj.free();
 }
 
 Annotation::~Annotation()
@@ -486,7 +471,6 @@ bool Annotation::ReadNum(Array* a, int i, double& d)
 	if (ok) {
 		d = n.getNum();
 	}
-	n.free();
 	return ok;
 }
 
@@ -621,7 +605,6 @@ TextAnnot::TextAnnot(Dict* d)
 	if (d->lookup("Open", &obj) && obj.isBool()) {
 		fOpen = obj.getBool();
 	}
-	obj.free();
 
 	if (d->lookup("Name", &obj) && obj.isName()) {
 		fName.clear();
@@ -634,7 +617,6 @@ TextAnnot::TextAnnot(Dict* d)
 			}
 		}
 	}
-	obj.free();
 }
 
 void TextAnnot::Print()
@@ -664,7 +646,6 @@ LinkAnnot::LinkAnnot(Dict* d)
 	} else if (d->lookup("A", &obj) && obj.isDict()) {
 		fLinkAction = LinkAction::parseAction(&obj /*, baseURI*/);
 	}
-	obj.free();
 }
 
 void LinkAnnot::Print()
@@ -744,7 +725,6 @@ FreeTextAnnot::FreeTextAnnot(Dict* d, BePDFAcroForm* acroForm)
 	if (d->lookup("DA", &obj) && obj.isString()) {
 		fAppearance.append(obj.getString());
 	}
-	obj.free();
 
 	fJustification = acroForm->GetJustification(); // inherit property from BePDFAcroForm
 	if (d->lookup("Q", &obj) && obj.isInt()) {
@@ -752,7 +732,6 @@ FreeTextAnnot::FreeTextAnnot(Dict* d, BePDFAcroForm* acroForm)
 		if (j >= left_justify && j <= right_justify)
 			fJustification = (free_text_justification)j;
 	}
-	obj.free();
 
 	// use appearance string to extract font short name and size
 	const char* appearance;
@@ -837,7 +816,6 @@ StyledAnnot::StyledAnnot(Dict* d)
 	if (d->lookup("BS", &obj) && obj.isDict()) {
 		fStyle.Set(obj.getDict());
 	}
-	obj.free();
 }
 
 void StyledAnnot::Print()
@@ -899,11 +877,9 @@ LineAnnot::LineAnnot(Dict* d)
 	} else {
 		goto error;
 	}
-	obj.free();
 	SetValid();
 	return;
 error:
-	obj.free();
 }
 
 void LineAnnot::Print()
@@ -972,14 +948,12 @@ MarkupAnnot::MarkupAnnot(Dict* d)
 		}
 	} else
 		goto error;
-	qp.free();
 
 
 	SetValid();
 	return;
 
 error:
-	qp.free();
 	delete[] fQuadPoints;
 }
 
@@ -1079,7 +1053,6 @@ StampAnnot::StampAnnot(Dict* d)
 		fName.clear();
 		fName.append(obj.getName());
 	}
-	obj.free();
 }
 
 void StampAnnot::Print()
@@ -1122,24 +1095,19 @@ InkAnnot::InkAnnot(Dict* d)
 				p->SetLength(n);
 				for (int j = 0; j < n; j++) {
 					if (!ReadPoint(obj2.getArray(), 2 * j, p->PointAt(j))) {
-						obj2.free();
 						goto error;
 					}
 				}
 			} else {
-				obj2.free();
 				goto error;
 			}
-			obj2.free();
 		}
 	} else
 		goto error;
-	obj.free();
 	SetValid();
 	return;
 
 error:
-	obj.free();
 }
 
 InkAnnot::~InkAnnot()
@@ -1214,13 +1182,11 @@ FileAttachmentAnnot::FileAttachmentAnnot(Dict* annot)
 			}
 		}
 	}
-	obj.free();
 
 	// File specification
 	if (annot->lookup("FS", &obj) && obj.isDict() && obj.dictIs("Filespec")) {
 		fFileSpec.SetTo(obj.getDict());
 	}
-	obj.free();
 
 	SetValid();
 }
@@ -1283,7 +1249,6 @@ BePDFAcroForm::BePDFAcroForm(XRef* xref, Object* acroFormRef)
 
 
 	if (!acroForm.isDict()) {
-		acroForm.free();
 		return;
 	}
 
@@ -1296,7 +1261,6 @@ BePDFAcroForm::BePDFAcroForm(XRef* xref, Object* acroFormRef)
 	if (d->lookup("DA", &obj) && obj.isString()) {
 		fAppearance.append(obj.getString());
 	}
-	obj.free();
 
 	// default quadding
 	if (d->lookup("Q", &obj) && obj.isInt()) {
@@ -1304,7 +1268,6 @@ BePDFAcroForm::BePDFAcroForm(XRef* xref, Object* acroFormRef)
 		if (j >= left_justify && j <= right_justify)
 			fJustification = (free_text_justification)j;
 	}
-	obj.free();
 
 	if (d->lookup("DR", &obj) && obj.isDict()) {
 		Dict* resources = obj.getDict();
@@ -1316,13 +1279,9 @@ BePDFAcroForm::BePDFAcroForm(XRef* xref, Object* acroFormRef)
 				if (font->getVal(i, &obj3) && obj3.isDict() && font->getValNF(i, &obj4) && obj4.isRef()) {
 					ParseFont(font->getKey(i), obj4.getRef(), obj3.getDict());
 				}
-				obj3.free();
-				obj4.free();
 			}
 		}
-		obj2.free();
 	}
-	obj.free();
 }
 
 BePDFAcroForm::~BePDFAcroForm()
@@ -1348,20 +1307,16 @@ void BePDFAcroForm::ParseFont(const char* shortName, Ref ref, Dict* dict)
 	if (dict->lookup("Type", &obj) == NULL || !obj.isName() || strcmp(obj.getName(), "Font") != 0) {
 		goto error;
 	}
-	obj.free();
 
 	isType1 = dict->lookup("Subtype", &obj) && obj.isName() && strcmp(obj.getName(), "Type1") == 0;
-	obj.free();
 
 	if (dict->lookup("FirstChar", &obj) && obj.isNum()) {
 		firstChar = (int)obj.getNum();
 	}
-	obj.free();
 
 	if (dict->lookup("LastChar", &obj) && obj.isNum()) {
 		lastChar = (int)obj.getNum();
 	}
-	obj.free();
 
 	if (dict->lookupNF("Encoding", &obj) && obj.isName()) {
 		encoding.append(obj.getName());
@@ -1369,14 +1324,12 @@ void BePDFAcroForm::ParseFont(const char* shortName, Ref ref, Dict* dict)
 			hasSupportedEncoding = true;
 		}
 	}
-	obj.free();
 
 	if (dict->lookup("BaseFont", &obj) && obj.isName()) {
 		baseFont.append(obj.getName());
 	} else {
 		goto error;
 	}
-	obj.free();
 
 	// add font to list
 	font = new PDFFont();
@@ -1400,7 +1353,6 @@ void BePDFAcroForm::ParseFont(const char* shortName, Ref ref, Dict* dict)
 	return;
 
 error:
-	obj.free();
 }
 
 PDFFont* BePDFAcroForm::FindFontByShortName(const char* name)
@@ -1494,12 +1446,8 @@ Annotations::Annotations(Object* annots, BePDFAcroForm* acroForm)
 						delete a;
 					}
 				}
-				subType.free();
 			}
-			type.free();
 		} // else skip it
-		r.free();
-		annot.free();
 	}
 }
 

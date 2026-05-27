@@ -284,7 +284,6 @@ Annotations* PageRenderer::GetAnnotationsForPage(int pageNo)
 		Object annotsDict;
 		fDoc->getCatalog()->getPage(pageNo)->getAnnots(&annotsDict);
 		fAnnotations.Set(i, new Annotations(&annotsDict, fBePDFAcroForm));
-		annotsDict.free();
 	}
 	return fAnnotations.Get(i);
 }
@@ -323,7 +322,6 @@ Links* PageRenderer::CreateLinks(int pageNo)
 	Page* page = fDoc->getCatalog()->getPage(pageNo);
 	Object obj;
 	Links* links = new Links(page->getAnnots(&obj), fDoc->getCatalog()->getBaseURI());
-	obj.free();
 	return links;
 }
 

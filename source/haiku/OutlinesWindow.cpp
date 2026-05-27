@@ -188,7 +188,6 @@ void OutlinesView::ReadOutlines(Object* o, uint32 level)
 			if (current->dictLookup("Count", &count) && count.isInt()) {
 				open = count.getInt() > 0;
 			}
-			count.free();
 
 			OutlineListItem* item;
 			if (title.isString()) {
@@ -221,7 +220,6 @@ void OutlinesView::ReadOutlines(Object* o, uint32 level)
 					item->SetLink(dest.getString()->copy());
 				}
 			}
-			dest.free();
 
 			Object dict;
 			if (current->dictLookup("A", &dict) && dict.isDict()) {
@@ -237,11 +235,8 @@ void OutlinesView::ReadOutlines(Object* o, uint32 level)
 					} else if (dest.isString()) {
 						item->SetLink(dest.getString()->copy());
 					}
-					dest.free();
 				}
-				s.free();
 			}
-			dict.free();
 
 			// PDF 1.4
 			rgb_color item_color = {0, 0, 0, 0};
@@ -251,10 +246,8 @@ void OutlinesView::ReadOutlines(Object* o, uint32 level)
 				rgb_color rgb;
 				if (color.arrayGet(0, &c) && c.isReal()) {
 					rgb.red = (int)(255 * c.getReal());
-					c.free();
 					if (color.arrayGet(1, &c) && c.isReal()) {
 						rgb.green = (int)(255 * c.getReal());
-						c.free();
 						if (color.arrayGet(2, &c) && c.isReal()) {
 							rgb.blue = (int)(255 * c.getReal());
 							// set font color
@@ -262,9 +255,7 @@ void OutlinesView::ReadOutlines(Object* o, uint32 level)
 						}
 					}
 				}
-				c.free();
 			}
-			color.free();
 
 			Object style;
 			int item_style = OutlineStyleList::PLAIN_STYLE;
@@ -279,7 +270,6 @@ void OutlinesView::ReadOutlines(Object* o, uint32 level)
 				if (italic)
 					item_style |= OutlineStyleList::ITALIC_STYLE;
 			}
-			style.free();
 
 			item->SetStyle(fOutlineStyleList.GetStyle(item_style, item_color));
 			/*
@@ -287,19 +277,16 @@ void OutlinesView::ReadOutlines(Object* o, uint32 level)
 			if (current->dictLookup("AA", &aa) && !aa.isNull()) {
 				Trace(LOG_DEBUG, " <AA>\n");
 			}
-			aa.free();
 
 			Object se;
 			if (current->dictLookup("SE", &se) && !se.isNull()) {
 				Trace(LOG_DEBUG, " <SE>\n");
 			}
-			se.free();
 */
 			// traverse child
 			if (current->dictLookup("First", &child) && child.isDict() && !child.isNull()) {
 				ReadOutlines(&child, level + 1);
 			}
-			child.free();
 
 			// expanded argument of OutlineListItem constructor does not work!
 			if (open)
@@ -307,12 +294,10 @@ void OutlinesView::ReadOutlines(Object* o, uint32 level)
 			else
 				fList->Collapse(item);
 		}
-		title.free();
 
 
 		Object* next = new Object();
 		if (current->dictLookup("Next", next) && next->isDict() && !next->isNull()) {
-			current->free();
 			delete current;
 			current = next;
 			loop = true;
@@ -321,7 +306,6 @@ void OutlinesView::ReadOutlines(Object* o, uint32 level)
 			delete next;
 		}
 	} while (loop);
-	current->free();
 	delete current;
 }
 
@@ -385,7 +369,6 @@ void OutlinesView::Activate()
 		if (fList->CountItems() == 1) {
 			fList->AddItem(new OutlineListItem(B_TRANSLATE("<empty>"), 1, true, GetDefaultStyle()));
 		}
-		obj.free();
 		fUserDefined = new OutlineListItem(B_TRANSLATE("User defined"), 0, true, GetDefaultStyle());
 		fList->AddItem(fUserDefined);
 		InitUserBookmarks(false);

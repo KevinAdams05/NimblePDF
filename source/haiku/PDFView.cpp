@@ -222,7 +222,6 @@ void PDFView::MakeTitleString(BPath* path)
 			*fTitle << path->Leaf();
 	} else
 		*fTitle << path->Leaf();
-	obj.free();
 }
 
 ///////////////////////////////////////////////////////////////////////////

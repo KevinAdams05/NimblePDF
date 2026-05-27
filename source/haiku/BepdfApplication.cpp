@@ -830,7 +830,6 @@ void BepdfApplication::UpdateFileAttributes(PDFDoc* doc, entry_ref* ref)
 			}
 		}
 	}
-	obj.free();
 }
 
 

@@ -59,7 +59,6 @@ bool FileSpec::SetTo(Dict* fileSpec)
 	if (fileSpec->lookup("Desc", &obj) != NULL && obj.isString()) {
 		fDescription.append(obj.getString());
 	}
-	obj.free();
 
 	// mandatory file name
 	if (!ReadFileName(fileSpec)) {
@@ -87,7 +86,6 @@ bool FileSpec::ReadFileName(Dict* fileSpec)
 			fFileName.append(obj.getString()->c_str());
 			return true;
 		}
-		obj.free();
 	}
 	return false;
 }
@@ -106,10 +104,8 @@ bool FileSpec::ReadEmbeddedFileRef(Dict* fileSpec)
 				fRef = stream.getRef();
 				found = true; // leave for loop
 			}
-			stream.free();
 		}
 	}
-	obj.free();
 	return found;
 }
 
@@ -150,10 +146,8 @@ FileSpec::SaveReturnCode FileSpec::Save(XRef* xref, const char* file)
 		stream->close();
 
 		fclose(f);
-		obj.free();
 		return rc;
 	}
-	obj.free();
 	return kMissingEmbeddedStreamError;
 }
 

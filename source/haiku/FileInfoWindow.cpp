@@ -171,7 +171,6 @@ BString* FileInfoWindow::GetProperty(Dict* dict, const char* key, time_t* time)
 			}
 		}
 	}
-	obj.free();
 	return result;
 }
 
@@ -326,11 +325,9 @@ void FileInfoWindow::QueryFonts(PDFDoc* doc, int page)
 							Unlock();
 						}
 					}
-					obj2.free();
 					delete gfxFontDict;
 				}
 			}
-			obj1.free();
 		}
 	}
 
@@ -378,7 +375,6 @@ void FileInfoWindow::Refresh(BEntry* file, PDFDoc* doc, int page)
 			}
 		}
 	}
-	obj.free();
 
 	char ver[80];
 	sprintf(ver, "%.1f", doc->getPDFVersion());

@@ -56,7 +56,6 @@ PageLabel::PageLabel(int page, Dict* leaf)
 	} else {
 		style = DECIMAL;
 	}
-	obj.free();
 
 	// Prefix
 	if (leaf->lookup("P", &obj) && obj.isString()) {
@@ -64,7 +63,6 @@ PageLabel::PageLabel(int page, Dict* leaf)
 		prefix = *s;
 		delete s;
 	}
-	obj.free();
 
 	// StartAt
 	if (leaf->lookup("St", &obj) && obj.isInt()) {
@@ -75,7 +73,6 @@ PageLabel::PageLabel(int page, Dict* leaf)
 	} else {
 		start = 1;
 	}
-	obj.free();
 }
 
 BString& PageLabel::ToAlpha(BString& str, int num)
