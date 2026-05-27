@@ -24,14 +24,14 @@
 #include <ctype.h>
 
 #include <locale/Catalog.h>
-#include <be/app/Application.h>
-#include <be/storage/Entry.h>
-#include <be/storage/FilePanel.h>
-#include <be/app/Roster.h>
-#include <be/interface/Screen.h>
-#include <be/StorageKit.h>
+#include <Application.h>
+#include <Entry.h>
+#include <FilePanel.h>
+#include <Roster.h>
+#include <Screen.h>
+#include <StorageKit.h>
 #include <Deskbar.h>
-#include <be/interface/Alert.h>
+#include <Alert.h>
 
 #include <gtypes.h>
 #include <GHash.h>
@@ -172,7 +172,7 @@ BepdfApplication::BepdfApplication()
 
 	BEntry entry;
 	app_info info;
-	if (B_OK == be_app->GetAppInfo(&info)) {
+	if (be_app->GetAppInfo(&info) == B_OK) {
 		fTeamID = info.team;
 		entry = BEntry(&info.ref);
 		entry.GetPath(&fAppPath);
@@ -526,7 +526,7 @@ bool BepdfApplication::QuitRequested()
 	fStderrTracer = NULL;
 
 	bool shortcut;
-	if (B_OK == CurrentMessage()->FindBool("shortcut", &shortcut) && shortcut) {
+	if (CurrentMessage() == B_OK->FindBool("shortcut", &shortcut) && shortcut) {
 		Notify(NOTIFY_QUIT_MSG);
 	}
 	return BApplication::QuitRequested();
@@ -564,10 +564,10 @@ void BepdfApplication::RefsReceived(BMessage* msg)
 	int32 pageNum = 0;
 	entry_ref ref;
 
-	if (B_OK == msg->FindString("ownerPassword", &ownerPassword)) {
+	if (msg->FindString("ownerPassword", &ownerPassword) == B_OK) {
 		owner = ownerPassword.String();
 	}
-	if (B_OK == msg->FindString("userPassword", &userPassword)) {
+	if (msg->FindString("userPassword", &userPassword) == B_OK) {
 		user = userPassword.String();
 	}
 	result = msg->FindInt32(PAGE_NUM_MSG_KEY, &pageNum);

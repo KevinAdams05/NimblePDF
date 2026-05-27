@@ -24,9 +24,9 @@
 #define PAGE_LABELS_H
 
 // BeOS
-#include <be/support/String.h>
-#include <be/support/List.h>
-#include <be/interface/ListView.h>
+#include <String.h>
+#include <List.h>
+#include <ListView.h>
 
 #include "TreeParser.h"
 

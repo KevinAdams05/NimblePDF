@@ -23,9 +23,9 @@
 #ifndef _PDFVIEW_H_
 #define _PDFVIEW_H_
 
-#include <be/interface/Bitmap.h>
-#include <be/interface/Menu.h>
-#include <be/interface/View.h>
+#include <Bitmap.h>
+#include <Menu.h>
+#include <View.h>
 
 #include "Page.h"
 #include "XRef.h"

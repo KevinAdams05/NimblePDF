@@ -23,11 +23,11 @@
 #ifndef _BE_PDFAPPLICATION_
 #define _BE_PDFAPPLICATION_
 
-#include <be/app/Application.h>
-#include <be/app/Cursor.h>
-#include <be/storage/FilePanel.h>
-#include <be/storage/Path.h>
-#include <be/storage/Node.h>
+#include <Application.h>
+#include <Cursor.h>
+#include <FilePanel.h>
+#include <Path.h>
+#include <Node.h>
 #include "Settings.h"
 #include "Annotation.h"
 

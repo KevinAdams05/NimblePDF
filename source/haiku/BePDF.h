@@ -23,8 +23,8 @@
 #ifndef _BEPDF_H
 #define _BEPDF_H
 
-#include <be/support/Locker.h>
-#include <be/interface/Screen.h>
+#include <Locker.h>
+#include <Screen.h>
 
 // global lock
 extern BLocker* gPdfLock;

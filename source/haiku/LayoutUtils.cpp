@@ -74,7 +74,7 @@ void MakeEmpty(BOutlineListView* list)
 filter_result EscapeMessageFilter::Filter(BMessage* msg, BHandler** target)
 {
 	int32 key;
-	if (B_OK == msg->FindInt32("key", &key) && key == 1) {
+	if (msg->FindInt32("key", &key) == B_OK && key == 1) {
 		fWindow->PostMessage(fWhat);
 		return B_SKIP_MESSAGE;
 	}
@@ -144,7 +144,7 @@ void Bitset::Clear()
 bool IsOn(BMessage* msg)
 {
 	void* ptr;
-	if (B_OK == msg->FindPointer("source", &ptr)) {
+	if (msg->FindPointer("source", &ptr) == B_OK) {
 		return ((BControl*)ptr)->Value() == B_CONTROL_ON;
 	}
 	return false;

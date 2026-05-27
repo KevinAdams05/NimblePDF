@@ -23,9 +23,9 @@
 #ifndef _BITMAP_POOL_H
 #define _BITMAP_POOL_H
 
-#include <be/support/List.h>
-#include <be/interface/GraphicsDefs.h>
-#include <be/interface/Bitmap.h>
+#include <List.h>
+#include <GraphicsDefs.h>
+#include <Bitmap.h>
 
 /*
    This is a workaround for a BeOS bug, to avoid crashes that are cause 

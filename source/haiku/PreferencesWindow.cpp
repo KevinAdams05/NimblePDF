@@ -379,7 +379,7 @@ bool PreferencesWindow::DecodeMessage(BMessage* msg, int16& kind, int16& which, 
 {
 	// assert msg->what == PREFERENCES_CHANGED_NOTIFY
 	return (
-	    (B_OK == msg->FindInt16("kind", &kind)) && (B_OK == msg->FindInt16("which", &which)) && (B_OK == msg->FindInt16("index", &index)));
+	    (msg->FindInt16("kind", &kind) == B_OK) && (msg->FindInt16("which", &which) == B_OK) && (msg->FindInt16("index", &index) == B_OK));
 }
 
 void PreferencesWindow::Notify(uint32 what)
@@ -441,7 +441,7 @@ void PreferencesWindow::MessageReceived(BMessage* msg)
 		break;
 	case WORKSPACE_CHANGED: {
 		int32 index;
-		if (B_OK == msg->FindInt32("index", &index)) {
+		if (msg->FindInt32("index", &index) == B_OK) {
 			if (index == 1)
 				index = 0;
 			bool enabled = index != 0;

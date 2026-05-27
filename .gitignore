@@ -40,6 +40,9 @@ docs/latex/
 scratch/
 TODO.local.md
 
+# Kevin's private planning notes (migration plans, design scratch, etc.)
+kevinnotes/
+
 # Pre-commit / hooks
 .git/hooks/
 

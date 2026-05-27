@@ -20,7 +20,7 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#include <be/support/UTF8.h>
+#include <UTF8.h>
 
 #include "TextConversion.h"
 

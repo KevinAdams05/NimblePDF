@@ -21,7 +21,7 @@
  */
 
 // BeOS
-#include <be/interface/PrintJob.h>
+#include <PrintJob.h>
 // xpdf
 #include <Object.h>
 #include <Gfx.h>

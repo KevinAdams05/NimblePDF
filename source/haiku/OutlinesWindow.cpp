@@ -403,7 +403,7 @@ void OutlinesView::InitUserBookmarks(bool initOnly)
 	} else {
 		BString label;
 		int32 pageNum, i = 0;
-		while (B_OK == fBookmarks->FindString("l", i, &label) && B_OK == fBookmarks->FindInt32("p", i, &pageNum)) {
+		while (fBookmarks->FindString("l", i, &label) == B_OK && fBookmarks->FindInt32("p", i, &pageNum) == B_OK) {
 			fBookmark.Set(pageNum, true);
 			if (!initOnly) {
 				OutlineListItem* item = new OutlineListItem(label.String(), 1, true, GetDefaultStyle());

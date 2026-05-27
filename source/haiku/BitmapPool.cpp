@@ -21,7 +21,7 @@
  */
 
 #include "BitmapPool.h"
-#include <be/interface/Bitmap.h>
+#include <Bitmap.h>
 
 BitmapPool* BitmapPool::fInstance = NULL;
 

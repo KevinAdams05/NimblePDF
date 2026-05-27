@@ -25,29 +25,29 @@
 // BeOS
 #include <locale/Catalog.h>
 
-#include <be/app/Application.h>
-#include <be/app/Clipboard.h>
-#include <be/app/Looper.h>
-#include <be/app/MessageQueue.h>
-#include <be/app/Roster.h>
+#include <Application.h>
+#include <Clipboard.h>
+#include <Looper.h>
+#include <MessageQueue.h>
+#include <Roster.h>
 
-#include <be/interface/ScrollBar.h>
-#include <be/interface/PrintJob.h>
-#include <be/interface/Alert.h>
-#include <be/interface/StringView.h>
-#include <be/interface/PopUpMenu.h>
-#include <be/interface/MenuItem.h>
+#include <ScrollBar.h>
+#include <PrintJob.h>
+#include <Alert.h>
+#include <StringView.h>
+#include <PopUpMenu.h>
+#include <MenuItem.h>
 
-#include <be/storage/Path.h>
-#include <be/storage/Entry.h>
-#include <be/storage/Directory.h>
-#include <be/storage/File.h>
-#include <be/storage/NodeInfo.h>
-#include <be/translation/BitmapStream.h>
-#include <be/translation/TranslationUtils.h>
-#include <be/translation/TranslatorRoster.h>
-#include <be/support/String.h>
-#include <be/support/Debug.h>
+#include <Path.h>
+#include <Entry.h>
+#include <Directory.h>
+#include <File.h>
+#include <NodeInfo.h>
+#include <BitmapStream.h>
+#include <TranslationUtils.h>
+#include <TranslatorRoster.h>
+#include <String.h>
+#include <Debug.h>
 
 // xpdf
 #include <TextOutputDev.h>
@@ -207,7 +207,7 @@ void PDFView::EndDoc()
 void PDFView::UpdatePanelDirectory(BPath* path)
 {
 	BPath directory;
-	if (strcmp(path->Path(), gApp->DefaultPDF()->Path()) != 0 && B_OK == path->GetParent(&directory)) {
+	if (strcmp(path->Path(), gApp->DefaultPDF()->Path()) != 0 && path->GetParent(&directory) == B_OK) {
 		// don't set path to default pdf file
 		gApp->GetSettings()->SetPanelDirectory(directory.Path());
 	}
@@ -375,7 +375,7 @@ void PDFView::MessageReceived(BMessage* msg)
 	switch (msg->what) {
 	case B_SIMPLE_DATA: {
 		entry_ref ref;
-		if (B_OK == msg->FindRef("refs", 0, &ref)) {
+		if (msg->FindRef("refs", 0, &ref) == B_OK) {
 			be_app->RefsReceived(msg);
 			return;
 		}
@@ -387,12 +387,12 @@ void PDFView::MessageReceived(BMessage* msg)
 		OnMouseWheelChanged(msg);
 		break;
 	case COPY_LINK_MSG:
-		if (B_OK == msg->FindString("link", &string)) {
+		if (msg->FindString("link", &string) == B_OK) {
 			CopyText(&string);
 		}
 		break;
 	case OPEN_FILE_MSG:
-		if (B_OK == msg->FindString("file", &string)) {
+		if (msg->FindString("file", &string) == B_OK) {
 			PDFWindow::Launch(string.String());
 		}
 		break;
@@ -2317,7 +2317,7 @@ void PDFView::SendDragMessage(uint32 protocol)
 		drag.AddString("be:filetypes", "text/plain");
 		drag.AddString("be:type_descriptions", "Text");
 
-		if ((B_OK == roster->GetTranslators(&stream, NULL, &outInfo, &outNumInfo)) && (outNumInfo >= 1)) {
+		if ((roster->GetTranslators(&stream, NULL, &outInfo, &outNumInfo) == B_OK) && (outNumInfo >= 1)) {
 			for (int32 i = 0; i < outNumInfo; i++) {
 				const translation_format* fmts;
 				int32 num_fmts;
@@ -2360,7 +2360,7 @@ void PDFView::SendDataMessage(BMessage* reply)
 		// reply->SendReply(&data);
 		return;
 	}
-	bool saveToFile = (B_OK == reply->FindRef("directory", &dir)) && (B_OK == reply->FindString("name", &name));
+	bool saveToFile = (reply->FindRef("directory", &dir) == B_OK) && (reply->FindString("name", &name) == B_OK);
 
 	if (filetype == "text/plain") {
 		BString* str = GetSelectedText();
@@ -2415,7 +2415,7 @@ void PDFView::SendDataMessage(BMessage* reply)
 	BTranslatorRoster* roster = BTranslatorRoster::Default();
 	translator_info* outInfo;
 	int32 outNumInfo;
-	if ((B_OK == roster->GetTranslators(&stream, NULL, &outInfo, &outNumInfo)) && (outNumInfo >= 1)) {
+	if ((roster->GetTranslators(&stream, NULL, &outInfo, &outNumInfo) == B_OK) && (outNumInfo >= 1)) {
 		for (int32 i = 0; i < outNumInfo; i++) {
 			const translation_format* fmts;
 			int32 num_fmts;

@@ -81,7 +81,7 @@ BBitmap* LoadBitmap(const char* name, uint32 type_code)
 			size_t length;
 			const void* bits = res->LoadResource(type_code, name, &length);
 			BMessage m;
-			if (bits && B_OK == m.Unflatten((char*)bits)) {
+			if (bits && m.Unflatten((char*)bits) == B_OK) {
 				BBitmap* bitmap = (BBitmap*)BBitmap::Instantiate(&m);
 				return bitmap;
 			}

@@ -19,7 +19,7 @@
 #ifndef _THREAD_H
 #define _THREAD_H
 
-#include <be/kernel/scheduler.h>
+#include <scheduler.h>
 
 class Thread {
 public:

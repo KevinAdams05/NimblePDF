@@ -24,7 +24,7 @@
 #define TEXT_CONVERSION_H
 
 #include <String.h>
-#include <be/support/UTF8.h>
+#include <UTF8.h>
 #include <GString.h>
 
 #include "CharTypes.h" // from xpdf

@@ -27,11 +27,11 @@
 #include <Gfx.h>
 #include <PSOutputDev.h>
 
-#include <be/support/String.h>
-#include <be/support/StopWatch.h>
-#include <be/storage/Directory.h>
-#include <be/storage/Entry.h>
-#include <be/storage/Path.h>
+#include <String.h>
+#include <StopWatch.h>
+#include <Directory.h>
+#include <Entry.h>
+#include <Path.h>
 #include <Debug.h>
 
 #include "BepdfApplication.h" // for images only

@@ -25,13 +25,13 @@
 #define ATTACHMENT_VIEW_H
 
 // BeOS
-#include <be/app/Looper.h>
-#include <be/interface/Font.h>
-#include <be/interface/ListItem.h>
-#include <be/interface/PictureButton.h>
-#include <be/interface/View.h>
-#include <be/support/SupportDefs.h>
-#include <be/support/List.h>
+#include <Looper.h>
+#include <Font.h>
+#include <ListItem.h>
+#include <PictureButton.h>
+#include <View.h>
+#include <SupportDefs.h>
+#include <List.h>
 
 #include <private/interface/ColumnListView.h>
 #include <private/interface/ColumnTypes.h>

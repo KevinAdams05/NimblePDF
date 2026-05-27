@@ -23,9 +23,9 @@
 #ifndef HISTORY_H
 #define HISTORY_H
 
-#include <be/support/List.h>
-#include <be/support/String.h>
-#include <be/storage/Entry.h>
+#include <List.h>
+#include <String.h>
+#include <Entry.h>
 
 class HistoryPosition;
 class HistoryFile;

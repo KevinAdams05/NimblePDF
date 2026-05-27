@@ -24,11 +24,11 @@
 #define _PDF_WINDOW_
 
 
-#include <be/interface/ListView.h>
-#include <be/interface/PictureButton.h>
-#include <be/interface/TextControl.h>
-#include <be/storage/Entry.h>
-#include <be/storage/Path.h>
+#include <ListView.h>
+#include <PictureButton.h>
+#include <TextControl.h>
+#include <Entry.h>
+#include <Path.h>
 #include <private/shared/ToolBar.h>
 #include <SplitView.h>
 #include <CardView.h>

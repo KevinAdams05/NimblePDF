@@ -68,17 +68,17 @@ void StatusWindow::MessageReceived(BMessage* msg)
 	BString s;
 	switch (msg->what) {
 	case TOTAL_NOTIFY:
-		if (B_OK == msg->FindInt32("total", &p)) {
+		if (msg->FindInt32("total", &p) == B_OK) {
 			fTotal = p;
 		}
 		break;
 	case CURRENT_NOTIFY:
-		if (B_OK == msg->FindInt32("current", &p)) {
+		if (msg->FindInt32("current", &p) == B_OK) {
 			fStatus->SetTo(p / (float)fTotal);
 		}
 		break;
 	case TEXT_NOTIFY:
-		if (B_OK == msg->FindString("text", &s)) {
+		if (msg->FindString("text", &s) == B_OK) {
 			fText->SetText(s.String());
 		}
 		break;

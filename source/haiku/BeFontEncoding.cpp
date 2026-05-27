@@ -21,7 +21,7 @@
  */
 
 #include <SupportDefs.h>
-#include <be/support/UTF8.h>
+#include <UTF8.h>
 #include <stdio.h>
 #include <string.h>
 #include "BeFontEncoding.h"

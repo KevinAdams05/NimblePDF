@@ -142,7 +142,7 @@ const char* PageLabel::GetLabel(int num, int max, BString& label)
 }
 
 /* PageLabels */
-#include <be/interface/ListItem.h>
+#include <ListItem.h>
 
 PageLabels::PageLabels(int numberOfPages)
     : numberOfPages(numberOfPages),

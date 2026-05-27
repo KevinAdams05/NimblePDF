@@ -35,7 +35,7 @@ GlobalSettings::GlobalSettings()
 	STRING_SETTINGS(DEFINE_STRING_VARIABLE)
 
 	BPath path;
-	if (B_OK == find_directory(B_DESKTOP_DIRECTORY, &path)) {
+	if (find_directory(B_DESKTOP_DIRECTORY, &path) == B_OK) {
 		fDefaultPanelDirectory = path.Path();
 	} else {
 		fDefaultPanelDirectory = "/boot/home/Desktop";
@@ -288,7 +288,7 @@ bool FileAttributes::Write(entry_ref* ref, GlobalSettings* s)
 		} else {
 			ssize_t size = bookmarks.FlattenedSize();
 			char* buffer = new char[size];
-			if (buffer && B_OK == bookmarks.Flatten(buffer, size)) {
+			if (buffer && bookmarks.Flatten(buffer, size) == B_OK) {
 				node.WriteAttr("bepdf:bookmarks", B_MESSAGE_TYPE, 0, buffer, size);
 			}
 			delete[] buffer;
