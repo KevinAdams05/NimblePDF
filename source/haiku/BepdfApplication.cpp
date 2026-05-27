@@ -527,7 +527,7 @@ bool BepdfApplication::QuitRequested()
 	fStderrTracer = NULL;
 
 	bool shortcut;
-	if (CurrentMessage() == B_OK->FindBool("shortcut", &shortcut) && shortcut) {
+	if (CurrentMessage()->FindBool("shortcut", &shortcut) == B_OK && shortcut) {
 		Notify(NOTIFY_QUIT_MSG);
 	}
 	return BApplication::QuitRequested();

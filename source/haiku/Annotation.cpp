@@ -1447,7 +1447,6 @@ Annotations::Annotations(Object* annots, BePDFAcroForm* acroForm)
 				Object subType;
 				if (annot.dictLookup("Subtype", &subType) && subType.isName()) {
 					Annotation* a = NULL;
-					LOG(s);
 					if (subType.isName("Text")) {
 						a = new TextAnnot(annot.getDict());
 					} else if (subType.isName("FreeText")) {

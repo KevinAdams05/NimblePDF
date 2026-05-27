@@ -1374,7 +1374,6 @@ bool PDFView::HandleLink(BPoint point)
 	GString* namedDest = NULL;
 	GString* fileName;
 	GString* actionName;
-	char* s;
 	BString pdfFile;
 
 	action = OnLink(point);
@@ -1430,7 +1429,6 @@ bool PDFView::HandleLink(BPoint point)
 			// Launch action
 		case actionLaunch: {
 			fileName = ((LinkLaunch*)action)->getFileName();
-			s = fileName->getCString();
 			fileName = fileName->copy();
 			if (((LinkLaunch*)action)->getParams()) {
 				fileName->append(' ');

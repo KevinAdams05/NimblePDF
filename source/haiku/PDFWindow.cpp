@@ -197,7 +197,7 @@ void PDFWindow::SetTotalPageNumber(int pages)
 	char* label = new char[len];
 	snprintf(label, len, fmt, pages);
 	fTotalPageNumberItem->SetText(label);
-	delete label;
+	delete[] label;
 }
 
 void PDFWindow::InitAfterOpen()

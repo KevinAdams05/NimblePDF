@@ -24,7 +24,7 @@
 #define TEXT_CONVERSION_H
 
 #include <String.h>
-#include <UTF8.h>
+#include <support/UTF8.h>  // bypass xpdf UTF8.h shadowing; revert after poppler migration
 #include <GString.h>
 
 #include "CharTypes.h" // from xpdf

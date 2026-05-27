@@ -21,7 +21,10 @@
  */
 
 #include <SupportDefs.h>
-#include <UTF8.h>
+// xpdf ships its own UTF8.h that shadows Haiku's via -isystem ../xpdf/xpdf;
+// use the explicit subdir path to bypass the collision. Revert to plain
+// <UTF8.h> once xpdf is removed in the poppler migration.
+#include <support/UTF8.h>
 #include <stdio.h>
 #include <string.h>
 #include "BeFontEncoding.h"
