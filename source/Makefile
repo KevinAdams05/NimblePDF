@@ -37,6 +37,7 @@ SRCS = haiku/AnnotAppearance.cpp \
 	haiku/AttachmentView.cpp \
 	haiku/BeFontEncoding.cpp \
 	haiku/BePDF.cpp \
+	haiku/BeSplashOutputDev.cpp \
 	haiku/BepdfApplication.cpp \
 	haiku/BitmapPool.cpp \
 	haiku/CachedPage.cpp \
