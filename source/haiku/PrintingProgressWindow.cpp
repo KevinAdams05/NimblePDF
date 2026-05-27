@@ -33,19 +33,22 @@
 #undef B_TRANSLATION_CONTEXT
 #define B_TRANSLATION_CONTEXT "PrintingProgressWindow"
 
-PrintingProgressWindow::PrintingProgressWindow(const char *text, BRect aRect, int32 pages)
-	: BWindow(aRect, B_TRANSLATE("BePDF printing"),
-		B_TITLED_WINDOW_LOOK,
-		B_MODAL_APP_WINDOW_FEEL,
-		B_NOT_RESIZABLE|B_NOT_ZOOMABLE|B_NOT_CLOSABLE|B_AUTO_UPDATE_SIZE_LIMITS) {
-	mPages = pages; mPrintedPages = 0;
+PrintingProgressWindow::PrintingProgressWindow(const char* text, BRect aRect, int32 pages)
+    : BWindow(aRect,
+          B_TRANSLATE("BePDF printing"),
+          B_TITLED_WINDOW_LOOK,
+          B_MODAL_APP_WINDOW_FEEL,
+          B_NOT_RESIZABLE | B_NOT_ZOOMABLE | B_NOT_CLOSABLE | B_AUTO_UPDATE_SIZE_LIMITS)
+{
+	mPages = pages;
+	mPrintedPages = 0;
 	mState = OK;
 
 	BString s(B_TRANSLATE("BePDF printing document: "));
 	s << text;
 	// center window
 
-	BStringView *stringView = new BStringView("stringView", s.String());
+	BStringView* stringView = new BStringView("stringView", s.String());
 
 	mPageString = new BStringView("mPageString", B_TRANSLATE("Page:"));
 
@@ -56,16 +59,16 @@ PrintingProgressWindow::PrintingProgressWindow(const char *text, BRect aRect, in
 	mAbort = new BButton("mAbort", B_TRANSLATE("Abort"), new BMessage('ABRT'));
 
 	BLayoutBuilder::Group<>(this, B_HORIZONTAL)
-		.SetInsets(B_USE_WINDOW_INSETS)
-		.AddGroup(B_VERTICAL)
-			.Add(stringView)
-			.Add(mPageString)
-			.Add(mProgress)
-		.End()
-		.AddGroup(B_VERTICAL)
-			.Add(mStop)
-			.Add(mAbort)
-		.End();
+	    .SetInsets(B_USE_WINDOW_INSETS)
+	    .AddGroup(B_VERTICAL)
+	    .Add(stringView)
+	    .Add(mPageString)
+	    .Add(mProgress)
+	    .End()
+	    .AddGroup(B_VERTICAL)
+	    .Add(mStop)
+	    .Add(mAbort)
+	    .End();
 
 	ResizeToPreferred();
 	CenterOnScreen();
@@ -74,33 +77,39 @@ PrintingProgressWindow::PrintingProgressWindow(const char *text, BRect aRect, in
 	Show();
 }
 
-void PrintingProgressWindow::SetPage(int32 page) {
+void PrintingProgressWindow::SetPage(int32 page)
+{
 	char buffer[256];
 	sprintf(buffer, B_TRANSLATE("Page: %d"), page);
 	Lock();
 	mPageString->SetText(buffer);
-	mPrintedPages ++;
+	mPrintedPages++;
 	mProgress->SetTo(mPrintedPages / (float)mPages);
 	Unlock();
 }
 
-bool PrintingProgressWindow::Aborted() {
+bool PrintingProgressWindow::Aborted()
+{
 	return mState == ABORTED;
 }
 
-bool PrintingProgressWindow::Stopped() {
+bool PrintingProgressWindow::Stopped()
+{
 	return mState == STOPPED;
 }
 
-void PrintingProgressWindow::MessageReceived(BMessage *msg) {
+void PrintingProgressWindow::MessageReceived(BMessage* msg)
+{
 	switch (msg->what) {
 	case 'ABRT':
 		mState = ABORTED;
-		mStop->SetEnabled(false); mAbort->SetEnabled(false);
+		mStop->SetEnabled(false);
+		mAbort->SetEnabled(false);
 		break;
 	case 'STOP':
 		mState = STOPPED;
-		mStop->SetEnabled(false); mAbort->SetEnabled(false);
+		mStop->SetEnabled(false);
+		mAbort->SetEnabled(false);
 		break;
 	default:
 		BWindow::MessageReceived(msg);
@@ -109,11 +118,11 @@ void PrintingProgressWindow::MessageReceived(BMessage *msg) {
 
 // PrintingHiddenWindow
 PrintingHiddenWindow::PrintingHiddenWindow(BRect aRect)
-	: BWindow(aRect, "BePDF Printing Hidden Window",
-		B_FLOATING_WINDOW_LOOK,
-		B_NORMAL_WINDOW_FEEL,
-		B_NOT_RESIZABLE|B_NOT_ZOOMABLE|B_NOT_CLOSABLE) {
+    : BWindow(aRect,
+          "BePDF Printing Hidden Window",
+          B_FLOATING_WINDOW_LOOK,
+          B_NORMAL_WINDOW_FEEL,
+          B_NOT_RESIZABLE | B_NOT_ZOOMABLE | B_NOT_CLOSABLE)
+{
 	Show();
 }
-
-

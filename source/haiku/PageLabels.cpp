@@ -24,27 +24,31 @@
 #include "LayoutUtils.h"
 #include "TextConversion.h"
 
-const char *PageLabel::d[3][10] = {
-	{ "", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX" },
-	{ "", "X", "XX", "XXX", "XL", "L", "LX", "LXX", "LXXX", "XC" },
-	{ "", "C", "CC", "CCC", "CD", "D", "DC", "DCC", "DCCC", "CM" }
-};
+const char* PageLabel::d[3][10] = {{"", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX"},
+    {"", "X", "XX", "XXX", "XL", "L", "LX", "LXX", "LXXX", "XC"},
+    {"", "C", "CC", "CCC", "CD", "D", "DC", "DCC", "DCCC", "CM"}};
 
-PageLabel::PageLabel(int page, Dict *leaf) {
+PageLabel::PageLabel(int page, Dict* leaf)
+{
 	Object obj;
 	this->page = page;
-	// Style 
+	// Style
 	if (leaf->lookup("S", &obj) && obj.isName()) {
 		switch (*obj.getName()) {
-		case 'D': style = DECIMAL;
+		case 'D':
+			style = DECIMAL;
 			break;
-		case 'R': style = UPPER_CASE_ROMAN;
+		case 'R':
+			style = UPPER_CASE_ROMAN;
 			break;
-		case 'r': style = LOWER_CASE_ROMAN;
+		case 'r':
+			style = LOWER_CASE_ROMAN;
 			break;
-		case 'A': style = UPPER_CASE_ALPHA;
+		case 'A':
+			style = UPPER_CASE_ALPHA;
 			break;
-		case 'a': style = LOWER_CASE_ALPHA;
+		case 'a':
+			style = LOWER_CASE_ALPHA;
 			break;
 		default:
 			style = DECIMAL;
@@ -53,15 +57,15 @@ PageLabel::PageLabel(int page, Dict *leaf) {
 		style = DECIMAL;
 	}
 	obj.free();
-	
+
 	// Prefix
 	if (leaf->lookup("P", &obj) && obj.isString()) {
-		BString *s = TextToUtf8(obj.getString()->getCString(), obj.getString()->getLength());
+		BString* s = TextToUtf8(obj.getString()->getCString(), obj.getString()->getLength());
 		prefix = *s;
 		delete s;
 	}
 	obj.free();
-	
+
 	// StartAt
 	if (leaf->lookup("St", &obj) && obj.isInt()) {
 		start = obj.getInt();
@@ -72,23 +76,26 @@ PageLabel::PageLabel(int page, Dict *leaf) {
 		start = 1;
 	}
 	obj.free();
-//	fprintf(stderr, "%d /P %s /St %d\n", page, prefix.String(), start);
+	//	fprintf(stderr, "%d /P %s /St %d\n", page, prefix.String(), start);
 }
 
-BString &PageLabel::ToAlpha(BString &str, int num) {
+BString& PageLabel::ToAlpha(BString& str, int num)
+{
 	// num >= 1
 	num--;
-	int digits = (num+26) / 26;
-	
-	char *s = str.LockBuffer(digits+1);
-	char c  = 'A' + (num % 26);
-	for (int i = digits; i; i--, s++) *s = c;
+	int digits = (num + 26) / 26;
+
+	char* s = str.LockBuffer(digits + 1);
+	char c = 'A' + (num % 26);
+	for (int i = digits; i; i--, s++)
+		*s = c;
 	*s = '\0';
-	str.UnlockBuffer(digits+1);
+	str.UnlockBuffer(digits + 1);
 	return str;
 }
-	
-BString &PageLabel::ToRoman(BString &s, int n) {
+
+BString& PageLabel::ToRoman(BString& s, int n)
+{
 	int d0, d1, d2;
 	d0 = n % 10;
 	n /= 10;
@@ -100,24 +107,32 @@ BString &PageLabel::ToRoman(BString &s, int n) {
 		s << "M";
 	}
 	s << d[2][d2] << d[1][d1] << d[0][d0];
-	return s; 
+	return s;
 }
 
-const char *PageLabel::GetLabel(int num, int max, BString &label) {
+const char* PageLabel::GetLabel(int num, int max, BString& label)
+{
 	if ((page <= num) && (num <= max)) {
 		BString s;
 		label = prefix;
 		num = num - page + start;
 		switch (style) {
-		case DECIMAL: label << num;
+		case DECIMAL:
+			label << num;
 			break;
-		case UPPER_CASE_ROMAN: label << ToRoman(s, num);
+		case UPPER_CASE_ROMAN:
+			label << ToRoman(s, num);
 			break;
-		case LOWER_CASE_ROMAN: ToRoman(s, num).ToLower(); label << s;
+		case LOWER_CASE_ROMAN:
+			ToRoman(s, num).ToLower();
+			label << s;
 			break;
-		case UPPER_CASE_ALPHA: label << ToAlpha(s, num);
+		case UPPER_CASE_ALPHA:
+			label << ToAlpha(s, num);
 			break;
-		case LOWER_CASE_ALPHA: ToAlpha(s, num).ToLower(); label << s;
+		case LOWER_CASE_ALPHA:
+			ToAlpha(s, num).ToLower();
+			label << s;
 			break;
 		}
 		return label.String();
@@ -130,37 +145,41 @@ const char *PageLabel::GetLabel(int num, int max, BString &label) {
 #include <be/interface/ListItem.h>
 
 PageLabels::PageLabels(int numberOfPages)
-	: numberOfPages(numberOfPages)
-	, old(NULL) {	
-}
+    : numberOfPages(numberOfPages),
+      old(NULL)
+{}
 
-PageLabels::~PageLabels() {
-	delete old; 
+PageLabels::~PageLabels()
+{
+	delete old;
 	old = NULL;
 
-	BListItem **items = (BListItem**)list.Items();
-	for (int i = list.CountItems()-1; i >= 0; i--) {
+	BListItem** items = (BListItem**)list.Items();
+	for (int i = list.CountItems() - 1; i >= 0; i--) {
 		delete items[i];
 	}
 	list.MakeEmpty();
 }
 
-bool PageLabels::Parse(Object* pageLabels) {
+bool PageLabels::Parse(Object* pageLabels)
+{
 	if (NumberTreeParser::Parse(pageLabels)) {
 		return NewPageLabel(NULL, numberOfPages);
 	}
 	return false;
 }
 
-bool PageLabels::DoNumber(int page, Object* value) {
+bool PageLabels::DoNumber(int page, Object* value)
+{
 	if (!value->isDict()) {
 		return false;
 	}
-	PageLabel *label = new PageLabel(page, value->getDict());
-	return NewPageLabel(label, page-1);
+	PageLabel* label = new PageLabel(page, value->getDict());
+	return NewPageLabel(label, page - 1);
 }
 
-bool PageLabels::NewPageLabel(PageLabel *label, int max) {
+bool PageLabels::NewPageLabel(PageLabel* label, int max)
+{
 	if (old) {
 		BString s;
 		for (int i = old->GetPage(); i <= max; i++) {
@@ -172,7 +191,8 @@ bool PageLabels::NewPageLabel(PageLabel *label, int max) {
 	return true;
 }
 
-void PageLabels::Replace(BListView *view) {
+void PageLabels::Replace(BListView* view)
+{
 	MakeEmpty(view);
 	view->AddList(&list);
 	list.MakeEmpty();

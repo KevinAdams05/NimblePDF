@@ -21,19 +21,23 @@
  */
 
 #include "SaveThread.h"
-	
-XRef* SaveThread::GetXRef() {
+
+XRef* SaveThread::GetXRef()
+{
 	return mXRef;
 }
 
-void SaveThread::SetTotal(int32 total) {
+void SaveThread::SetTotal(int32 total)
+{
 	StatusWindow::SetTotal(mShowStatusWindow.GetMessenger(), total);
 }
 
-void SaveThread::SetCurrent(int32 current) {
+void SaveThread::SetCurrent(int32 current)
+{
 	StatusWindow::SetCurrent(mShowStatusWindow.GetMessenger(), current);
 }
 
-void SaveThread::SetText(const char* text) {
+void SaveThread::SetText(const char* text)
+{
 	StatusWindow::SetText(mShowStatusWindow.GetMessenger(), text);
 }

@@ -39,16 +39,15 @@
 ///////////////////////////////////////////////////////////
 
 
-
 class FindThread : public Thread {
 public:
-	FindThread(const char *s, bool ignoreCase, bool backward, PDFView* mainView, FindTextWindow *find, bool* stopThread);
+	FindThread(const char* s, bool ignoreCase, bool backward, PDFView* mainView, FindTextWindow* find, bool* stopThread);
 
 	int32 Run();
 
 private:
 	bool CanContinue() { return !(*mStopThread); }
-	BWindow* Window()  { return mMainView->Window(); }
+	BWindow* Window() { return mMainView->Window(); }
 	CachedPage* GetPage() { return mMainView->GetPage(); }
 	PDFDoc* GetPDFDoc() { return mMainView->GetPDFDoc(); }
 	int CurrentPage() { return mMainView->Page(); }
@@ -56,15 +55,15 @@ private:
 	void SendPageMsg(int32 page);
 
 	PDFView* mMainView;
-	FindTextWindow *mFindWindow;
+	FindTextWindow* mFindWindow;
 	BString mFindText;
 	bool mCaseSensitive;
 	bool mBackward;
 	bool* mStopThread;
 };
 
-FindThread::FindThread(const char *s, bool ignoreCase, bool backward, PDFView* mainView, FindTextWindow *find, bool* stopThread)
-	: Thread("find_thread", B_LOW_PRIORITY)
+FindThread::FindThread(const char* s, bool ignoreCase, bool backward, PDFView* mainView, FindTextWindow* find, bool* stopThread)
+    : Thread("find_thread", B_LOW_PRIORITY)
 {
 	mFindText = s;
 	mCaseSensitive = !ignoreCase;
@@ -74,15 +73,16 @@ FindThread::FindThread(const char *s, bool ignoreCase, bool backward, PDFView* m
 	mStopThread = stopThread;
 }
 
- void FindThread::SendPageMsg(int32 page) {
+void FindThread::SendPageMsg(int32 page)
+{
 	BMessage msg(FindTextWindow::FIND_SET_PAGE_MSG);
 	msg.AddInt32("page", page);
 	mFindWindow->PostMessage(&msg);
 }
 
-int32
-FindThread::Run() {
-	TextOutputDev *textOut = NULL;
+int32 FindThread::Run()
+{
+	TextOutputDev* textOut = NULL;
 	double xMin, yMin, xMax, yMax;
 	int pg;
 	GBool startAtTop, startAtLast, stopAtLast;
@@ -99,158 +99,162 @@ FindThread::Run() {
 	mMainView->GetSelection(selectULX, selectLRX, selectULY, selectLRY);
 
 	int32 len;
-	Unicode *u = Utf8ToUnicode(mFindText.String(), &len);
+	Unicode* u = Utf8ToUnicode(mFindText.String(), &len);
 	if (u == NULL) {
 		goto done;
 	}
 
-// Begin Code copied from PDFCore::FindU()
+	// Begin Code copied from PDFCore::FindU()
 
-  // search current page starting at previous result, current
-  // selection, or top/bottom of page
-  startAtTop = startAtLast = gFalse;
-  xMin = yMin = xMax = yMax = 0;
-  pg = CurrentPage();
-  if (next) {
-    startAtLast = gTrue;
-  } else if (selectULX != selectLRX && selectULY != selectLRY) {
-    if (backward) {
-      xMin = selectULX - 1;
-      yMin = selectULY - 1;
-    } else {
-      xMin = selectULX + 1;
-      yMin = selectULY + 1;
-    }
-  } else {
-    startAtTop = gTrue;
-  }
-  if (GetPage()->FindText(u, len, startAtTop, gTrue, startAtLast, gFalse,
-			   caseSensitive, backward,
-			   &xMin, &yMin, &xMax, &yMax)) {
-    goto found;
-  }
+	// search current page starting at previous result, current
+	// selection, or top/bottom of page
+	startAtTop = startAtLast = gFalse;
+	xMin = yMin = xMax = yMax = 0;
+	pg = CurrentPage();
+	if (next) {
+		startAtLast = gTrue;
+	} else if (selectULX != selectLRX && selectULY != selectLRY) {
+		if (backward) {
+			xMin = selectULX - 1;
+			yMin = selectULY - 1;
+		} else {
+			xMin = selectULX + 1;
+			yMin = selectULY + 1;
+		}
+	} else {
+		startAtTop = gTrue;
+	}
+	if (GetPage()->FindText(u, len, startAtTop, gTrue, startAtLast, gFalse, caseSensitive, backward, &xMin, &yMin, &xMax, &yMax)) {
+		goto found;
+	}
 
-  if (!onePageOnly) {
+	if (!onePageOnly) {
+		// search following/previous pages
+		TextOutputControl control;
+		control.mode = textOutPhysLayout;
+		textOut = new TextOutputDev(NULL, &control, gFalse);
+		if (!textOut->isOk()) {
+			delete textOut;
+			goto notFound;
+		}
+		for (pg = backward ? pg - 1 : pg + 1; backward ? pg >= 1 : pg <= doc->getNumPages(); pg += backward ? -1 : 1) {
+			// Begin BePDF
+			if (!CanContinue()) {
+				delete textOut;
+				goto notFound;
+			}
+			// End BePDF
+			SendPageMsg(pg);
+			doc->displayPage(textOut, pg, 72, 72, 0, gFalse, gTrue, gFalse);
+			if (textOut->findText(u,
+			        len,
+			        gTrue,
+			        gTrue,
+			        gFalse,
+			        gFalse,
+			        caseSensitive,
+			        backward,
+			        false, // TODO/FIXME: wordwise
+			        &xMin,
+			        &yMin,
+			        &xMax,
+			        &yMax)) {
+				delete textOut;
+				goto foundPage;
+			}
+		}
 
-    // search following/previous pages
-    TextOutputControl control;
-    control.mode = textOutPhysLayout;
-    textOut = new TextOutputDev(NULL, &control, gFalse);
-    if (!textOut->isOk()) {
-      delete textOut;
-      goto notFound;
-    }
-    for (pg = backward ? pg - 1 : pg + 1;
-	 backward ? pg >= 1 : pg <= doc->getNumPages();
-	 pg += backward ? -1 : 1) {
-	  // Begin BePDF
-	  if (!CanContinue()) {
-	    delete textOut;
-	    goto notFound;
-	  }
-	  // End BePDF
-	  SendPageMsg(pg);
-      doc->displayPage(textOut, pg, 72, 72, 0, gFalse, gTrue, gFalse);
-      if (textOut->findText(u, len, gTrue, gTrue, gFalse, gFalse,
-			    caseSensitive, backward, false, // TODO/FIXME: wordwise
-			    &xMin, &yMin, &xMax, &yMax)) {
-	delete textOut;
-	goto foundPage;
-      }
-    }
+		// search previous/following pages
+		for (pg = backward ? doc->getNumPages() : 1; backward ? pg > topPage : pg < topPage; pg += backward ? -1 : 1) {
+			// Begin BePDF
+			if (!CanContinue()) {
+				delete textOut;
+				goto notFound;
+			}
+			// End BePDF
+			SendPageMsg(pg);
+			doc->displayPage(textOut, pg, 72, 72, 0, gFalse, gTrue, gFalse);
+			if (textOut->findText(u,
+			        len,
+			        gTrue,
+			        gTrue,
+			        gFalse,
+			        gFalse,
+			        caseSensitive,
+			        backward,
+			        false, // TODO/FIXME wordwise
+			        &xMin,
+			        &yMin,
+			        &xMax,
+			        &yMax)) {
+				delete textOut;
+				goto foundPage;
+			}
+		}
+		delete textOut;
+	}
 
-    // search previous/following pages
-    for (pg = backward ? doc->getNumPages() : 1;
-	 backward ? pg > topPage : pg < topPage;
-	 pg += backward ? -1 : 1) {
-	  // Begin BePDF
-	  if (!CanContinue()) {
-	    delete textOut;
-	    goto notFound;
-	  }
-	  // End BePDF
-	  SendPageMsg(pg);
-      doc->displayPage(textOut, pg, 72, 72, 0, gFalse, gTrue, gFalse);
-      if (textOut->findText(u, len, gTrue, gTrue, gFalse, gFalse,
-			    caseSensitive, backward, false, // TODO/FIXME wordwise
-			    &xMin, &yMin, &xMax, &yMax)) {
-	delete textOut;
-	goto foundPage;
-      }
-    }
-    delete textOut;
+	// search current page ending at previous result, current selection,
+	// or bottom/top of page
+	if (!startAtTop) {
+		xMin = yMin = xMax = yMax = 0;
+		if (next) {
+			stopAtLast = gTrue;
+		} else {
+			stopAtLast = gFalse;
+			xMax = selectLRX;
+			yMax = selectLRY;
+		}
+		if (GetPage()->FindText(u, len, gTrue, gFalse, gFalse, stopAtLast, caseSensitive, backward, &xMin, &yMin, &xMax, &yMax)) {
+			goto found;
+		}
+	}
 
-  }
+	// End Code copied from PDFCore::FindU()
 
-  // search current page ending at previous result, current selection,
-  // or bottom/top of page
-  if (!startAtTop) {
-    xMin = yMin = xMax = yMax = 0;
-    if (next) {
-      stopAtLast = gTrue;
-    } else {
-      stopAtLast = gFalse;
-      xMax = selectLRX;
-      yMax = selectLRY;
-    }
-    if (GetPage()->FindText(u, len, gTrue, gFalse, gFalse, stopAtLast,
-			     caseSensitive, backward,
-			     &xMin, &yMin, &xMax, &yMax)) {
-      goto found;
-    }
-  }
-
-// End Code copied from PDFCore::FindU()
-
-  // not found
-notFound:
-{
-  BAlert *alert = new BAlert("Error", B_TRANSLATE("Search string not found."), B_TRANSLATE("OK"), 0, 0, B_WIDTH_AS_USUAL, B_STOP_ALERT);
-  alert->Go();
+	// not found
+notFound: {
+	BAlert* alert = new BAlert("Error", B_TRANSLATE("Search string not found."), B_TRANSLATE("OK"), 0, 0, B_WIDTH_AS_USUAL, B_STOP_ALERT);
+	alert->Go();
 }
-  goto done;
+	goto done;
 
 	// found on a different page
- foundPage:
+foundPage:
 	if (Window()->Lock()) {
 		mMainView->SetPage(pg);
 		mMainView->WaitForPage();
 		Window()->Unlock();
 	}
-	if (!GetPage()->FindText(u, len, gTrue, gTrue, gFalse, gFalse,
-  			mCaseSensitive, mBackward,
-			&xMin, &yMin, &xMax, &yMax))
+	if (!GetPage()->FindText(u, len, gTrue, gTrue, gFalse, gFalse, mCaseSensitive, mBackward, &xMin, &yMin, &xMax, &yMax))
 		// this can happen if coalescing is bad
 		goto notFound;
 
 	// found: change the selection
- found:
- 	found = true;
-	mMainView->SetSelection((int)floor(xMin), (int)floor(yMin),
-	       (int)ceil(xMax), (int)ceil(yMax), true);
+found:
+	found = true;
+	mMainView->SetSelection((int)floor(xMin), (int)floor(yMin), (int)ceil(xMax), (int)ceil(yMax), true);
 #ifndef NO_TEXT_SELECT
 	if (GetPDFDoc()->okToCopy()) {
 		mMainView->CopySelection();
 	}
 #endif
 
- done:
- 	delete u;
- 	Window()->PostMessage((uint32)(
- 		found ?
- 			FindTextWindow::TEXT_FOUND_NOTIFY_MSG :
- 			FindTextWindow::TEXT_NOT_FOUND_NOTIFY_MSG));
- 	return 0 /*found*/;
+done:
+	delete u;
+	Window()->PostMessage((uint32)(found ? FindTextWindow::TEXT_FOUND_NOTIFY_MSG : FindTextWindow::TEXT_NOT_FOUND_NOTIFY_MSG));
+	return 0 /*found*/;
 }
 
 ///////////////////////////////////////////////////////////
-void PDFView::Find(const char *s, bool ignoreCase, bool backward, FindTextWindow *findWindow) {
+void PDFView::Find(const char* s, bool ignoreCase, bool backward, FindTextWindow* findWindow)
+{
 	mStopFindThread = false;
 	FindThread* thread = new FindThread(s, ignoreCase, backward, this, findWindow, &mStopFindThread);
 	thread->Resume();
 }
 
-void PDFView::StopFind() {
+void PDFView::StopFind()
+{
 	mStopFindThread = true;
 }
-

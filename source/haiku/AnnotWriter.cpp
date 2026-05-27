@@ -32,22 +32,25 @@
 // Implementation of XRefTable
 
 XRefTable::XRefTable(XRef* xref)
-	: mXRef(xref)
-	, mLength(xref->getSize() + INITIAL_INCREMENT)
-	, mSize(xref->getSize())
-	, mEntries((XRefEntry*)malloc(sizeof(XRefEntry) * mLength))
+    : mXRef(xref),
+      mLength(xref->getSize() + INITIAL_INCREMENT),
+      mSize(xref->getSize()),
+      mEntries((XRefEntry*)malloc(sizeof(XRefEntry) * mLength))
 {
 	for (int i = 0; i < mSize; i++) {
 		mEntries[i] = *xref->getEntry(i);
 	}
 }
 
-XRefTable::~XRefTable() {
-	free(mEntries); mEntries = NULL;
+XRefTable::~XRefTable()
+{
+	free(mEntries);
+	mEntries = NULL;
 }
 
 // increase mEntries if necessary only
-void XRefTable::Resize(int l) {
+void XRefTable::Resize(int l)
+{
 	mSize = l;
 	if (mLength < l) {
 		mLength = l + INCREMENT;
@@ -56,25 +59,29 @@ void XRefTable::Resize(int l) {
 	}
 }
 
-bool XRefTable::InRange(int num) {
+bool XRefTable::InRange(int num)
+{
 	return num >= 0 && num < mSize;
 }
 
-XRefEntry* XRefTable::GetUnusedHead() {
+XRefEntry* XRefTable::GetUnusedHead()
+{
 	XRefEntry* head = GetXRef(0);
 	ASSERT(head->gen == DEAD_GEN && head->type == xrefEntryFree);
 	return head;
 }
 
 // simply insert "e" after the head entry and its successor
-void XRefTable::InsertInUnusedList(int num, XRefEntry* e) {
+void XRefTable::InsertInUnusedList(int num, XRefEntry* e)
+{
 	XRefEntry* head = GetUnusedHead();
 	e->offset = head->offset;
 	head->offset = num;
 }
 
 // return (available) successor of head entry in unused list
-Ref XRefTable::ActivateUnusedEntry(XRefEntryType type) {
+Ref XRefTable::ActivateUnusedEntry(XRefEntryType type)
+{
 	ASSERT(type != xrefEntryFree);
 	XRefEntry* head = GetUnusedHead();
 	XRefEntry* prev;
@@ -87,75 +94,91 @@ Ref XRefTable::ActivateUnusedEntry(XRefEntryType type) {
 	if (cur != head) {
 		// create a Ref for current entry
 		Ref ref;
-		ref.num = prev->offset; ref.gen = cur->gen;
+		ref.num = prev->offset;
+		ref.gen = cur->gen;
 		// unlink entry from list
 		prev->offset = cur->offset;
 		// mark entry as used
-		cur->type = type; cur->offset = (Guint)-1;
+		cur->type = type;
+		cur->offset = (Guint)-1;
 		return ref;
 	} else {
 		return empty_ref;
 	}
 }
 
-XRefEntry* XRefTable::GetXRef(int num) {
+XRefEntry* XRefTable::GetXRef(int num)
+{
 	ASSERT(InRange(num));
 	return &mEntries[num];
 }
 
-int XRefTable::GetSize() {
+int XRefTable::GetSize()
+{
 	return mSize;
 }
 
-bool XRefTable::HasChanged(int num) {
+bool XRefTable::HasChanged(int num)
+{
 	ASSERT(InRange(num));
-	if (num >= mXRef->getSize()) return true;
-	if (num == 0) return true;
+	if (num >= mXRef->getSize())
+		return true;
+	if (num == 0)
+		return true;
 	XRefEntry* o = mXRef->getEntry(num);
 	XRefEntry* n = GetXRef(num);
-	return o->offset != n->offset ||
-		o->gen != n->gen ||
-		o->type != n->type;
+	return o->offset != n->offset || o->gen != n->gen || o->type != n->type;
 }
 
 
-void XRefTable::DeleteRef(Ref ref) {
+void XRefTable::DeleteRef(Ref ref)
+{
 	XRefEntry* e = GetXRef(ref.num);
 	ASSERT(e->type != xrefEntryFree && e->gen == ref.gen && e->gen != DEAD_GEN);
-	e->gen ++; e->type = xrefEntryFree;
+	e->gen++;
+	e->type = xrefEntryFree;
 	InsertInUnusedList(ref.num, e);
 }
 
-Ref XRefTable::AppendNewRef(XRefEntryType type) {
+Ref XRefTable::AppendNewRef(XRefEntryType type)
+{
 	ASSERT(type != xrefEntryFree);
 	Ref ref;
-	ref.num = mSize; ref.gen = 0;
+	ref.num = mSize;
+	ref.gen = 0;
 	Resize(mSize + 1);
 	XRefEntry* e = GetXRef(ref.num);
-	e->offset = (Guint)-1; e->gen = ref.gen; e->type = type;
+	e->offset = (Guint)-1;
+	e->gen = ref.gen;
+	e->type = type;
 	return ref;
 }
 
-Ref XRefTable::GetNewRef(XRefEntryType type) {
+Ref XRefTable::GetNewRef(XRefEntryType type)
+{
 	ASSERT(type != xrefEntryFree);
 	Ref ref = ActivateUnusedEntry(type);
-	if (!is_empty_ref(ref)) return ref;
+	if (!is_empty_ref(ref))
+		return ref;
 	return AppendNewRef(type);
 }
 
-void XRefTable::SetOffset(Ref ref, int offset) {
+void XRefTable::SetOffset(Ref ref, int offset)
+{
 	XRefEntry* e = GetXRef(ref.num);
 	e->offset = offset;
 }
 
-bool XRefTable::NextGroup(int first, int* num, int* nof) {
+bool XRefTable::NextGroup(int first, int* num, int* nof)
+{
 	int n = GetSize();
-	while (first < n && !HasChanged(first)) first ++;
+	while (first < n && !HasChanged(first))
+		first++;
 	bool found = first < n;
 	if (found) {
 		*num = first;
 		do {
-			first ++;
+			first++;
 		} while (first < n && HasChanged(first));
 		*nof = first - *num;
 	}
@@ -164,17 +187,17 @@ bool XRefTable::NextGroup(int first, int* num, int* nof) {
 
 // Implementation of AnnotTester
 AnnotTester::AnnotTester()
-	: AnnotVisitor()
-{
-}
+    : AnnotVisitor()
+{}
 
 AnnotTester::~AnnotTester()
-{
-}
+{}
 
 // global function
-bool CanWrite(Annotation* annot) {
-	if (annot == NULL) return false;
+bool CanWrite(Annotation* annot)
+{
+	if (annot == NULL)
+		return false;
 	AnnotTester tester;
 	annot->Visit(&tester);
 	return tester.CanWrite();
@@ -182,149 +205,168 @@ bool CanWrite(Annotation* annot) {
 
 // Implementation of AnnotWriter
 AnnotWriter::AnnotWriter(XRef* xref, PDFDoc* doc, AnnotsList* list, BePDFAcroForm* acroForm)
-	: mDoc(doc)
-	, mAnnots(list) // make a copy
-	, mBePDFAcroForm(acroForm)
-	, mXRef(xref)
-	, mXRefTable(xref)
-	, mASRef(empty_ref)
-	, mInfoRef(empty_ref)
-{
-}
+    : mDoc(doc),
+      mAnnots(list) // make a copy
+      ,
+      mBePDFAcroForm(acroForm),
+      mXRef(xref),
+      mXRefTable(xref),
+      mASRef(empty_ref),
+      mInfoRef(empty_ref)
+{}
 
 AnnotWriter::~AnnotWriter()
-{
-}
+{}
 
-void AnnotWriter::Write(const char* s) {
+void AnnotWriter::Write(const char* s)
+{
 	fprintf(mFile, "%s", s);
 }
 
-void AnnotWriter::Write(GString* s) {
+void AnnotWriter::Write(GString* s)
+{
 	fwrite(s->getCString(), s->getLength(), 1, mFile);
 }
 
-void AnnotWriter::Write(Ref r) {
+void AnnotWriter::Write(Ref r)
+{
 	fprintf(mFile, "%d %d", r.num, r.gen);
 }
 
-void AnnotWriter::WriteCr() {
+void AnnotWriter::WriteCr()
+{
 	Write("\r");
 }
 
-void AnnotWriter::WriteCrLf() {
+void AnnotWriter::WriteCrLf()
+{
 	Write("\r\n");
 }
 
-int AnnotWriter::Tell() {
+int AnnotWriter::Tell()
+{
 	return ftell(mFile);
 }
 
 // Convert xpdf Object to PDF output
 
-void AnnotWriter::InsertWhiteSpace(Object* obj) {
+void AnnotWriter::InsertWhiteSpace(Object* obj)
+{
 	bool startsWithDelimiter;
 	switch (obj->getType()) {
-		case objString:
-		case objArray:
-		case objDict:
-			startsWithDelimiter = true;
-			break;
-		default:
-			startsWithDelimiter = false;
+	case objString:
+	case objArray:
+	case objDict:
+		startsWithDelimiter = true;
+		break;
+	default:
+		startsWithDelimiter = false;
 	}
-	if (!startsWithDelimiter) Write(" ");
+	if (!startsWithDelimiter)
+		Write(" ");
 }
 
 
-void AnnotWriter::WriteObject(Object* obj) {
+void AnnotWriter::WriteObject(Object* obj)
+{
 	ASSERT(mFile != NULL);
 	int i;
 	Object o;
 	GString* s = NULL;
 
 	switch (obj->getType()) {
-		 // simple objects
-		case objBool:
-			fprintf(mFile, "%s", obj->getBool() ? "true" : "false");
-			break;
-		case objInt:
-			fprintf(mFile, "%d", obj->getInt());
-			break;
-		case objReal:
-			fprintf(mFile, "%g", obj->getReal());
-			break;
-		case objString:
-			if (AnnotUtils::InUCS2(obj->getString())) {
-				s = AnnotUtils::EscapeString(obj->getString());
-				Write("(");
-				Write(s);
-				Write(")");
-			} else {
-				s = AnnotUtils::EscapeString(obj->getString());
-				fprintf(mFile, "(%s)", s->getCString());
-			}
-			break;
-		case objName:
-			s = AnnotUtils::EscapeName(obj->getName());
-			fprintf(mFile, "/%s", s->getCString());
-			break;
-		case objNull:
-			Write("null");
-			break;
+		// simple objects
+	case objBool:
+		fprintf(mFile, "%s", obj->getBool() ? "true" : "false");
+		break;
+	case objInt:
+		fprintf(mFile, "%d", obj->getInt());
+		break;
+	case objReal:
+		fprintf(mFile, "%g", obj->getReal());
+		break;
+	case objString:
+		if (AnnotUtils::InUCS2(obj->getString())) {
+			s = AnnotUtils::EscapeString(obj->getString());
+			Write("(");
+			Write(s);
+			Write(")");
+		} else {
+			s = AnnotUtils::EscapeString(obj->getString());
+			fprintf(mFile, "(%s)", s->getCString());
+		}
+		break;
+	case objName:
+		s = AnnotUtils::EscapeName(obj->getName());
+		fprintf(mFile, "/%s", s->getCString());
+		break;
+	case objNull:
+		Write("null");
+		break;
 
-		// complex objects
-		case objArray:
-			Write("[");
-			for (i = 0; i < obj->arrayGetLength(); i ++) {
-				obj->arrayGetNF(i, &o);
-				if (i > 0) InsertWhiteSpace(&o);
-				WriteObject(&o);
-			}
-			Write("]");
-			break;
-		case objDict:
-			Write("<<");
-			for (i = 0; i < obj->dictGetLength(); i ++) {
-				if (i > 0) WriteCr();
-				fprintf(mFile, "/%s", obj->dictGetKey(i));
-				obj->dictGetValNF(i, &o);
+	// complex objects
+	case objArray:
+		Write("[");
+		for (i = 0; i < obj->arrayGetLength(); i++) {
+			obj->arrayGetNF(i, &o);
+			if (i > 0)
 				InsertWhiteSpace(&o);
-				WriteObject(&o);
-			}
-			Write(">>");
-			break;
-		case objStream:
-			fflush(mFile);
-			fprintf(stderr, "Error: <!!!stream!!!>\n");
-			ASSERT(false);
-			break;
-		case objRef:
-			Write(obj->getRef()); Write(" R");
-			break;
-		default:
-			fflush(mFile);
-			fprintf(stderr, "Error: WriteObj unknown type %d\n", obj->getType());
-			obj->print(stderr);
-			fprintf(stderr, "\n");
-			ASSERT(false);
+			WriteObject(&o);
+		}
+		Write("]");
+		break;
+	case objDict:
+		Write("<<");
+		for (i = 0; i < obj->dictGetLength(); i++) {
+			if (i > 0)
+				WriteCr();
+			fprintf(mFile, "/%s", obj->dictGetKey(i));
+			obj->dictGetValNF(i, &o);
+			InsertWhiteSpace(&o);
+			WriteObject(&o);
+		}
+		Write(">>");
+		break;
+	case objStream:
+		fflush(mFile);
+		fprintf(stderr, "Error: <!!!stream!!!>\n");
+		ASSERT(false);
+		break;
+	case objRef:
+		Write(obj->getRef());
+		Write(" R");
+		break;
+	default:
+		fflush(mFile);
+		fprintf(stderr, "Error: WriteObj unknown type %d\n", obj->getType());
+		obj->print(stderr);
+		fprintf(stderr, "\n");
+		ASSERT(false);
 	}
 	delete s;
 }
 
-void AnnotWriter::WriteObject(Ref ref, Object* obj, GString* stream) {
+void AnnotWriter::WriteObject(Ref ref, Object* obj, GString* stream)
+{
 	mXRefTable.SetOffset(ref, Tell());
-	Write(ref); Write(" obj"); WriteCr();
-	WriteObject(obj); WriteCr();
+	Write(ref);
+	Write(" obj");
+	WriteCr();
+	WriteObject(obj);
+	WriteCr();
 	if (stream != NULL) {
-		Write("stream"); WriteCr();
+		Write("stream");
+		WriteCr();
 		Write(stream);
-		Write("endstream"); WriteCr();
+		Write("endstream");
+		WriteCr();
 	}
-	Write("endobj"); WriteCr();
+	Write("endobj");
+	WriteCr();
 }
 
-bool AnnotWriter::WriteXRefTable() {
+bool AnnotWriter::WriteXRefTable()
+{
 	WriteCr();
 	mXRefOffset = ftell(mFile);
 	Write("xref\r");
@@ -333,13 +375,12 @@ bool AnnotWriter::WriteXRefTable() {
 	while (mXRefTable.NextGroup(first, &first, &nof)) {
 		// write start num and count
 		fprintf(mFile, "%d %d\r", first, nof);
-		for (int i = 0; i < nof; i ++) {
+		for (int i = 0; i < nof; i++) {
 			XRefEntry* x = mXRefTable.GetXRef(i + first);
 			ASSERT(x->offset >= 0);
 			// write offset, gen and used or unused char
-			fprintf(mFile, "%10.10lld %5.5d %c\r\n",
-				x->offset, x->gen, x->type != xrefEntryFree ? 'n' : 'f');
-			}
+			fprintf(mFile, "%10.10lld %5.5d %c\r\n", x->offset, x->gen, x->type != xrefEntryFree ? 'n' : 'f');
+		}
 		first += nof;
 	}
 	return true;
@@ -348,18 +389,21 @@ bool AnnotWriter::WriteXRefTable() {
 
 // Copy a dictionary excluding specified keys
 
-bool AnnotWriter::IsInList(char* s, char* list[]) {
-	for (int i = 0; list[i] != NULL; i ++) {
-		if (strcmp(list[i], s) == 0) return true;
+bool AnnotWriter::IsInList(char* s, char* list[])
+{
+	for (int i = 0; list[i] != NULL; i++) {
+		if (strcmp(list[i], s) == 0)
+			return true;
 	}
 	return false;
 }
 
-void AnnotWriter::CopyDict(Object* in, Object* out, char* excludeKeys[]) {
+void AnnotWriter::CopyDict(Object* in, Object* out, char* excludeKeys[])
+{
 	ASSERT(in->isDict());
 	out->initDict(mXRef);
 	int n = in->dictGetLength();
-	for (int i = 0; i < n; i ++) {
+	for (int i = 0; i < n; i++) {
 		char* key = in->dictGetKey(i);
 		if (excludeKeys == NULL || !IsInList(key, excludeKeys)) {
 			Object val;
@@ -371,28 +415,32 @@ void AnnotWriter::CopyDict(Object* in, Object* out, char* excludeKeys[]) {
 
 // Update modification date
 
-Ref AnnotWriter::GetModDateRef(Ref infoDictRef) {
+Ref AnnotWriter::GetModDateRef(Ref infoDictRef)
+{
 	Ref dateRef = empty_ref;
 	if (!is_empty_ref(infoDictRef)) {
 		Object ref, dict;
 		ref.initRef(infoDictRef.num, infoDictRef.gen);
 		ref.fetch(mXRef, &dict);
 		ref.free();
-		if (dict.isDict()) HasRef(&dict, "ModDate", dateRef);
+		if (dict.isDict())
+			HasRef(&dict, "ModDate", dateRef);
 		dict.free();
 	}
 	return dateRef;
 }
 
-Ref AnnotWriter::GetInfoDictRef() {
+Ref AnnotWriter::GetInfoDictRef()
+{
 	Ref ref;
 	HasRef(mXRef->getTrailerDict(), "Info", ref);
 	return ref;
 }
 
-static char* infoDictExcludeKeys[] = { "ModDate", NULL };
+static char* infoDictExcludeKeys[] = {"ModDate", NULL};
 
-void AnnotWriter::CopyInfoDict(Object* dict) {
+void AnnotWriter::CopyInfoDict(Object* dict)
+{
 	ASSERT(!is_empty_ref(mInfoRef));
 	Object info;
 	mXRef->getTrailerDict()->dictLookup("Info", &info);
@@ -400,7 +448,8 @@ void AnnotWriter::CopyInfoDict(Object* dict) {
 	info.free();
 }
 
-void AnnotWriter::WriteModDate(Ref ref) {
+void AnnotWriter::WriteModDate(Ref ref)
+{
 	GString* date = new GString();
 	AnnotUtils::CurrentDate(date);
 
@@ -410,7 +459,8 @@ void AnnotWriter::WriteModDate(Ref ref) {
 	obj.free(); // frees date
 }
 
-void AnnotWriter::UpdateInfoDict() {
+void AnnotWriter::UpdateInfoDict()
+{
 	mInfoRef = GetInfoDictRef();
 	Ref modDate = GetModDateRef(mInfoRef);
 	if (is_empty_ref(modDate)) {
@@ -429,9 +479,10 @@ void AnnotWriter::UpdateInfoDict() {
 	WriteModDate(modDate);
 }
 
-static char* fileTrailerExcludeKeys[] = { "Size", "Prev", "Root", "Info", NULL };
+static char* fileTrailerExcludeKeys[] = {"Size", "Prev", "Root", "Info", NULL};
 
-bool AnnotWriter::WriteFileTrailer() {
+bool AnnotWriter::WriteFileTrailer()
+{
 	Write("trailer\r");
 	Object trailer;
 	Object val;
@@ -448,12 +499,14 @@ bool AnnotWriter::WriteFileTrailer() {
 	return true;
 }
 
-bool AnnotWriter::CopyFile(const char* name) {
+bool AnnotWriter::CopyFile(const char* name)
+{
 	GString n(name);
 	return mDoc->saveAs(&n);
 }
 
-bool AnnotWriter::HasRef(Object* dict, const char* key, Ref &ref) {
+bool AnnotWriter::HasRef(Object* dict, const char* key, Ref& ref)
+{
 	Object obj;
 	bool ok = true;
 	ASSERT(dict && dict->isDict());
@@ -467,27 +520,30 @@ bool AnnotWriter::HasRef(Object* dict, const char* key, Ref &ref) {
 	return ok;
 }
 
-bool AnnotWriter::HasAnnotRef(Object* page, Ref &annotRef) {
+bool AnnotWriter::HasAnnotRef(Object* page, Ref& annotRef)
+{
 	return HasRef(page, "Annots", annotRef);
 }
 
-bool AnnotWriter::HasEmbeddedContent(Object* page) {
+bool AnnotWriter::HasEmbeddedContent(Object* page)
+{
 	ASSERT(page && page->isDict());
 	Object obj;
-	bool embedded = !(page->dictLookupNF("Contents", &obj) &&
-		(obj.isArray() || obj.isRef() || obj.isNull()));
+	bool embedded = !(page->dictLookupNF("Contents", &obj) && (obj.isArray() || obj.isRef() || obj.isNull()));
 	obj.free();
 	return embedded;
 }
 
-bool AnnotWriter::CopyContentStream(Object* page) {
+bool AnnotWriter::CopyContentStream(Object* page)
+{
 	// not implemented yet!!!
 	return false;
 }
 
-static char* pageDictExcludeKeys[] = { "Annots", NULL };
+static char* pageDictExcludeKeys[] = {"Annots", NULL};
 
-bool AnnotWriter::CopyPage(Object* page, Ref pageRef, Ref arrayRef) {
+bool AnnotWriter::CopyPage(Object* page, Ref pageRef, Ref arrayRef)
+{
 	Object copy;
 	Object ar;
 
@@ -501,12 +557,14 @@ bool AnnotWriter::CopyPage(Object* page, Ref pageRef, Ref arrayRef) {
 	return true;
 }
 
-bool AnnotWriter::UpdatePage(int pageNo, Annotations* annots, Ref& annotArray) {
+bool AnnotWriter::UpdatePage(int pageNo, Annotations* annots, Ref& annotArray)
+{
 	bool ok = false;
 	Object page;
-	Ref* pageRef = mDoc->getCatalog()->getPageRef(pageNo+1);
+	Ref* pageRef = mDoc->getCatalog()->getPageRef(pageNo + 1);
 	if (!mXRef->fetch(pageRef->num, pageRef->gen, &page)->isNull()) {
-		if (HasAnnotRef(&page, annotArray)) return true;
+		if (HasAnnotRef(&page, annotArray))
+			return true;
 		annotArray = mXRefTable.GetNewRef(xrefEntryUncompressed);
 		if (HasEmbeddedContent(&page)) {
 			if (!CopyContentStream(&page)) {
@@ -520,7 +578,7 @@ bool AnnotWriter::UpdatePage(int pageNo, Annotations* annots, Ref& annotArray) {
 			ok = true;
 		}
 	} else {
-		fprintf(stderr, "Error: Could not get page dict for page %d\n", pageNo+1);
+		fprintf(stderr, "Error: Could not get page dict for page %d\n", pageNo + 1);
 	}
 error:
 	page.free();
@@ -535,7 +593,8 @@ error:
 //     empty_ref -> add to Annots array if CanWrite
 //   Otherwise -> add to Annots array
 
-void AnnotWriter::AddToAnnots(Object* array, Annotation* a) {
+void AnnotWriter::AddToAnnots(Object* array, Annotation* a)
+{
 	Ref r = a->GetRef();
 	if (is_empty_ref(r)) {
 		if (CanWrite(a)) {
@@ -550,7 +609,8 @@ void AnnotWriter::AddToAnnots(Object* array, Annotation* a) {
 	array->arrayAdd(&ref);
 }
 
-bool AnnotWriter::UpdateAnnotArray(int pageNo, Annotations* annots, Ref annotArray) {
+bool AnnotWriter::UpdateAnnotArray(int pageNo, Annotations* annots, Ref annotArray)
+{
 	ASSERT(annots->HasChanged());
 	Object array;
 	array.initArray(mXRef);
@@ -558,7 +618,8 @@ bool AnnotWriter::UpdateAnnotArray(int pageNo, Annotations* annots, Ref annotArr
 		Annotation* a = annots->At(i);
 		if (!a->IsDeleted()) {
 			AddToAnnots(&array, a);
-			if (a->GetPopup()) AddToAnnots(&array, a->GetPopup());
+			if (a->GetPopup())
+				AddToAnnots(&array, a->GetPopup());
 		}
 	}
 	// write to file
@@ -567,8 +628,10 @@ bool AnnotWriter::UpdateAnnotArray(int pageNo, Annotations* annots, Ref annotArr
 	return true;
 }
 
-bool AnnotWriter::WriteAS(Ref& ref, Annotation* a) {
-	if (is_empty_ref(ref)) return true;
+bool AnnotWriter::WriteAS(Ref& ref, Annotation* a)
+{
+	if (is_empty_ref(ref))
+		return true;
 
 	Object xobj;
 	xobj.initDict(mXRef);
@@ -577,7 +640,8 @@ bool AnnotWriter::WriteAS(Ref& ref, Annotation* a) {
 	AddName(&xobj, "Subtype", "Form");
 	AddInteger(&xobj, "FormType", 1);
 	PDFRectangle r = *a->GetRect();
-	r.x2 -= r.x1; r.y2 -= r.y1;
+	r.x2 -= r.x1;
+	r.y2 -= r.y1;
 	r.x1 = r.y1 = 0;
 	AddRect(&xobj, "BBox", &r);
 	// setup resource dictionary
@@ -605,7 +669,8 @@ bool AnnotWriter::WriteAS(Ref& ref, Annotation* a) {
 }
 
 
-bool AnnotWriter::UpdateAnnot(Annotation* annot) {
+bool AnnotWriter::UpdateAnnot(Annotation* annot)
+{
 	if (annot->HasChanged()) {
 		Ref ref = annot->GetRef();
 		ASSERT(!is_empty_ref(ref));
@@ -625,21 +690,24 @@ bool AnnotWriter::UpdateAnnot(Annotation* annot) {
 }
 
 // Create new PDF file and append changed or new annotations
-bool AnnotWriter::WriteTo(const char* name) {
-	if (!CopyFile(name)) return false;
-	if (!mAnnots.HasChanged()) return true;
+bool AnnotWriter::WriteTo(const char* name)
+{
+	if (!CopyFile(name))
+		return false;
+	if (!mAnnots.HasChanged())
+		return true;
 	AssignShortFontNames();
 	mFile = fopen(name, "a+b");
 	bool ok = mFile != NULL;
 	int numPages = mDoc->getNumPages();
-	for (int i = 0; ok && i < numPages; i ++) {
-		mPageRef = *mDoc->getCatalog()->getPageRef(i+1);
+	for (int i = 0; ok && i < numPages; i++) {
+		mPageRef = *mDoc->getCatalog()->getPageRef(i + 1);
 		Annotations* a = mAnnots.Get(i);
 		if (a && a->HasChanged()) {
 			Ref annotArray;
 			ok = ok && UpdatePage(i, a, annotArray);
 			ok = ok && UpdateAnnotArray(i, a, annotArray);
-			for (int j = 0; ok && j < a->Length(); j ++) {
+			for (int j = 0; ok && j < a->Length(); j++) {
 				Annotation* an = a->At(j);
 				if (!an->IsDeleted()) {
 					if (CanWrite(an)) {
@@ -661,7 +729,8 @@ bool AnnotWriter::WriteTo(const char* name) {
 		ok = ok && WriteFileTrailer();
 	}
 	if (mFile) {
-		fclose(mFile); mFile = NULL;
+		fclose(mFile);
+		mFile = NULL;
 	}
 	if (!ok) {
 		// delete file on error
@@ -672,7 +741,8 @@ bool AnnotWriter::WriteTo(const char* name) {
 }
 
 
-void AnnotWriter::AddRef(Object* dict, char* key, Ref ref) {
+void AnnotWriter::AddRef(Object* dict, char* key, Ref ref)
+{
 	ASSERT(dict->isDict());
 	Object n;
 	n.initRef(ref.num, ref.gen);
@@ -680,7 +750,8 @@ void AnnotWriter::AddRef(Object* dict, char* key, Ref ref) {
 }
 
 
-void AnnotWriter::AddBool(Object* dict, char* key, bool b) {
+void AnnotWriter::AddBool(Object* dict, char* key, bool b)
+{
 	ASSERT(dict->isDict());
 	Object n;
 	n.initBool(b);
@@ -688,7 +759,8 @@ void AnnotWriter::AddBool(Object* dict, char* key, bool b) {
 }
 
 
-void AnnotWriter::AddName(Object* dict, char* key, char* name) {
+void AnnotWriter::AddName(Object* dict, char* key, char* name)
+{
 	ASSERT(dict->isDict());
 	Object n;
 	n.initName(name);
@@ -696,7 +768,8 @@ void AnnotWriter::AddName(Object* dict, char* key, char* name) {
 }
 
 
-void AnnotWriter::AddString(Object* dict, char* key, GString* string) {
+void AnnotWriter::AddString(Object* dict, char* key, GString* string)
+{
 	ASSERT(dict->isDict());
 	Object n;
 	n.initString(new GString(string));
@@ -704,7 +777,8 @@ void AnnotWriter::AddString(Object* dict, char* key, GString* string) {
 }
 
 
-void AnnotWriter::AddString(Object* dict, char* key, char* string) {
+void AnnotWriter::AddString(Object* dict, char* key, char* string)
+{
 	ASSERT(dict->isDict());
 	Object n;
 	n.initString(new GString(string));
@@ -712,7 +786,8 @@ void AnnotWriter::AddString(Object* dict, char* key, char* string) {
 }
 
 
-void AnnotWriter::AddInteger(Object* dict, char* key, int i) {
+void AnnotWriter::AddInteger(Object* dict, char* key, int i)
+{
 	ASSERT(dict->isDict());
 	Object n;
 	n.initInt(i);
@@ -720,7 +795,8 @@ void AnnotWriter::AddInteger(Object* dict, char* key, int i) {
 }
 
 
-void AnnotWriter::AddReal(Object* dict, char* key, double r) {
+void AnnotWriter::AddReal(Object* dict, char* key, double r)
+{
 	ASSERT(dict->isDict());
 	Object n;
 	n.initReal(r);
@@ -728,7 +804,8 @@ void AnnotWriter::AddReal(Object* dict, char* key, double r) {
 }
 
 
-void AnnotWriter::AddReal(Object* array, double r) {
+void AnnotWriter::AddReal(Object* array, double r)
+{
 	ASSERT(array->isArray());
 	Object n;
 	n.initReal(r);
@@ -736,7 +813,8 @@ void AnnotWriter::AddReal(Object* array, double r) {
 }
 
 
-void AnnotWriter::AddRect(Object* dict, char* key, PDFRectangle* rect) {
+void AnnotWriter::AddRect(Object* dict, char* key, PDFRectangle* rect)
+{
 	ASSERT(dict->isDict());
 	Object a;
 	a.initArray(mXRef);
@@ -748,7 +826,8 @@ void AnnotWriter::AddRect(Object* dict, char* key, PDFRectangle* rect) {
 }
 
 
-void AnnotWriter::AddColor(Object* dict, char* key, GfxRGB* c) {
+void AnnotWriter::AddColor(Object* dict, char* key, GfxRGB* c)
+{
 	Object a;
 	a.initArray(mXRef);
 	AddReal(&a, colToDbl(c->r));
@@ -758,27 +837,32 @@ void AnnotWriter::AddColor(Object* dict, char* key, GfxRGB* c) {
 }
 
 
-void AnnotWriter::AddDict(Object* dict, char* key, Object* d) {
+void AnnotWriter::AddDict(Object* dict, char* key, Object* d)
+{
 	ASSERT(dict->isDict());
 	dict->dictAdd(copyString(key), d);
 }
 
 
-void AnnotWriter::AddAnnotSubtype(char* type) {
+void AnnotWriter::AddAnnotSubtype(char* type)
+{
 	AddName(&mAnnot, "Subtype", type);
 }
 
-void AnnotWriter::AddAnnotContents(Annotation* a) {
+void AnnotWriter::AddAnnotContents(Annotation* a)
+{
 	AddString(&mAnnot, "Contents", a->GetContents());
 }
 
-bool AnnotWriter::HasAppearanceStream(Annotation* a) {
+bool AnnotWriter::HasAppearanceStream(Annotation* a)
+{
 	AnnotAppearance ap;
 	a->Visit(&ap);
 	return ap.GetLength() > 0;
 }
 
-void AnnotWriter::DoAnnotation(Annotation* a) {
+void AnnotWriter::DoAnnotation(Annotation* a)
+{
 	AddRect(&mAnnot, "Rect", a->GetRect());
 	if (a->HasColor()) {
 		AddColor(&mAnnot, "C", a->GetColor());
@@ -813,7 +897,8 @@ void AnnotWriter::DoAnnotation(Annotation* a) {
 	}
 }
 
-void AnnotWriter::DoStyledAnnot(StyledAnnot* s) {
+void AnnotWriter::DoStyledAnnot(StyledAnnot* s)
+{
 	AddAnnotContents(s);
 	// border style
 	char* style = NULL;
@@ -822,11 +907,16 @@ void AnnotWriter::DoStyledAnnot(StyledAnnot* s) {
 	AddName(&bs, "Type", "Border");
 	AddInteger(&bs, "W", (float)s->GetBorderStyle()->GetWidth()); // width
 	switch (s->GetBorderStyle()->GetStyle()) {
-		case BorderStyle::solid_style: style = "S";
-		case BorderStyle::dashed_style: style = "D";
-		case BorderStyle::beveled_style: style = "B";
-		case BorderStyle::inset_style: style = "I";
-		case BorderStyle::underline_style: style = "U";
+	case BorderStyle::solid_style:
+		style = "S";
+	case BorderStyle::dashed_style:
+		style = "D";
+	case BorderStyle::beveled_style:
+		style = "B";
+	case BorderStyle::inset_style:
+		style = "I";
+	case BorderStyle::underline_style:
+		style = "U";
 	}
 	if (style != NULL) {
 		AddName(&bs, "S", style); // border style
@@ -834,13 +924,14 @@ void AnnotWriter::DoStyledAnnot(StyledAnnot* s) {
 	AddDict(&mAnnot, "BS", &bs);
 }
 
-void AnnotWriter::DoMarkupAnnot(MarkupAnnot* m) {
+void AnnotWriter::DoMarkupAnnot(MarkupAnnot* m)
+{
 	DoStyledAnnot(m);
 	Object array;
 	array.initArray(mXRef);
 	for (int i = 0; i < m->QuadPointsLength(); i++) {
 		PDFQuadPoints* q = m->QuadPointsAt(i);
-		for (int j = 0; j < 4; j ++) {
+		for (int j = 0; j < 4; j++) {
 			PDFPoint p = (*q)[j];
 			Object val;
 			array.arrayAdd(val.initReal(p.x));
@@ -851,19 +942,22 @@ void AnnotWriter::DoMarkupAnnot(MarkupAnnot* m) {
 }
 
 // Annotation visitor implementation
-void AnnotWriter::DoText(TextAnnot* a){
+void AnnotWriter::DoText(TextAnnot* a)
+{
 	AddAnnotSubtype("Text");
 	AddAnnotContents(a);
 	AddName(&mAnnot, "Name", (char*)a->GetName());
 }
 
 
-void AnnotWriter::DoLink(LinkAnnot* a){
+void AnnotWriter::DoLink(LinkAnnot* a)
+{
 	AddAnnotSubtype("Link");
 }
 
 
-void AnnotWriter::DoFreeText(FreeTextAnnot* a){
+void AnnotWriter::DoFreeText(FreeTextAnnot* a)
+{
 	GString appearance;
 	char buf[250];
 	PDFFont* font;
@@ -893,7 +987,8 @@ void AnnotWriter::DoFreeText(FreeTextAnnot* a){
 }
 
 
-void AnnotWriter::DoLine(LineAnnot* a){
+void AnnotWriter::DoLine(LineAnnot* a)
+{
 	AddAnnotSubtype("Line");
 	DoStyledAnnot(a);
 	Object array;
@@ -908,52 +1003,61 @@ void AnnotWriter::DoLine(LineAnnot* a){
 }
 
 
-void AnnotWriter::DoSquare(SquareAnnot* a){
+void AnnotWriter::DoSquare(SquareAnnot* a)
+{
 	AddAnnotSubtype("Square");
 	DoStyledAnnot(a);
 }
 
 
-void AnnotWriter::DoCircle(CircleAnnot* a){
+void AnnotWriter::DoCircle(CircleAnnot* a)
+{
 	AddAnnotSubtype("Circle");
 	DoStyledAnnot(a);
 }
 
 
-void AnnotWriter::DoHighlight(HighlightAnnot* a){
+void AnnotWriter::DoHighlight(HighlightAnnot* a)
+{
 	AddAnnotSubtype("Highlight");
 	DoMarkupAnnot(a);
 }
 
 
-void AnnotWriter::DoUnderline(UnderlineAnnot * a){
+void AnnotWriter::DoUnderline(UnderlineAnnot* a)
+{
 	AddAnnotSubtype("Underline");
 	DoMarkupAnnot(a);
 }
 
 
-void AnnotWriter::DoSquiggly(SquigglyAnnot* a){
+void AnnotWriter::DoSquiggly(SquigglyAnnot* a)
+{
 	AddAnnotSubtype("Squiggly");
 	DoMarkupAnnot(a);
 }
 
 
-void AnnotWriter::DoStrikeOut(StrikeOutAnnot* a){
+void AnnotWriter::DoStrikeOut(StrikeOutAnnot* a)
+{
 	AddAnnotSubtype("StrikeOut");
 	DoMarkupAnnot(a);
 }
 
-void AnnotWriter::DoStamp(StampAnnot* a){
+void AnnotWriter::DoStamp(StampAnnot* a)
+{
 	AddAnnotSubtype("Stamp");
 }
 
 
-void AnnotWriter::DoInk(InkAnnot* a){
+void AnnotWriter::DoInk(InkAnnot* a)
+{
 	AddAnnotSubtype("Ink");
 }
 
 
-void AnnotWriter::DoPopup(PopupAnnot* a){
+void AnnotWriter::DoPopup(PopupAnnot* a)
+{
 	AddAnnotSubtype("Popup");
 	if (!is_empty_ref(a->GetParentRef())) {
 		AddRef(&mAnnot, "Parent", a->GetParentRef());
@@ -961,43 +1065,50 @@ void AnnotWriter::DoPopup(PopupAnnot* a){
 }
 
 
-void AnnotWriter::DoFileAttachment(FileAttachmentAnnot* a){
+void AnnotWriter::DoFileAttachment(FileAttachmentAnnot* a)
+{
 	AddAnnotSubtype("FileAttachment");
 }
 
 
-void AnnotWriter::DoSound(SoundAnnot* a){
+void AnnotWriter::DoSound(SoundAnnot* a)
+{
 	AddAnnotSubtype("Sound");
 }
 
 
-void AnnotWriter::DoMovie(MovieAnnot* a){
+void AnnotWriter::DoMovie(MovieAnnot* a)
+{
 	AddAnnotSubtype("Movie");
 }
 
 
-void AnnotWriter::DoWidget(WidgetAnnot* a){
+void AnnotWriter::DoWidget(WidgetAnnot* a)
+{
 	AddAnnotSubtype("Widget");
 }
 
 
-void AnnotWriter::DoPrinterMark(PrinterMarkAnnot* a){
+void AnnotWriter::DoPrinterMark(PrinterMarkAnnot* a)
+{
 	AddAnnotSubtype("PrinterMark");
 }
 
 
-void AnnotWriter::DoTrapNet(TrapNetAnnot* a){
+void AnnotWriter::DoTrapNet(TrapNetAnnot* a)
+{
 	AddAnnotSubtype("TrapNet");
 }
 
 // FreeTextAnnot
-void AnnotWriter::AssignShortFontNames() {
+void AnnotWriter::AssignShortFontNames()
+{
 	// scan all fonts
 	std::list<int> fontIDs;
 	{
 		std::list<PDFFont*>* fonts = mBePDFAcroForm->GetFonts();
 		std::list<PDFFont*>::iterator it;
-		for (it = fonts->begin(); it != fonts->end(); it ++) {
+		for (it = fonts->begin(); it != fonts->end(); it++) {
 			int d;
 			PDFFont* font = *it;
 			if (sscanf(font->GetShortName(), "F%d", &d) != 0 && d >= 0) {
@@ -1012,35 +1123,39 @@ void AnnotWriter::AssignShortFontNames() {
 	std::list<int>::iterator it;
 	fontIDs.sort();
 	it = fontIDs.begin();
-	for (int i = 0; i < stdFonts->CountFonts(); i ++) {
+	for (int i = 0; i < stdFonts->CountFonts(); i++) {
 		PDFFont* font = stdFonts->FontAt(i);
 		if (strcmp(font->GetShortName(), "") == 0) {
 			GString shortName("F");
 			char number[80];
 			while (it != fontIDs.end() && id == *it) {
-				id ++; it ++;
+				id++;
+				it++;
 			}
 			sprintf(number, "%d", id);
 			shortName.append(number);
 			font->SetShortName(shortName.getCString());
 			mTemporaryFonts.push_back(font);
-			id ++;
+			id++;
 		}
 	}
 }
 
-void AnnotWriter::UnassignShortFontNames() {
+void AnnotWriter::UnassignShortFontNames()
+{
 	// reverse steps to have proper state in case file is saved again
 	std::list<PDFFont*>::iterator it;
-	for (it = mTemporaryFonts.begin(); it != mTemporaryFonts.end(); it ++) {
+	for (it = mTemporaryFonts.begin(); it != mTemporaryFonts.end(); it++) {
 		PDFFont* font = *it;
 		font->SetRef(empty_ref);
 		font->SetShortName("");
 	}
 }
 
-void AnnotWriter::WriteFont(PDFFont* font) {
-	if (!is_empty_ref(font->GetRef())) return; // already saved
+void AnnotWriter::WriteFont(PDFFont* font)
+{
+	if (!is_empty_ref(font->GetRef()))
+		return; // already saved
 	font->SetRef(mXRefTable.GetNewRef(xrefEntryUncompressed));
 	mWrittenFonts.push_back(font);
 	Object dict;
@@ -1053,25 +1168,24 @@ void AnnotWriter::WriteFont(PDFFont* font) {
 	dict.free();
 }
 
-void AnnotWriter::AddFonts(Object* dict, std::list<PDFFont*>* fonts) {
+void AnnotWriter::AddFonts(Object* dict, std::list<PDFFont*>* fonts)
+{
 	std::list<PDFFont*>::iterator it;
-	for (it = fonts->begin(); it != fonts->end(); it ++) {
+	for (it = fonts->begin(); it != fonts->end(); it++) {
 		PDFFont* font = *it;
 		ASSERT(!is_empty_ref(font->GetRef()));
 		AddRef(dict, (char*)font->GetShortName(), font->GetRef());
 	}
 }
 
-static char* acroFormExcludeKeys[] = {
-	"DR", NULL
-};
+static char* acroFormExcludeKeys[] = {"DR", NULL};
 
-static char* drExcludeKeys[] = {
-	"Font", NULL
-};
+static char* drExcludeKeys[] = {"Font", NULL};
 
-void AnnotWriter::UpdateBePDFAcroForm() {
-	if (mWrittenFonts.empty()) return;
+void AnnotWriter::UpdateBePDFAcroForm()
+{
+	if (mWrittenFonts.empty())
+		return;
 
 	Object acroForm;
 	Object oldDR;
@@ -1123,9 +1237,11 @@ void AnnotWriter::UpdateBePDFAcroForm() {
 	acroForm.free();
 }
 
-void AnnotWriter::UpdateCatalog() {
+void AnnotWriter::UpdateCatalog()
+{
 	// Return if BePDFAcroForm has not been written or ref exists already in Catalog
-	if (is_empty_ref(mBePDFAcroFormRef) || !is_empty_ref(mBePDFAcroForm->GetRef())) return;
+	if (is_empty_ref(mBePDFAcroFormRef) || !is_empty_ref(mBePDFAcroForm->GetRef()))
+		return;
 	// Copy catalog and add ref to new BePDFAcroForm
 	Ref root;
 	Object oldCatalogRef;

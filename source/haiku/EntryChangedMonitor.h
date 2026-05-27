@@ -41,25 +41,25 @@ public:
 	// And before destruction the EntryChangedMonitor has to be
 	// removed from the BLooper.
 	virtual ~EntryChangedMonitor();
-	
+
 	// Set the listener that is called when the entry changes.
 	void SetEntryChangedListener(EntryChangedListener* listener);
 
-	// Set the node referenced by the entry to be watched. 
+	// Set the node referenced by the entry to be watched.
 	// Automatically stops watching of a previously set node.
-	void StartWatching(entry_ref *ref);
+	void StartWatching(entry_ref* ref);
 	// Stop watching of a previously set entry.
 	void StopWatching();
 
 	void MessageReceived(BMessage* msg);
 
-private:	
+private:
 	void NotifyListener();
-	
+
 	EntryChangedListener* mListener;
-	bool       mActive;
-	entry_ref  mEntryRef;
-	node_ref   mNodeRef;
+	bool mActive;
+	entry_ref mEntryRef;
+	node_ref mNodeRef;
 };
 
 #endif

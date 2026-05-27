@@ -39,50 +39,43 @@
 #undef B_TRANSLATION_CONTEXT
 #define B_TRANSLATION_CONTEXT "TraceWindow"
 
-TraceWindow::TraceWindow(GlobalSettings *settings)
-	: BWindow(BRect(0, 0, 100, 100), B_TRANSLATE("Error messages"),
-		B_TITLED_WINDOW_LOOK, B_NORMAL_WINDOW_FEEL, B_AUTO_UPDATE_SIZE_LIMITS)
-	, mSettings(settings)
-	, mAutoOpen(settings->GetTraceAutoOpen())
-	, mShowStdout(settings->GetTraceShowStdout())
-	, mShowStderr(settings->GetTraceShowStderr())
+TraceWindow::TraceWindow(GlobalSettings* settings)
+    : BWindow(BRect(0, 0, 100, 100), B_TRANSLATE("Error messages"), B_TITLED_WINDOW_LOOK, B_NORMAL_WINDOW_FEEL, B_AUTO_UPDATE_SIZE_LIMITS),
+      mSettings(settings),
+      mAutoOpen(settings->GetTraceAutoOpen()),
+      mShowStdout(settings->GetTraceShowStdout()),
+      mShowStderr(settings->GetTraceShowStderr())
 {
-
 	AddCommonFilter(new EscapeMessageFilter(this, HIDE_MSG));
 
 	mOutput = new BTextView("mOutput");
 	mOutput->SetViewUIColor(B_PANEL_BACKGROUND_COLOR);
-	BScrollView *outScroll = new BScrollView("outScroll", mOutput, 0, false, true);
+	BScrollView* outScroll = new BScrollView("outScroll", mOutput, 0, false, true);
 
-	BCheckBox *autoOpen = new BCheckBox("autoOpen", B_TRANSLATE("Auto open"),
-		new BMessage(AUTO_OPEN_MSG));
+	BCheckBox* autoOpen = new BCheckBox("autoOpen", B_TRANSLATE("Auto open"), new BMessage(AUTO_OPEN_MSG));
 	autoOpen->SetValue(mAutoOpen);
 
-	BCheckBox *floating = new BCheckBox("floating", B_TRANSLATE("Floating"),
-		new BMessage(FLOATING_MSG));
+	BCheckBox* floating = new BCheckBox("floating", B_TRANSLATE("Floating"), new BMessage(FLOATING_MSG));
 	floating->SetValue(mSettings->GetTraceFloating());
 
-	mStdoutCB = new BCheckBox("mStdoutCB", "stdout",
-		new BMessage(SHOW_STDOUT_MSG));
+	mStdoutCB = new BCheckBox("mStdoutCB", "stdout", new BMessage(SHOW_STDOUT_MSG));
 	mStdoutCB->SetValue(mShowStdout);
 
-	mStderrCB = new BCheckBox("mStderrCB", "stderr",
-		new BMessage(SHOW_STDERR_MSG));
+	mStderrCB = new BCheckBox("mStderrCB", "stderr", new BMessage(SHOW_STDERR_MSG));
 	mStderrCB->SetValue(mShowStderr);
 
-	BButton *clear = new BButton("clear", B_TRANSLATE("Clear"),
-		new BMessage(CLEAR_MSG));
+	BButton* clear = new BButton("clear", B_TRANSLATE("Clear"), new BMessage(CLEAR_MSG));
 
 	BLayoutBuilder::Group<>(this, B_VERTICAL)
-		.SetInsets(B_USE_WINDOW_INSETS)
-		.Add(outScroll)
-		.AddGroup(B_HORIZONTAL)
-			.Add(autoOpen)
-			.Add(floating)
-			.Add(mStdoutCB)
-			.Add(mStderrCB)
-			.AddGlue()
-			.Add(clear);
+	    .SetInsets(B_USE_WINDOW_INSETS)
+	    .Add(outScroll)
+	    .AddGroup(B_HORIZONTAL)
+	    .Add(autoOpen)
+	    .Add(floating)
+	    .Add(mStdoutCB)
+	    .Add(mStderrCB)
+	    .AddGlue()
+	    .Add(clear);
 
 	mOutput->MakeEditable(false);
 	mOutput->SetStylable(true);
@@ -97,7 +90,10 @@ TraceWindow::TraceWindow(GlobalSettings *settings)
 
 	UpdateWindowLookAndFeel();
 
-	Show(); Lock(); Hide(); Unlock();
+	Show();
+	Lock();
+	Hide();
+	Unlock();
 }
 
 void TraceWindow::EnableCheckboxes()
@@ -106,57 +102,67 @@ void TraceWindow::EnableCheckboxes()
 	mStderrCB->SetEnabled((mShowStdout && mShowStderr) || !mShowStderr);
 }
 
-void TraceWindow::UpdateWindowLookAndFeel() {
+void TraceWindow::UpdateWindowLookAndFeel()
+{
 	if (mSettings->GetTraceFloating()) {
-		SetLook(B_FLOATING_WINDOW_LOOK); SetFeel(B_FLOATING_APP_WINDOW_FEEL);
+		SetLook(B_FLOATING_WINDOW_LOOK);
+		SetFeel(B_FLOATING_APP_WINDOW_FEEL);
 	} else {
-		SetLook(B_TITLED_WINDOW_LOOK); SetFeel(B_NORMAL_WINDOW_FEEL);
+		SetLook(B_TITLED_WINDOW_LOOK);
+		SetFeel(B_NORMAL_WINDOW_FEEL);
 	}
 }
 
-void TraceWindow::FrameMoved(BPoint point) {
+void TraceWindow::FrameMoved(BPoint point)
+{
 	mWindowPos = point;
 	mSettings->SetTraceWindowPosition(point);
 	BWindow::FrameMoved(point);
 }
 
-void TraceWindow::FrameResized(float w, float h) {
+void TraceWindow::FrameResized(float w, float h)
+{
 	mSettings->SetTraceWindowSize(w, h);
 	BWindow::FrameResized(w, h);
 }
 
-bool TraceWindow::QuitRequested() {
-	if (!IsHidden()) Hide();
+bool TraceWindow::QuitRequested()
+{
+	if (!IsHidden())
+		Hide();
 	return false;
 }
 
-void TraceWindow::WriteData(const char* name, int fd, const char* data, int len) {
+void TraceWindow::WriteData(const char* name, int fd, const char* data, int len)
+{
 	static rgb_color stderr_color = {255, 0, 0, 255};
 	static rgb_color stdout_color = {0, 0, 255, 255};
 
-	if (len == 0) return;
+	if (len == 0)
+		return;
 
-	if (!((fd == 1 && mShowStdout) || (fd == 2 && mShowStderr))) return;
+	if (!((fd == 1 && mShowStdout) || (fd == 2 && mShowStderr)))
+		return;
 
 	if (mAutoOpen && IsHidden()) {
 		Show();
 	}
 
-//	char buffer[256];
-//	sprintf(buffer, "%s %d\n", name, fd);
-//	mOutput->Insert(mOutput->TextLength(), buffer, strlen(buffer));
+	//	char buffer[256];
+	//	sprintf(buffer, "%s %d\n", name, fd);
+	//	mOutput->Insert(mOutput->TextLength(), buffer, strlen(buffer));
 
-	int32 cur = mOutput->TextLength()-1;
+	int32 cur = mOutput->TextLength() - 1;
 	mOutput->Insert(cur + 1, data, len);
 	int32 end = mOutput->TextLength();
 	mOutput->SetFontAndColor(cur, end, NULL, 0, (fd == 1) ? &stdout_color : &stderr_color);
 	mOutput->ScrollToOffset(end);
 	mOutput->Invalidate();
-
 }
 
-void TraceWindow::MessageReceived(BMessage* msg) {
-	switch(msg->what) {
+void TraceWindow::MessageReceived(BMessage* msg)
+{
+	switch (msg->what) {
 	case AUTO_OPEN_MSG:
 		mAutoOpen = IsOn(msg);
 		mSettings->SetTraceAutoOpen(mAutoOpen);
@@ -180,7 +186,8 @@ void TraceWindow::MessageReceived(BMessage* msg) {
 		UpdateWindowLookAndFeel();
 		break;
 	case HIDE_MSG:
-		if (!IsHidden()) Hide();
+		if (!IsHidden())
+			Hide();
 		break;
 	default:
 		BWindow::MessageReceived(msg);
@@ -188,25 +195,25 @@ void TraceWindow::MessageReceived(BMessage* msg) {
 }
 
 
-
 // Implementation of OutputTracer
 TraceWindow* OutputTracer::mWindow = NULL;
-BLocker      OutputTracer::mLock;
-int          OutputTracer::mTracerCount = 0;
+BLocker OutputTracer::mLock;
+int OutputTracer::mTracerCount = 0;
 
 OutputTracer::OutputTracer(int fd, const char* name, GlobalSettings* settings)
-	: mDupFd(-1)
-	, mOutFd(fd)
-	, mInFd(-1)
-	, mName(name)
-	, mSettings(settings)
-	, mPipeThread(-1)
+    : mDupFd(-1),
+      mOutFd(fd),
+      mInFd(-1),
+      mName(name),
+      mSettings(settings),
+      mPipeThread(-1)
 {
 	mName = name;
-	mTracerCount ++;
+	mTracerCount++;
 	int fildes[2];
 #ifdef DEBUG
-	mInFd = -1; return;
+	mInFd = -1;
+	return;
 #endif
 	if (0 != pipe(fildes)) {
 		mInFd = -1;
@@ -224,13 +231,15 @@ OutputTracer::OutputTracer(int fd, const char* name, GlobalSettings* settings)
 	}
 }
 
-OutputTracer::~OutputTracer() {
+OutputTracer::~OutputTracer()
+{
 	status_t status;
 	close(mInFd);
-	dup2(mDupFd, mOutFd); close(mDupFd);
+	dup2(mDupFd, mOutFd);
+	close(mDupFd);
 	wait_for_thread(mPipeThread, &status);
 	mLock.Lock();
-	mTracerCount --;
+	mTracerCount--;
 	if (mTracerCount == 0 && mWindow) {
 		mWindow->Lock();
 		mWindow->Quit();
@@ -239,12 +248,14 @@ OutputTracer::~OutputTracer() {
 	mLock.Unlock();
 }
 
-int32 OutputTracer::start_thread(void *data) {
+int32 OutputTracer::start_thread(void* data)
+{
 	((OutputTracer*)data)->Run();
 	return 0;
 }
 
-TraceWindow* OutputTracer::CreateWindow(GlobalSettings* s) {
+TraceWindow* OutputTracer::CreateWindow(GlobalSettings* s)
+{
 	if (mWindow == NULL) {
 		mLock.Lock();
 		if (mWindow == NULL) {
@@ -255,7 +266,8 @@ TraceWindow* OutputTracer::CreateWindow(GlobalSettings* s) {
 	return mWindow;
 }
 
-void OutputTracer::WriteData(const char* data, int len) {
+void OutputTracer::WriteData(const char* data, int len)
+{
 	mLock.Lock();
 	mWindow = CreateWindow(mSettings);
 	if (mWindow->Lock()) {
@@ -265,20 +277,23 @@ void OutputTracer::WriteData(const char* data, int len) {
 	mLock.Unlock();
 }
 
-void OutputTracer::Run() {
+void OutputTracer::Run()
+{
 	const int max = 256;
-	char      buffer[max];
-	int       len;
+	char buffer[max];
+	int len;
 
-	while(0 < (len = read(mInFd, buffer, max))) {
+	while (0 < (len = read(mInFd, buffer, max))) {
 		WriteData(buffer, len);
 	}
 }
 
-void OutputTracer::ShowWindow(GlobalSettings* s) {
+void OutputTracer::ShowWindow(GlobalSettings* s)
+{
 	BWindow* w = CreateWindow(s);
 	w->Lock();
-	if (w->IsHidden()) w->Show();
+	if (w->IsHidden())
+		w->Show();
 	w->Activate();
 	w->Unlock();
 }

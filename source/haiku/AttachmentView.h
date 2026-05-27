@@ -70,13 +70,12 @@ public:
 // AttachmentView displays attachments in a ColumnListView
 class AttachmentView : public BView {
 	BColumnListView* mList;
-	XRef*           mXRef;
+	XRef* mXRef;
 
 	typedef BView super;
 
 public:
-	AttachmentView(GlobalSettings* settings,
-		BLooper* looper, uint32 flags);
+	AttachmentView(GlobalSettings* settings, BLooper* looper, uint32 flags);
 	~AttachmentView();
 	void AttachedToWindow();
 	void MessageReceived(BMessage* msg);
@@ -92,22 +91,17 @@ public:
 	void Update();
 
 private:
-	BToolBar*	fToolBar;
-	PDFDoc*		fDoc;
+	BToolBar* fToolBar;
+	PDFDoc* fDoc;
 
 	// Adds selected attachments to msg
 	int32 AddSelectedAttachments(BMessage* msg);
 	// Saves the attachments stored in msg
 	void Save(BMessage* msg);
 
-	enum AttachmentSelection {
-		kNoAttachmentSelected,
-		kOneAttachmentSelected,
-		kMultipleAttachmentsSelected
-	};
+	enum AttachmentSelection { kNoAttachmentSelected, kOneAttachmentSelected, kMultipleAttachmentsSelected };
 
 	AttachmentSelection GetAttachmentSelection();
-
 };
 
 #endif

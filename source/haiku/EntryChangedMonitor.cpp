@@ -23,40 +23,43 @@
 #include "EntryChangedMonitor.h"
 
 EntryChangedMonitor::EntryChangedMonitor()
-	: mListener(NULL)
-	, mActive(false)
-{
-}
+    : mListener(NULL),
+      mActive(false)
+{}
 
-EntryChangedMonitor::~EntryChangedMonitor() {
+EntryChangedMonitor::~EntryChangedMonitor()
+{
 	StopWatching();
 }
 
-void EntryChangedMonitor::SetEntryChangedListener(EntryChangedListener* listener) {
+void EntryChangedMonitor::SetEntryChangedListener(EntryChangedListener* listener)
+{
 	mListener = listener;
 }
 
-void EntryChangedMonitor::StartWatching(entry_ref *ref) {
+void EntryChangedMonitor::StartWatching(entry_ref* ref)
+{
 	// allow to watch a single file only!
 	StopWatching();
 
 	mEntryRef = *ref;
 	mActive = true;
 	BNode node(ref);
-	if (node.InitCheck() == B_OK &&
-		node.GetNodeRef(&mNodeRef) == B_OK) {
+	if (node.InitCheck() == B_OK && node.GetNodeRef(&mNodeRef) == B_OK) {
 		watch_node(&mNodeRef, B_WATCH_STAT, this);
 	}
 }
 
-void EntryChangedMonitor::StopWatching() {
+void EntryChangedMonitor::StopWatching()
+{
 	if (mActive) {
 		watch_node(&mNodeRef, B_STOP_WATCHING, this);
 		mActive = false;
 	}
 }
 
-void EntryChangedMonitor::MessageReceived(BMessage* msg) {
+void EntryChangedMonitor::MessageReceived(BMessage* msg)
+{
 	if (msg->what != B_NODE_MONITOR)
 		return;
 
@@ -76,9 +79,9 @@ void EntryChangedMonitor::MessageReceived(BMessage* msg) {
 	// then notify the listener
 }
 
-void EntryChangedMonitor::NotifyListener() {
+void EntryChangedMonitor::NotifyListener()
+{
 	if (mListener != NULL) {
 		mListener->EntryChanged();
 	}
 }
-

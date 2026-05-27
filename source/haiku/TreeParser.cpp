@@ -25,13 +25,14 @@
 #include "TextConversion.h"
 
 /* TreeParser */
-bool TreeParser::ParseEntries(Array *entries) {
-	int len = entries->getLength();	
+bool TreeParser::ParseEntries(Array* entries)
+{
+	int len = entries->getLength();
 	bool ok = true;
 	for (int i = 0; ok && i < len; i++) {
 		Object key;
 		if (entries->get(i, &key)) {
-			i ++;
+			i++;
 			Object value;
 			if (i < len && entries->get(i, &value)) {
 				ok = DoEntry(&key, &value);
@@ -46,7 +47,8 @@ bool TreeParser::ParseEntries(Array *entries) {
 	return ok;
 }
 
-bool TreeParser::ParseKids(Array *kids) {
+bool TreeParser::ParseKids(Array* kids)
+{
 	int len = kids->getLength();
 	Object kid;
 	Object sub;
@@ -57,7 +59,7 @@ bool TreeParser::ParseKids(Array *kids) {
 				ok = ParseKids(sub.getArray());
 			}
 			sub.free();
-			
+
 			if (ok && kid.dictLookup(GetEntryKey(), &sub) && sub.isArray()) {
 				ok = ParseEntries(sub.getArray());
 			}
@@ -68,17 +70,18 @@ bool TreeParser::ParseKids(Array *kids) {
 	return ok;
 }
 
-bool TreeParser::Parse(Object *tree) {
+bool TreeParser::Parse(Object* tree)
+{
 	if (tree->isDict()) {
-		Object o; 
+		Object o;
 		// nodes or leafs
 		if (tree->dictLookup("Kids", &o) && o.isArray()) {
 			bool ok = ParseKids(o.getArray());
 			o.free();
 			return ok;
-		} else { 
+		} else {
 			o.free();
-		
+
 			// leafs
 			if (tree->dictLookup(GetEntryKey(), &o) && o.isArray()) {
 				bool ok = ParseEntries(o.getArray());
@@ -87,12 +90,13 @@ bool TreeParser::Parse(Object *tree) {
 			}
 			o.free();
 		}
-	} 
+	}
 	return false;
 }
 
 /* NameTreeParser */
-bool NameTreeParser::DoEntry(Object* key, Object* value) {
+bool NameTreeParser::DoEntry(Object* key, Object* value)
+{
 	if (key->isString() && key->getString() != NULL) {
 		GString* string = key->getString();
 		BString* utf8 = TextToUtf8(string->getCString(), string->getLength());
@@ -102,7 +106,7 @@ bool NameTreeParser::DoEntry(Object* key, Object* value) {
 		}
 		delete utf8;
 		return ok;
-	} 
+	}
 	// not in PDF spec. but does not hurt either
 	if (key->isName()) {
 		return DoName(key->getName(), value);
@@ -111,7 +115,8 @@ bool NameTreeParser::DoEntry(Object* key, Object* value) {
 }
 
 /* NumberTreeParser */
-bool NumberTreeParser::DoEntry(Object* key, Object* value) {
+bool NumberTreeParser::DoEntry(Object* key, Object* value)
+{
 	if (key->isInt()) {
 		return DoNumber(key->getInt(), value);
 	}

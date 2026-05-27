@@ -27,46 +27,52 @@
 #include "LayoutUtils.h"
 
 typedef struct {
-	BListItem **items;
+	BListItem** items;
 	int32 current;
 } ListItems;
 
-static bool CopyListItem(BListItem *item, void *data) {
+static bool CopyListItem(BListItem* item, void* data)
+{
 	((ListItems*)data)->items[((ListItems*)data)->current++] = item;
 	return false;
 }
 
-void MakeEmpty(BListView *list) {
+void MakeEmpty(BListView* list)
+{
 	int32 count = list->CountItems();
-	if (count == 0) return;
-	
-	BListItem **items = new BListItem *[count];
-	const BListItem **listItems = list->Items();
-	for (int32 i = count-1; i >= 0; i--) {
+	if (count == 0)
+		return;
+
+	BListItem** items = new BListItem*[count];
+	const BListItem** listItems = list->Items();
+	for (int32 i = count - 1; i >= 0; i--) {
 		items[i] = (BListItem*)listItems[i];
 	}
 	list->MakeEmpty();
-	for (int32 i = count-1; i >= 0; i--) {
+	for (int32 i = count - 1; i >= 0; i--) {
 		delete items[i];
 	}
 }
 
-void MakeEmpty(BOutlineListView *list) {
+void MakeEmpty(BOutlineListView* list)
+{
 	int32 count = list->FullListCountItems();
-	if (count == 0) return;
+	if (count == 0)
+		return;
 
 	ListItems data;
-	data.items = new BListItem *[count];
+	data.items = new BListItem*[count];
 	data.current = 0;
 	list->FullListDoForEach(CopyListItem, &data);
 	list->MakeEmpty();
-	for (int32 i = count-1; i >= 0; i--) {
+	for (int32 i = count - 1; i >= 0; i--) {
 		delete data.items[i];
 	}
 }
 
 // Implementation of EscapeMessageFilter
-filter_result EscapeMessageFilter::Filter(BMessage *msg, BHandler **target) {
+filter_result EscapeMessageFilter::Filter(BMessage* msg, BHandler** target)
+{
 	int32 key;
 	if (B_OK == msg->FindInt32("key", &key) && key == 1) {
 		mWindow->PostMessage(mWhat);
@@ -77,38 +83,43 @@ filter_result EscapeMessageFilter::Filter(BMessage *msg, BHandler **target) {
 
 // Implementation of Bitset
 #include <malloc.h>
-Bitset::Bitset() {
+Bitset::Bitset()
+{
 	mBitsetElems = 1;
 	mLength = 0;
 	mBitset = (int32*)malloc(sizeof(int32) * mBitsetElems);
 }
 
-Bitset::~Bitset() {
+Bitset::~Bitset()
+{
 	free(mBitset);
 }
 
-void Bitset::Resize(int32 i) {
+void Bitset::Resize(int32 i)
+{
 	int32 elems = 1 + i / 32;
 
-	// resize bitset	
+	// resize bitset
 	if (mBitsetElems < elems) {
 		mBitsetElems = elems;
 		mBitset = (int32*)realloc(mBitset, sizeof(int32) * mBitsetElems);
 	}
-	
-	// initialize 
+
+	// initialize
 	if (i >= mLength) {
-		int32 s = (mLength+31) / 32;
+		int32 s = (mLength + 31) / 32;
 		mLength = i + 1;
 		while (s < elems) {
-			mBitset[s] = 0; s ++;
+			mBitset[s] = 0;
+			s++;
 		};
-	} 
+	}
 }
 
-void Bitset::Set(int i, bool v) { 
+void Bitset::Set(int i, bool v)
+{
 	if (i >= 0) {
-		Resize(i); 
+		Resize(i);
 		if (v) {
 			mBitset[i / 32] |= 1 << (i % 32);
 		} else {
@@ -117,19 +128,22 @@ void Bitset::Set(int i, bool v) {
 	}
 }
 
-bool Bitset::IsSet(int i) { 
-	if (i >= 0 && i < mLength) 
-		return (mBitset[i / 32] & (1 << (i % 32))) != 0; 
+bool Bitset::IsSet(int i)
+{
+	if (i >= 0 && i < mLength)
+		return (mBitset[i / 32] & (1 << (i % 32))) != 0;
 	else
 		return false;
 }
 
-void Bitset::Clear() { 
-	mLength = 0; 
+void Bitset::Clear()
+{
+	mLength = 0;
 }
 
-bool IsOn(BMessage *msg) {
-	void *ptr;
+bool IsOn(BMessage* msg)
+{
+	void* ptr;
 	if (B_OK == msg->FindPointer("source", &ptr)) {
 		return ((BControl*)ptr)->Value() == B_CONTROL_ON;
 	}
@@ -137,14 +151,14 @@ bool IsOn(BMessage *msg) {
 }
 
 // Implementation of TextView
-TextView::TextView(const char *name)
-	: BTextView(name)
+TextView::TextView(const char* name)
+    : BTextView(name)
 {
 	InitColors();
 }
 
 TextView::TextView(BMessage* msg)
-	: BTextView(msg)
+    : BTextView(msg)
 {
 	InitColors();
 }
@@ -156,7 +170,8 @@ void TextView::InitColors()
 	SetViewColor(255, 255, 255);
 }
 
-void TextView::Notify() {
+void TextView::Notify()
+{
 	if (Window()) {
 		BMessage msg(CHANGED_NOTIFY);
 		msg.AddPointer("view", this);
@@ -164,10 +179,7 @@ void TextView::Notify() {
 	}
 }
 
-void TextView::InsertText(const char* inText, 
-							int32 inLength, 
-							int32 inOffset,
-							const text_run_array* inRuns)
+void TextView::InsertText(const char* inText, int32 inLength, int32 inOffset, const text_run_array* inRuns)
 {
 	inherited::InsertText(inText, inLength, inOffset, inRuns);
 	Notify();
@@ -178,5 +190,3 @@ void TextView::DeleteText(int32 fromOffset, int32 toOffset)
 	inherited::DeleteText(fromOffset, toOffset);
 	Notify();
 }
-
-

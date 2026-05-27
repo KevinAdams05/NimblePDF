@@ -24,14 +24,14 @@
 #define _CACHED_PAGE_H
 
 // xpdf
-#include<XRef.h>
-#include<Link.h>
-#include<TextOutputDev.h>
-#include<PDFDoc.h>
-#include"Annotation.h"
+#include <XRef.h>
+#include <Link.h>
+#include <TextOutputDev.h>
+#include <PDFDoc.h>
+#include "Annotation.h"
 // BeOS
-#include<Bitmap.h>
-#include<SupportDefs.h>
+#include <Bitmap.h>
+#include <SupportDefs.h>
 
 class PageCache;
 
@@ -49,65 +49,76 @@ public:
 
 	enum State GetState() const { return mState; }
 	// Is this page displayed?
-	bool GetDisplayed() const   { return mDisplayed; }
-	
-	GBool FindText(Unicode *s, int len,
-		 GBool startAtTop, GBool stopAtBottom,
-		 GBool startAtLast, GBool stopAtLast,
-		 GBool caseSensitive, GBool backward,
-		double *xMin, double *yMin, double *xMax, double *yMax);
-	GString *GetText(int xMin, int yMin, int xMax, int yMax);
-	
+	bool GetDisplayed() const { return mDisplayed; }
+
+	GBool FindText(Unicode* s,
+	    int len,
+	    GBool startAtTop,
+	    GBool stopAtBottom,
+	    GBool startAtLast,
+	    GBool stopAtLast,
+	    GBool caseSensitive,
+	    GBool backward,
+	    double* xMin,
+	    double* yMin,
+	    double* xMax,
+	    double* yMax);
+	GString* GetText(int xMin, int yMin, int xMax, int yMax);
+
 	// If point <x>,<y> is in a link, return the associated action;
 	// else return NULL.
-	LinkAction *FindLink(double x, double y);
+	LinkAction* FindLink(double x, double y);
 
 	// Return true if <x>,<y> is in a link.
 	GBool OnLink(double x, double y);
-	
-	void CvtDevToUser(int dx, int dy, double *ux, double *uy);
-	void CvtUserToDev(double ux, double uy, int *dx, int *dy);
-	
-	BBitmap *GetBitmap() const { return mBitmap; }
-	int32 GetWidth() const     { return mWidth; }
-	int32 GetHeight() const    { return mHeight; }
-	
-	float GetDeltaX()          { return mGSdeltaX; }
-	float GetDeltaY()          { return mGSdeltaY; }
+
+	void CvtDevToUser(int dx, int dy, double* ux, double* uy);
+	void CvtUserToDev(double ux, double uy, int* dx, int* dy);
+
+	BBitmap* GetBitmap() const { return mBitmap; }
+	int32 GetWidth() const { return mWidth; }
+	int32 GetHeight() const { return mHeight; }
+
+	float GetDeltaX() { return mGSdeltaX; }
+	float GetDeltaY() { return mGSdeltaY; }
 
 	void SetAnnotations(Annotations* a) { mAnnotations = a; }
-	Annotations* GetAnnotations()       { return mAnnotations; }
+	Annotations* GetAnnotations() { return mAnnotations; }
 
-	friend class PageCache;	
+	friend class PageCache;
 	friend class PageRenderer;
-	friend int gsdll_callback(int message, char *str, unsigned long count);
+	friend int gsdll_callback(int message, char* str, unsigned long count);
 
-	double *GetCTM() { return mCtm; }
+	double* GetCTM() { return mCtm; }
 
 protected:
 	void MakeEmpty();
 	void SetState(enum State state) { mState = state; };
 	void SetDisplayed(bool displayed) { mDisplayed = displayed; };
-	void SetText(TextPage *text);
-	void SetLinks(Links *links);
-	void InitCTM(OutputDev *outputDev);
-	void SetBitmap(BBitmap *bitmap, int32 width, int32 height);
-	void SetBitmapSize(int32 width, int32 height) { mWidth = width; mHeight = height; };
+	void SetText(TextPage* text);
+	void SetLinks(Links* links);
+	void InitCTM(OutputDev* outputDev);
+	void SetBitmap(BBitmap* bitmap, int32 width, int32 height);
+	void SetBitmapSize(int32 width, int32 height)
+	{
+		mWidth = width;
+		mHeight = height;
+	};
 	enum State mState;
-	bool mDisplayed;   
+	bool mDisplayed;
 
-	BBitmap *mBitmap;
+	BBitmap* mBitmap;
 	int32 mWidth, mHeight;
 	int32 mPage, mZoom, mRotation;
 	// correction for Ghostscript
 	double mGSdeltaX, mGSdeltaY;
 	// from BeOutputDev
-	TextPage *mText;
+	TextPage* mText;
 	// from PDFDoc
-	Links *mLinks;
+	Links* mLinks;
 	// from OutputDev
 	double mCtm[6], mIctm[6];
-	Annotations *mAnnotations;
+	Annotations* mAnnotations;
 };
 
 #endif

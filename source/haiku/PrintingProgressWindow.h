@@ -35,17 +35,18 @@ class BStatusBar;
 
 class PrintingProgressWindow : public BWindow {
 public:
-	PrintingProgressWindow(const char *text, BRect, int32 pages);
+	PrintingProgressWindow(const char* text, BRect, int32 pages);
 	void SetPage(int32 page);
 	bool Aborted();
 	bool Stopped();
-	void MessageReceived(BMessage *msg);
+	void MessageReceived(BMessage* msg);
+
 protected:
 	enum { OK, STOPPED, ABORTED } mState;
 	int32 mPages, mPrintedPages;
-	BStringView *mPageString;
+	BStringView* mPageString;
 	BButton *mAbort, *mStop;
-	BStatusBar *mProgress;
+	BStatusBar* mProgress;
 };
 
 class PrintingHiddenWindow : public BWindow {

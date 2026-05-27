@@ -81,30 +81,31 @@ static const int kZoomDPI[MAX_ZOOM - MIN_ZOOM + 1] = {
 	86, 104, 124, 149, 179
 };
 #else
-static const int kZoomDPI[MAX_ZOOM - MIN_ZOOM + 1] = {
-	18, 24, 36, 48, 54,
-	72,
-	90, 108, 127, 144, 216
-};
+static const int kZoomDPI[MAX_ZOOM - MIN_ZOOM + 1] = {18, 24, 36, 48, 54, 72, 90, 108, 127, 144, 216};
 #endif
 
-#define OPEN_FILE_MSG                  'open'
-#define COPY_LINK_MSG                  'cplk'
-#define DELETE_ANNOT_MSG               'dele'
-#define PROPERTIES_ANNOT_MSG           'prp'
-#define EDIT_ANNOT_MSG                 'edit'
+#define OPEN_FILE_MSG 'open'
+#define COPY_LINK_MSG 'cplk'
+#define DELETE_ANNOT_MSG 'dele'
+#define PROPERTIES_ANNOT_MSG 'prp'
+#define EDIT_ANNOT_MSG 'edit'
 #define SAVE_FILE_ATTACHMENT_ANNOT_MSG 'save'
 
 ///////////////////////////////////////////////////////////////////////////
-PDFView::PDFView (entry_ref* ref, FileAttributes *fileAttributes,
-	const char *name, uint32 flags, const char *ownerPassword,
-	const char *userPassword, bool *encrypted)
-	: BView(name, flags)
+PDFView::PDFView(entry_ref* ref,
+    FileAttributes* fileAttributes,
+    const char* name,
+    uint32 flags,
+    const char* ownerPassword,
+    const char* userPassword,
+    bool* encrypted)
+    : BView(name, flags)
 {
-	GlobalSettings *settings = gApp->GetSettings();
+	GlobalSettings* settings = gApp->GetSettings();
 	SetViewColor(B_TRANSPARENT_COLOR);
 	// init member variables
-	mDoc = NULL; mBePDFAcroForm = NULL;
+	mDoc = NULL;
+	mBePDFAcroForm = NULL;
 	mOk = false;
 	mZoom = settings->GetZoom();
 	mBitmap = NULL;
@@ -120,7 +121,8 @@ PDFView::PDFView (entry_ref* ref, FileAttributes *fileAttributes,
 
 	mTitle = NULL;
 	mLeft = mTop = 0;
-	mWidth = 100; mHeight = 100;
+	mWidth = 100;
+	mHeight = 100;
 	mLinkAction = NULL;
 	mAnnotation = NULL;
 	mAnnotInEditor = NULL;
@@ -143,21 +145,21 @@ PDFView::PDFView (entry_ref* ref, FileAttributes *fileAttributes,
 
 	mPrintSettings = NULL;
 
-	#if JAPANESE_SUPPORT
+#if JAPANESE_SUPPORT
 	SetJapaneseFont(settings->GetJapaneseFontFamily(), settings->GetJapaneseFontStyle());
-	#endif
+#endif
 
-	#if CHINESE_CNS_SUPPORT
+#if CHINESE_CNS_SUPPORT
 	SetChineseTFont(settings->GetChineseTFontFamily(), settings->GetChineseTFontStyle());
-	#endif
+#endif
 
-	#if CHINESE_GB_SUPPORT
+#if CHINESE_GB_SUPPORT
 	SetChineseSFont(settings->GetChineseSFontFamily(), settings->GetChineseSFontStyle());
-	#endif
+#endif
 
-	#if KOREAN_SUPPORT
+#if KOREAN_SUPPORT
 	SetKoreanFont(settings->GetKoreanFontFamily(), settings->GetKoreanFontStyle());
-	#endif
+#endif
 
 	mPageRenderer.SetPassword(mOwnerPassword, mUserPassword);
 
@@ -167,22 +169,26 @@ PDFView::PDFView (entry_ref* ref, FileAttributes *fileAttributes,
 	}
 }
 
-PDFWindow*
-PDFView::GetPDFWindow() {
+PDFWindow* PDFView::GetPDFWindow()
+{
 	return dynamic_cast<PDFWindow*>(Window());
 }
 
 ///////////////////////////////////////////////////////////////////////////
-void PDFView::SetPassword(const char* ownerPassword, const char* userPassword) {
-	delete mOwnerPassword; mOwnerPassword = ownerPassword ? new BString(ownerPassword) : NULL;
-	delete mUserPassword; mUserPassword = userPassword ? new BString(userPassword) : NULL;
+void PDFView::SetPassword(const char* ownerPassword, const char* userPassword)
+{
+	delete mOwnerPassword;
+	mOwnerPassword = ownerPassword ? new BString(ownerPassword) : NULL;
+	delete mUserPassword;
+	mUserPassword = userPassword ? new BString(userPassword) : NULL;
 }
 
 ///////////////////////////////////////////////////////////////////////////
-GString* PDFView::ConvertPassword(const char* password) {
-	GString *pwd = NULL;
+GString* PDFView::ConvertPassword(const char* password)
+{
+	GString* pwd = NULL;
 	if (password != NULL) {
-		BString *s = ToAscii(password);
+		BString* s = ToAscii(password);
 		if (s) {
 			pwd = new GString(s->String());
 			delete s;
@@ -192,32 +198,31 @@ GString* PDFView::ConvertPassword(const char* password) {
 }
 
 ///////////////////////////////////////////////////////////////////////////
-void
-PDFView::EndDoc() {
+void PDFView::EndDoc()
+{
 	mSelected = NOT_SELECTED;
 }
 
 ///////////////////////////////////////////////////////////////////////////
-void
-PDFView::UpdatePanelDirectory(BPath* path) {
+void PDFView::UpdatePanelDirectory(BPath* path)
+{
 	BPath directory;
-	if (strcmp(path->Path(), gApp->DefaultPDF()->Path()) != 0 &&
-		B_OK == path->GetParent(&directory)) {
+	if (strcmp(path->Path(), gApp->DefaultPDF()->Path()) != 0 && B_OK == path->GetParent(&directory)) {
 		// don't set path to default pdf file
 		gApp->GetSettings()->SetPanelDirectory(directory.Path());
 	}
 }
 
 ///////////////////////////////////////////////////////////////////////////
-void
-PDFView::MakeTitleString(BPath* path) {
+void PDFView::MakeTitleString(BPath* path)
+{
 	delete mTitle;
 	mTitle = new BString("BePDF: ");
 
 	Object obj;
 	if (mDoc->getDocInfo(&obj) && obj.isDict()) {
-		Dict *dict = obj.getDict();
-		BString *s = FileInfoWindow::GetProperty(dict, FileInfoWindow::titleKey);
+		Dict* dict = obj.getDict();
+		BString* s = FileInfoWindow::GetProperty(dict, FileInfoWindow::titleKey);
 		if (s) {
 			*mTitle << *s << " (" << path->Leaf() << ")";
 			delete s;
@@ -229,21 +234,22 @@ PDFView::MakeTitleString(BPath* path) {
 }
 
 ///////////////////////////////////////////////////////////////////////////
-bool
-PDFView::OpenFile(entry_ref *ref, const char *ownerPassword, const char *userPassword, bool *encrypted) {
-	BEntry entry (ref, true);
-    if (!entry.Exists()) {
-        return false;
-    }
+bool PDFView::OpenFile(entry_ref* ref, const char* ownerPassword, const char* userPassword, bool* encrypted)
+{
+	BEntry entry(ref, true);
+	if (!entry.Exists()) {
+		return false;
+	}
 	BPath path;
-	entry.GetPath (&path);
+	entry.GetPath(&path);
 
-	GString *fileName = new GString ((char*)path.Path ());
-	GString *owner = ConvertPassword(ownerPassword);
-	GString *user  = ConvertPassword(userPassword);
+	GString* fileName = new GString((char*)path.Path());
+	GString* owner = ConvertPassword(ownerPassword);
+	GString* user = ConvertPassword(userPassword);
 
-	PDFDoc *newDoc = new PDFDoc (fileName, owner, user, NULL);
-	delete owner; delete user;
+	PDFDoc* newDoc = new PDFDoc(fileName, owner, user, NULL);
+	delete owner;
+	delete user;
 
 	UpdatePanelDirectory(&path);
 
@@ -261,9 +267,9 @@ PDFView::OpenFile(entry_ref *ref, const char *ownerPassword, const char *userPas
 }
 
 ///////////////////////////////////////////////////////////////////////////
-void
-PDFView::LoadFileSettings(entry_ref* ref, FileAttributes* fileAttributes, float& left, float& top) {
-	GlobalSettings *s = gApp->GetSettings();
+void PDFView::LoadFileSettings(entry_ref* ref, FileAttributes* fileAttributes, float& left, float& top)
+{
+	GlobalSettings* s = gApp->GetSettings();
 	if (fileAttributes->Read(ref, s) && s->GetRestorePageNumber()) {
 		mCurrentPage = fileAttributes->GetPage();
 		if (mCurrentPage > mDoc->getNumPages()) {
@@ -281,8 +287,8 @@ PDFView::LoadFileSettings(entry_ref* ref, FileAttributes* fileAttributes, float&
 }
 
 ///////////////////////////////////////////////////////////////////////////
-void
-PDFView::RestoreWindowFrame(BWindow* w) {
+void PDFView::RestoreWindowFrame(BWindow* w)
+{
 	GlobalSettings* s = gApp->GetSettings();
 	if (s->GetRestoreWindowFrame()) {
 		// restore window position and size
@@ -294,8 +300,9 @@ PDFView::RestoreWindowFrame(BWindow* w) {
 }
 
 ///////////////////////////////////////////////////////////////////////////
-bool
-PDFView::LoadFile(entry_ref *ref, FileAttributes *fileAttributes, const char *ownerPassword, const char *userPassword, bool init, bool *encrypted) {
+bool PDFView::LoadFile(
+    entry_ref* ref, FileAttributes* fileAttributes, const char* ownerPassword, const char* userPassword, bool init, bool* encrypted)
+{
 	BString s(B_TRANSLATE("BePDF reading file: "));
 	s += ref->name;
 	ShowLoadProgressStatusWindow statusWindow(s.String());
@@ -316,7 +323,8 @@ PDFView::LoadFile(entry_ref *ref, FileAttributes *fileAttributes, const char *ow
 		Window()->Unlock();
 	}
 	bool opened = OpenFile(ref, ownerPassword, userPassword, encrypted);
-	if (isLocked) Window()->Lock();
+	if (isLocked)
+		Window()->Lock();
 	mLoading = false;
 	mPageRenderer.StartDoc(mColorSpace);
 	if (!opened) {
@@ -328,8 +336,7 @@ PDFView::LoadFile(entry_ref *ref, FileAttributes *fileAttributes, const char *ow
 		return false;
 	}
 	delete mBePDFAcroForm;
-	mBePDFAcroForm = new BePDFAcroForm(mDoc->getXRef(),
-		mDoc->getCatalog()->getAcroForm());
+	mBePDFAcroForm = new BePDFAcroForm(mDoc->getXRef(), mDoc->getCatalog()->getAcroForm());
 	mPageRenderer.SetDoc(mDoc, mBePDFAcroForm);
 	BepdfApplication::UpdateFileAttributes(mDoc, ref);
 
@@ -338,11 +345,11 @@ PDFView::LoadFile(entry_ref *ref, FileAttributes *fileAttributes, const char *ow
 
 	RecordHistory(*ref, ownerPassword, userPassword);
 
-	PDFWindow *w = GetPDFWindow();
+	PDFWindow* w = GetPDFWindow();
 	if (w && !init && w->Lock()) {
 		RestoreWindowFrame(w);
 		w->NewDoc(mDoc);
-		w->SetTitle (mTitle->String());
+		w->SetTitle(mTitle->String());
 		Redraw();
 		ScrollTo(left, top);
 		w->Unlock();
@@ -362,17 +369,17 @@ PDFView::~PDFView()
 }
 
 ///////////////////////////////////////////////////////////////////////////
-void PDFView::MessageReceived(BMessage *msg) {
+void PDFView::MessageReceived(BMessage* msg)
+{
 	BString string;
 	switch (msg->what) {
 	case B_SIMPLE_DATA: {
-			entry_ref ref;
-			if (B_OK == msg->FindRef("refs", 0, &ref)) {
-				be_app->RefsReceived(msg);
-				return;
-			}
+		entry_ref ref;
+		if (B_OK == msg->FindRef("refs", 0, &ref)) {
+			be_app->RefsReceived(msg);
+			return;
 		}
-		break;
+	} break;
 	case B_COPY_TARGET:
 		SendDataMessage(msg);
 		break;
@@ -389,43 +396,38 @@ void PDFView::MessageReceived(BMessage *msg) {
 			PDFWindow::Launch(string.String());
 		}
 		break;
-	case DELETE_ANNOT_MSG:
-		{
-			void* p;
-			if (msg->FindPointer("annot", &p) == B_OK && p == mAnnotation) {
-				if (p == mAnnotInEditor) mAnnotInEditor = NULL;
-				mAnnotation->SetDeleted(true);
-				Invalidate(CvtUserToDev(mAnnotation->GetRect()));
-				ClearAnnotationWindow();
-			}
-			mAnnotation = NULL;
+	case DELETE_ANNOT_MSG: {
+		void* p;
+		if (msg->FindPointer("annot", &p) == B_OK && p == mAnnotation) {
+			if (p == mAnnotInEditor)
+				mAnnotInEditor = NULL;
+			mAnnotation->SetDeleted(true);
+			Invalidate(CvtUserToDev(mAnnotation->GetRect()));
+			ClearAnnotationWindow();
 		}
-		break;
-	case EDIT_ANNOT_MSG:
-		{
-			PDFWindow* win = GetPDFWindow();
-			if (win) {
-				win->EditAnnotation(!mEditAnnot);
-			}
+		mAnnotation = NULL;
+	} break;
+	case EDIT_ANNOT_MSG: {
+		PDFWindow* win = GetPDFWindow();
+		if (win) {
+			win->EditAnnotation(!mEditAnnot);
 		}
-		break;
-	case SAVE_FILE_ATTACHMENT_ANNOT_MSG:
-		{
-			PDFWindow* win = GetPDFWindow();
-			if (win == NULL) {
-				break;
-			}
+	} break;
+	case SAVE_FILE_ATTACHMENT_ANNOT_MSG: {
+		PDFWindow* win = GetPDFWindow();
+		if (win == NULL) {
+			break;
+		}
 
-			FileAttachmentAnnot* fileAttachment = dynamic_cast<FileAttachmentAnnot*>(mAnnotation);
-			if (fileAttachment == NULL) {
-				break;
-			}
-
-			BMessage msg(B_SAVE_REQUESTED);
-			msg.AddPointer("fileAttachment", fileAttachment);
-			gApp->OpenSaveFilePanel(this, NULL, &msg, fileAttachment->GetFileName());
+		FileAttachmentAnnot* fileAttachment = dynamic_cast<FileAttachmentAnnot*>(mAnnotation);
+		if (fileAttachment == NULL) {
+			break;
 		}
-		break;
+
+		BMessage msg(B_SAVE_REQUESTED);
+		msg.AddPointer("fileAttachment", fileAttachment);
+		gApp->OpenSaveFilePanel(this, NULL, &msg, fileAttachment->GetFileName());
+	} break;
 	case PROPERTIES_ANNOT_MSG:
 		ShowAnnotWindow(true);
 		break;
@@ -438,25 +440,29 @@ void PDFView::MessageReceived(BMessage *msg) {
 }
 
 ///////////////////////////////////////////////////////////////////////////
-bool
-PDFView::InPage(BPoint p) {
+bool PDFView::InPage(BPoint p)
+{
 	return p.x >= 0.0 && p.x < mWidth && p.y >= 0.0 && p.y < mHeight;
 }
 
 ///////////////////////////////////////////////////////////////////////////
-BPoint
-PDFView::LimitToPage(BPoint p) {
-	if (p.x < 0) p.x = 0.0;
-	else if (p.x > mWidth) p.x = mWidth;
+BPoint PDFView::LimitToPage(BPoint p)
+{
+	if (p.x < 0)
+		p.x = 0.0;
+	else if (p.x > mWidth)
+		p.x = mWidth;
 
-	if (p.y < 0) p.y = 0.0;
-	else if (p.y > mHeight) p.y = mHeight;
+	if (p.y < 0)
+		p.y = 0.0;
+	else if (p.y > mHeight)
+		p.y = mHeight;
 	return p;
 }
 
 ///////////////////////////////////////////////////////////////////////////
-void
-PDFView::OnMouseWheelChanged(BMessage *msg) {
+void PDFView::OnMouseWheelChanged(BMessage* msg)
+{
 	float dy, dx;
 	if (msg->FindFloat("be:wheel_delta_y", &dy) == B_OK && dy != 0.0) {
 		bool down = dy > 0;
@@ -477,8 +483,7 @@ PDFView::OnMouseWheelChanged(BMessage *msg) {
 }
 
 ///////////////////////////////////////////////////////////////////////////
-void
-PDFView::DrawAnnotations(BRect updateRect)
+void PDFView::DrawAnnotations(BRect updateRect)
 {
 	if (!mRendering && mEditAnnot) {
 		SetOrigin(mLeft, mTop);
@@ -489,12 +494,11 @@ PDFView::DrawAnnotations(BRect updateRect)
 
 
 ///////////////////////////////////////////////////////////////////////////
-void
-PDFView::DrawPage(BRect updateRect)
+void PDFView::DrawPage(BRect updateRect)
 {
 	if (mBitmap == NULL) {
 #ifdef DEBUG
-		fprintf (stderr, "WARNING: PDFView::Draw() NULL bitmap\n");
+		fprintf(stderr, "WARNING: PDFView::Draw() NULL bitmap\n");
 #endif
 	} else {
 		DrawBitmap(mBitmap, BRect(0, 0, mWidth, mHeight), BRect(mLeft, mTop, mLeft + mWidth, mTop + mHeight));
@@ -503,8 +507,7 @@ PDFView::DrawPage(BRect updateRect)
 }
 
 ///////////////////////////////////////////////////////////////////////////
-void
-PDFView::DrawBackground(BRect updateRect)
+void PDFView::DrawBackground(BRect updateRect)
 {
 	BRect rect(Bounds());
 	float right = mLeft + mWidth, bottom = mTop + mHeight;
@@ -527,37 +530,35 @@ PDFView::DrawBackground(BRect updateRect)
 }
 
 ///////////////////////////////////////////////////////////////////////////
-void
-PDFView::DrawSelection(BRect updateRect)
+void PDFView::DrawSelection(BRect updateRect)
 {
 	BRect selection(mSelection);
 	selection.OffsetBy(mLeft, mTop);
 
 	rgb_color fill_color = {0, 0, 255, 64}; // transparent blue
-	SetHighColor(fill_color); // fill color for selection
+	SetHighColor(fill_color);               // fill color for selection
 	SetPenSize(1.0);
 
 	switch (mSelected) {
-		case DO_SELECTION:
+	case DO_SELECTION:
+		StrokeRect(selection);
+		break;
+	case SELECTED:
+		SetDrawingMode(B_OP_ALPHA);
+		if (mFilledSelection) {
+			FillRect(selection);
+		} else {
 			StrokeRect(selection);
-			break;
-		case SELECTED:
-			SetDrawingMode(B_OP_ALPHA);
-			if (mFilledSelection) {
-				FillRect(selection);
-			} else {
-				StrokeRect(selection);
-			}
-			SetDrawingMode(B_OP_COPY);
-			break;
-		default:
-			break;
+		}
+		SetDrawingMode(B_OP_COPY);
+		break;
+	default:
+		break;
 	}
 }
 
 ///////////////////////////////////////////////////////////////////////////
-void
-PDFView::Draw(BRect updateRect)
+void PDFView::Draw(BRect updateRect)
 {
 	if (mLoading) {
 		SetLowColor(128, 128, 128, 0);
@@ -574,16 +575,17 @@ PDFView::Draw(BRect updateRect)
 }
 
 ///////////////////////////////////////////////////////////////////////////
-void
-PDFView::ScrollTo (BPoint point) {
+void PDFView::ScrollTo(BPoint point)
+{
 	BView::ScrollTo(point);
-	BPoint mouse; uint32 buttons;
+	BPoint mouse;
+	uint32 buttons;
 	GetMouse(&mouse, &buttons);
 	DisplayLink(mouse);
 }
 
-void
-PDFView::ScrollTo(float x, float y) {
+void PDFView::ScrollTo(float x, float y)
+{
 	BRect bounds(Bounds());
 	float xMax = mWidth - bounds.Width();
 	float yMax = mHeight - bounds.Height();
@@ -602,30 +604,28 @@ PDFView::ScrollTo(float x, float y) {
 }
 
 ///////////////////////////////////////////////////////////////////////////
-void
-PDFView::FrameResized (float width, float height)
+void PDFView::FrameResized(float width, float height)
 {
 	Resize();
 }
 
 
 ///////////////////////////////////////////////////////////////////////////
-void
-PDFView::AttachedToWindow ()
+void PDFView::AttachedToWindow()
 {
-	Window()->SetTitle (mTitle->String());
+	Window()->SetTitle(mTitle->String());
 	SetViewCursor(gApp->handCursor);
 	mPageRenderer.SetListener(Window(), this);
 }
 
 ///////////////////////////////////////////////////////////////////////////
-void
-PDFView::ScrollVertical (bool down, float by) {
-	BRect rect(Bounds ());
+void PDFView::ScrollVertical(bool down, float by)
+{
+	BRect rect(Bounds());
 	float scrollBy = (by > 0) ? rect.Height() * by : -by;
 	if (down) {
-		if (rect.bottom < mHeight-1) {
-			ScrollBy (0, scrollBy);
+		if (rect.bottom < mHeight - 1) {
+			ScrollBy(0, scrollBy);
 		} else {
 			if (mCurrentPage != mDoc->getNumPages()) { // bottom of last page not reached
 				MoveToPage(mCurrentPage + 1, true);
@@ -633,7 +633,7 @@ PDFView::ScrollVertical (bool down, float by) {
 		}
 	} else { // up
 		if (rect.top != 0) {
-			ScrollBy (0, -scrollBy);
+			ScrollBy(0, -scrollBy);
 		} else {
 			if (mCurrentPage != 1) { // top of first page not reached
 				MoveToPage(mCurrentPage - 1, false);
@@ -643,63 +643,64 @@ PDFView::ScrollVertical (bool down, float by) {
 }
 
 ///////////////////////////////////////////////////////////////////////////
-void
-PDFView::ScrollHorizontal (bool right, float by) {
+void PDFView::ScrollHorizontal(bool right, float by)
+{
 	BRect rect(Bounds());
 	float scrollBy = (by > 0) ? rect.Width() * by : -by;
 	if (right) {
 		if (rect.right < mWidth - 1) {
-			ScrollBy (scrollBy, 0);
+			ScrollBy(scrollBy, 0);
 		}
 	} else {
 		if (rect.left != 0) {
-			ScrollBy (-scrollBy, 0);
+			ScrollBy(-scrollBy, 0);
 		}
 	}
 }
 ///////////////////////////////////////////////////////////////////////////
-void
-PDFView::KeyDown (const char * bytes, int32 numBytes)
+void PDFView::KeyDown(const char* bytes, int32 numBytes)
 {
 	switch (*bytes) {
 	case B_PAGE_UP:
-		MoveToPage (mCurrentPage - 1);
+		MoveToPage(mCurrentPage - 1);
 		break;
 	case B_SPACE:
 	case B_ENTER:
 	case B_BACKSPACE:
-		ScrollVertical (*bytes != B_BACKSPACE, 0.95);
+		ScrollVertical(*bytes != B_BACKSPACE, 0.95);
 		break;
 	case B_DOWN_ARROW:
 	case B_UP_ARROW:
-		ScrollVertical (*bytes == B_DOWN_ARROW, -20);
+		ScrollVertical(*bytes == B_DOWN_ARROW, -20);
 		break;
 	case B_LEFT_ARROW:
 	case B_RIGHT_ARROW:
 		ScrollHorizontal(*bytes == B_RIGHT_ARROW, -20);
 		break;
 	case B_PAGE_DOWN:
-		MoveToPage (mCurrentPage + 1);
+		MoveToPage(mCurrentPage + 1);
 		break;
 	case B_HOME:
-		MoveToPage (1);
+		MoveToPage(1);
 		break;
 	case B_END:
-		MoveToPage (GetNumPages ());
+		MoveToPage(GetNumPages());
 		break;
 	default:
-		BView::KeyDown (bytes, numBytes);
+		BView::KeyDown(bytes, numBytes);
 		break;
 	}
 }
 
 ///////////////////////////////////////////////////////////////////////////
-void PDFView::SetAction(mouse_action action) {
+void PDFView::SetAction(mouse_action action)
+{
 	mMouseAction = action;
 }
 
 ///////////////////////////////////////////////////////////////////////////
-void PDFView::SetViewCursor(BCursor *cursor, bool sync) {
+void PDFView::SetViewCursor(BCursor* cursor, bool sync)
+{
 	if (Window()->Lock()) {
 		mViewCursor = cursor;
 		BView::SetViewCursor(cursor, sync);
@@ -708,8 +709,8 @@ void PDFView::SetViewCursor(BCursor *cursor, bool sync) {
 }
 
 ///////////////////////////////////////////////////////////////////////////
-BPoint
-PDFView::CorrectMousePos(const BPoint point) {
+BPoint PDFView::CorrectMousePos(const BPoint point)
+{
 	BPoint p(point);
 	p.x -= mLeft;
 	p.y -= mTop;
@@ -717,24 +718,24 @@ PDFView::CorrectMousePos(const BPoint point) {
 }
 
 ///////////////////////////////////////////////////////////////////////////
-PDFPoint
-PDFView::CvtDevToUser(BPoint dev) {
+PDFPoint PDFView::CvtDevToUser(BPoint dev)
+{
 	double x, y;
 	mPage->CvtDevToUser((int)dev.x, (int)dev.y, &x, &y);
 	return PDFPoint(x, y);
 }
 
 ///////////////////////////////////////////////////////////////////////////
-BPoint
-PDFView::CvtUserToDev(PDFPoint user) {
+BPoint PDFView::CvtUserToDev(PDFPoint user)
+{
 	int x, y;
 	mPage->CvtUserToDev(user.x, user.y, &x, &y);
 	return BPoint(x, y);
 }
 
 ///////////////////////////////////////////////////////////////////////////
-BRect
-PDFView::CvtUserToDev(PDFRectangle* user) {
+BRect PDFView::CvtUserToDev(PDFRectangle* user)
+{
 	// Note: Keep in sync with AnnotationRenderer::ToRect()
 	BRect r;
 	int x, y;
@@ -742,24 +743,30 @@ PDFView::CvtUserToDev(PDFRectangle* user) {
 	r.top = r.bottom = y;
 	r.right = r.left = x;
 	mPage->CvtUserToDev(user->x2, user->y2, &x, &y);
-	if (y < r.top) r.top = y; else r.bottom = y;
-	if (x < r.left) r.left = x; else r.right = x;
+	if (y < r.top)
+		r.top = y;
+	else
+		r.bottom = y;
+	if (x < r.left)
+		r.left = x;
+	else
+		r.right = x;
 	r.top = floor(r.top);
 	r.left = floor(r.left);
-	r.bottom = ceil(r.bottom+1.0);
-	r.right = ceil(r.right+1.0);
+	r.bottom = ceil(r.bottom + 1.0);
+	r.right = ceil(r.right + 1.0);
 	// The next line exists not in AnnotationRenderer::ToRect():
 	r.OffsetBy(mLeft, mTop);
 	return r;
 }
 
 ///////////////////////////////////////////////////////////////////////////
-bool
-PDFView::OnAnnotResizeRect(BPoint point, bool& vertOnly) {
+bool PDFView::OnAnnotResizeRect(BPoint point, bool& vertOnly)
+{
 	BRect r = CvtUserToDev(mAnnotation->GetRect());
 	r.left = r.right - 5;
 	if (r.Contains(point)) {
-		r.top  = r.bottom - 5;
+		r.top = r.bottom - 5;
 		vertOnly = !r.Contains(point);
 		return true;
 	}
@@ -767,27 +774,29 @@ PDFView::OnAnnotResizeRect(BPoint point, bool& vertOnly) {
 }
 
 ///////////////////////////////////////////////////////////////////////////
-bool
-PDFView::OnAnnotation(BPoint point) {
-	if (mRendering) return false;
+bool PDFView::OnAnnotation(BPoint point)
+{
+	if (mRendering)
+		return false;
 
 	BPoint p = CorrectMousePos(point);
 	PDFPoint u = CvtDevToUser(p);
 	Annotation* annot = mPage->GetAnnotations()->OverAnnotation(u.x, u.y, mEditAnnot);
 	// XXX maybe allow deleting the annotation even if we can't write one
-	if (!CanWrite(annot)) annot = NULL;
+	if (!CanWrite(annot))
+		annot = NULL;
 	mAnnotation = annot;
 	if (mAnnotation) {
 		bool vertOnly;
 		if (OnAnnotResizeRect(point, vertOnly)) {
-	  		if (vertOnly) {
-	  			SetViewCursor(gApp->splitVCursor);
-	  		} else {
-	  			SetViewCursor(gApp->resizeCursor);
-	  		}
+			if (vertOnly) {
+				SetViewCursor(gApp->splitVCursor);
+			} else {
+				SetViewCursor(gApp->resizeCursor);
+			}
 		} else {
-	  	SetViewCursor(gApp->pointerCursor);
-	  	}
+			SetViewCursor(gApp->pointerCursor);
+		}
 	} else {
 		SetViewCursor(gApp->handCursor);
 	}
@@ -795,16 +804,16 @@ PDFView::OnAnnotation(BPoint point) {
 }
 
 ///////////////////////////////////////////////////////////////////////////
-void
-PDFView::CurrentDate(BString& date) {
+void PDFView::CurrentDate(BString& date)
+{
 	GString s;
 	AnnotUtils::CurrentDate(&s);
 	date = s.getCString();
 }
 
 ///////////////////////////////////////////////////////////////////////////
-void
-PDFView::InsertAnnotation(BPoint where, bool* hasFixedSize) {
+void PDFView::InsertAnnotation(BPoint where, bool* hasFixedSize)
+{
 	BString date;
 	CurrentDate(date);
 
@@ -844,8 +853,8 @@ PDFView::InsertAnnotation(BPoint where, bool* hasFixedSize) {
 }
 
 ///////////////////////////////////////////////////////////////////////////
-void
-PDFView::AnnotMoveOrResize(BPoint point, bool annotInserted, bool fixedSize) {
+void PDFView::AnnotMoveOrResize(BPoint point, bool annotInserted, bool fixedSize)
+{
 	SetAction(MOVE_ANNOT_ACTION);
 	SyncAnnotation(false);
 	mAnnotStartRect = *mAnnotation->GetRect();
@@ -854,10 +863,10 @@ PDFView::AnnotMoveOrResize(BPoint point, bool annotInserted, bool fixedSize) {
 	mResizeVertOnly = false;
 	if (fixedSize || (!annotInserted && !OnAnnotResizeRect(point, mResizeVertOnly))) {
 		// move
-  		PDFPoint p = CvtDevToUser(CorrectMousePos(point)) - mAnnotation->LeftTop();
+		PDFPoint p = CvtDevToUser(CorrectMousePos(point)) - mAnnotation->LeftTop();
 		if (fixedSize) {
-			float dx = (mAnnotation->GetRect()->x2 - mAnnotation->GetRect()->x1)/2;
-			float dy = (mAnnotation->GetRect()->y1 - mAnnotation->GetRect()->y2)/2;
+			float dx = (mAnnotation->GetRect()->x2 - mAnnotation->GetRect()->x1) / 2;
+			float dy = (mAnnotation->GetRect()->y1 - mAnnotation->GetRect()->y2) / 2;
 			p.x = dx;
 			p.y = dy;
 		}
@@ -875,49 +884,50 @@ PDFView::AnnotMoveOrResize(BPoint point, bool annotInserted, bool fixedSize) {
 }
 
 ///////////////////////////////////////////////////////////////////////////
-bool
-PDFView::AnnotMouseDown(BPoint point, uint32 buttons) {
+bool PDFView::AnnotMouseDown(BPoint point, uint32 buttons)
+{
 	BPoint screen = ConvertToScreen(point);
 	switch (buttons) {
-		case B_PRIMARY_MOUSE_BUTTON:
-			if (!mEditAnnot) return false;
-			// move, resize or insert annotation
-			{
-				bool annotInserted = false;
-				bool fixedSize = false;
-				if (mInsertAnnot) {
-					InsertAnnotation(point, &fixedSize);
-					annotInserted = true;
-				}
-				ShowAnnotWindow(true, true);
-				if (annotInserted || OnAnnotation(point)) {
-					AnnotMoveOrResize(point, annotInserted, fixedSize);
-					return true;
-				} else {
-					SetAction(NO_ACTION);
-					return false;
-				}
+	case B_PRIMARY_MOUSE_BUTTON:
+		if (!mEditAnnot)
+			return false;
+		// move, resize or insert annotation
+		{
+			bool annotInserted = false;
+			bool fixedSize = false;
+			if (mInsertAnnot) {
+				InsertAnnotation(point, &fixedSize);
+				annotInserted = true;
 			}
-			break;
-		case B_SECONDARY_MOUSE_BUTTON:
-			// context menu, copy is not implemented in annotation editing mode
-			if (mAnnotation) {
-				ShowAnnotPopUpMenu(screen);
+			ShowAnnotWindow(true, true);
+			if (annotInserted || OnAnnotation(point)) {
+				AnnotMoveOrResize(point, annotInserted, fixedSize);
 				return true;
+			} else {
+				SetAction(NO_ACTION);
+				return false;
 			}
-			// don't allow copy in annotation editing mode
-			if (mEditAnnot) {
-				return true;
-			}
-			break;
-		default:;
+		}
+		break;
+	case B_SECONDARY_MOUSE_BUTTON:
+		// context menu, copy is not implemented in annotation editing mode
+		if (mAnnotation) {
+			ShowAnnotPopUpMenu(screen);
+			return true;
+		}
+		// don't allow copy in annotation editing mode
+		if (mEditAnnot) {
+			return true;
+		}
+		break;
+	default:;
 	}
 	return mInsertAnnot != NULL;
 }
 
 ///////////////////////////////////////////////////////////////////////////
-void
-PDFView::MoveAnnotation(BPoint point) {
+void PDFView::MoveAnnotation(BPoint point)
+{
 	PDFPoint p = CvtDevToUser(CorrectMousePos(point)) - PDFPoint(mMousePosition.x, mMousePosition.y);
 	if (!(mAnnotation->LeftTop() == p)) {
 		BRect oldRect = CvtUserToDev(mAnnotation->GetRect());
@@ -930,10 +940,11 @@ PDFView::MoveAnnotation(BPoint point) {
 }
 
 ///////////////////////////////////////////////////////////////////////////
-void
-PDFView::ResizeAnnotation(BPoint point) {
+void PDFView::ResizeAnnotation(BPoint point)
+{
 	mInsertAnnot = NULL;
-	if (mResizeVertOnly) point.y = mMousePosition.y;
+	if (mResizeVertOnly)
+		point.y = mMousePosition.y;
 	PDFPoint delta = CvtDevToUser(mMousePosition - point);
 	PDFPoint origin = CvtDevToUser(BPoint(0.0, 0.0));
 	delta = origin - delta;
@@ -946,14 +957,16 @@ PDFView::ResizeAnnotation(BPoint point) {
 	mAnnotation->SetChanged(true);
 	BRect newRect = CvtUserToDev(mAnnotation->GetRect());
 	BRect invRect = oldRect | newRect;
-	if (oldRect != newRect) Invalidate(invRect);
+	if (oldRect != newRect)
+		Invalidate(invRect);
 }
 
 ///////////////////////////////////////////////////////////////////////////
-bool
-PDFView::AnnotMouseMoved(BPoint point, uint32 transit, const BMessage* msg) {
+bool PDFView::AnnotMouseMoved(BPoint point, uint32 transit, const BMessage* msg)
+{
 	if (mEditAnnot && mMouseAction == NO_ACTION) {
-		if (mInsertAnnot == NULL) OnAnnotation(point);
+		if (mInsertAnnot == NULL)
+			OnAnnotation(point);
 		return true;
 	} else if (mInsertAnnot != NULL) {
 		return true;
@@ -963,8 +976,8 @@ PDFView::AnnotMouseMoved(BPoint point, uint32 transit, const BMessage* msg) {
 }
 
 ///////////////////////////////////////////////////////////////////////////
-bool
-PDFView::AnnotMouseUp(BPoint point) {
+bool PDFView::AnnotMouseUp(BPoint point)
+{
 	bool consumed;
 	consumed = AnnotMouseMoved(point, 0, NULL);
 	if (consumed) {
@@ -974,8 +987,8 @@ PDFView::AnnotMouseUp(BPoint point) {
 }
 
 ///////////////////////////////////////////////////////////////////////////
-uint32
-PDFView::GetButtons() {
+uint32 PDFView::GetButtons()
+{
 	BPoint point;
 	uint32 buttons;
 	GetMouse(&point, &buttons, false);
@@ -990,9 +1003,9 @@ PDFView::GetButtons() {
 }
 
 ///////////////////////////////////////////////////////////////////////////
-void
-PDFView::MouseDown (BPoint point) {
-	LinkAction *action;
+void PDFView::MouseDown(BPoint point)
+{
+	LinkAction* action;
 	BPoint screen;
 
 	MakeFocus(true);
@@ -1002,74 +1015,74 @@ PDFView::MouseDown (BPoint point) {
 		return;
 	}
 	switch (buttons) {
-		case B_PRIMARY_MOUSE_BUTTON:
-			if ((mSelected == SELECTED) && mSelection.Contains(CorrectMousePos(point))) {
-				SendDragMessage(B_MIME_DATA); // start text drag and drop
-				break;
-			}
-			// follow link or move view
-			SetAction(MOVE_ACTION);
-			if (!HandleLink(point)) {
-				mDragStarted = true;
-				SetMouseEventMask(B_POINTER_EVENTS);
-		  		SetViewCursor(gApp->grabCursor);
-				mMousePosition = ConvertToScreen(point);
-			} else {
-				SetAction(NO_ACTION);
-			}
+	case B_PRIMARY_MOUSE_BUTTON:
+		if ((mSelected == SELECTED) && mSelection.Contains(CorrectMousePos(point))) {
+			SendDragMessage(B_MIME_DATA); // start text drag and drop
 			break;
-		case B_SECONDARY_MOUSE_BUTTON:
-			if ((mSelected == SELECTED) && mSelection.Contains(CorrectMousePos(point ))) {
-				SendDragMessage(B_SIMPLE_DATA); // start negotiated drag and drop
-				return;
-			}
-			if (mSelected == NOT_SELECTED) {
-				if ((action = OnLink(point)) != NULL) {
-					ShowPopUpMenu(screen, action);
-					return;
-				}
-			}
-			// text selection: fall through
-		case B_TERTIARY_MOUSE_BUTTON: // zoom to selection
-			if (mSelected != NOT_SELECTED) {
-				mSelection.OffsetBy(mLeft, mTop);
-				Invalidate(mSelection);
-				mSelected = NOT_SELECTED;
-			}
-
-			// is copying allowed?
-			if (buttons == B_SECONDARY_MOUSE_BUTTON && !mDoc->okToCopy()) {
-				return;
-			}
-
-			SetAction(buttons == B_TERTIARY_MOUSE_BUTTON ? ZOOM_ACTION : SELECT_ACTION);
-
-			mSelected = DO_SELECTION;
-			mMousePosition = screen;
-			point = CorrectMousePos(point);
-
-			if (buttons == B_SECONDARY_MOUSE_BUTTON) {
-			  	SetViewCursor(gApp->textSelectionCursor);
-			  	point = LimitToPage(point);
-			} else {
-			  	SetViewCursor(gApp->zoomCursor);
-			}
-			mSelectionStart = point;
-			mSelection.SetLeftTop(point);
-			mSelection.SetRightBottom(point);
+		}
+		// follow link or move view
+		SetAction(MOVE_ACTION);
+		if (!HandleLink(point)) {
+			mDragStarted = true;
 			SetMouseEventMask(B_POINTER_EVENTS);
+			SetViewCursor(gApp->grabCursor);
+			mMousePosition = ConvertToScreen(point);
+		} else {
+			SetAction(NO_ACTION);
+		}
+		break;
+	case B_SECONDARY_MOUSE_BUTTON:
+		if ((mSelected == SELECTED) && mSelection.Contains(CorrectMousePos(point))) {
+			SendDragMessage(B_SIMPLE_DATA); // start negotiated drag and drop
+			return;
+		}
+		if (mSelected == NOT_SELECTED) {
+			if ((action = OnLink(point)) != NULL) {
+				ShowPopUpMenu(screen, action);
+				return;
+			}
+		}
+		// text selection: fall through
+	case B_TERTIARY_MOUSE_BUTTON: // zoom to selection
+		if (mSelected != NOT_SELECTED) {
+			mSelection.OffsetBy(mLeft, mTop);
+			Invalidate(mSelection);
+			mSelected = NOT_SELECTED;
+		}
 
-			break;
+		// is copying allowed?
+		if (buttons == B_SECONDARY_MOUSE_BUTTON && !mDoc->okToCopy()) {
+			return;
+		}
+
+		SetAction(buttons == B_TERTIARY_MOUSE_BUTTON ? ZOOM_ACTION : SELECT_ACTION);
+
+		mSelected = DO_SELECTION;
+		mMousePosition = screen;
+		point = CorrectMousePos(point);
+
+		if (buttons == B_SECONDARY_MOUSE_BUTTON) {
+			SetViewCursor(gApp->textSelectionCursor);
+			point = LimitToPage(point);
+		} else {
+			SetViewCursor(gApp->zoomCursor);
+		}
+		mSelectionStart = point;
+		mSelection.SetLeftTop(point);
+		mSelection.SetRightBottom(point);
+		SetMouseEventMask(B_POINTER_EVENTS);
+
+		break;
 	}
 }
 
 
-void
-PDFView::ScrollIfOutside(BPoint point) {
+void PDFView::ScrollIfOutside(BPoint point)
+{
 	float x, y, r_min, r_max;
 	BRect bounds(Bounds());
 
-	BScrollBar *scroll = ScrollBar(B_VERTICAL);
+	BScrollBar* scroll = ScrollBar(B_VERTICAL);
 
 	scroll->GetRange(&r_min, &r_max);
 
@@ -1098,21 +1111,26 @@ PDFView::ScrollIfOutside(BPoint point) {
 }
 
 
-void
-PDFView::ResizeSelection(BPoint point) {
+void PDFView::ResizeSelection(BPoint point)
+{
 	point = CorrectMousePos(point);
 	BRect rect(mSelection);
-	if (mMouseAction == SELECT_ACTION) point = LimitToPage(point);
+	if (mMouseAction == SELECT_ACTION)
+		point = LimitToPage(point);
 	if (point.x < mSelectionStart.x) {
-		mSelection.left = point.x; mSelection.right = mSelectionStart.x;
+		mSelection.left = point.x;
+		mSelection.right = mSelectionStart.x;
 	} else {
-		mSelection.left = mSelectionStart.x; mSelection.right = point.x;
+		mSelection.left = mSelectionStart.x;
+		mSelection.right = point.x;
 	}
 
 	if (point.y < mSelectionStart.y) {
-		mSelection.top = point.y; mSelection.bottom = mSelectionStart.y;
+		mSelection.top = point.y;
+		mSelection.bottom = mSelectionStart.y;
 	} else {
-		mSelection.top = mSelectionStart.y; mSelection.bottom = point.y;
+		mSelection.top = mSelectionStart.y;
+		mSelection.bottom = point.y;
 	}
 
 	if (rect != mSelection) {
@@ -1123,17 +1141,17 @@ PDFView::ResizeSelection(BPoint point) {
 }
 
 ///////////////////////////////////////////////////////////////////////////
-void PDFView::SkipMouseMoveMsgs() {
-	BMessage *mouseMovedMsg;
-	while ((mouseMovedMsg = Looper()->MessageQueue()->FindMessage(B_MOUSE_MOVED, 0)))
-	{
+void PDFView::SkipMouseMoveMsgs()
+{
+	BMessage* mouseMovedMsg;
+	while ((mouseMovedMsg = Looper()->MessageQueue()->FindMessage(B_MOUSE_MOVED, 0))) {
 		Looper()->MessageQueue()->RemoveMessage(mouseMovedMsg);
 		delete mouseMovedMsg;
 	}
 }
 
-void
-PDFView::InitViewCursor(uint32 transit) {
+void PDFView::InitViewCursor(uint32 transit)
+{
 	// FIXME: Where is the best place to set the initial Cursor of a view?
 	if ((transit == B_ENTERED_VIEW) && (mViewCursor != NULL)) {
 		if (Window()->Lock()) {
@@ -1144,9 +1162,9 @@ PDFView::InitViewCursor(uint32 transit) {
 	}
 }
 
-void
-PDFView::MouseMoved (BPoint point, uint32 transit, const BMessage *msg) {
-	#define UPDATE_INTERVAL 4
+void PDFView::MouseMoved(BPoint point, uint32 transit, const BMessage* msg)
+{
+#define UPDATE_INTERVAL 4
 	int updateCounter = UPDATE_INTERVAL;
 
 	InitViewCursor(transit);
@@ -1156,93 +1174,93 @@ PDFView::MouseMoved (BPoint point, uint32 transit, const BMessage *msg) {
 	}
 
 	switch (mMouseAction) {
-		case NO_ACTION:
-			if (!mDragStarted)
-				DisplayLink(point);
-			break;
-		case MOVE_ACTION: // move view
-		{
+	case NO_ACTION:
+		if (!mDragStarted)
+			DisplayLink(point);
+		break;
+	case MOVE_ACTION: // move view
+	{
+		SkipMouseMoveMsgs();
+
+		BPoint mousePosition = point;
+		uint32 buttons = GetButtons();
+		BPoint offset;
+		float x, y, r_min, r_max;
+		BScrollBar* scroll;
+
+		point = ConvertToScreen(mousePosition);
+		offset = point - mMousePosition;
+		if (mInvertVerticalScrolling) {
+			offset.y = mMousePosition.y - point.y;
+		}
+		mMousePosition = point;
+
+		scroll = ScrollBar(B_HORIZONTAL);
+		scroll->GetRange(&r_min, &r_max);
+		x = min_c(r_max, max_c(scroll->Value() - offset.x, r_min));
+
+		scroll = ScrollBar(B_VERTICAL);
+		scroll->GetRange(&r_min, &r_max);
+		y = min_c(r_max, max_c(scroll->Value() - offset.y, r_min));
+
+		ScrollTo(x, y);
+
+		if ((buttons & B_PRIMARY_MOUSE_BUTTON) == 0) {
+			MouseUp(mousePosition);
+		}
+		break;
+	}
+	case SELECT_ACTION: // text selection
+	case ZOOM_ACTION:   // zoom to selection
+	case MOVE_ANNOT_ACTION:
+	case RESIZE_ANNOT_ACTION:
+		while (true) {
 			SkipMouseMoveMsgs();
 
-			BPoint mousePosition = point;
-			uint32 buttons = GetButtons();
-			BPoint offset;
-			float x, y, r_min, r_max;
-			BScrollBar *scroll;
+			uint32 buttons;
 
-			point = ConvertToScreen(mousePosition);
-			offset = point - mMousePosition;
-			if (mInvertVerticalScrolling) {
-				offset.y = mMousePosition.y - point.y;
+			ScrollIfOutside(point);
+
+			switch (mMouseAction) {
+			case SELECT_ACTION:
+			case ZOOM_ACTION:
+				ResizeSelection(point);
+				break;
+			case MOVE_ANNOT_ACTION:
+				MoveAnnotation(point);
+				break;
+			case RESIZE_ANNOT_ACTION:
+				ResizeAnnotation(point);
+				break;
+			default:;
 			}
-			mMousePosition = point;
 
-			scroll = ScrollBar(B_HORIZONTAL);
-			scroll->GetRange(&r_min, &r_max);
-			x = min_c(r_max, max_c(scroll->Value() - offset.x, r_min));
-
-			scroll = ScrollBar(B_VERTICAL);
-			scroll->GetRange(&r_min, &r_max);
-			y = min_c(r_max, max_c(scroll->Value() - offset.y, r_min));
-
-			ScrollTo(x, y);
-
-			if ((buttons & B_PRIMARY_MOUSE_BUTTON) == 0) {
-				MouseUp(mousePosition);
+			GetMouse(&point, &buttons, false);
+			if (buttons == 0) {
+				MouseUp(point);
+				return;
 			}
-			break;
+			if (updateCounter == UPDATE_INTERVAL) {
+				Window()->UpdateIfNeeded();
+				updateCounter = 0;
+			} else {
+				updateCounter++;
+			}
+			snooze(10000);
 		}
-		case SELECT_ACTION: // text selection
-		case ZOOM_ACTION: // zoom to selection
-		case MOVE_ANNOT_ACTION:
-		case RESIZE_ANNOT_ACTION:
-		 	while(true) {
-				SkipMouseMoveMsgs();
-
-				uint32 buttons;
-
-				ScrollIfOutside(point);
-
-				switch (mMouseAction) {
-					case SELECT_ACTION:
-					case ZOOM_ACTION:
-						ResizeSelection(point);
-						break;
-					case MOVE_ANNOT_ACTION:
-						MoveAnnotation(point);
-						break;
-					case RESIZE_ANNOT_ACTION:
-						ResizeAnnotation(point);
-						break;
-					default:;
-				}
-
-				GetMouse(&point, &buttons, false);
-				if (buttons == 0) {
-					MouseUp(point);
-					return;
-				}
-				if (updateCounter == UPDATE_INTERVAL) {
-					Window()->UpdateIfNeeded();
-					updateCounter = 0;
-				} else {
-					updateCounter ++;
-				}
-				snooze(10000);
-			}
-			break;
-		default:;
+		break;
+	default:;
 	}
 }
 
 ///////////////////////////////////////////////////////////////////////////
-void
-PDFView::MouseUp (BPoint point) {
+void PDFView::MouseUp(BPoint point)
+{
 	if (AnnotMouseUp(point)) {
 		mDragStarted = false;
 	} else {
 		if (mMouseAction == SELECT_ACTION) { // copy selection
-			if (mSelection.Width() * mSelection.Height() * mSelection .Height() > 200) {
+			if (mSelection.Width() * mSelection.Height() * mSelection.Height() > 200) {
 				mSelected = SELECTED;
 				Invalidate(mSelection.OffsetByCopy(mLeft, mTop));
 				CopySelection();
@@ -1254,7 +1272,7 @@ PDFView::MouseUp (BPoint point) {
 			mSelected = NOT_SELECTED;
 			Invalidate(mSelection.OffsetByCopy(mLeft, mTop));
 
-			if (mSelection.Width() * mSelection .Height() > 200) {
+			if (mSelection.Width() * mSelection.Height() > 200) {
 				float a = mSelection.Width() + 1, b = mSelection.Height() + 1;
 				BRect bounds(Bounds());
 				float n = bounds.Width() + 1, m = bounds.Height() + 1;
@@ -1266,14 +1284,15 @@ PDFView::MouseUp (BPoint point) {
 					newZoomDPI = (int32)(zoomDPI * m / b);
 				}
 
-				if (newZoomDPI > ZOOM_DPI_MAX) newZoomDPI = ZOOM_DPI_MAX;
-				float x = mSelection.left * newZoomDPI / zoomDPI,
-					y = mSelection.top * newZoomDPI / zoomDPI;
+				if (newZoomDPI > ZOOM_DPI_MAX)
+					newZoomDPI = ZOOM_DPI_MAX;
+				float x = mSelection.left * newZoomDPI / zoomDPI, y = mSelection.top * newZoomDPI / zoomDPI;
 
 				int i;
 				for (i = MIN_ZOOM; i <= MAX_ZOOM; i++) {
 					if (newZoomDPI == kZoomDPI[i]) {
-						newZoomDPI = i; break;
+						newZoomDPI = i;
+						break;
 					}
 				}
 
@@ -1282,7 +1301,8 @@ PDFView::MouseUp (BPoint point) {
 
 				if (mZoom != newZoomDPI) {
 					PDFWindow* w = GetPDFWindow();
-					if (w) w->SetZoom(newZoomDPI);
+					if (w)
+						w->SetZoom(newZoomDPI);
 					SetZoom(newZoomDPI);
 				}
 
@@ -1301,10 +1321,11 @@ PDFView::MouseUp (BPoint point) {
 }
 
 ///////////////////////////////////////////////////////////////////////////
-LinkAction*
-PDFView::OnLink(BPoint point) {
+LinkAction* PDFView::OnLink(BPoint point)
+{
 	double x, y;
-	if (mRendering || (mDoc == NULL) || (mDoc->getNumPages() == 0)) return NULL;
+	if (mRendering || (mDoc == NULL) || (mDoc->getNumPages() == 0))
+		return NULL;
 
 	point = CorrectMousePos(point);
 
@@ -1313,59 +1334,60 @@ PDFView::OnLink(BPoint point) {
 	return mPage->FindLink(x, y);
 }
 
-bool
-PDFView::IsLinkToPDF(LinkAction* action, BString* path) {
-	LinkDest *dest = NULL;
-	GString *namedDest = NULL;
-	GString *fileName;
-	char *s;
+bool PDFView::IsLinkToPDF(LinkAction* action, BString* path)
+{
+	LinkDest* dest = NULL;
+	GString* namedDest = NULL;
+	GString* fileName;
+	char* s;
 
 	if (action->getKind() == actionGoToR) {
 		dest = NULL;
 		namedDest = NULL;
-		if ((dest = ((LinkGoToR *)action)->getDest()))
+		if ((dest = ((LinkGoToR*)action)->getDest()))
 			dest = dest->copy();
-		else if ((namedDest = ((LinkGoToR *)action)->getNamedDest()))
+		else if ((namedDest = ((LinkGoToR*)action)->getNamedDest()))
 			namedDest = namedDest->copy();
-		s = ((LinkGoToR *)action)->getFileName()->getCString();
+		s = ((LinkGoToR*)action)->getFileName()->getCString();
 		if (isAbsolutePath(s))
 			fileName = new GString(s);
 		else
 			fileName = appendToPath(grabPath(mDoc->getFileName()->getCString()), s);
-		*path = fileName->getCString(); delete fileName;
+		*path = fileName->getCString();
+		delete fileName;
 		return true;
 	} else if (action->getKind() == actionLaunch) {
-		fileName = ((LinkLaunch *)action)->getFileName();
+		fileName = ((LinkLaunch*)action)->getFileName();
 		s = fileName->getCString();
-		if (!strcmp(s + fileName->getLength() - 4, ".pdf") ||
-			!strcmp(s + fileName->getLength() - 4, ".PDF")) {
-
+		if (!strcmp(s + fileName->getLength() - 4, ".pdf") || !strcmp(s + fileName->getLength() - 4, ".PDF")) {
 			if (isAbsolutePath(s))
 				fileName = fileName->copy();
 			else
 				fileName = appendToPath(grabPath(mDoc->getFileName()->getCString()), s);
-			*path = fileName->getCString(); delete fileName; return true;
+			*path = fileName->getCString();
+			delete fileName;
+			return true;
 		}
 	}
 	return false;
 }
 
 ///////////////////////////////////////////////////////////////////////////
-bool
-PDFView::HandleLink(BPoint point) {
-	LinkAction *action = NULL;
+bool PDFView::HandleLink(BPoint point)
+{
+	LinkAction* action = NULL;
 	LinkActionKind kind;
-	LinkDest *dest = NULL;
-	GString *namedDest = NULL;
-	GString *fileName;
-	GString *actionName;
-	char *s;
+	LinkDest* dest = NULL;
+	GString* namedDest = NULL;
+	GString* fileName;
+	GString* actionName;
+	char* s;
 	BString pdfFile;
 
 	action = OnLink(point);
 	if (mAnnotation) {
 		LinkAnnot* link = dynamic_cast<LinkAnnot*>(mAnnotation);
-		if(link == NULL) {
+		if (link == NULL) {
 			ShowAnnotWindow(false);
 			return true;
 		} else {
@@ -1387,16 +1409,15 @@ PDFView::HandleLink(BPoint point) {
 		}
 
 		switch (kind = action->getKind()) {
-
 		// GoTo / GoToR action
 		case actionGoTo:
 		case actionGoToR:
 			if (kind == actionGoTo) {
 				dest = NULL;
 				namedDest = NULL;
-				if ((dest = ((LinkGoTo *)action)->getDest()))
+				if ((dest = ((LinkGoTo*)action)->getDest()))
 					dest = dest->copy();
-				else if ((namedDest = ((LinkGoTo *)action)->getNamedDest()))
+				else if ((namedDest = ((LinkGoTo*)action)->getNamedDest()))
 					namedDest = namedDest->copy();
 			}
 			if (namedDest) {
@@ -1415,12 +1436,12 @@ PDFView::HandleLink(BPoint point) {
 
 			// Launch action
 		case actionLaunch: {
-			fileName = ((LinkLaunch *)action)->getFileName();
+			fileName = ((LinkLaunch*)action)->getFileName();
 			s = fileName->getCString();
 			fileName = fileName->copy();
-			if (((LinkLaunch *)action)->getParams()) {
+			if (((LinkLaunch*)action)->getParams()) {
 				fileName->append(' ');
-				fileName->append(((LinkLaunch *)action)->getParams());
+				fileName->append(((LinkLaunch*)action)->getParams());
 			}
 
 			fileName->append(" &");
@@ -1428,34 +1449,32 @@ PDFView::HandleLink(BPoint point) {
 			BString string(B_TRANSLATE("Execute the command:"));
 			string += fileName->getCString();
 			string += "?";
-			BAlert *dialog = new BAlert(B_TRANSLATE("BePDF: Launch"),
-					 string.String(),
-					 B_TRANSLATE("OK"), B_TRANSLATE("Cancel"));
+			BAlert* dialog = new BAlert(B_TRANSLATE("BePDF: Launch"), string.String(), B_TRANSLATE("OK"), B_TRANSLATE("Cancel"));
 			if (dialog->Go() == 0)
 				system(fileName->getCString());
 			delete dialog;
 			delete fileName;
 			return true;
-			}
+		}
 
 		// URI action
 		case actionURI:
 			if (GetPDFWindow()) {
-				GetPDFWindow()->LaunchHTMLBrowser(((LinkURI *)action)->getURI()->getCString());
+				GetPDFWindow()->LaunchHTMLBrowser(((LinkURI*)action)->getURI()->getCString());
 			}
 			return true;
 
 		// Named action
 		case actionNamed:
-			actionName = ((LinkNamed *)action)->getName();
+			actionName = ((LinkNamed*)action)->getName();
 			if (!actionName->cmp("NextPage")) {
-				MoveToPage( mCurrentPage + 1 );
+				MoveToPage(mCurrentPage + 1);
 			} else if (!actionName->cmp("PrevPage")) {
-				MoveToPage( mCurrentPage - 1 );
+				MoveToPage(mCurrentPage - 1);
 			} else if (!actionName->cmp("FirstPage")) {
-				MoveToPage( 1 );
+				MoveToPage(1);
 			} else if (!actionName->cmp("LastPage")) {
-				MoveToPage( GetNumPages() );
+				MoveToPage(GetNumPages());
 			} else if (!actionName->cmp("GoBack")) {
 				Back();
 			} else if (!actionName->cmp("GoForward")) {
@@ -1465,13 +1484,12 @@ PDFView::HandleLink(BPoint point) {
 			} else {
 				// error(-1, "Unknown named action: '%s'", actionName->getCString());
 			}
-      break;
-      	// TODO
-      	case actionMovie: // fall through
+			break;
+		// TODO
+		case actionMovie: // fall through
 		// unknown action type
 		case actionUnknown:
-			fprintf(stdout, B_TRANSLATE("Unknown link action type: '%s'"),
-				((LinkUnknown *)action)->getAction()->getCString());
+			fprintf(stdout, B_TRANSLATE("Unknown link action type: '%s'"), ((LinkUnknown*)action)->getAction()->getCString());
 			break;
 		}
 	}
@@ -1480,8 +1498,8 @@ PDFView::HandleLink(BPoint point) {
 
 
 ///////////////////////////////////////////////////////////////////////////
-void
-PDFView::GotoDest(LinkDest* dest) {
+void PDFView::GotoDest(LinkDest* dest)
+{
 	int dx, dy;
 	int pg;
 	Ref pageRef;
@@ -1535,8 +1553,8 @@ PDFView::GotoDest(LinkDest* dest) {
 }
 
 ///////////////////////////////////////////////////////////////////////////
-BMenuItem*
-PDFView::AddAnnotItem(BMenu* menu, const char* label, uint32 what) {
+BMenuItem* PDFView::AddAnnotItem(BMenu* menu, const char* label, uint32 what)
+{
 	BMessage* msg = new BMessage(what);
 	msg->AddPointer("annot", mAnnotation);
 	BMenuItem* item = new BMenuItem(B_TRANSLATE(label), msg);
@@ -1546,24 +1564,22 @@ PDFView::AddAnnotItem(BMenu* menu, const char* label, uint32 what) {
 }
 
 ///////////////////////////////////////////////////////////////////////////
-void
-PDFView::ShowAnnotPopUpMenu(BPoint point) {
-	ASSERT (mAnnotation != NULL);
+void PDFView::ShowAnnotPopUpMenu(BPoint point)
+{
+	ASSERT(mAnnotation != NULL);
 
 	BMenuItem* item;
 	BPopUpMenu* menu = new BPopUpMenu("PopUpMenu");
 	menu->SetAsyncAutoDestruct(true);
 
-	AddAnnotItem(menu, mEditAnnot ?
-		B_TRANSLATE("Leave annotation editing mode") : B_TRANSLATE("Edit"), EDIT_ANNOT_MSG);
+	AddAnnotItem(menu, mEditAnnot ? B_TRANSLATE("Leave annotation editing mode") : B_TRANSLATE("Edit"), EDIT_ANNOT_MSG);
 
 	item = AddAnnotItem(menu, B_TRANSLATE("Delete"), DELETE_ANNOT_MSG);
 	item->SetEnabled(mEditAnnot);
 
 	if (dynamic_cast<FileAttachmentAnnot*>(mAnnotation) != NULL) {
 		menu->AddSeparatorItem();
-		AddAnnotItem(menu, B_TRANSLATE("Save file attachment as" B_UTF8_ELLIPSIS),
-			SAVE_FILE_ATTACHMENT_ANNOT_MSG);
+		AddAnnotItem(menu, B_TRANSLATE("Save file attachment as" B_UTF8_ELLIPSIS), SAVE_FILE_ATTACHMENT_ANNOT_MSG);
 	}
 
 	menu->AddSeparatorItem();
@@ -1575,8 +1591,8 @@ PDFView::ShowAnnotPopUpMenu(BPoint point) {
 }
 
 ///////////////////////////////////////////////////////////////////////////
-void
-PDFView::ShowPopUpMenu(BPoint point, LinkAction* action) {
+void PDFView::ShowPopUpMenu(BPoint point, LinkAction* action)
+{
 	BPopUpMenu* menu = new BPopUpMenu("PopUpMenu");
 	menu->SetAsyncAutoDestruct(true);
 
@@ -1606,22 +1622,23 @@ PDFView::ShowPopUpMenu(BPoint point, LinkAction* action) {
 }
 
 ///////////////////////////////////////////////////////////////////////////
-void
-PDFView::LinkToString(LinkAction* action, BString* string) {
-	const char *s = NULL;
-	char *t;
+void PDFView::LinkToString(LinkAction* action, BString* string)
+{
+	const char* s = NULL;
+	char* t;
 	BString str;
-	LinkDest *dest;
+	LinkDest* dest;
 	int pg;
 
 	switch (action->getKind()) {
 	case actionGoTo:
 		s = B_TRANSLATE("[internal link]");
-		dest = ((LinkGoTo *)action)->getDest();
+		dest = ((LinkGoTo*)action)->getDest();
 		if (!dest) {
 			PDFLock lock;
-			dest = mDoc->findDest(((LinkGoTo *)action)->getNamedDest());
-			if (!dest) break;
+			dest = mDoc->findDest(((LinkGoTo*)action)->getNamedDest());
+			if (!dest)
+				break;
 		}
 		if (dest->isPageRef()) {
 			Ref ref = dest->getPageRef();
@@ -1631,22 +1648,22 @@ PDFView::LinkToString(LinkAction* action, BString* string) {
 			pg = dest->getPageNum();
 		}
 		s = B_TRANSLATE("Go to page %d");
-		t = str.LockBuffer(strlen(s)+20);
+		t = str.LockBuffer(strlen(s) + 20);
 		sprintf(t, s, pg);
 		str.UnlockBuffer();
 		s = str.String();
 		break;
 	case actionGoToR:
-		s = ((LinkGoToR *)action)->getFileName()->getCString();
+		s = ((LinkGoToR*)action)->getFileName()->getCString();
 		break;
 	case actionLaunch:
-		s = ((LinkLaunch *)action)->getFileName()->getCString();
+		s = ((LinkLaunch*)action)->getFileName()->getCString();
 		break;
 	case actionURI:
-		s = ((LinkURI *)action)->getURI()->getCString();
+		s = ((LinkURI*)action)->getURI()->getCString();
 		break;
 	case actionNamed:
-		s = ((LinkNamed *)mLinkAction)->getName()->getCString();
+		s = ((LinkNamed*)mLinkAction)->getName()->getCString();
 		break;
 	case actionMovie:
 		// TODO
@@ -1660,19 +1677,16 @@ PDFView::LinkToString(LinkAction* action, BString* string) {
 }
 
 
-void
-PDFView::DisplayLink(BPoint point)
+void PDFView::DisplayLink(BPoint point)
 {
-	LinkAction *action;
+	LinkAction* action;
 	BString str;
-	if (mRendering || mDragStarted || (mDoc == NULL) ||
-		(mDoc->getNumPages() == 0))
+	if (mRendering || mDragStarted || (mDoc == NULL) || (mDoc->getNumPages() == 0))
 		return;
 
 	BPoint p = CorrectMousePos(point);
 	// over selection?
-	if (((mSelected == SELECTED) && mSelection.Contains(p)) ||
-		p.x < 0 || p.y < 0 || p.x >= mWidth || p.y >= mHeight) {
+	if (((mSelected == SELECTED) && mSelection.Contains(p)) || p.x < 0 || p.y < 0 || p.x >= mWidth || p.y >= mHeight) {
 		SetViewCursor((BCursor*)B_CURSOR_SYSTEM_DEFAULT);
 		return;
 	}
@@ -1688,11 +1702,11 @@ PDFView::DisplayLink(BPoint point)
 			mAnnotation = annot;
 			SetViewCursor(gApp->linkCursor);
 			LinkAnnot* link = dynamic_cast<LinkAnnot*>(annot);
-			if(link == NULL) {
+			if (link == NULL) {
 				SetToolTip(B_TRANSLATE("Annotation"));
 			} else {
 				LinkToString(link->GetLinkAction(), &str);
-				SetToolTip( str.String() );
+				SetToolTip(str.String());
 			}
 			ShowToolTip();
 		}
@@ -1712,7 +1726,7 @@ PDFView::DisplayLink(BPoint point)
 			SetViewCursor(gApp->linkCursor);
 			mLinkAction = action;
 			LinkToString(action, &str);
-			SetToolTip( str.String() );
+			SetToolTip(str.String());
 			ShowToolTip();
 		}
 	} else {
@@ -1725,11 +1739,10 @@ PDFView::DisplayLink(BPoint point)
 	}
 }
 ///////////////////////////////////////////////////////////////////////////
-void
-PDFView::FixScrollbars ()
+void PDFView::FixScrollbars()
 {
 	BRect frame = Bounds();
-	BScrollBar * scroll;
+	BScrollBar* scroll;
 	float x, y;
 	float bigStep, smallStep;
 
@@ -1742,24 +1755,23 @@ PDFView::FixScrollbars ()
 		y = 0.0;
 	}
 
-	scroll = ScrollBar (B_HORIZONTAL);
-	scroll->SetRange (0.0, x);
-	scroll->SetProportion ((mWidth - x) / mWidth);
+	scroll = ScrollBar(B_HORIZONTAL);
+	scroll->SetRange(0.0, x);
+	scroll->SetProportion((mWidth - x) / mWidth);
 	bigStep = frame.Width() - 2;
 	smallStep = bigStep / 10.;
-	scroll->SetSteps (smallStep, bigStep);
+	scroll->SetSteps(smallStep, bigStep);
 
-	scroll = ScrollBar (B_VERTICAL);
-	scroll->SetRange (0.0, y);
-	scroll->SetProportion ((mHeight - y) / mHeight);
+	scroll = ScrollBar(B_VERTICAL);
+	scroll->SetRange(0.0, y);
+	scroll->SetProportion((mHeight - y) / mHeight);
 	bigStep = frame.Height() - 2;
 	smallStep = bigStep / 10.;
-	scroll->SetSteps (smallStep, bigStep);
+	scroll->SetSteps(smallStep, bigStep);
 }
 
 ///////////////////////////////////////////////////////////////////////////
-void
-PDFView::Redraw(PDFDoc *mDoc)
+void PDFView::Redraw(PDFDoc* mDoc)
 {
 	PDFWindow* parentWin = GetPDFWindow();
 
@@ -1772,7 +1784,8 @@ PDFView::Redraw(PDFDoc *mDoc)
 	}
 	mRendering = true;
 
-	if (mDoc == NULL) mDoc = this->mDoc;
+	if (mDoc == NULL)
+		mDoc = this->mDoc;
 
 	mSelected = NOT_SELECTED;
 	mPageRenderer.Start(mPage, mCurrentPage, GetZoomDPI(), mRotation, &mRendererID, mEditAnnot);
@@ -1780,44 +1793,46 @@ PDFView::Redraw(PDFDoc *mDoc)
 	mLinkAction = NULL;
 
 	mBitmap = mPage->GetBitmap();
-	mWidth = mPage->GetWidth(); mHeight = mPage->GetHeight();
+	mWidth = mPage->GetWidth();
+	mHeight = mPage->GetHeight();
 	CenterPage();
 	FixScrollbars();
 
 	if (parentWin) {
 		parentWin->GetFileAttributes()->SetPage(mCurrentPage);
-		parentWin->SetPage (mCurrentPage);
-		parentWin->SetZoomSize (mWidth, mHeight);
+		parentWin->SetPage(mCurrentPage);
+		parentWin->SetZoomSize(mWidth, mHeight);
 	}
 
 	Invalidate();
 }
 
 ///////////////////////////////////////////////////////////
-void
-PDFView::RestartDoc() {
+void PDFView::RestartDoc()
+{
 	WaitForPage(true);
 	mPageRenderer.StartDoc(mColorSpace);
 	Redraw();
 }
 
 ///////////////////////////////////////////////////////////////////////////
-void
-PDFView::PostRedraw(thread_id id, BBitmap *bitmap) {
+void PDFView::PostRedraw(thread_id id, BBitmap* bitmap)
+{
 	// TODO
 	if (id != -1) {
 		mRendering = false;
 		mRendererID = -1;
 		Invalidate();
-		BPoint mouse; uint32 buttons;
+		BPoint mouse;
+		uint32 buttons;
 		GetMouse(&mouse, &buttons);
 		DisplayLink(mouse);
 	}
 }
 
 ///////////////////////////////////////////////////////////////////////////
-void
-PDFView::RedrawAborted(thread_id id, BBitmap *bitmap) {
+void PDFView::RedrawAborted(thread_id id, BBitmap* bitmap)
+{
 	if ((mRendererID == id) && (id != -1)) {
 		mRendering = false;
 		mRendererID = -1;
@@ -1825,8 +1840,8 @@ PDFView::RedrawAborted(thread_id id, BBitmap *bitmap) {
 }
 
 ///////////////////////////////////////////////////////////////////////////
-void
-PDFView::WaitForPage(bool abort) {
+void PDFView::WaitForPage(bool abort)
+{
 	if (abort) {
 		mPageRenderer.Abort();
 	}
@@ -1834,8 +1849,8 @@ PDFView::WaitForPage(bool abort) {
 }
 
 ///////////////////////////////////////////////////////////////////////////
-void
-PDFView::CenterPage() {
+void PDFView::CenterPage()
+{
 	BRect bounds(Bounds());
 	if (bounds.Width() + 1 > mWidth) { // center page horizontally
 		mLeft = (bounds.Width() - mWidth) / 2;
@@ -1851,21 +1866,19 @@ PDFView::CenterPage() {
 }
 
 ///////////////////////////////////////////////////////////////////////////
-void
-PDFView::Resize() {
+void PDFView::Resize()
+{
 	CenterPage();
 	FixScrollbars();
 	Invalidate();
 }
 
 ///////////////////////////////////////////////////////////////////////////
-void
-PDFView::Dump() {
-}
+void PDFView::Dump()
+{}
 
 ///////////////////////////////////////////////////////////////////////////
-void
-PDFView::SetPage (int page)
+void PDFView::SetPage(int page)
 {
 	mSelected = NOT_SELECTED;
 
@@ -1873,28 +1886,29 @@ PDFView::SetPage (int page)
 	if (mCurrentPage != page) {
 		if (page < 1) {
 			mCurrentPage = 1;
-		}
-		else if (page > GetNumPages()) {
+		} else if (page > GetNumPages()) {
 			mCurrentPage = GetNumPages();
-		}
-		else {
+		} else {
 			mCurrentPage = page;
 		}
 
 		if (currentPage != mCurrentPage) {
-			Redraw ();
+			Redraw();
 		}
 	}
 }
 
 
 //////////////////////////////////////////////////////////////////
-void
-PDFView::MoveToPage(int page, bool top) {
-	if (page > GetNumPages()) page = GetNumPages();
-	if (page <= 0) page = 1;
+void PDFView::MoveToPage(int page, bool top)
+{
+	if (page > GetNumPages())
+		page = GetNumPages();
+	if (page <= 0)
+		page = 1;
 	bool notChanged = mCurrentPage == page;
-	if (notChanged) return;
+	if (notChanged)
+		return;
 
 	SyncAnnotation(true);
 	RecordHistory();
@@ -1905,14 +1919,14 @@ PDFView::MoveToPage(int page, bool top) {
 }
 
 //////////////////////////////////////////////////////////////////
-void
-PDFView::MoveToPage(int num, int gen, bool top) {
+void PDFView::MoveToPage(int num, int gen, bool top)
+{
 	MoveToPage(mDoc->findPage(num, gen), top);
 }
 
 //////////////////////////////////////////////////////////////////
-void
-PDFView::MoveToPage(const char *string, bool top) {
+void PDFView::MoveToPage(const char* string, bool top)
+{
 	WaitForPage(true);
 	GString* s = new GString(string);
 	LinkDest* link = mDoc->getCatalog()->findDest(s);
@@ -1929,8 +1943,8 @@ PDFView::MoveToPage(const char *string, bool top) {
 }
 
 //////////////////////////////////////////////////////////////////
-void
-PDFView::BeginHistoryNavigation() {
+void PDFView::BeginHistoryNavigation()
+{
 	// Note: We are going into history navigation mode and
 	// have to store the current position state in the history.
 	if (mNavigationState == kNotInHistory) {
@@ -1941,8 +1955,8 @@ PDFView::BeginHistoryNavigation() {
 }
 
 //////////////////////////////////////////////////////////////////
-void
-PDFView::EndHistoryNavigation() {
+void PDFView::EndHistoryNavigation()
+{
 	// Note: When not navigating through the history (= kNotInHistory) the
 	// current position information is not stored in the history.
 	// The state is stored prior to changes of the state to the history.
@@ -1956,26 +1970,27 @@ PDFView::EndHistoryNavigation() {
 }
 
 //////////////////////////////////////////////////////////////////
-void
-PDFView::RecordHistory() {
+void PDFView::RecordHistory()
+{
 	EndHistoryNavigation();
 	BRect bounds(Bounds());
 	mHistory.AddPosition(mCurrentPage, mZoom, bounds.left, bounds.top, mRotation);
 }
 
 //////////////////////////////////////////////////////////////////
-void
-PDFView::RecordHistory(entry_ref ref, const char* ownerPassword, const char* userPassword) {
+void PDFView::RecordHistory(entry_ref ref, const char* ownerPassword, const char* userPassword)
+{
 	// XXX: record file open events too, otherwise they are missed if page state does not change between
 	// open events.
 	mHistory.SetFile(ref, ownerPassword, userPassword);
 }
 
 //////////////////////////////////////////////////////////////////
-void
-PDFView::RestoreHistory() {
+void PDFView::RestoreHistory()
+{
 	HistoryEntry* e = mHistory.GetTop();
-	if (e == NULL) return;
+	if (e == NULL)
+		return;
 
 	HistoryPosition* pos = dynamic_cast<HistoryPosition*>(e);
 	if (pos) {
@@ -1989,7 +2004,8 @@ PDFView::RestoreHistory() {
 			return;
 		}
 
-		int page; int32 left, top;
+		int page;
+		int32 left, top;
 		page = pos->GetPage();
 		mZoom = pos->GetZoom();
 		left = pos->GetLeft();
@@ -1997,7 +2013,8 @@ PDFView::RestoreHistory() {
 		mRotation = pos->GetRotation();
 
 		if (w) {
-			w->SetZoom(mZoom); w->SetRotation(mRotation);
+			w->SetZoom(mZoom);
+			w->SetRotation(mRotation);
 		}
 		mCurrentPage = -1;
 		SetPage(page);
@@ -2006,67 +2023,70 @@ PDFView::RestoreHistory() {
 }
 
 //////////////////////////////////////////////////////////////////
-void
-PDFView::Back() {
+void PDFView::Back()
+{
 	BeginHistoryNavigation();
 	if (mHistory.Back()) {
 		RestoreHistory();
 	}
 }
 //////////////////////////////////////////////////////////////////
-void
-PDFView::Forward() {
+void PDFView::Forward()
+{
 	BeginHistoryNavigation();
 	if (mHistory.Forward()) {
 		RestoreHistory();
 	}
 }
 //////////////////////////////////////////////////////////////////
-void
-PDFView::SetZoom (int zoom)
+void PDFView::SetZoom(int zoom)
 {
 	if (mZoom != zoom) {
 		RecordHistory();
 		mZoom = zoom;
-		Redraw ();
+		Redraw();
 	}
 }
 
 //////////////////////////////////////////////////////////////////
-void
-PDFView::Zoom(bool zoomIn) {
+void PDFView::Zoom(bool zoomIn)
+{
 	int32 zoomOld = GetZoomDPI();
 	int32 zoomNew;
 	if (zoomIn) {
 		zoomNew = (int32)(zoomOld * 1.2);
-		if (zoomNew > ZOOM_DPI_MAX) zoomNew = ZOOM_DPI_MAX;
+		if (zoomNew > ZOOM_DPI_MAX)
+			zoomNew = ZOOM_DPI_MAX;
 	} else {
 		zoomNew = (int32)(zoomOld / 1.2);
-		if (zoomNew < ZOOM_DPI_MIN) zoomNew = ZOOM_DPI_MIN;
+		if (zoomNew < ZOOM_DPI_MIN)
+			zoomNew = ZOOM_DPI_MIN;
 	}
 	if (zoomNew != zoomOld) {
 		SetZoom(-zoomNew);
 		PDFWindow* w = GetPDFWindow();
-		if (w) w->SetZoom(-zoomNew);
+		if (w)
+			w->SetZoom(-zoomNew);
 	}
 }
 
 //////////////////////////////////////////////////////////////////
-void
-PDFView::FitToPageWidth() {
+void PDFView::FitToPageWidth()
+{
 	BRect r(Bounds());
 	int32 zoomOld = GetZoomDPI();
 	int32 zoomNew = (int32)(r.Width() * zoomOld / mWidth);
 	if (zoomOld != zoomNew) {
 		SetZoom(-zoomNew);
 		PDFWindow* w = GetPDFWindow();
-		if (w) w->SetZoom(-zoomNew);
+		if (w)
+			w->SetZoom(-zoomNew);
 	}
 }
 
 //////////////////////////////////////////////////////////////////
-void
-PDFView::FitToPage() {
+void PDFView::FitToPage()
+{
 	BRect r(Bounds());
 	int32 zoomOld = GetZoomDPI();
 	int32 zoomNewH = (int32)(r.Width() * zoomOld / mWidth);
@@ -2075,60 +2095,65 @@ PDFView::FitToPage() {
 	if (zoomOld != zoomNew) {
 		SetZoom(-zoomNew);
 		PDFWindow* w = GetPDFWindow();
-		if (w) w->SetZoom(-zoomNew);
+		if (w)
+			w->SetZoom(-zoomNew);
 	}
 }
 
 //////////////////////////////////////////////////////////////////
-int16
-PDFView::GetZoomDPI() const {
+int16 PDFView::GetZoomDPI() const
+{
 	if (mZoom >= MIN_ZOOM)
-		return kZoomDPI[mZoom -  MIN_ZOOM];
+		return kZoomDPI[mZoom - MIN_ZOOM];
 	else
 		return -mZoom;
 }
 
 //////////////////////////////////////////////////////////////////
-void
-PDFView::SetRotation (float rotation)
+void PDFView::SetRotation(float rotation)
 {
 	if (mRotation != rotation) {
 		RecordHistory();
 		gApp->GetSettings()->SetRotation(rotation);
 		mRotation = rotation;
 		PDFWindow* w = GetPDFWindow();
-		if (w) w->SetRotation(mRotation);
-		Redraw ();
+		if (w)
+			w->SetRotation(mRotation);
+		Redraw();
 	}
 }
 
-void
-PDFView::RotateClockwise() {
+void PDFView::RotateClockwise()
+{
 	SetRotation(((int)mRotation + 90) % 360);
 }
 
-void
-PDFView::RotateAntiClockwise() {
+void PDFView::RotateAntiClockwise()
+{
 	SetRotation(((int)mRotation - 90 + 360) % 360);
 }
 
 //////////////////////////////////////////////////////////////////
-void PDFView::SetSelection(int xMin, int yMin, int xMax, int yMax, bool display) {
+void PDFView::SetSelection(int xMin, int yMin, int xMax, int yMax, bool display)
+{
 	BRect rect(mSelection);
 	mSelection.Set(xMin, yMin, xMax, yMax);
 	if (Window()->Lock()) {
 		if (mSelected == NOT_SELECTED) {
 			Invalidate(mSelection.OffsetByCopy(mLeft, mTop));
 		} else {
-			rect = mSelection | rect; rect.OffsetBy(mLeft, mTop);
+			rect = mSelection | rect;
+			rect.OffsetBy(mLeft, mTop);
 			Invalidate(rect);
 		}
 		mSelected = SELECTED;
 
 		if (display) { // make selection visible
 			BRect bounds(Bounds());
-			xMin -= (int)mLeft; xMax -= (int)mLeft;
-			yMin -= (int)mTop; yMax -= (int)mTop;
+			xMin -= (int)mLeft;
+			xMax -= (int)mLeft;
+			yMin -= (int)mTop;
+			yMax -= (int)mTop;
 			float x, y;
 
 			if ((bounds.left <= xMin) && (xMax <= bounds.right))
@@ -2149,7 +2174,8 @@ void PDFView::SetSelection(int xMin, int yMin, int xMax, int yMax, bool display)
 }
 
 //////////////////////////////////////////////////////////////////
-void PDFView::GetSelection(int &xMin, int &yMin, int &xMax, int &yMax) {
+void PDFView::GetSelection(int& xMin, int& yMin, int& xMax, int& yMax)
+{
 	if (mSelected == SELECTED) {
 		xMin = (int)mSelection.left;
 		yMin = (int)mSelection.top;
@@ -2160,11 +2186,12 @@ void PDFView::GetSelection(int &xMin, int &yMin, int &xMax, int &yMax) {
 	}
 }
 //////////////////////////////////////////////////////////////////
-BString *PDFView::GetSelectedText() {
+BString* PDFView::GetSelectedText()
+{
 	if (!mRendering && (mSelected == SELECTED) && (mSelection.left < mSelection.right) && (mSelection.top < mSelection.bottom)) {
-		GString *s = mPage->GetText(mSelection.left, mSelection.top, mSelection.right, mSelection.bottom);
+		GString* s = mPage->GetText(mSelection.left, mSelection.top, mSelection.right, mSelection.bottom);
 		if (s) {
-			BString *str = new BString(s->getCString());
+			BString* str = new BString(s->getCString());
 			delete s;
 			return str;
 		}
@@ -2173,11 +2200,12 @@ BString *PDFView::GetSelectedText() {
 }
 
 //////////////////////////////////////////////////////////////////
-void PDFView::CopyText(BString *str) {
+void PDFView::CopyText(BString* str)
+{
 	if (be_clipboard->Lock()) {
 		be_clipboard->Clear();
 
-		BMessage *clip = NULL;
+		BMessage* clip = NULL;
 		if ((clip = be_clipboard->Data()) != NULL) {
 			// copy text to clipboard
 			clip->AddData("text/plain", B_MIME_TYPE, str->String(), str->Length());
@@ -2187,17 +2215,20 @@ void PDFView::CopyText(BString *str) {
 	}
 }
 //////////////////////////////////////////////////////////////////
-void PDFView::CopySelection() {
+void PDFView::CopySelection()
+{
 	if (!mRendering && (mSelected == SELECTED) && (mSelection.left < mSelection.right) && (mSelection.top < mSelection.bottom)) {
 		if (be_clipboard->Lock()) {
 			be_clipboard->Clear();
 
-			BMessage *clip = NULL;
+			BMessage* clip = NULL;
 			if ((clip = be_clipboard->Data()) != NULL) {
 				// copy bitmap to clipboard
 				BMessage data;
-				BRect sel(max_c(mSelection.left, 0), max_c(mSelection.top, 0),
-						  min_c(mSelection.right, mWidth), min_c(mSelection.bottom, mHeight));
+				BRect sel(max_c(mSelection.left, 0),
+				    max_c(mSelection.top, 0),
+				    min_c(mSelection.right, mWidth),
+				    min_c(mSelection.bottom, mHeight));
 				BRect rect(0, 0, sel.Width(), sel.Height());
 				BView view(rect, NULL, B_FOLLOW_NONE, B_WILL_DRAW);
 				BBitmap bitmap(rect, mBitmap->ColorSpace(), true);
@@ -2213,7 +2244,7 @@ void PDFView::CopySelection() {
 				clip->AddRect("rect", rect);
 
 				// copy text to clipboard
-				BString *str = GetSelectedText();
+				BString* str = GetSelectedText();
 				if (str) {
 					clip->AddData("text/plain", B_MIME_TYPE, str->String(), str->Length());
 					delete str;
@@ -2227,7 +2258,8 @@ void PDFView::CopySelection() {
 
 
 ///////////////////////////////////////////////////////////
-void PDFView::SelectAll() {
+void PDFView::SelectAll()
+{
 	if ((mSelected == NOT_SELECTED) || (mSelected == SELECTED)) {
 		mSelected = SELECTED;
 		mSelection.Set(0, 0, mWidth, mHeight);
@@ -2237,7 +2269,8 @@ void PDFView::SelectAll() {
 }
 
 ///////////////////////////////////////////////////////////
-void PDFView::SelectNone() {
+void PDFView::SelectNone()
+{
 	if (mSelected == SELECTED) {
 		mSelected = NOT_SELECTED;
 		SelectionChanged();
@@ -2246,7 +2279,8 @@ void PDFView::SelectNone() {
 }
 
 ///////////////////////////////////////////////////////////
-void PDFView::SetFilledSelection(bool filled) {
+void PDFView::SetFilledSelection(bool filled)
+{
 	mFilledSelection = filled;
 	gApp->GetSettings()->SetFilledSelection(filled);
 
@@ -2256,7 +2290,8 @@ void PDFView::SetFilledSelection(bool filled) {
 }
 
 ///////////////////////////////////////////////////////////
-void PDFView::SelectionChanged() {
+void PDFView::SelectionChanged()
+{
 	PDFWindow* w = GetPDFWindow();
 	if (w) {
 		w->UpdateInputEnabler();
@@ -2264,7 +2299,8 @@ void PDFView::SelectionChanged() {
 }
 
 ///////////////////////////////////////////////////////////
-void PDFView::SendDragMessage(uint32 protocol) {
+void PDFView::SendDragMessage(uint32 protocol)
+{
 	mDragStarted = true;
 	SetMouseEventMask(B_POINTER_EVENTS);
 	if (protocol == B_SIMPLE_DATA) {
@@ -2272,19 +2308,18 @@ void PDFView::SendDragMessage(uint32 protocol) {
 		drag.AddString("be:types", "text/plain");
 		drag.AddString("be:types", B_FILE_MIME_TYPE);
 
-		BTranslatorRoster *roster = BTranslatorRoster::Default();
+		BTranslatorRoster* roster = BTranslatorRoster::Default();
 		BBitmapStream stream(mBitmap);
 
-		translator_info *outInfo;
+		translator_info* outInfo;
 		int32 outNumInfo;
 
 		drag.AddString("be:filetypes", "text/plain");
 		drag.AddString("be:type_descriptions", "Text");
 
-		if ((B_OK == roster->GetTranslators(&stream, NULL, &outInfo, &outNumInfo)) &&
-			(outNumInfo >= 1)) {
+		if ((B_OK == roster->GetTranslators(&stream, NULL, &outInfo, &outNumInfo)) && (outNumInfo >= 1)) {
 			for (int32 i = 0; i < outNumInfo; i++) {
-				const translation_format *fmts;
+				const translation_format* fmts;
 				int32 num_fmts;
 				roster->GetOutputFormats(outInfo[i].translator, &fmts, &num_fmts);
 				for (int32 j = 0; j < num_fmts; j++) {
@@ -2298,12 +2333,13 @@ void PDFView::SendDragMessage(uint32 protocol) {
 			drag.AddString("be:clip_name", "Untitled clipping");
 			DragMessage(&drag, mSelection.OffsetByCopy(mLeft, mTop));
 		}
-		BBitmap *bm;
+		BBitmap* bm;
 		stream.DetachBitmap(&bm);
-		if (bm != mBitmap) delete bm;
+		if (bm != mBitmap)
+			delete bm;
 	} else if (protocol == B_MIME_DATA) {
 		BMessage drag(B_MIME_DATA);
-		BString *str = GetSelectedText();
+		BString* str = GetSelectedText();
 		if (str) {
 			drag.AddInt32("be:actions", B_TRASH_TARGET);
 			drag.AddData("text/plain", B_MIME_DATA, str->String(), str->Length());
@@ -2313,7 +2349,8 @@ void PDFView::SendDragMessage(uint32 protocol) {
 	}
 }
 
-void PDFView::SendDataMessage(BMessage *reply) {
+void PDFView::SendDataMessage(BMessage* reply)
+{
 	BMessage data(B_MIME_DATA);
 
 	entry_ref dir;
@@ -2323,11 +2360,10 @@ void PDFView::SendDataMessage(BMessage *reply) {
 		// reply->SendReply(&data);
 		return;
 	}
-	bool saveToFile = (B_OK == reply->FindRef("directory", &dir)) &&
-					  (B_OK == reply->FindString("name", &name));
+	bool saveToFile = (B_OK == reply->FindRef("directory", &dir)) && (B_OK == reply->FindString("name", &name));
 
 	if (filetype == "text/plain") {
-		BString *str = GetSelectedText();
+		BString* str = GetSelectedText();
 		if (str) {
 			if (saveToFile) {
 				// write text to file
@@ -2353,18 +2389,18 @@ void PDFView::SendDataMessage(BMessage *reply) {
 #if MORE_DEBUG
 	BString s;
 	s << name << " " << filetype;
-	BAlert *a = new BAlert("Info", s.String(), "OK");
+	BAlert* a = new BAlert("Info", s.String(), "OK");
 	a->Go();
 #endif
 	//~ sending image in message to target application not implemented
-	if (!saveToFile) return;
+	if (!saveToFile)
+		return;
 
 	// copy selection to bitmap
-	BRect sel(max_c(mSelection.left, 0), max_c(mSelection.top, 0),
-			  min_c(mSelection.right, mWidth), min_c(mSelection.bottom, mHeight));
+	BRect sel(max_c(mSelection.left, 0), max_c(mSelection.top, 0), min_c(mSelection.right, mWidth), min_c(mSelection.bottom, mHeight));
 	BRect rect(0, 0, sel.Width(), sel.Height());
 	BView view(rect, NULL, B_FOLLOW_NONE, B_WILL_DRAW);
-	BBitmap *bitmap = new BBitmap(rect, mBitmap->ColorSpace(), true);
+	BBitmap* bitmap = new BBitmap(rect, mBitmap->ColorSpace(), true);
 	if (bitmap->Lock()) {
 		bitmap->AddChild(&view);
 		view.DrawBitmap(mBitmap, sel, rect);
@@ -2376,20 +2412,18 @@ void PDFView::SendDataMessage(BMessage *reply) {
 	BBitmapStream stream(bitmap); // destructor frees bitmap
 
 	// identify type
-	BTranslatorRoster *roster = BTranslatorRoster::Default();
-	translator_info *outInfo;
+	BTranslatorRoster* roster = BTranslatorRoster::Default();
+	translator_info* outInfo;
 	int32 outNumInfo;
-	if ((B_OK == roster->GetTranslators(&stream, NULL, &outInfo, &outNumInfo)) &&
-		(outNumInfo >= 1)) {
-
+	if ((B_OK == roster->GetTranslators(&stream, NULL, &outInfo, &outNumInfo)) && (outNumInfo >= 1)) {
 		for (int32 i = 0; i < outNumInfo; i++) {
-			const translation_format *fmts;
+			const translation_format* fmts;
 			int32 num_fmts;
 			roster->GetOutputFormats(outInfo[i].translator, &fmts, &num_fmts);
 			for (int32 j = 0; j < num_fmts; j++) {
 				if (strcmp(fmts[j].MIME, filetype.String()) == 0) {
 					// save bitmap to file
-					BTranslatorRoster *roster = BTranslatorRoster::Default();
+					BTranslatorRoster* roster = BTranslatorRoster::Default();
 					BDirectory d(&dir);
 					BNode node(&d, name.String());
 					// set mime type
@@ -2412,8 +2446,8 @@ void PDFView::SendDataMessage(BMessage *reply) {
 }
 
 ///////////////////////////////////////////////////////////
-void
-PDFView::SetColorSpace(color_space colorSpace) {
+void PDFView::SetColorSpace(color_space colorSpace)
+{
 	bool refresh = mColorSpace != colorSpace;
 	if (refresh) {
 		mColorSpace = colorSpace;
@@ -2422,15 +2456,15 @@ PDFView::SetColorSpace(color_space colorSpace) {
 }
 
 ///////////////////////////////////////////////////////////
-void
-PDFView::UpdateSettings(GlobalSettings* settings) {
+void PDFView::UpdateSettings(GlobalSettings* settings)
+{
 	mInvertVerticalScrolling = settings->GetInvertVerticalScrolling();
 }
 
 
 ///////////////////////////////////////////////////////////
-void
-PDFView::BeginEditAnnot() {
+void PDFView::BeginEditAnnot()
+{
 	SelectNone();
 	SetAction(NO_ACTION);
 	mEditAnnot = true;
@@ -2439,12 +2473,11 @@ PDFView::BeginEditAnnot() {
 	mInsertAnnot = NULL;
 	mLinkAction = NULL;
 	Redraw();
-
 }
 
 ///////////////////////////////////////////////////////////
-void
-PDFView::EndEditAnnot() {
+void PDFView::EndEditAnnot()
+{
 	SyncAnnotation(true);
 	SetAction(NO_ACTION);
 	mEditAnnot = false;
@@ -2456,8 +2489,8 @@ PDFView::EndEditAnnot() {
 }
 
 ///////////////////////////////////////////////////////////
-void
-PDFView::InsertAnnotation(Annotation* a) {
+void PDFView::InsertAnnotation(Annotation* a)
+{
 	mInsertAnnot = a;
 	mAnnotation = NULL;
 	SetViewCursor(gApp->pointerCursor);
@@ -2466,8 +2499,8 @@ PDFView::InsertAnnotation(Annotation* a) {
 }
 
 ///////////////////////////////////////////////////////////
-void
-PDFView::UpdateAnnotation(Annotation* a, const char* contents, const char* font, float size, const char* align) {
+void PDFView::UpdateAnnotation(Annotation* a, const char* contents, const char* font, float size, const char* align)
+{
 	if (mAnnotInEditor == a) {
 		ASSERT(a != NULL);
 		GString* c = Utf8ToUcs2(contents);
@@ -2487,8 +2520,8 @@ PDFView::UpdateAnnotation(Annotation* a, const char* contents, const char* font,
 }
 
 ///////////////////////////////////////////////////////////
-void
-PDFView::UpdateAnnotation(Annotation* a, BMessage* data) {
+void PDFView::UpdateAnnotation(Annotation* a, BMessage* data)
+{
 	const char* contents;
 	const char* font;
 	const char* align;
@@ -2509,19 +2542,20 @@ PDFView::UpdateAnnotation(Annotation* a, BMessage* data) {
 }
 
 
-void
-PDFView::ShowAnnotWindow(bool editable, bool updateOnly)
+void PDFView::ShowAnnotWindow(bool editable, bool updateOnly)
 {
 	SyncAnnotation(false);
 	if (editable) {
 		mAnnotInEditor = mAnnotation;
-		if (mAnnotInEditor == NULL) mAnnotInEditor = mInsertAnnot;
+		if (mAnnotInEditor == NULL)
+			mAnnotInEditor = mInsertAnnot;
 	}
 
 	Annotation* annotation = mAnnotation;
 	if (annotation == NULL) {
 		annotation = mInsertAnnot;
-		if (annotation == NULL) return;
+		if (annotation == NULL)
+			return;
 	}
 	BString *label, *date, *contents;
 	char buffer[80];
@@ -2531,7 +2565,7 @@ PDFView::ShowAnnotWindow(bool editable, bool updateOnly)
 	} else {
 		label = new BString();
 	}
-	date     = TextToUtf8(d, strlen(d));
+	date = TextToUtf8(d, strlen(d));
 	contents = TextToUtf8(annotation->GetContents()->getCString(), annotation->GetContents()->getLength());
 	AnnotationWindow* w = NULL;
 	PDFWindow* win = GetPDFWindow();
@@ -2557,14 +2591,17 @@ PDFView::ShowAnnotWindow(bool editable, bool updateOnly)
 			w->Unlock();
 		}
 	}
-	delete contents; delete date; delete label;
+	delete contents;
+	delete date;
+	delete label;
 }
 
 ///////////////////////////////////////////////////////////
-void
-PDFView::ClearAnnotationWindow() {
+void PDFView::ClearAnnotationWindow()
+{
 	PDFWindow* win = GetPDFWindow();
-	if (win == NULL) return;
+	if (win == NULL)
+		return;
 	AnnotationWindow* w = win->GetAnnotationWindow();
 	if (w) {
 		w->MakeEditable(false);
@@ -2575,11 +2612,13 @@ PDFView::ClearAnnotationWindow() {
 
 ///////////////////////////////////////////////////////////
 // read info from AnnotationWindow, e.g. before a new annotation is selected
-void
-PDFView::SyncAnnotation(bool clearWindow) {
-	if (mAnnotInEditor == NULL) return;
+void PDFView::SyncAnnotation(bool clearWindow)
+{
+	if (mAnnotInEditor == NULL)
+		return;
 	PDFWindow* win = GetPDFWindow();
-	if (win == NULL) return;
+	if (win == NULL)
+		return;
 	AnnotationWindow* w = win->GetAnnotationWindow();
 	if (w) {
 		BMessage msg;
@@ -2594,24 +2633,22 @@ PDFView::SyncAnnotation(bool clearWindow) {
 
 class SaveFileAttachmentThread : public SaveThread {
 public:
-
 	SaveFileAttachmentThread(const char* title, XRef* xref, const BMessage* message)
-		: SaveThread(title, xref)
-		, mMessage(*message)
-	{
-	}
+	    : SaveThread(title, xref),
+	      mMessage(*message)
+	{}
 
-	int32 Run() {
+	int32 Run()
+	{
 		entry_ref dir;
 		BString name;
 
-		if (mMessage.FindRef("directory", &dir) != B_OK ||
-			mMessage.FindString("name", &name) != B_OK) {
+		if (mMessage.FindRef("directory", &dir) != B_OK || mMessage.FindString("name", &name) != B_OK) {
 			// should not happen
 			return -1;
 		}
 
-		BPath  path(&dir);
+		BPath path(&dir);
 		path.Append(name.String());
 
 		void* pointer;
@@ -2634,11 +2671,9 @@ private:
 	BMessage mMessage;
 };
 
-void PDFView::SaveFileAttachment(BMessage* msg) {
+void PDFView::SaveFileAttachment(BMessage* msg)
+{
 	const char* title = B_TRANSLATE("Saving file attachment:");
-	SaveFileAttachmentThread* thread = new SaveFileAttachmentThread(
-		title,
-		mDoc->getXRef(),
-		msg);
+	SaveFileAttachmentThread* thread = new SaveFileAttachmentThread(title, mDoc->getXRef(), msg);
 	thread->Resume();
 }

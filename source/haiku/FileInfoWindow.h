@@ -48,67 +48,68 @@ class BButton;
 class PDFDoc;
 
 class FileInfoWindow : public BWindow {
-	BLooper *mLooper;
-	GlobalSettings *mSettings;
-	BView *mView;
-	
+	BLooper* mLooper;
+	GlobalSettings* mSettings;
+	BView* mView;
+
 	static const int16 noKeys;
-	static const char *systemKeys[9];
-	
-	enum  {
-		NORMAL, // shows fonts of current page
+	static const char* systemKeys[9];
+
+	enum {
+		NORMAL,          // shows fonts of current page
 		QUERY_ALL_FONTS, // query is in progress
-		ALL_FONTS, // shows all fonts of current document
-		STOP, // query progress stopped by user
-		QUIT // 
+		ALL_FONTS,       // shows all fonts of current document
+		STOP,            // query progress stopped by user
+		QUIT             //
 	} mState;
-	
+
 	// font list
-	BColumnListView *mFontList;
+	BColumnListView* mFontList;
 	struct Font {
 		Ref ref;
 		BString name;
-		Font(Ref r, GString *s) {
-			ref = r; 
+		Font(Ref r, GString* s)
+		{
+			ref = r;
 			if (s) {
 				name = s->getCString();
 			}
 		};
 	};
-	bool AddFont(BList *list, GfxFont *font);
-	BRow *FontItem(GfxFont *font);
-	void QueryFonts(PDFDoc *doc, int page);
-	void AddPair(BGridView *dest, BView *lv, BView *rv);	 
-	void CreateProperty(BGridView *dest, Dict *dict, const char *key, const char *title);
-	
+	bool AddFont(BList* list, GfxFont* font);
+	BRow* FontItem(GfxFont* font);
+	void QueryFonts(PDFDoc* doc, int page);
+	void AddPair(BGridView* dest, BView* lv, BView* rv);
+	void CreateProperty(BGridView* dest, Dict* dict, const char* key, const char* title);
+
 	BButton *mShowAllFonts, *mStop;
 
 public:
-	static const char *authorKey, *creationDateKey, *modDateKey, *creatorKey, 
-		*producerKey, *titleKey, *subjectKey, *keywordsKey, *trappedKey;
-	
-	static bool IsSystemKey(const char *key);	
-	static BString *GetProperty(Dict *dict, const char *key, time_t *time = NULL);
+	static const char *authorKey, *creationDateKey, *modDateKey, *creatorKey, *producerKey, *titleKey, *subjectKey, *keywordsKey,
+	    *trappedKey;
+
+	static bool IsSystemKey(const char* key);
+	static BString* GetProperty(Dict* dict, const char* key, time_t* time = NULL);
 
 	enum {
 		// notify main window that this window quits
 		QUIT_NOTIFY = 'FInQ',
-		
+
 		START_QUERY_ALL_FONTS_MSG = 'FIsf',
-		// 
+		//
 		FONT_QUERY_STOPPED_NOTIFY = 'FQst',
 		SHOW_ALL_FONTS_MSG = 'Show',
 		STOP_MSG = 'Stop'
 	};
-	FileInfoWindow(GlobalSettings *settings, BEntry *file, PDFDoc *doc, BLooper *looper, int page);
+	FileInfoWindow(GlobalSettings* settings, BEntry* file, PDFDoc* doc, BLooper* looper, int page);
 	// new document
-	void Refresh(BEntry *file, PDFDoc *doc, int page);
+	void Refresh(BEntry* file, PDFDoc* doc, int page);
 	// new page
-	void RefreshFontList(BEntry *file, PDFDoc *doc, int page);
+	void RefreshFontList(BEntry* file, PDFDoc* doc, int page);
 	// search for all fonts in all pages
-	void QueryAllFonts(PDFDoc *doc);
-	
-	virtual void MessageReceived(BMessage *msg);
+	void QueryAllFonts(PDFDoc* doc);
+
+	virtual void MessageReceived(BMessage* msg);
 	virtual bool QuitRequested();
 	virtual void FrameMoved(BPoint point);
 	virtual void FrameResized(float w, float h);

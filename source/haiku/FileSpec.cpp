@@ -24,35 +24,28 @@
 
 #include "Annotation.h"
 
-static char *gFileAttachmentFileNameKeys[] = {
-	"Unix",
-	"F",
-	"DOS",
-	"Mac",
-	NULL
-};
+static char* gFileAttachmentFileNameKeys[] = {"Unix", "F", "DOS", "Mac", NULL};
 
-FileSpec::FileSpec() 
-	: mRef(empty_ref)
+FileSpec::FileSpec()
+    : mRef(empty_ref)
+{}
+
+FileSpec::FileSpec(FileSpec* copy)
+    : mDescription(copy->mDescription),
+      mFileName(copy->mFileName),
+      mRef(copy->mRef)
+{}
+
+FileSpec::FileSpec(Dict* fileSpec)
 {
-}
-
-FileSpec::FileSpec(FileSpec* copy) 
-	: mDescription(copy->mDescription)
-	, mFileName(copy->mFileName)
-	, mRef(copy->mRef)
-{
-
-}
-
-FileSpec::FileSpec(Dict* fileSpec) {
 	SetTo(fileSpec);
 }
 
-FileSpec::~FileSpec() {
-}
+FileSpec::~FileSpec()
+{}
 
-bool FileSpec::SetTo(Dict* fileSpec) {
+bool FileSpec::SetTo(Dict* fileSpec)
+{
 	mDescription.clear();
 	mFileName.clear();
 	mRef = empty_ref;
@@ -60,35 +53,36 @@ bool FileSpec::SetTo(Dict* fileSpec) {
 	if (!fileSpec->is("Filespec")) {
 		return false;
 	}
-	
+
 	// optional PDF 1.6 description for files in EmbeddedFiles name tree
 	Object obj;
 	if (fileSpec->lookup("Desc", &obj) != NULL && obj.isString()) {
 		mDescription.append(obj.getString());
 	}
 	obj.free();
-	
+
 	// mandatory file name
 	if (!ReadFileName(fileSpec)) {
 		mDescription.clear();
 		return false;
 	}
 
-	
+
 	// mandatory ref to embedded file
 	if (!ReadEmbeddedFileRef(fileSpec)) {
 		mDescription.clear();
 		mFileName.clear();
 		return false;
 	}
-	
+
 	return true;
 }
 
-bool FileSpec::ReadFileName(Dict *fileSpec) {
+bool FileSpec::ReadFileName(Dict* fileSpec)
+{
 	for (int i = 0; gFileAttachmentFileNameKeys[i] != NULL; i++) {
 		Object obj;
-		char *key = gFileAttachmentFileNameKeys[i];
+		char* key = gFileAttachmentFileNameKeys[i];
 		if (fileSpec->lookup(key, &obj) != NULL && obj.isString()) {
 			mFileName.append(obj.getString()->getCString());
 			return true;
@@ -98,13 +92,14 @@ bool FileSpec::ReadFileName(Dict *fileSpec) {
 	return false;
 }
 
-bool FileSpec::ReadEmbeddedFileRef(Dict* fileSpec) {
+bool FileSpec::ReadEmbeddedFileRef(Dict* fileSpec)
+{
 	bool found = false;
 	Object obj;
 	if (fileSpec->lookup("EF", &obj) != NULL && obj.isDict()) {
 		for (int i = 0; (!found) && gFileAttachmentFileNameKeys[i] != NULL; i++) {
 			Object stream;
-			char *key = gFileAttachmentFileNameKeys[i];
+			char* key = gFileAttachmentFileNameKeys[i];
 			// Is there a reference to a stream?
 			// We do not test here if the stream really exists!
 			if (obj.dictLookupNF(key, &stream) != NULL && stream.isRef()) {
@@ -117,21 +112,24 @@ bool FileSpec::ReadEmbeddedFileRef(Dict* fileSpec) {
 	obj.free();
 	return found;
 }
-	
-bool FileSpec::IsValid() {
+
+bool FileSpec::IsValid()
+{
 	return mFileName.getLength() > 0 && !is_empty_ref(mRef);
 }
 
-GString* FileSpec::GetDescription() {
+GString* FileSpec::GetDescription()
+{
 	return &mDescription;
 }
 
-GString* FileSpec::GetFileName() {
+GString* FileSpec::GetFileName()
+{
 	return &mFileName;
 }
 
-FileSpec::SaveReturnCode 
-FileSpec::Save(XRef* xref, const char* file) {
+FileSpec::SaveReturnCode FileSpec::Save(XRef* xref, const char* file)
+{
 	if (is_empty_ref(mRef)) {
 		return kMissingEmbeddedStreamError;
 	}
@@ -140,42 +138,42 @@ FileSpec::Save(XRef* xref, const char* file) {
 	ref.initRef(mRef.num, mRef.gen);
 	Object obj;
 	if (ref.fetch(xref, &obj) != NULL && obj.isStream()) {
-			Stream* stream = obj.getStream();
-			
-			FILE* f = fopen(file, "wb");
-			if (f == NULL) {
-				return kFileOpenError;
-			}
-			
-			stream->reset();
-			SaveReturnCode rc = SaveStream(stream, f);
-			stream->close();
-			
-			fclose(f);
-			obj.free();
-			return rc;
+		Stream* stream = obj.getStream();
+
+		FILE* f = fopen(file, "wb");
+		if (f == NULL) {
+			return kFileOpenError;
+		}
+
+		stream->reset();
+		SaveReturnCode rc = SaveStream(stream, f);
+		stream->close();
+
+		fclose(f);
+		obj.free();
+		return rc;
 	}
 	obj.free();
 	return kMissingEmbeddedStreamError;
 }
 
-FileSpec::SaveReturnCode
-FileSpec::SaveStream(Stream* stream, FILE* file) {
+FileSpec::SaveReturnCode FileSpec::SaveStream(Stream* stream, FILE* file)
+{
 	const int kBufferSize = 4096;
 	unsigned char buffer[kBufferSize];
 	while (true) {
 		// fill buffer
 		int length;
 		int ch;
-		for (length = 0; length < kBufferSize && ((ch = stream->getChar()) != EOF); length ++) {
+		for (length = 0; length < kBufferSize && ((ch = stream->getChar()) != EOF); length++) {
 			buffer[length] = (unsigned char)ch;
 		}
-		
+
 		// end of stream reached
 		if (length == 0) {
 			return kOk;
 		}
-		
+
 		// write buffer
 		if (fwrite(buffer, length, 1, file) != 1) {
 			return kFileWriteError;

@@ -59,16 +59,14 @@ enum {
 	kSelectionChangedCmd,
 };
 
-enum {
-	kAdditionalVerticalBorder = 2
-};
+enum { kAdditionalVerticalBorder = 2 };
 
 // Implementation of AttachmentItem
 
 AttachmentItem::AttachmentItem(BString fileName, int fileIdx)
-	: BRow(),
-	  fFileName(fileName),
-	  fFileIdx(fileIdx)
+    : BRow(),
+      fFileName(fileName),
+      fFileIdx(fileIdx)
 {
 	SetField(new BStringField(fileName.String()), 0);
 
@@ -77,14 +75,15 @@ AttachmentItem::AttachmentItem(BString fileName, int fileIdx)
 	//SetField(new BStringField(description.String()),1);
 }
 
-const char* AttachmentItem::Text() {
+const char* AttachmentItem::Text()
+{
 	BStringField* field = static_cast<BStringField*>(GetField(0));
 	return field->String();
 }
 
 
-AttachmentView::AttachmentView(GlobalSettings *settings, BLooper *looper, uint32 flags)
-	: BView("attachments", flags | B_FRAME_EVENTS)
+AttachmentView::AttachmentView(GlobalSettings* settings, BLooper* looper, uint32 flags)
+    : BView("attachments", flags | B_FRAME_EVENTS)
 {
 	fToolBar = new BToolBar;
 	fToolBar->SetName("toolbar");
@@ -95,25 +94,15 @@ AttachmentView::AttachmentView(GlobalSettings *settings, BLooper *looper, uint32
 	//	B_TRANSLATE("Open attachment(s)"));
 
 	// Note tooltip text used in method Update() also!
-	fToolBar->AddAction(kSaveAsCmd, this, LoadBitmap("SAVE_FILE_AS_ON"),
-		B_TRANSLATE("Save attachment(s) as"));
+	fToolBar->AddAction(kSaveAsCmd, this, LoadBitmap("SAVE_FILE_AS_ON"), B_TRANSLATE("Save attachment(s) as"));
 	fToolBar->AddGlue();
 
-	mList = new BColumnListView(NULL,
-		B_WILL_DRAW | B_FRAME_EVENTS | B_NAVIGABLE,
-		B_FANCY_BORDER,
-		true);
+	mList = new BColumnListView(NULL, B_WILL_DRAW | B_FRAME_EVENTS | B_NAVIGABLE, B_FANCY_BORDER, true);
 	mList->SetSelectionMode(B_MULTIPLE_SELECTION_LIST);
-	mList->AddColumn(new BStringColumn(B_TRANSLATE("File name"),
-		settings->GetAttachmentFileNameColumnWidth(), 10, 1000, true),0);
-	mList->AddColumn(new BStringColumn(B_TRANSLATE("Description"),
-		settings->GetAttachmentDescriptionColumnWidth(), 10, 1000, true),1);
+	mList->AddColumn(new BStringColumn(B_TRANSLATE("File name"), settings->GetAttachmentFileNameColumnWidth(), 10, 1000, true), 0);
+	mList->AddColumn(new BStringColumn(B_TRANSLATE("Description"), settings->GetAttachmentDescriptionColumnWidth(), 10, 1000, true), 1);
 
-	BLayoutBuilder::Group<>(this, B_VERTICAL, 0)
-		.SetInsets(0)
-		.Add(fToolBar)
-		.Add(mList)
-	.End();
+	BLayoutBuilder::Group<>(this, B_VERTICAL, 0).SetInsets(0).Add(fToolBar).Add(mList).End();
 }
 
 AttachmentView::~AttachmentView()
@@ -121,11 +110,12 @@ AttachmentView::~AttachmentView()
 	mList->Clear();
 }
 
-void AttachmentView::AttachedToWindow() {
+void AttachmentView::AttachedToWindow()
+{
 	super::AttachedToWindow();
 
 	BView* toolbar = FindView("toolbar");
-	for (int32 i = 0; i < toolbar->CountChildren(); i ++) {
+	for (int32 i = 0; i < toolbar->CountChildren(); i++) {
 		BView* view = toolbar->ChildAt(i);
 		BControl* control = dynamic_cast<BControl*>(view);
 		if (control != NULL) {
@@ -137,7 +127,8 @@ void AttachmentView::AttachedToWindow() {
 	mList->SetTarget(this);
 }
 
-void AttachmentView::Update() {
+void AttachmentView::Update()
+{
 	AttachmentSelection selection = GetAttachmentSelection();
 
 	// Update tool tip text
@@ -156,27 +147,26 @@ void AttachmentView::Update() {
 	fToolBar->SetActionEnabled(kSaveAsCmd, selection != kNoAttachmentSelected);
 }
 
-void AttachmentView::MessageReceived(BMessage *msg) {
+void AttachmentView::MessageReceived(BMessage* msg)
+{
 	switch (msg->what) {
 	case kSelectionChangedCmd:
 		Update();
 		break;
-	case kSaveAsCmd:
-		{
-			BMessage saveMsg(B_SAVE_REQUESTED);
-			int32 count = AddSelectedAttachments(&saveMsg);
+	case kSaveAsCmd: {
+		BMessage saveMsg(B_SAVE_REQUESTED);
+		int32 count = AddSelectedAttachments(&saveMsg);
 
-			if (count == 0) {
-				break;
-			}
-
-			if (count == 1) {
-				gApp->OpenSaveFilePanel(this, NULL, &saveMsg, "");
-			} else {
-				gApp->OpenSaveToDirectoryFilePanel(this, NULL, &saveMsg);
-			}
+		if (count == 0) {
+			break;
 		}
-		break;
+
+		if (count == 1) {
+			gApp->OpenSaveFilePanel(this, NULL, &saveMsg, "");
+		} else {
+			gApp->OpenSaveToDirectoryFilePanel(this, NULL, &saveMsg);
+		}
+	} break;
 	case kOpenCmd:
 		// TODO open attachment
 		break;
@@ -202,8 +192,7 @@ void AttachmentView::Fill(XRef* xref, PDFDoc* doc)
 			BString str;
 			char buf[4];
 			for (int j = 0; j < catalog->getEmbeddedFileNameLength(i); j++) {
-				int32 len = mapUTF8(catalog->getEmbeddedFileName(i)[j],
-					(char*)&buf, 4);
+				int32 len = mapUTF8(catalog->getEmbeddedFileName(i)[j], (char*)&buf, 4);
 				str.Append((const char*)&buf, len);
 			}
 			mList->AddRow(new AttachmentItem(str, i));
@@ -216,13 +205,14 @@ void AttachmentView::Empty()
 {
 	mList->Clear();
 	BRow* item = new BRow();
-	item->SetField(new BStringField(B_TRANSLATE("<empty>")),0);
+	item->SetField(new BStringField(B_TRANSLATE("<empty>")), 0);
 	mList->AddRow(item);
 }
 
-int32 AttachmentView::AddSelectedAttachments(BMessage* msg) {
+int32 AttachmentView::AddSelectedAttachments(BMessage* msg)
+{
 	int32 count = 0;
-	for (int32 i = 0; i < mList->CountRows(); i ++) {
+	for (int32 i = 0; i < mList->CountRows(); i++) {
 		if (!mList->RowAt(i)->IsSelected()) {
 			continue;
 		}
@@ -234,13 +224,14 @@ int32 AttachmentView::AddSelectedAttachments(BMessage* msg) {
 		}
 
 		msg->AddPointer("attachment", attachment);
-		count ++;
+		count++;
 	}
 	msg->AddInt32("count", count);
 	return count;
 }
 
-AttachmentItem* AttachmentView::GetAttachment(BMessage* msg, int32 index) {
+AttachmentItem* AttachmentView::GetAttachment(BMessage* msg, int32 index)
+{
 	void* pointer;
 	if (msg->FindPointer("attachment", index, &pointer) != B_OK) {
 		return NULL;
@@ -252,18 +243,19 @@ AttachmentItem* AttachmentView::GetAttachment(BMessage* msg, int32 index) {
 class SaveAttachmentThread : public SaveThread {
 public:
 	SaveAttachmentThread(const char* title, XRef* xref, PDFDoc* doc, const BMessage* message)
-		: SaveThread(title, xref),
-		mMessage(*message),
-		fDoc(doc)
-	{
-	}
+	    : SaveThread(title, xref),
+	      mMessage(*message),
+	      fDoc(doc)
+	{}
 
-	void ActuallySave(BString path, int fileIdx) {
+	void ActuallySave(BString path, int fileIdx)
+	{
 		fDoc->saveEmbeddedFile(fileIdx, path.LockBuffer(path.Length()));
 		path.UnlockBuffer();
 	}
 
-	int32 Run() {
+	int32 Run()
+	{
 		entry_ref dir;
 		int32 count;
 
@@ -274,15 +266,14 @@ public:
 		BPath path;
 		if (count == 1) {
 			BString name;
-			if (mMessage.FindRef("directory", &dir) != B_OK ||
-				mMessage.FindString("name", &name) != B_OK)	{
+			if (mMessage.FindRef("directory", &dir) != B_OK || mMessage.FindString("name", &name) != B_OK) {
 				// should not happen
 				return -1;
 			}
 			path.SetTo(&dir);
 			path.Append(name.String());
 		} else {
-			if (mMessage.FindRef("refs", &dir) != B_OK)	{
+			if (mMessage.FindRef("refs", &dir) != B_OK) {
 				// should not happen
 				return -1;
 			}
@@ -300,11 +291,11 @@ public:
 			}
 		} else {
 			AttachmentItem* item = AttachmentView::GetAttachment(&mMessage, 0);
-			for (int32 i = 1; item != NULL; i ++) {
+			for (int32 i = 1; item != NULL; i++) {
 				BString name(item->GetFileName());
 				SetText(name.String());
 				SetCurrent(i);
-				for (int postfix = 1; postfix < 50; postfix ++) {
+				for (int postfix = 1; postfix < 50; postfix++) {
 					BPath file(path);
 					if (postfix == 1) {
 						file.Append(name.String());
@@ -330,11 +321,12 @@ public:
 	}
 
 private:
-	BMessage         mMessage;
-	PDFDoc*			fDoc;
+	BMessage mMessage;
+	PDFDoc* fDoc;
 };
 
-void AttachmentView::Save(BMessage* msg) {
+void AttachmentView::Save(BMessage* msg)
+{
 	const char* title = B_TRANSLATE("Saving attachment(s):");
 	SaveAttachmentThread* thread = new SaveAttachmentThread(title, mXRef, fDoc, msg);
 	thread->Resume();
@@ -343,7 +335,7 @@ void AttachmentView::Save(BMessage* msg) {
 AttachmentView::AttachmentSelection AttachmentView::GetAttachmentSelection()
 {
 	AttachmentSelection selection = kNoAttachmentSelected;
-	for (int32 index = 0; index < mList->CountRows(); index ++) {
+	for (int32 index = 0; index < mList->CountRows(); index++) {
 		if (!mList->RowAt(index)->IsSelected()) {
 			continue;
 		}
@@ -362,4 +354,3 @@ AttachmentView::AttachmentSelection AttachmentView::GetAttachmentSelection()
 	}
 	return selection;
 }
-

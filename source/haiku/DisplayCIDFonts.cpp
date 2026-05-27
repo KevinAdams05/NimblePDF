@@ -31,7 +31,7 @@
 #define TYPE "type"
 
 #define TRUE_TYPE "tt"
-#define TYPE1     "t1"
+#define TYPE1 "t1"
 
 class DisplayCIDFont {
 public:
@@ -51,25 +51,28 @@ private:
 
 // implementation of DisplayCIDFont
 DisplayCIDFont::DisplayCIDFont(const char* name, const char* file, DisplayCIDFonts::Type type)
-	: mName(name)
-	, mFile(file)
-	, mType(type)
-{
-}
+    : mName(name),
+      mFile(file),
+      mType(type)
+{}
 
-const char* DisplayCIDFont::GetName() const {
+const char* DisplayCIDFont::GetName() const
+{
 	return mName.String();
 }
 
-const char* DisplayCIDFont::GetFile() const {
+const char* DisplayCIDFont::GetFile() const
+{
 	return mFile.String();
 }
 
-DisplayCIDFonts::Type DisplayCIDFont::GetType() const {
+DisplayCIDFonts::Type DisplayCIDFont::GetType() const
+{
 	return mType;
 }
 
-void DisplayCIDFont::Set(const char* name, const char* file, DisplayCIDFonts::Type type) {
+void DisplayCIDFont::Set(const char* name, const char* file, DisplayCIDFonts::Type type)
+{
 	mName = name;
 	mFile = file;
 	mType = type;
@@ -78,9 +81,10 @@ void DisplayCIDFont::Set(const char* name, const char* file, DisplayCIDFonts::Ty
 
 // implementation of DisplayCIDFonts
 
-DisplayCIDFonts::DisplayCIDFonts(const BMessage& DisplayCIDFonts) {
+DisplayCIDFonts::DisplayCIDFonts(const BMessage& DisplayCIDFonts)
+{
 	BMessage msg;
-	for (int32 index = 0; DisplayCIDFonts.FindMessage(FONT, index, &msg) == B_OK; index ++) {
+	for (int32 index = 0; DisplayCIDFonts.FindMessage(FONT, index, &msg) == B_OK; index++) {
 		BString name;
 		BString file;
 		BString typeString;
@@ -95,31 +99,34 @@ DisplayCIDFonts::DisplayCIDFonts(const BMessage& DisplayCIDFonts) {
 		}
 		mFonts.AddItem(new DisplayCIDFont(name.String(), file.String(), type));
 	}
-
-
 }
 
-DisplayCIDFonts::~DisplayCIDFonts() {
-	for (int32 index = 0; index < GetSize(); index ++) {
+DisplayCIDFonts::~DisplayCIDFonts()
+{
+	for (int32 index = 0; index < GetSize(); index++) {
 		delete Get(index);
 	}
 	mFonts.MakeEmpty();
 }
 
-bool DisplayCIDFonts::Contains(const char* name) const {
+bool DisplayCIDFonts::Contains(const char* name) const
+{
 	return Find(name) != NULL;
 }
 
-int32 DisplayCIDFonts::GetSize() const {
+int32 DisplayCIDFonts::GetSize() const
+{
 	return mFonts.CountItems();
 }
 
-DisplayCIDFont* DisplayCIDFonts::Get(int32 index) const {
+DisplayCIDFont* DisplayCIDFonts::Get(int32 index) const
+{
 	return (DisplayCIDFont*)mFonts.ItemAt(index);
 }
 
-DisplayCIDFont* DisplayCIDFonts::Find(const char* name) const {
-	for (int32 index = 0; index < GetSize(); index ++) {
+DisplayCIDFont* DisplayCIDFonts::Find(const char* name) const
+{
+	for (int32 index = 0; index < GetSize(); index++) {
 		if (strcmp(name, Get(index)->GetName()) == 0) {
 			return Get(index);
 		}
@@ -128,8 +135,9 @@ DisplayCIDFont* DisplayCIDFonts::Find(const char* name) const {
 	return NULL;
 }
 
-status_t DisplayCIDFonts::Archive(BMessage& archive) {
-	for (int32 index = 0; index < GetSize(); index ++) {
+status_t DisplayCIDFonts::Archive(BMessage& archive)
+{
+	for (int32 index = 0; index < GetSize(); index++) {
 		DisplayCIDFont* name = Get(index);
 		BMessage msg;
 		msg.AddString(NAME, name->GetName());
@@ -146,7 +154,8 @@ status_t DisplayCIDFonts::Archive(BMessage& archive) {
 	return B_OK;
 }
 
-void DisplayCIDFonts::Get(DisplayCIDFont* font, BString& name, BString& file, Type& type) const {
+void DisplayCIDFonts::Get(DisplayCIDFont* font, BString& name, BString& file, Type& type) const
+{
 	if (font == NULL) {
 		name = "";
 		file = "";
@@ -158,16 +167,19 @@ void DisplayCIDFonts::Get(DisplayCIDFont* font, BString& name, BString& file, Ty
 	type = font->GetType();
 }
 
-void DisplayCIDFonts::Get(int32 index, BString& name, BString& file, Type& type) const {
+void DisplayCIDFonts::Get(int32 index, BString& name, BString& file, Type& type) const
+{
 	Get(Get(index), name, file, type);
 }
 
-void DisplayCIDFonts::Get(const char* name, BString& file, Type& type) const {
+void DisplayCIDFonts::Get(const char* name, BString& file, Type& type) const
+{
 	BString dummyName;
 	Get(Find(name), dummyName, file, type);
 }
 
-void DisplayCIDFonts::Set(const char* name, const char* file, Type type) {
+void DisplayCIDFonts::Set(const char* name, const char* file, Type type)
+{
 	DisplayCIDFont* font = Find(name);
 	if (font == NULL) {
 		font = new DisplayCIDFont(name, file, type);

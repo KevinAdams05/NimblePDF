@@ -26,10 +26,10 @@ public:
 	// Constructs a thread with the specified name and priority
 	// See spawn_thread()
 	Thread(const char* name, int32 priority);
-	
+
 	// Thread destructor.
 	virtual ~Thread();
-	
+
 	// Returns B_OK if the thread could be created in the constructor
 	status_t InitCheck();
 
@@ -42,14 +42,14 @@ public:
 	// Resumes the thread. The thread takes ownership of this Thread
 	// and deletes it before the thread exits. You must not call
 	// this method more than one time.
-	status_t Resume();	
-	
+	status_t Resume();
+
 	// This callback method is run in the created thread.
 	virtual int32 Run() = 0;
 
 private:
 	static int32 DoRun(void* data);
-	
+
 	thread_id mThreadId;
 };
 

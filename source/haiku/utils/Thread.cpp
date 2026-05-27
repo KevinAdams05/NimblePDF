@@ -18,34 +18,39 @@
 
 #include "Thread.h"
 
-Thread::Thread(const char* name, int32 priority) {
+Thread::Thread(const char* name, int32 priority)
+{
 	mThreadId = spawn_thread(DoRun, name, priority, this);
 }
 
-Thread::~Thread() {
-}
+Thread::~Thread()
+{}
 
-status_t Thread::InitCheck() {
+status_t Thread::InitCheck()
+{
 	return mThreadId >= 0 ? B_OK : B_ERROR;
 }
 
-thread_id Thread::GetThreadId() {
+thread_id Thread::GetThreadId()
+{
 	return mThreadId;
 }
 
-void Thread::SetPriority(int32 priority) {
+void Thread::SetPriority(int32 priority)
+{
 	if (InitCheck() == B_OK) {
 		set_thread_priority(mThreadId, priority);
 	}
 }
-	
-status_t Thread::Resume() {
+
+status_t Thread::Resume()
+{
 	status_t result = InitCheck();
 	if (result != B_OK) {
 		delete this;
 		return result;
 	}
-	
+
 	result = resume_thread(mThreadId);
 	if (result != B_OK) {
 		delete this;
@@ -53,11 +58,10 @@ status_t Thread::Resume() {
 	return result;
 }
 
-int32 Thread::DoRun(void* data) {
+int32 Thread::DoRun(void* data)
+{
 	Thread* thread = (Thread*)data;
 	int32 result = thread->Run();
 	delete thread;
 	return result;
 }
-
-

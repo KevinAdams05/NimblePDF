@@ -51,71 +51,63 @@
 #undef B_TRANSLATION_CONTEXT
 #define B_TRANSLATION_CONTEXT "BepdfApplication"
 
-static const char * bePDFCopyright =
-	"© 1997 Benoit Triquet\n"
-	"© 1998-2000 Hubert Figuiere\n"
-    "© 2000-2011 Michael Pfeiffer\n"
-    "© 2013-2017 waddlesplash\n";
+static const char* bePDFCopyright = "© 1997 Benoit Triquet\n"
+                                    "© 1998-2000 Hubert Figuiere\n"
+                                    "© 2000-2011 Michael Pfeiffer\n"
+                                    "© 2013-2017 waddlesplash\n";
 
-static const char * GPLCopyright =
-    "\n\n"
-    "This program is free software under the GNU GPL v2, or any later version.\n";
+static const char* GPLCopyright = "\n\n"
+                                  "This program is free software under the GNU GPL v2, or any later version.\n";
 
-static const char *PAGE_NUM_MSG_KEY = "bepdf:page_num";
+static const char* PAGE_NUM_MSG_KEY = "bepdf:page_num";
 
-static const char *settingsFilename = "BePDF";
+static const char* settingsFilename = "BePDF";
 
-static const char* attachmentNames[] = {
-	"GRAPH_ANNOT",
-	"PAPER_CLIP_ANNOT",
-	"PUSH_PIN_ANNOT",
-	"TAG_ANNOT",
-	"UNKNOWN_ATTACHMENT_ANNOT"
-};
+static const char* attachmentNames[] = {"GRAPH_ANNOT", "PAPER_CLIP_ANNOT", "PUSH_PIN_ANNOT", "TAG_ANNOT", "UNKNOWN_ATTACHMENT_ANNOT"};
 
-static const char* textAnnotNames[] = {
-	"COMMENT_ANNOT",
-	"HELP_ANNOT",
-	"INSERT_ANNOT",
-	"KEY_ANNOT",
-	"NEW_PARAGRAPH_ANNOT",
-	"NOTE_ANNOT",
-	"PARAGRAPH_ANNOT",
-	"UNKNOWN_TEXT_ANNOT"
-};
+static const char* textAnnotNames[] = {"COMMENT_ANNOT",
+    "HELP_ANNOT",
+    "INSERT_ANNOT",
+    "KEY_ANNOT",
+    "NEW_PARAGRAPH_ANNOT",
+    "NOTE_ANNOT",
+    "PARAGRAPH_ANNOT",
+    "UNKNOWN_TEXT_ANNOT"};
 
 // Implementation of PDFFilter
 class PDFFilter : public BRefFilter {
-	static const char *valid_filetypes[];
+	static const char* valid_filetypes[];
 
 public:
-	bool Filter(const entry_ref *ref, BNode *node, struct stat_beos *st, const char *filetype);
+	bool Filter(const entry_ref* ref, BNode* node, struct stat_beos* st, const char* filetype);
 };
 
 static PDFFilter pdfFilter;
 
-BRefFilter* GetPdfFilter() {
+BRefFilter* GetPdfFilter()
+{
 	return &pdfFilter;
 }
 
-const char * PDFFilter::valid_filetypes[] = {
-	"application/x-vnd.Be-directory",
-	"application/x-vnd.Be-symlink",
-	"application/x-vnd.Be-volume",
-	"application/pdf",
-	"application/x-pdf",
-	NULL
-};
+const char* PDFFilter::valid_filetypes[] = {"application/x-vnd.Be-directory",
+    "application/x-vnd.Be-symlink",
+    "application/x-vnd.Be-volume",
+    "application/pdf",
+    "application/x-pdf",
+    NULL};
 
-bool PDFFilter::Filter(const entry_ref *ref, BNode *node, struct stat_beos *st, const char *filetype) {
+bool PDFFilter::Filter(const entry_ref* ref, BNode* node, struct stat_beos* st, const char* filetype)
+{
 	for (int i = 0; valid_filetypes[i]; i++) {
-		if (strcmp(filetype, valid_filetypes[i]) == 0) return true;
+		if (strcmp(filetype, valid_filetypes[i]) == 0)
+			return true;
 		// check file extension if filetype has not been set to application/pdf
 		BString name(ref->name);
 		name.ToUpper();
 		int32 l = name.FindLast('.');
 		if (l != B_ERROR) {
-			if (name.FindFirst(".PDF", l) != B_ERROR) return true;
+			if (name.FindFirst(".PDF", l) != B_ERROR)
+				return true;
 		}
 	}
 	return false;
@@ -123,7 +115,7 @@ bool PDFFilter::Filter(const entry_ref *ref, BNode *node, struct stat_beos *st, 
 ///////////////////////////////////////////////////////////
 int main()
 {
-	new BepdfApplication ( );
+	new BepdfApplication();
 
 	be_app->Run();
 
@@ -132,9 +124,9 @@ int main()
 }
 
 
-
 ///////////////////////////////////////////////////////////
-void BepdfApplication::LoadImages(BBitmap* images[], const char* names[], int num) {
+void BepdfApplication::LoadImages(BBitmap* images[], const char* names[], int num)
+{
 	for (int i = 0; i < num; i++) {
 		images[i] = LoadBitmap(names[i], 'BBMP');
 		if (!images[i])
@@ -143,23 +135,25 @@ void BepdfApplication::LoadImages(BBitmap* images[], const char* names[], int nu
 }
 
 ///////////////////////////////////////////////////////////
-void BepdfApplication::FreeImages(BBitmap* images[], int num) {
+void BepdfApplication::FreeImages(BBitmap* images[], int num)
+{
 	for (int i = 0; i < num; i++) {
-		delete images[i]; images[i] = NULL;
+		delete images[i];
+		images[i] = NULL;
 	}
 }
 
 ///////////////////////////////////////////////////////////
 BepdfApplication::BepdfApplication()
-		: BApplication ( BEPDF_APP_SIG )
+    : BApplication(BEPDF_APP_SIG)
 {
 	mSettings = new GlobalSettings();
-	mOpenFilePanel            = NULL;
-	mSaveFilePanel            = NULL;
+	mOpenFilePanel = NULL;
+	mSaveFilePanel = NULL;
 	mSaveToDirectoryFilePanel = NULL;
-	mInitialized  = false;
+	mInitialized = false;
 	mGotSomething = false;
-	mReadyToQuit  = false;
+	mReadyToQuit = false;
 	mWindow = NULL;
 
 	mStdoutTracer = NULL;
@@ -174,9 +168,10 @@ BepdfApplication::BepdfApplication()
 	resizeCursor = new BCursor(B_CURSOR_ID_RESIZE_NORTH_WEST_SOUTH_EAST);
 
 	LoadImages(mAttachmentImages, attachmentNames, FileAttachmentAnnot::no_of_types);
-	LoadImages(mTextAnnotImages,  textAnnotNames,  TextAnnot::no_of_types);
+	LoadImages(mTextAnnotImages, textAnnotNames, TextAnnot::no_of_types);
 
-	BEntry entry; app_info info;
+	BEntry entry;
+	app_info info;
 	if (B_OK == be_app->GetAppInfo(&info)) {
 		mTeamID = info.team;
 		entry = BEntry(&info.ref);
@@ -200,7 +195,8 @@ BepdfApplication::BepdfApplication()
 #include <GString.h>
 #include "DisplayCIDFonts.h"
 
-static void setGlobalParameter(const char* type, const char* arg1, const char* arg2 = NULL) {
+static void setGlobalParameter(const char* type, const char* arg1, const char* arg2 = NULL)
+{
 	GString line;
 	line.append(type);
 	line.append(" ");
@@ -214,21 +210,21 @@ static void setGlobalParameter(const char* type, const char* arg1, const char* a
 }
 
 /* copied from xpdf/GlobalParams.cc as it was removed in XPDF 4 */
-GList* getCIDToUnicodeNames(GlobalParams* globalParams) {
-  GList *list = new GList();
-  GString *key;
-  void *value;
-  GHashIter *iter = NULL;
-  globalParams->cidToUnicodes->startIter(&iter);
-  while (globalParams->cidToUnicodes->getNext(&iter, &key, &value)) {
-       list->append(key->copy());
-  }
-  globalParams->cidToUnicodes->killIter(&iter);
-  return list;
+GList* getCIDToUnicodeNames(GlobalParams* globalParams)
+{
+	GList* list = new GList();
+	GString* key;
+	void* value;
+	GHashIter* iter = NULL;
+	globalParams->cidToUnicodes->startIter(&iter);
+	while (globalParams->cidToUnicodes->getNext(&iter, &key, &value)) {
+		list->append(key->copy());
+	}
+	globalParams->cidToUnicodes->killIter(&iter);
+	return list;
 }
 
-void
-BepdfApplication::Initialize()
+void BepdfApplication::Initialize()
 {
 	if (!mInitialized) {
 		mInitialized = true;
@@ -266,7 +262,7 @@ BepdfApplication::Initialize()
 		// record new names
 		bool foundNewName = false;
 		GList* list = getCIDToUnicodeNames(globalParams);
-		for (int i = 0; i < list->getLength(); i ++) {
+		for (int i = 0; i < list->getLength(); i++) {
 			GString* name = (GString*)list->get(i);
 			if (displayNames.Contains(name->getCString())) {
 				continue;
@@ -284,14 +280,13 @@ BepdfApplication::Initialize()
 		}
 
 		// set CID fonts
-		for (int i = 0; i < list->getLength(); i ++) {
-		    GString* name = (GString*)list->get(i);
+		for (int i = 0; i < list->getLength(); i++) {
+			GString* name = (GString*)list->get(i);
 			BString file;
 			DisplayCIDFonts::Type type;
 
 			displayNames.Get(name->getCString(), file, type);
-			if (type == DisplayCIDFonts::kUnknownType ||
-				file.Length() == 0) {
+			if (type == DisplayCIDFonts::kUnknownType || file.Length() == 0) {
 				continue;
 			}
 
@@ -311,18 +306,26 @@ BepdfApplication::~BepdfApplication()
 {
 	SaveSettings();
 
-	delete mSettings; mSettings = NULL;
+	delete mSettings;
+	mSettings = NULL;
 
-	delete linkCursor;          linkCursor = NULL;
-	delete handCursor;          handCursor = NULL;
-	delete grabCursor;          grabCursor = NULL;
-	delete textSelectionCursor; textSelectionCursor = NULL;
-	delete zoomCursor;          zoomCursor = NULL;
-	delete splitVCursor;        splitVCursor = NULL;
-	delete resizeCursor;        resizeCursor = NULL;
+	delete linkCursor;
+	linkCursor = NULL;
+	delete handCursor;
+	handCursor = NULL;
+	delete grabCursor;
+	grabCursor = NULL;
+	delete textSelectionCursor;
+	textSelectionCursor = NULL;
+	delete zoomCursor;
+	zoomCursor = NULL;
+	delete splitVCursor;
+	splitVCursor = NULL;
+	delete resizeCursor;
+	resizeCursor = NULL;
 
 	FreeImages(mAttachmentImages, FileAttachmentAnnot::no_of_types);
-	FreeImages(mTextAnnotImages,  TextAnnot::no_of_types);
+	FreeImages(mTextAnnotImages, TextAnnot::no_of_types);
 
 	ExitBePDF();
 }
@@ -339,13 +342,13 @@ void BepdfApplication::ReadyToRun()
 #endif
 
 	Initialize();
-	if (! mGotSomething) {
+	if (!mGotSomething) {
 		// open start document
 		entry_ref defaultDocument;
 		BMessage msg(B_REFS_RECEIVED);
-		get_ref_for_path (mDefaultPDF.Path(), &defaultDocument);
-		msg.AddRef ("refs", &defaultDocument);
-		RefsReceived (&msg);
+		get_ref_for_path(mDefaultPDF.Path(), &defaultDocument);
+		msg.AddRef("refs", &defaultDocument);
+		RefsReceived(&msg);
 
 		if (!mGotSomething) {
 			// on error open file open dialog
@@ -367,25 +370,25 @@ void BepdfApplication::AboutRequested()
 	str += bePDFCopyright;
 	str += "\n";
 
-	str += BString().SetToFormat(B_TRANSLATE_COMMENT("BePDF is based on XPDF %s, %s.", "XPDF version, copyright"),
-		xpdfVersion, xpdfCopyright);
+	str +=
+	    BString().SetToFormat(B_TRANSLATE_COMMENT("BePDF is based on XPDF %s, %s.", "XPDF version, copyright"), xpdfVersion, xpdfCopyright);
 
 	str += GPLCopyright;
 
-	BAlert *about = new BAlert("About", str.String(), "OK");
-	BTextView *v = about->TextView();
+	BAlert* about = new BAlert("About", str.String(), "OK");
+	BTextView* v = about->TextView();
 	if (v) {
 		rgb_color red = {255, 0, 51, 255};
 		rgb_color blue = {0, 102, 255, 255};
 
 		v->SetStylable(true);
-		char *text = (char*)v->Text();
-		char *s = text;
+		char* text = (char*)v->Text();
+		char* s = text;
 		// set all Be in BePDF in blue and red
 		while ((s = strstr(s, "BePDF")) != NULL) {
 			int32 i = s - text;
-			v->SetFontAndColor(i, i+1, NULL, 0, &blue);
-			v->SetFontAndColor(i+1, i+2, NULL, 0, &red);
+			v->SetFontAndColor(i, i + 1, NULL, 0, &blue);
+			v->SetFontAndColor(i + 1, i + 2, NULL, 0, &red);
 			s += 2;
 		}
 		// first text line
@@ -393,7 +396,7 @@ void BepdfApplication::AboutRequested()
 		BFont font;
 		v->GetFontAndColor(0, &font);
 		font.SetSize(16);
-		v->SetFontAndColor(0, s-text+1, &font, B_FONT_SIZE);
+		v->SetFontAndColor(0, s - text + 1, &font, B_FONT_SIZE);
 	};
 	about->Go();
 }
@@ -403,11 +406,10 @@ void BepdfApplication::AboutRequested()
 	the file panel will tell by itself if openning have been cancelled
 	or not.
 */
-void BepdfApplication::OpenFilePanel ()
+void BepdfApplication::OpenFilePanel()
 {
 	if (mOpenFilePanel == NULL) {
-		mOpenFilePanel = new BFilePanel (B_OPEN_PANEL,
-						NULL, NULL, B_FILE_NODE, true, NULL, NULL);
+		mOpenFilePanel = new BFilePanel(B_OPEN_PANEL, NULL, NULL, B_FILE_NODE, true, NULL, NULL);
 		mOpenFilePanel->SetRefFilter(&pdfFilter);
 	}
 	mOpenFilePanel->SetPanelDirectory(mSettings->GetPanelDirectory());
@@ -420,15 +422,15 @@ void BepdfApplication::OpenFilePanel ()
 	the file panel will tell by itself if openning have been cancelled
 	or not.
 */
-void BepdfApplication::OpenSaveFilePanel(BHandler* handler, bool fileMode, BRefFilter* filter, BMessage* msg, const char* name) {
+void BepdfApplication::OpenSaveFilePanel(BHandler* handler, bool fileMode, BRefFilter* filter, BMessage* msg, const char* name)
+{
 	BFilePanel* panel = NULL;
 
 	// lazy construct file panel
 	if (fileMode) {
 		// file panel for selection of file
 		if (mSaveFilePanel == NULL) {
-			mSaveFilePanel = new BFilePanel (B_SAVE_PANEL,
-							NULL, NULL, B_FILE_NODE, false, NULL, NULL, true);
+			mSaveFilePanel = new BFilePanel(B_SAVE_PANEL, NULL, NULL, B_FILE_NODE, false, NULL, NULL, true);
 		}
 
 		// hide other file panel
@@ -440,8 +442,7 @@ void BepdfApplication::OpenSaveFilePanel(BHandler* handler, bool fileMode, BRefF
 	} else {
 		// file panel for selection of directory
 		if (mSaveToDirectoryFilePanel == NULL) {
-			mSaveToDirectoryFilePanel = new BFilePanel (B_OPEN_PANEL,
-							NULL, NULL, B_DIRECTORY_NODE, false, NULL, NULL, true);
+			mSaveToDirectoryFilePanel = new BFilePanel(B_OPEN_PANEL, NULL, NULL, B_DIRECTORY_NODE, false, NULL, NULL, true);
 		}
 
 		// hide other file panel
@@ -458,8 +459,7 @@ void BepdfApplication::OpenSaveFilePanel(BHandler* handler, bool fileMode, BRefF
 
 	if (name != NULL) {
 		panel->SetSaveText(name);
-	}
-	else if (fileMode) {
+	} else if (fileMode) {
 		panel->SetSaveText("");
 	}
 
@@ -482,11 +482,13 @@ void BepdfApplication::OpenSaveFilePanel(BHandler* handler, bool fileMode, BRefF
 	panel->Show();
 }
 
-void BepdfApplication::OpenSaveFilePanel(BHandler* handler, BRefFilter* filter, BMessage* msg, const char* name) {
+void BepdfApplication::OpenSaveFilePanel(BHandler* handler, BRefFilter* filter, BMessage* msg, const char* name)
+{
 	OpenSaveFilePanel(handler, true, filter, msg, name);
 }
 
-void BepdfApplication::OpenSaveToDirectoryFilePanel(BHandler* handler, BRefFilter* filter, BMessage* msg, const char* name) {
+void BepdfApplication::OpenSaveToDirectoryFilePanel(BHandler* handler, BRefFilter* filter, BMessage* msg, const char* name)
+{
 	OpenSaveFilePanel(handler, false, filter, msg, name);
 }
 
@@ -495,15 +497,17 @@ void BepdfApplication::OpenSaveToDirectoryFilePanel(BHandler* handler, BRefFilte
   NOTIFY_QUIT_MSG:
   Or to quit all BePDF applications.
 */
-void BepdfApplication::Notify(uint32 cmd) {
+void BepdfApplication::Notify(uint32 cmd)
+{
 	BList list;
 	be_roster->GetAppList(BEPDF_APP_SIG, &list);
-	const int n = list.CountItems()-1;
+	const int n = list.CountItems() - 1;
 	BMessage msg(cmd);
 	// notify all but this team
-	for (int i = n; i >= 0; i --) {
+	for (int i = n; i >= 0; i--) {
 		team_id who = (team_id)(addr_t)list.ItemAt(i);
-		if (who == mTeamID) continue; // skip own team
+		if (who == mTeamID)
+			continue; // skip own team
 		status_t status;
 		BMessenger app(BEPDF_APP_SIG, who, &status);
 		if (status == B_OK) {
@@ -514,9 +518,12 @@ void BepdfApplication::Notify(uint32 cmd) {
 	PostMessage(&msg, (BHandler*)NULL, 0);
 }
 
-bool BepdfApplication::QuitRequested() {
-	delete mStdoutTracer; mStdoutTracer = NULL;
-	delete mStderrTracer; mStderrTracer = NULL;
+bool BepdfApplication::QuitRequested()
+{
+	delete mStdoutTracer;
+	mStdoutTracer = NULL;
+	delete mStderrTracer;
+	mStderrTracer = NULL;
 
 	bool shortcut;
 	if (B_OK == CurrentMessage()->FindBool("shortcut", &shortcut) && shortcut) {
@@ -529,26 +536,32 @@ bool BepdfApplication::QuitRequested() {
 /*
 	Opens everything.
 */
-void BepdfApplication::RefsReceived(BMessage *msg)
+void BepdfApplication::RefsReceived(BMessage* msg)
 {
 	uint32 type;
 	int32 count;
 	mReadyToQuit = false;
-    status_t result;
+	status_t result;
 
 	msg->GetInfo("refs", &type, &count);
 
 	if (type != B_REF_TYPE) {
-        BAlert *error = new BAlert(B_TRANSLATE("Error"), B_TRANSLATE("Invalid file reference received!"), B_TRANSLATE("Close"), NULL, NULL, B_WIDTH_AS_USUAL, B_WARNING_ALERT);
-        error->Go();
+		BAlert* error = new BAlert(B_TRANSLATE("Error"),
+		    B_TRANSLATE("Invalid file reference received!"),
+		    B_TRANSLATE("Close"),
+		    NULL,
+		    NULL,
+		    B_WIDTH_AS_USUAL,
+		    B_WARNING_ALERT);
+		error->Go();
 
-        return;
-    }
+		return;
+	}
 
 	BString ownerPassword, userPassword;
-	const char *owner = NULL;
-	const char *user  = NULL;
-    int32 pageNum = 0;
+	const char* owner = NULL;
+	const char* user = NULL;
+	int32 pageNum = 0;
 	entry_ref ref;
 
 	if (B_OK == msg->FindString("ownerPassword", &ownerPassword)) {
@@ -557,23 +570,29 @@ void BepdfApplication::RefsReceived(BMessage *msg)
 	if (B_OK == msg->FindString("userPassword", &userPassword)) {
 		user = userPassword.String();
 	}
-    result = msg->FindInt32(PAGE_NUM_MSG_KEY, &pageNum);
-    if (result != B_OK) {
-        if (result != B_NAME_NOT_FOUND) {
-            BAlert *error = new BAlert(B_TRANSLATE("Error"), B_TRANSLATE("Error getting page number!"), B_TRANSLATE("Close"), NULL, NULL, B_WIDTH_AS_USUAL, B_WARNING_ALERT);
-            error->Go();
-        }
+	result = msg->FindInt32(PAGE_NUM_MSG_KEY, &pageNum);
+	if (result != B_OK) {
+		if (result != B_NAME_NOT_FOUND) {
+			BAlert* error = new BAlert(B_TRANSLATE("Error"),
+			    B_TRANSLATE("Error getting page number!"),
+			    B_TRANSLATE("Close"),
+			    NULL,
+			    NULL,
+			    B_WIDTH_AS_USUAL,
+			    B_WARNING_ALERT);
+			error->Go();
+		}
 	}
 
 	Initialize();
 
-	for (int32 i = --count ; i >= 0; i-- ) {
-		if ( msg->FindRef("refs", i, &ref ) == B_OK ) {
+	for (int32 i = --count; i >= 0; i--) {
+		if (msg->FindRef("refs", i, &ref) == B_OK) {
 			/*
 				Open the document...
 				WARNING: The application thread is used to open a file!
 			*/
-			PDFWindow *win;
+			PDFWindow* win;
 			BRect rect(mSettings->GetWindowRect());
 			bool ok;
 			bool encrypted = false;
@@ -590,27 +609,34 @@ void BepdfApplication::RefsReceived(BMessage *msg)
 
 			if (!ok) {
 				if (!encrypted) {
-			 		BAlert *error = new BAlert(B_TRANSLATE("Error"), B_TRANSLATE("BePDF: Error opening file!"), B_TRANSLATE("Close"), NULL, NULL, B_WIDTH_AS_USUAL, B_STOP_ALERT);
-			 		error->Go();
+					BAlert* error = new BAlert(B_TRANSLATE("Error"),
+					    B_TRANSLATE("BePDF: Error opening file!"),
+					    B_TRANSLATE("Close"),
+					    NULL,
+					    NULL,
+					    B_WIDTH_AS_USUAL,
+					    B_STOP_ALERT);
+					error->Go();
 
-                    if (mWindow == NULL) {  // fixme: always true even if a PDF window is already open!
-                        OpenFilePanel();
-                    }
-		 		} else {
-		 			new PasswordWindow(&ref, rect, this);
-                }
-		 		if (mWindow == NULL) delete win;
+					if (mWindow == NULL) { // fixme: always true even if a PDF window is already open!
+						OpenFilePanel();
+					}
+				} else {
+					new PasswordWindow(&ref, rect, this);
+				}
+				if (mWindow == NULL)
+					delete win;
 
 			} else if (mWindow == NULL) {
 				mWindow = win;
 				win->Show();
 			}
-            // jump to page if provided
-            if (pageNum != 0) {
-                BMessage goToPageMsg(PDFWindow::GOTO_PAGE_CMD);
-                goToPageMsg.AddInt32("page", pageNum);
-                mWindow->MessageReceived(&goToPageMsg);
-            }
+			// jump to page if provided
+			if (pageNum != 0) {
+				BMessage goToPageMsg(PDFWindow::GOTO_PAGE_CMD);
+				goToPageMsg.AddInt32("page", pageNum);
+				mWindow->MessageReceived(&goToPageMsg);
+			}
 			// stop after first document
 			mGotSomething = true;
 			break;
@@ -619,13 +645,11 @@ void BepdfApplication::RefsReceived(BMessage *msg)
 }
 
 
-
 ///////////////////////////////////////////////////////////
-void
-BepdfApplication::MessageReceived (BMessage * msg)
+void BepdfApplication::MessageReceived(BMessage* msg)
 {
 	if (msg == NULL) {
-		fprintf (stderr, "xpdf: message NULL received\n");
+		fprintf(stderr, "xpdf: message NULL received\n");
 		return;
 	}
 
@@ -656,20 +680,16 @@ BepdfApplication::MessageReceived (BMessage * msg)
 }
 
 
-
-
-
 ///////////////////////////////////////////////////////////
-void
-BepdfApplication::ArgvReceived (int32 argc, char **argv)
+void BepdfApplication::ArgvReceived(int32 argc, char** argv)
 {
 	GBool ok;
 	int pg;
 	entry_ref fileToOpen;
 
 	// copy args because parseArgs might be change it
-	char **argvCopy = new char*[argc];
-	for (int i = 0; i < argc; i ++) {
+	char** argvCopy = new char*[argc];
+	for (int i = 0; i < argc; i++) {
 		argvCopy[i] = argv[i];
 	}
 
@@ -689,62 +709,60 @@ BepdfApplication::ArgvReceived (int32 argc, char **argv)
 	}
 
 	// print banner
-//	fprintf(errFile, "BePDF version %s\n", pdfViewerVersion);
-//	fprintf(errFile, "based on xpdf %s %s\n", xpdfVersion, xpdfCopyright);
-//	fprintf(errFile, "and based on BePDF %s\n%s\n", bePDFVersion, bePDFCopyright);
-//	fprintf(errFile, "%s%s\n", pdfViewerCopyright, GPLCopyright);
+	//	fprintf(errFile, "BePDF version %s\n", pdfViewerVersion);
+	//	fprintf(errFile, "based on xpdf %s %s\n", xpdfVersion, xpdfCopyright);
+	//	fprintf(errFile, "and based on BePDF %s\n%s\n", bePDFVersion, bePDFCopyright);
+	//	fprintf(errFile, "%s%s\n", pdfViewerCopyright, GPLCopyright);
 
 	BMessage msg(B_REFS_RECEIVED);
-	msg.AddInt32 (PAGE_NUM_MSG_KEY, pg);
-	get_ref_for_path (argvCopy[1], &fileToOpen);
-	msg.AddRef ("refs", &fileToOpen);
-	PostMessage (&msg);
+	msg.AddInt32(PAGE_NUM_MSG_KEY, pg);
+	get_ref_for_path(argvCopy[1], &fileToOpen);
+	msg.AddRef("refs", &fileToOpen);
+	PostMessage(&msg);
 	mGotSomething = true;
 	delete argvCopy;
 }
 
 
 ///////////////////////////////////////////////////////////
-void BepdfApplication::LoadSettings() {
-BPath path;
-	if (find_directory(B_USER_SETTINGS_DIRECTORY, &path) == B_OK &&
-		path.Append(settingsFilename) == B_OK ) {
+void BepdfApplication::LoadSettings()
+{
+	BPath path;
+	if (find_directory(B_USER_SETTINGS_DIRECTORY, &path) == B_OK && path.Append(settingsFilename) == B_OK) {
 		mSettings->Load(path.Path());
 	}
 }
 
 ///////////////////////////////////////////////////////////
-void BepdfApplication::SaveSettings() {
-BPath path;
-	if (find_directory(B_USER_SETTINGS_DIRECTORY, &path) == B_OK &&
-		path.Append(settingsFilename) == B_OK) {
+void BepdfApplication::SaveSettings()
+{
+	BPath path;
+	if (find_directory(B_USER_SETTINGS_DIRECTORY, &path) == B_OK && path.Append(settingsFilename) == B_OK) {
 		mSettings->Save(path.Path());
 	}
 }
 
 static struct {
-	const char *name;
-	const char *public_name;
-	const char *pdf_name;
+	const char* name;
+	const char* public_name;
+	const char* pdf_name;
 	int32 type_code;
-} gAttrInfo[] = {
-	{"META:subject",    "Subject",     "Subject",      B_STRING_TYPE},
-	{"META:title",      "Title",       "Title",        B_STRING_TYPE},
-	{"META:creator",    "Creator",     "Creator",      B_STRING_TYPE},
-	{"META:author",     "Author",      "Author",       B_STRING_TYPE},
-	{"META:keyw",    	"Keywords",    "Keywords",     B_STRING_TYPE},
-	{"PDF:producer",    "Producer",    "Producer",     B_STRING_TYPE},
-	{"PDF:created",     "Created",     "CreationDate", B_TIME_TYPE},
-	{"PDF:modified",    "Modified",    "ModDate",      B_TIME_TYPE},
-	{"META:pages",      "Pages",       NULL,           B_INT32_TYPE},
-	{"PDF:version",     "Version",     NULL,           B_DOUBLE_TYPE},
-	{"PDF:linearized",  "Linearized",  NULL,           B_BOOL_TYPE},
-	{NULL, NULL, NULL, 0}
-};
+} gAttrInfo[] = {{"META:subject", "Subject", "Subject", B_STRING_TYPE},
+    {"META:title", "Title", "Title", B_STRING_TYPE},
+    {"META:creator", "Creator", "Creator", B_STRING_TYPE},
+    {"META:author", "Author", "Author", B_STRING_TYPE},
+    {"META:keyw", "Keywords", "Keywords", B_STRING_TYPE},
+    {"PDF:producer", "Producer", "Producer", B_STRING_TYPE},
+    {"PDF:created", "Created", "CreationDate", B_TIME_TYPE},
+    {"PDF:modified", "Modified", "ModDate", B_TIME_TYPE},
+    {"META:pages", "Pages", NULL, B_INT32_TYPE},
+    {"PDF:version", "Version", NULL, B_DOUBLE_TYPE},
+    {"PDF:linearized", "Linearized", NULL, B_BOOL_TYPE},
+    {NULL, NULL, NULL, 0}};
 
 ///////////////////////////////////////////////////////////
-void
-BepdfApplication::UpdateAttr(BNode &node, const char *name, type_code type, off_t offset, void *buffer, size_t length) {
+void BepdfApplication::UpdateAttr(BNode& node, const char* name, type_code type, off_t offset, void* buffer, size_t length)
+{
 	char dummy[10];
 	if (B_ENTRY_NOT_FOUND == node.ReadAttr(name, type, offset, (char*)dummy, sizeof(dummy))) {
 		node.WriteAttr(name, type, offset, buffer, length);
@@ -753,10 +771,11 @@ BepdfApplication::UpdateAttr(BNode &node, const char *name, type_code type, off_
 
 
 ///////////////////////////////////////////////////////////
-void
-BepdfApplication::UpdateFileAttributes(PDFDoc *doc, entry_ref *ref) {
+void BepdfApplication::UpdateFileAttributes(PDFDoc* doc, entry_ref* ref)
+{
 	BNode node(ref);
-	if (node.InitCheck() != B_OK) return;
+	if (node.InitCheck() != B_OK)
+		return;
 
 	const bool force_overwrite = (modifiers() & B_COMMAND_KEY) == B_COMMAND_KEY;
 
@@ -775,18 +794,19 @@ BepdfApplication::UpdateFileAttributes(PDFDoc *doc, entry_ref *ref) {
 
 	Object obj;
 	if (doc->getDocInfo(&obj) && obj.isDict()) {
-		Dict *dict = obj.getDict();
+		Dict* dict = obj.getDict();
 		for (int i = 0; gAttrInfo[i].name; i++) {
 			time_t time;
-			if (gAttrInfo[i].pdf_name == NULL) continue;
-			BString *s = FileInfoWindow::GetProperty(dict, gAttrInfo[i].pdf_name, &time);
+			if (gAttrInfo[i].pdf_name == NULL)
+				continue;
+			BString* s = FileInfoWindow::GetProperty(dict, gAttrInfo[i].pdf_name, &time);
 			if (s) {
 				if (gAttrInfo[i].type_code == B_TIME_TYPE) {
 					if (time != 0) {
 						UpdateAttr(node, gAttrInfo[i].name, B_TIME_TYPE, 0, &time, sizeof(time));
 					}
 				} else {
-					UpdateAttr(node, gAttrInfo[i].name, B_STRING_TYPE, 0, (void*)s->String(), s->Length()+1);
+					UpdateAttr(node, gAttrInfo[i].name, B_STRING_TYPE, 0, (void*)s->String(), s->Length() + 1);
 				}
 				delete s;
 			}
@@ -796,7 +816,8 @@ BepdfApplication::UpdateFileAttributes(PDFDoc *doc, entry_ref *ref) {
 }
 
 
-const char* BepdfApplication::GetVersion(BString &version) {
+const char* BepdfApplication::GetVersion(BString& version)
+{
 	version = "?.?.?";
 	if (be_app == NULL) {
 		return version.String();
@@ -820,34 +841,34 @@ const char* BepdfApplication::GetVersion(BString &version) {
 
 	BString variety = B_TRANSLATE("Unknown");
 	switch (appVersion.variety) {
-		case 0: variety = B_TRANSLATE("Development");
-			break;
-		case 1: variety = B_TRANSLATE("Alpha");
-			break;
-		case 2: variety = B_TRANSLATE("Beta");
-			break;
-		case 3: variety = B_TRANSLATE("Gamma");
-			break;
-		case 4: variety = B_TRANSLATE("Golden Master");
-			break;
-		case 5:
-			if (appVersion.internal == 0) {
-				// hide variety
-				variety = "";
-			}
-			else {
-				variety = B_TRANSLATE("Final");
-			}
-			break;
+	case 0:
+		variety = B_TRANSLATE("Development");
+		break;
+	case 1:
+		variety = B_TRANSLATE("Alpha");
+		break;
+	case 2:
+		variety = B_TRANSLATE("Beta");
+		break;
+	case 3:
+		variety = B_TRANSLATE("Gamma");
+		break;
+	case 4:
+		variety = B_TRANSLATE("Golden Master");
+		break;
+	case 5:
+		if (appVersion.internal == 0) {
+			// hide variety
+			variety = "";
+		} else {
+			variety = B_TRANSLATE("Final");
+		}
+		break;
 	};
 	version = "";
-	version << appVersion.major << "."
-		<< appVersion.middle << "."
-		<< appVersion.minor
-		<< " " << variety;
+	version << appVersion.major << "." << appVersion.middle << "." << appVersion.minor << " " << variety;
 	if (appVersion.internal != 0) {
-		version << " "<< appVersion.internal;
+		version << " " << appVersion.internal;
 	}
 	return version.String();
 }
-

@@ -39,42 +39,38 @@ class BPopUpMenu;
 class BGridLayout;
 
 class PrintSettingsWindow : public BWindow {
-	PDFDoc *mDoc;
-	BLooper *mLooper;
-	GlobalSettings *mSettings;
+	PDFDoc* mDoc;
+	BLooper* mLooper;
+	GlobalSettings* mSettings;
 	int32 mZoomValue;
-	BTextControl *mZoom;
-	
-	BButton      *mPrint;
-	BTextControl *mPage;
-	BStringView  *mWidth, 
-	             *mHeight;
-	             
+	BTextControl* mZoom;
+
+	BButton* mPrint;
+	BTextControl* mPage;
+	BStringView *mWidth, *mHeight;
+
 	enum {
-		MSG_SELECTION_CHANGED  = 'Sele',
-		MSG_ORDER_CHANGED      = 'Orde',
-		MSG_DPI_CHANGED        = 'Dpi',
-		MSG_ROTATION_CHANGED   = 'Rota',
-		MSG_ZOOM_CHANGED       = 'Zoom',
+		MSG_SELECTION_CHANGED = 'Sele',
+		MSG_ORDER_CHANGED = 'Orde',
+		MSG_DPI_CHANGED = 'Dpi',
+		MSG_ROTATION_CHANGED = 'Rota',
+		MSG_ZOOM_CHANGED = 'Zoom',
 		MSG_COLOR_MODE_CHANGED = 'CMod',
-		MSG_PRINT              = 'Prin',	
-		MSG_PAGE_CHANGED       = 'Page'
+		MSG_PRINT = 'Prin',
+		MSG_PAGE_CHANGED = 'Page'
 	};
-	
+
 	void GetPageSize(uint32 page);
-	
+
 	const char* MakeLabel(const char* text);
 	void AddItem(BPopUpMenu* popup, const char* label, uint32 what);
-	BPopUpMenu* MakePopup(const char *label, BGridLayout *layout, int32 &row);
+	BPopUpMenu* MakePopup(const char* label, BGridLayout* layout, int32& row);
 
 public:
-	enum {
-		QUIT_NOTIFY  = 'PSeQ',
-		PRINT_NOTIFY = 'PSeP'
-	};
-	PrintSettingsWindow(PDFDoc *doc, GlobalSettings *settings, BLooper *looper);
-	void Refresh(PDFDoc *doc);
-	void MessageReceived(BMessage *msg);
+	enum { QUIT_NOTIFY = 'PSeQ', PRINT_NOTIFY = 'PSeP' };
+	PrintSettingsWindow(PDFDoc* doc, GlobalSettings* settings, BLooper* looper);
+	void Refresh(PDFDoc* doc);
+	void MessageReceived(BMessage* msg);
 	virtual bool QuitRequested();
 	virtual void FrameMoved(BPoint point);
 	virtual void FrameResized(float w, float h);

@@ -34,43 +34,45 @@
 
 class BitmapPool {
 	typedef struct item {
-		int      index;
-		int64    size; // free
-		int      width;
-		int      height;
+		int index;
+		int64 size; // free
+		int width;
+		int height;
 		BBitmap* bitmap;
 		struct item* next; // list of free items
 	} Item;
-	
-	int64              mSize; // free
-	BList              mPool;
+
+	int64 mSize; // free
+	BList mPool;
 	static BitmapPool* mInstance;
-	Item*              mFree; // list of free items
+	Item* mFree; // list of free items
 
 	static int64 freeMemorySize();
 	static int64 size(int width, int height, color_space cs);
-	Item*        itemAt(int id) const { return (Item*)mPool.ItemAt(id); }
+	Item* itemAt(int id) const { return (Item*)mPool.ItemAt(id); }
 	BitmapPool();
 
-public: 
-	static BitmapPool* getInstance();	
+public:
+	static BitmapPool* getInstance();
 
-	int      newBitmap(); 
-	void     deleteBitmap(int id);
+	int newBitmap();
+	void deleteBitmap(int id);
 	// getBitmap returns NULL if bitmap could not be created
 	BBitmap* getBitmap(int id, int width, int height, color_space cs);
 };
 
 class Bitmap {
-	int        id;
-	BitmapPool *pool;
-	
+	int id;
+	BitmapPool* pool;
+
 public:
-	Bitmap()  { pool = BitmapPool::getInstance(); id = pool->newBitmap(); }
-	~Bitmap() { pool->deleteBitmap(id); }
-	BBitmap* getBitmap(int width, int height, color_space cs) {
-		return pool->getBitmap(id, width, height, cs);
+	Bitmap()
+	{
+		pool = BitmapPool::getInstance();
+		id = pool->newBitmap();
 	}
+	~Bitmap() { pool->deleteBitmap(id); }
+	BBitmap* getBitmap(int width, int height, color_space cs) { return pool->getBitmap(id, width, height, cs); }
 };
 
 #endif

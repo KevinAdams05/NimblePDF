@@ -52,10 +52,9 @@ typedef struct {
 	const char* mButtonPrefix;
 } AnnotDesc;
 
-class RecentDocumentsMenu : public BMenu
-{
+class RecentDocumentsMenu : public BMenu {
 public:
-	RecentDocumentsMenu(const char *title, uint32 what, menu_layout layout = B_ITEMS_IN_COLUMN);
+	RecentDocumentsMenu(const char* title, uint32 what, menu_layout layout = B_ITEMS_IN_COLUMN);
 	bool AddDynamicItem(add_state s);
 
 private:
@@ -64,10 +63,7 @@ private:
 };
 
 
-class PDFWindow
-	: public BWindow
-	, public EntryChangedListener
-{
+class PDFWindow : public BWindow, public EntryChangedListener {
 public:
 	enum {
 		// File
@@ -83,10 +79,10 @@ public:
 		TYPE3_FONT_RENDERER_CMD,
 		PREFERENCES_FILE_CMD,
 		FILE_INFO_CMD,
-			// Printing
-			PAGESETUP_FILE_CMD,
-			PRINT_SETTINGS_CMD,
-			// PRINT_FILE_CMD,
+		// Printing
+		PAGESETUP_FILE_CMD,
+		PRINT_SETTINGS_CMD,
+		// PRINT_FILE_CMD,
 
 		// Edit
 		COPY_SELECTION_CMD,
@@ -104,13 +100,13 @@ public:
 
 		// Annotations
 		FIRST_ANNOT_CMD,
-			ADD_COMMENT_TEXT_ANNOT_CMD = FIRST_ANNOT_CMD,
-			ADD_HELP_TEXT_ANNOT_CMD,
-			ADD_INSERT_TEXT_ANNOT_CMD,
-			ADD_KEY_TEXT_ANNOT_CMD,
-			ADD_NEW_PARAGRAPH_TEXT_ANNOT_CMD,
-			ADD_NOTE_TEXT_ANNOT_CMD,
-			ADD_PARAGRAPH_TEXT_ANNOT_CMD,
+		ADD_COMMENT_TEXT_ANNOT_CMD = FIRST_ANNOT_CMD,
+		ADD_HELP_TEXT_ANNOT_CMD,
+		ADD_INSERT_TEXT_ANNOT_CMD,
+		ADD_KEY_TEXT_ANNOT_CMD,
+		ADD_NEW_PARAGRAPH_TEXT_ANNOT_CMD,
+		ADD_NOTE_TEXT_ANNOT_CMD,
+		ADD_PARAGRAPH_TEXT_ANNOT_CMD,
 		ADD_LINK_ANNOT_CMD,
 		ADD_FREETEXT_ANNOT_CMD,
 		ADD_LINE_ANNOT_CMD,
@@ -188,11 +184,7 @@ public:
 		FULL_SCREEN_CMD,
 	};
 
-	enum {
-		TOOLBAR_HEIGHT = 30,
-		TOOLBAR_WIDTH = 30,
-		NUM_ANNOTS = LAST_ANNOT_CMD - FIRST_ANNOT_CMD + 1
-	};
+	enum { TOOLBAR_HEIGHT = 30, TOOLBAR_WIDTH = 30, NUM_ANNOTS = LAST_ANNOT_CMD - FIRST_ANNOT_CMD + 1 };
 
 	// active view in left panel
 	enum {
@@ -204,83 +196,81 @@ public:
 
 	// pending mask
 	enum {
-		UPDATE_PAGE_LIST_PENDING =    1 << 0,
+		UPDATE_PAGE_LIST_PENDING = 1 << 0,
 		UPDATE_OUTLINE_LIST_PENDING = 1 << 1,
-		FILE_INFO_PENDING =           1 << 2,
-		PRINT_SETTINGS_PENDING =      1 << 3,
+		FILE_INFO_PENDING = 1 << 2,
+		PRINT_SETTINGS_PENDING = 1 << 3,
 	};
 
 private:
-	BEntry         mCurrentFile;
+	BEntry mCurrentFile;
 	FileAttributes mFileAttributes;
 	EntryChangedMonitor mEntryChangedMonitor;
 
-	BToolBar		*mToolBar;
-	BTextControl   *mPageNumberItem;
-	BStringView    *mTotalPageNumberItem;
-	BSplitView*		mSplitView;
-	PDFView*		mMainView;
-	BView*			fMainContainer;
-	BCardView*		mLayerView;
-	BListView      *mPagesView;
-	OutlinesView   *mOutlinesView;
-	BToolBar*		mAnnotationBar;
-	AttachmentView *mAttachmentView;
+	BToolBar* mToolBar;
+	BTextControl* mPageNumberItem;
+	BStringView* mTotalPageNumberItem;
+	BSplitView* mSplitView;
+	PDFView* mMainView;
+	BView* fMainContainer;
+	BCardView* mLayerView;
+	BListView* mPagesView;
+	OutlinesView* mOutlinesView;
+	BToolBar* mAnnotationBar;
+	AttachmentView* mAttachmentView;
 
-	BMessage       *mPrintSettings;
-	FindTextWindow *mFindWindow;
-	BMenuBar*		fMenuBar;
-	BMenuItem      *mPreferencesItem, *mFileInfoItem, // *mPrintSettingsItem,
-	               *mFullScreenItem;
-	BMenu          *mOpenMenu, *mNewMenu, *mWindowsMenu;
+	BMessage* mPrintSettings;
+	FindTextWindow* mFindWindow;
+	BMenuBar* fMenuBar;
+	BMenuItem *mPreferencesItem, *mFileInfoItem, // *mPrintSettingsItem,
+	    *mFullScreenItem;
+	BMenu *mOpenMenu, *mNewMenu, *mWindowsMenu;
 
-	uint32         mFindState;
-	BString        mFindText;
-	bool           mFindInProgress;
+	uint32 mFindState;
+	BString mFindText;
+	bool mFindInProgress;
 
-	BMenu          *mZoomMenu,
-	               *mRotationMenu;
-	BMessenger     *mOWMessenger;  // outlines window messenger
-	BMessenger     *mFIWMessenger; // file info window messenger
-	BMessenger     *mPSWMessenger; // printing settings window messenger
-	BMessenger     *mAWMessenger;  // annotation window messenger
-	bool           mPrintSettingsWindowOpen;
+	BMenu *mZoomMenu, *mRotationMenu;
+	BMessenger* mOWMessenger;  // outlines window messenger
+	BMessenger* mFIWMessenger; // file info window messenger
+	BMessenger* mPSWMessenger; // printing settings window messenger
+	BMessenger* mAWMessenger;  // annotation window messenger
+	bool mPrintSettingsWindowOpen;
 
-	bool           mShowLeftPanel;
+	bool mShowLeftPanel;
 
-	BRect          mWindowFrame;
-	bool           mFullScreen;
-	int32          mCurrentWorkspace;
+	BRect mWindowFrame;
+	bool mFullScreen;
+	int32 mCurrentWorkspace;
 
-	uint32         mPendingMask;
+	uint32 mPendingMask;
 
-	Annotation*    mAnnotTemplates[NUM_ANNOTS];
-	BControl*      mPressedAnnotationButton;
+	Annotation* mAnnotTemplates[NUM_ANNOTS];
+	BControl* mPressedAnnotationButton;
 
 public:
-	PDFWindow (entry_ref* ref, BRect frame, const char *ownerPassword,
-		const char *userPassword, bool *encrypted);
+	PDFWindow(entry_ref* ref, BRect frame, const char* ownerPassword, const char* userPassword, bool* encrypted);
 	virtual ~PDFWindow();
 
 	virtual bool QuitRequested();
-	virtual	bool CanClose();
+	virtual bool CanClose();
 	bool IsOk();
 	BMenuBar* BuildMenu();
 	BToolBar* BuildToolBar();
 	BCardView* BuildLeftPanel();
-	void SetUpViews (entry_ref * ref, const char *ownerPassword, const char *userPassword, bool *encrypted);
+	void SetUpViews(entry_ref* ref, const char* ownerPassword, const char* userPassword, bool* encrypted);
 	void CleanUpBeforeLoad();
 	bool IsCurrentFile(entry_ref* ref) const;
-	bool LoadFile(entry_ref *ref, const char *ownerPassword, const char *userPassword, bool *encrypted);
+	bool LoadFile(entry_ref* ref, const char* ownerPassword, const char* userPassword, bool* encrypted);
 	void Reload(void);
 	void EntryChanged();
 	void StoreFileAttributes();
-	FileAttributes *GetFileAttributes() { return &mFileAttributes; };
+	FileAttributes* GetFileAttributes() { return &mFileAttributes; };
 
-	virtual void FrameMoved (BPoint p);
-	virtual void FrameResized (float width, float height);
-	virtual void MessageReceived (BMessage * message);
-	void SetZoomSize (float w, float h);
+	virtual void FrameMoved(BPoint p);
+	virtual void FrameResized(float width, float height);
+	virtual void MessageReceived(BMessage* message);
+	void SetZoomSize(float w, float h);
 	void SetZoom(int16 zoom);
 	void SetRotation(float rotation);
 	void SetPage(int32 page);
@@ -288,33 +278,33 @@ public:
 	static void OpenPDF(const char* file);
 	static bool OpenPDFHelp(const char* name);
 	static void OpenHelp();
-	static void LaunchHTMLBrowser(const char *file);
-	static void LaunchInHome(const char *rel_path);
+	static void LaunchHTMLBrowser(const char* file);
+	static void LaunchInHome(const char* rel_path);
 	static bool FindFile(BPath* path);
 	static bool GetEntryRef(const char* file, entry_ref* ref);
-	static void Launch(const char *file);
+	static void Launch(const char* file);
 	static void OpenInWindow(const char* file);
 	AnnotationWindow* GetAnnotationWindow();
 	AnnotationWindow* ShowAnnotationWindow();
 
 	// hook function
-	void NewDoc(PDFDoc *doc);
+	void NewDoc(PDFDoc* doc);
 	void NewPage(int page);
 
 	enum {
-		PAGE_CHANGE_NOTIFY_MSG = 'Page',	/*message of page change notification*/
+		PAGE_CHANGE_NOTIFY_MSG = 'Page', /*message of page change notification*/
 		CUSTOM_ZOOM_FACTOR_MSG = 'CuZo'
 	};
 
-	static char * PAGE_MSG_LABEL;
+	static char* PAGE_MSG_LABEL;
 
 	const BEntry* CurrentFile() const { return &mCurrentFile; }
 	void UpdateInputEnabler();
 
 	void UpdateWindowsMenu();
 
-	void ClearPending()          { mPendingMask = 0; }
-	bool IsPending(uint32 mask)  { return (mPendingMask & mask) != 0; }
+	void ClearPending() { mPendingMask = 0; }
+	bool IsPending(uint32 mask) { return (mPendingMask & mask) != 0; }
 	void SetPending(uint32 mask) { mPendingMask |= mask; }
 	bool SetPendingIfLocked(uint32 mask);
 
@@ -327,12 +317,12 @@ public:
 
 protected:
 	bool CancelCommand(BMessage* msg);
-	void Find(const char *s);
-	void AddItem(BMenu *subMenu, const char *label, uint32 cmd, bool marked, char shortcut = 0, uint32 modifiers = 0);
+	void Find(const char* s);
+	void AddItem(BMenu* subMenu, const char* label, uint32 cmd, bool marked, char shortcut = 0, uint32 modifiers = 0);
 
 	void ActivateOutlines();
 
-	bool ActivateWindow(BMessenger *messenger);
+	bool ActivateWindow(BMessenger* messenger);
 	void WorkspaceActivated(int32 workspace, bool active);
 	void SetTotalPageNumber(int pages);
 	void InitAfterOpen();
@@ -366,13 +356,10 @@ inline bool PDFWindow::IsOk()
 {
 	if (mMainView != NULL) {
 		return mMainView->IsOk();
-	}
-	else {
+	} else {
 		return false;
 	}
 }
-
-
 
 
 //////////////////////////////////////////////////////////////////

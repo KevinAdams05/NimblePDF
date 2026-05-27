@@ -29,16 +29,16 @@
 
 #include "CharTypes.h" // from xpdf
 
-BString *ToUtf8(uint32 encoding, const char *string, int32 len);
+BString* ToUtf8(uint32 encoding, const char* string, int32 len);
 
 // PDF Text to Utf8-String
-BString *TextToUtf8(const char *string, int32 len);
+BString* TextToUtf8(const char* string, int32 len);
 bool TextToUtf8(GString* string, BString* result);
 // UTF -> UCS2
-GString *Utf8ToUcs2(const char *string, bool addOrderMarker = true);
+GString* Utf8ToUcs2(const char* string, bool addOrderMarker = true);
 // UTF -> Unicode (length returned in len)
-Unicode *Utf8ToUnicode(const char *string, int32 *len);
+Unicode* Utf8ToUnicode(const char* string, int32* len);
 // Utf8 To Ascii
-BString *ToAscii(const char *string);
+BString* ToAscii(const char* string);
 
 #endif

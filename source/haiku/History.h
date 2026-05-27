@@ -38,9 +38,9 @@ public:
 
 class HistoryPosition : public HistoryEntry {
 public:
-	HistoryPosition(HistoryFile* file, int page, int16 zoom, int32 left, int32 top, float rotation);	
+	HistoryPosition(HistoryFile* file, int page, int16 zoom, int32 left, int32 top, float rotation);
 	~HistoryPosition();
-	
+
 	HistoryFile* GetFile() const { return mFile; }
 	int GetPage() const { return mPage; }
 	int16 GetZoom() const { return mZoom; }
@@ -60,14 +60,19 @@ class HistoryFile {
 public:
 	HistoryFile(entry_ref ref, const char* ownerPassword, const char* userPassword);
 	~HistoryFile();
-	entry_ref GetRef() const { return fRef; }	
+	entry_ref GetRef() const { return fRef; }
 	const char* GetOwnerPassword() const { return fOwnerPassword ? fOwnerPassword->String() : NULL; }
 	const char* GetUserPassword() const { return fUserPassword ? fUserPassword->String() : NULL; }
-		
+
 	void IncreaseUseCount() { fUseCount++; }
-	void DecreaseUseCount() { fUseCount--; if (fUseCount == 0) delete this; }
+	void DecreaseUseCount()
+	{
+		fUseCount--;
+		if (fUseCount == 0)
+			delete this;
+	}
 	int32 GetUseCount() const { return fUseCount; }
-	
+
 private:
 	entry_ref fRef;
 	BString* fOwnerPassword;
@@ -80,7 +85,7 @@ protected:
 	BList mList;
 	int32 mCurrent;
 	HistoryFile* mFile;
-	
+
 public:
 	History();
 	~History();
@@ -91,7 +96,7 @@ public:
 	void SetFile(entry_ref ref, const char* ownerPassword, const char* userPassword);
 	HistoryEntry* GetTop();
 	int GetElements() { return mList.CountItems(); }
-	bool CanGoBack()    { return mCurrent > 0 || (mCurrent == 0 && GetElements() == 1); }
+	bool CanGoBack() { return mCurrent > 0 || (mCurrent == 0 && GetElements() == 1); }
 	bool CanGoForward() { return mCurrent < GetElements() - 1; }
 
 private:

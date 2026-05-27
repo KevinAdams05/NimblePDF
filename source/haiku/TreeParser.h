@@ -29,30 +29,32 @@
 #include <Object.h>
 
 class TreeParser {
-	bool ParseEntries(Array *nums);
-	bool ParseKids(Array *kids);
-	
+	bool ParseEntries(Array* nums);
+	bool ParseKids(Array* kids);
+
 	GString entryKey;
 	char* GetEntryKey() { return entryKey.getCString(); };
-	
+
 public:
 	TreeParser(const char* entryKey) { this->entryKey.append(entryKey); };
 	virtual ~TreeParser() {};
-	
-	bool Parse(Object *tree);
+
+	bool Parse(Object* tree);
 	virtual bool DoEntry(Object* key, Object* value) = 0;
 };
 
 class NameTreeParser : public TreeParser {
 public:
-	NameTreeParser() : TreeParser("Names") {};
+	NameTreeParser()
+	    : TreeParser("Names") {};
 	bool DoEntry(Object* key, Object* value);
-	virtual bool DoName(const char *name, Object* value) = 0;
+	virtual bool DoName(const char* name, Object* value) = 0;
 };
 
 class NumberTreeParser : public TreeParser {
 public:
-	NumberTreeParser() : TreeParser("Nums") {};
+	NumberTreeParser()
+	    : TreeParser("Nums") {};
 	bool DoEntry(Object* key, Object* value);
 	virtual bool DoNumber(int number, Object* value) = 0;
 };

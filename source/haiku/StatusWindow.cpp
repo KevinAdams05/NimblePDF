@@ -31,12 +31,10 @@
 #undef B_TRANSLATION_CONTEXT
 #define B_TRANSLATION_CONTEXT "StatusWindow"
 
-StatusWindow::StatusWindow(const char *text, BRect aRect)
-	: BWindow(aRect, B_TRANSLATE("BePDF status"),
-		B_MODAL_WINDOW ,
-		B_NOT_RESIZABLE|B_NOT_ZOOMABLE|B_NOT_CLOSABLE) {
-
-	BStringView *stringView = new BStringView("stringView", text);
+StatusWindow::StatusWindow(const char* text, BRect aRect)
+    : BWindow(aRect, B_TRANSLATE("BePDF status"), B_MODAL_WINDOW, B_NOT_RESIZABLE | B_NOT_ZOOMABLE | B_NOT_CLOSABLE)
+{
+	BStringView* stringView = new BStringView("stringView", text);
 	mStatus = new BStatusBar("mStatus");
 	mStatus->SetMaxValue(1);
 	mTotal = -1;
@@ -44,19 +42,19 @@ StatusWindow::StatusWindow(const char *text, BRect aRect)
 	mText = new BStringView("mText", "");
 
 	BLayoutBuilder::Group<>(this, B_VERTICAL, 0)
-		.SetInsets(0)
-		.AddGlue()
-		.AddGroup(B_HORIZONTAL)
-			.AddGlue()
-			.Add(stringView)
-			.AddGlue()
-		.End()
-		.AddGlue()
-		.AddGroup(B_HORIZONTAL)
-			.Add(mText)
-			.AddGlue()
-		.End()
-		.Add(mStatus);
+	    .SetInsets(0)
+	    .AddGlue()
+	    .AddGroup(B_HORIZONTAL)
+	    .AddGlue()
+	    .Add(stringView)
+	    .AddGlue()
+	    .End()
+	    .AddGlue()
+	    .AddGroup(B_HORIZONTAL)
+	    .Add(mText)
+	    .AddGlue()
+	    .End()
+	    .Add(mStatus);
 
 	ResizeTo(500, 100);
 
@@ -64,11 +62,11 @@ StatusWindow::StatusWindow(const char *text, BRect aRect)
 	Show();
 }
 
-void
-StatusWindow::MessageReceived(BMessage *msg) {
+void StatusWindow::MessageReceived(BMessage* msg)
+{
 	int32 p;
 	BString s;
-	switch(msg->what) {
+	switch (msg->what) {
 	case TOTAL_NOTIFY:
 		if (B_OK == msg->FindInt32("total", &p)) {
 			mTotal = p;
@@ -89,19 +87,22 @@ StatusWindow::MessageReceived(BMessage *msg) {
 	}
 }
 
-void StatusWindow::SetTotal(BMessenger* msgr, int32 total) {
+void StatusWindow::SetTotal(BMessenger* msgr, int32 total)
+{
 	BMessage m(TOTAL_NOTIFY);
 	m.AddInt32("total", total);
 	msgr->SendMessage(&m);
 }
 
-void StatusWindow::SetCurrent(BMessenger* msgr, int32 current) {
+void StatusWindow::SetCurrent(BMessenger* msgr, int32 current)
+{
 	BMessage m(CURRENT_NOTIFY);
 	m.AddInt32("current", current);
 	msgr->SendMessage(&m);
 }
 
-void StatusWindow::SetText(BMessenger* msgr, const char* text) {
+void StatusWindow::SetText(BMessenger* msgr, const char* text)
+{
 	BMessage m(TEXT_NOTIFY);
 	m.AddString("text", text);
 	msgr->SendMessage(&m);
@@ -110,22 +111,22 @@ void StatusWindow::SetText(BMessenger* msgr, const char* text) {
 
 // Implementation of ShowStatusWindow
 
-ShowStatusWindow::ShowStatusWindow(const char* name) {
+ShowStatusWindow::ShowStatusWindow(const char* name)
+{
 	BWindow* window = new StatusWindow(name, gApp->GetSettings()->GetWindowRect());
 	mMessenger = BMessenger(window);
 }
 
-ShowStatusWindow::~ShowStatusWindow() {
+ShowStatusWindow::~ShowStatusWindow()
+{
 	mMessenger.SendMessage(B_QUIT_REQUESTED);
 }
 
 // Implementation of ShowLoadProgressStatusWindow
 
 ShowLoadProgressStatusWindow::ShowLoadProgressStatusWindow(const char* name)
-	: ShowStatusWindow(name)
-{
-}
+    : ShowStatusWindow(name)
+{}
 
-ShowLoadProgressStatusWindow::~ShowLoadProgressStatusWindow() {
-}
-
+ShowLoadProgressStatusWindow::~ShowLoadProgressStatusWindow()
+{}

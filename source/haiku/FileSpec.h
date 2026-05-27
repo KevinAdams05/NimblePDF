@@ -32,7 +32,6 @@
 
 // PDF Filespec
 class FileSpec {
-
 public:
 	enum SaveReturnCode {
 		kOk,
@@ -41,10 +40,10 @@ public:
 		kFileWriteError,
 	};
 
-private:	
+private:
 	GString mDescription;
 	GString mFileName;
-	Ref     mRef;
+	Ref mRef;
 
 	bool ReadFileName(Dict* fileSpec);
 	bool ReadEmbeddedFileRef(Dict* fileSpec);
@@ -56,18 +55,17 @@ public:
 	FileSpec(FileSpec* copy);
 	FileSpec(Dict* fileSpec);
 	~FileSpec();
-	
+
 	// Returns true if the FileSpec is valid
 	bool IsValid();
-	
+
 	bool SetTo(Dict* fileSpec);
 	// Returns description. Can be empty.
 	GString* GetDescription();
-	// Returns file name. 
+	// Returns file name.
 	GString* GetFileName();
 	// Save embedded file to file
 	SaveReturnCode Save(XRef* xref, const char* file);
 };
 
 #endif
-

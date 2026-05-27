@@ -33,38 +33,34 @@
 /* PageLabels */
 class PageLabel {
 	BString prefix;
-	enum {
-		DECIMAL,
-		UPPER_CASE_ROMAN,
-		LOWER_CASE_ROMAN,
-		UPPER_CASE_ALPHA,
-		LOWER_CASE_ALPHA
-	} style;
+	enum { DECIMAL, UPPER_CASE_ROMAN, LOWER_CASE_ROMAN, UPPER_CASE_ALPHA, LOWER_CASE_ALPHA } style;
 	int page, start;
 
-	static const char *d[3][10];
+	static const char* d[3][10];
+
 public:
-	static BString &ToAlpha(BString &s, int n);
-	static BString &ToRoman(BString &s, int n);
-	
+	static BString& ToAlpha(BString& s, int n);
+	static BString& ToRoman(BString& s, int n);
+
 	int GetPage() { return page; };
-	PageLabel(int page, Dict *leaf);
-	const char *GetLabel(int page, int max, BString &label);
+	PageLabel(int page, Dict* leaf);
+	const char* GetLabel(int page, int max, BString& label);
 };
 
 class PageLabels : public NumberTreeParser {
 	int numberOfPages;
-	PageLabel *old;
+	PageLabel* old;
 	BList list;
+
 public:
 	PageLabels(int numberOfPages);
 	~PageLabels();
 
 	bool Parse(Object* pageLabels);
 	bool DoNumber(int page, Object* object);
-	virtual bool NewPageLabel(PageLabel *label, int max);
+	virtual bool NewPageLabel(PageLabel* label, int max);
 
-	void Replace(BListView *view);
+	void Replace(BListView* view);
 };
 
 #endif

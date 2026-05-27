@@ -43,31 +43,31 @@ public:
 
 protected:
 	void DeletePDFLink();
-	void GetSize(int pageNo, float *width, float *height, int32 zoom);
+	void GetSize(int pageNo, float* width, float* height, int32 zoom);
 	void ResizeBitmap(float width, float height);
 	void SetPDFPage(int index, bool valid, float width, float height);
 	void Draw(int page, int pageNo, float left, float top);
 
-	Links *CreateLinks(int pageNo);
+	Links* CreateLinks(int pageNo);
 	void DrawAnnotations();
 	// callback from rendering thread; does the rendering
 	void Render();
-	static void RedrawCallback(void *data, int left, int top, int right, int bottom, bool composited);
-	static GBool AbortCheckCallback(void *data);
-	static GBool AnnotDisplayDecideCallback(Annot *annot, void *data);
+	static void RedrawCallback(void* data, int left, int top, int right, int bottom, bool composited);
+	static GBool AbortCheckCallback(void* data);
+	static GBool AnnotDisplayDecideCallback(Annot* annot, void* data);
 	void Notify(uint32 what);
 
-	BString      mGSDriver;
+	BString mGSDriver;
 
-	BString       *mOwnerPassword;
-	BString       *mUserPassword;
-	PDFDoc        *mDoc;
-	BView         *mOffscreenView;
-	float          mWidth, mHeight;
-	BeSplashOutputDev   *mOutputDev;
-	BLooper       *mLooper;
-	BHandler      *mHandler;
-	color_space    mColorSpace;
+	BString* mOwnerPassword;
+	BString* mUserPassword;
+	PDFDoc* mDoc;
+	BView* mOffscreenView;
+	float mWidth, mHeight;
+	BeSplashOutputDev* mOutputDev;
+	BLooper* mLooper;
+	BHandler* mHandler;
+	color_space mColorSpace;
 #if 0
 	PageMode       mPageMode;
 #endif
@@ -77,18 +77,18 @@ protected:
 		float width, height;
 	} mPDFPage[2];
 
-	thread_id   mRenderingThread;
-	CachedPage *mPage;
-	BBitmap    *mBitmap;
-	int         mPageNo;
-	int         mZoom;
-	int         mRotate;
-	bool        mEditAnnot;
-	bool        mDoRendering;
+	thread_id mRenderingThread;
+	CachedPage* mPage;
+	BBitmap* mBitmap;
+	int mPageNo;
+	int mZoom;
+	int mRotate;
+	bool mEditAnnot;
+	bool mDoRendering;
 
-	BePDFAcroForm   *mBePDFAcroForm;
+	BePDFAcroForm* mBePDFAcroForm;
 	// the annotation of the current document
-	AnnotsList   mAnnotations;
+	AnnotsList mAnnotations;
 	Annotations* GetAnnotations();
 
 public:
@@ -99,12 +99,12 @@ public:
 	BePDFAcroForm* GetBePDFAcroForm() { return mBePDFAcroForm; }
 
 	// have to be set, before Start() may be called
-    void NewFile(entry_ref *ref);
-	void SetDoc(PDFDoc *doc, BePDFAcroForm* acroForm);
+	void NewFile(entry_ref* ref);
+	void SetDoc(PDFDoc* doc, BePDFAcroForm* acroForm);
 	void StartDoc(color_space colorSpace);
-	void SetPassword(BString *owner, BString *user);
+	void SetPassword(BString* owner, BString* user);
 
-	void SetListener(BLooper *looper, BHandler *handler);
+	void SetListener(BLooper* looper, BHandler* handler);
 
 	enum {
 		// page contents has change; update required
@@ -117,19 +117,19 @@ public:
 
 	// start rendering of a page asynchronosly
 	// returns an unique identifier in id (id is greater than or equal to zero)
-	void Start(CachedPage *page, int pageNo, int zoom, int rotate, thread_id *id, bool editAnnot);
+	void Start(CachedPage* page, int pageNo, int zoom, int rotate, thread_id* id, bool editAnnot);
 	// abort rendering process asynchronosly
 	void Abort();
 	// waits for rendering process to finish; returns immediatly when no process runs
 	void Wait();
 
-	friend int32 page_rendering_thread(void *data);
+	friend int32 page_rendering_thread(void* data);
 
-	static void GetParameter(BMessage *msg, thread_id *id, BBitmap **bitmap);
+	static void GetParameter(BMessage* msg, thread_id* id, BBitmap** bitmap);
 
 	float GetWidth() const { return mWidth; }
 	float GetHeight() const { return mHeight; }
-	BeSplashOutputDev *GetOutputDev() const { return mOutputDev; }
+	BeSplashOutputDev* GetOutputDev() const { return mOutputDev; }
 
 #if 0
 	enum PageMode {

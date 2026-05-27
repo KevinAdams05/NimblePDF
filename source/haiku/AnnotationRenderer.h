@@ -31,24 +31,25 @@
 
 #include "Annotation.h"
 
-// Render Annotation 
+// Render Annotation
 class AnnotationRenderer : public AnnotVisitor {
-	BView*		mView;
-	int         mZoom;
-	double      mCtm[6];
-	bool        mEdit;
+	BView* mView;
+	int mZoom;
+	double mCtm[6];
+	bool mEdit;
 
-	drawing_mode   mDrawingMode;
-	source_alpha   mSourceAlpha;
+	drawing_mode mDrawingMode;
+	source_alpha mSourceAlpha;
 	alpha_function mAlphaFunction;
 
 	class ClipToRect {
 		AnnotationRenderer* mRenderer;
-		Annotation*         mAnnot;
-		BRect               mRect;
-		BRegion             mOldClippingRegion;
-		
+		Annotation* mAnnot;
+		BRect mRect;
+		BRegion mOldClippingRegion;
+
 		BView* View() { return mRenderer->mView; }
+
 	public:
 		ClipToRect(AnnotationRenderer* r, Annotation* a);
 		~ClipToRect();
@@ -57,24 +58,24 @@ class AnnotationRenderer : public AnnotVisitor {
 	friend class ClipToRect;
 
 	float CvtUserToDev(float f);
-	void CvtUserToDev(double ux, double uy, int *dx, int *dy);
+	void CvtUserToDev(double ux, double uy, int* dx, int* dy);
 	BRect ToRect(PDFRectangle* r);
 	void CvtUserToDev(PDFPoint* u, BPoint* d, int n);
 	BPoint PointBetween(BPoint p1, BPoint p2, float f);
 	void StrokeSquiggly(BPoint p1, BPoint p2, float height);
-	void DrawBitmap(BBitmap* image, BPoint p);	
+	void DrawBitmap(BBitmap* image, BPoint p);
 	void SetPenSize(int width);
 	void DrawRect(Annotation* a, BRect rect);
 	bool DrawAnnotation(Annotation* a);
 	float LayoutText(BString* text, BFont font, free_text_justification justification, BRect bounds, bool draw);
-	
+
 public:
 	AnnotationRenderer(BView* v, double* ctm, int zoom, bool edit);
 	~AnnotationRenderer();
 
 	static rgb_color GetColor(GfxRGB* c, double opacity = 1);
 	static BBitmap* ColorBitmap(BBitmap* image, rgb_color color);
-	
+
 	virtual void DoText(TextAnnot* a);
 	virtual void DoLink(LinkAnnot* a);
 	virtual void DoFreeText(FreeTextAnnot* a);

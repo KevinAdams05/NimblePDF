@@ -25,25 +25,26 @@
 #include <cassert>
 
 HistoryPosition::HistoryPosition(HistoryFile* file, int page, int16 zoom, int32 left, int32 top, float rotation)
-	: mFile(file)
-	, mPage(page)
-	, mZoom(zoom)
-	, mLeft(left)
-	, mTop(top)
-	, mRotation(rotation)
+    : mFile(file),
+      mPage(page),
+      mZoom(zoom),
+      mLeft(left),
+      mTop(top),
+      mRotation(rotation)
 {
 	file->IncreaseUseCount();
 }
 
-HistoryPosition::~HistoryPosition() {
+HistoryPosition::~HistoryPosition()
+{
 	mFile->DecreaseUseCount();
 }
 
 HistoryFile::HistoryFile(entry_ref ref, const char* ownerPassword, const char* userPassword)
-	: fRef(ref)
-	, fOwnerPassword(NULL)
-	, fUserPassword(NULL)
-	, fUseCount(0)
+    : fRef(ref),
+      fOwnerPassword(NULL),
+      fUserPassword(NULL),
+      fUseCount(0)
 {
 	if (ownerPassword) {
 		fOwnerPassword = new BString(ownerPassword);
@@ -53,22 +54,26 @@ HistoryFile::HistoryFile(entry_ref ref, const char* ownerPassword, const char* u
 	}
 }
 
-HistoryFile::~HistoryFile() {
+HistoryFile::~HistoryFile()
+{
 	delete fOwnerPassword;
 	delete fUserPassword;
 }
 
-History::History() {
+History::History()
+{
 	mCurrent = -1;
 	mFile = NULL;
 }
 
-History::~History() {
+History::~History()
+{
 	MakeEmpty();
 }
 
-void History::MakeEmpty() {
-	HistoryEntry **items = (HistoryEntry**)mList.Items();
+void History::MakeEmpty()
+{
+	HistoryEntry** items = (HistoryEntry**)mList.Items();
 	for (int i = GetElements() - 1; i >= 0; i--) {
 		delete items[i];
 	}
@@ -77,9 +82,10 @@ void History::MakeEmpty() {
 	mFile = NULL;
 }
 
-void History::Add(HistoryEntry* e) {
+void History::Add(HistoryEntry* e)
+{
 	// delete to current (exlusive current)
-	for (int32 i = GetElements()-1; i > mCurrent; i--) {
+	for (int32 i = GetElements() - 1; i > mCurrent; i--) {
 		delete (HistoryEntry*)mList.RemoveItem(i);
 	}
 	if (mCurrent == GetElements() - 1) {
@@ -88,37 +94,41 @@ void History::Add(HistoryEntry* e) {
 		if (mList.CountItems() == 101) {
 			delete (HistoryEntry*)mList.RemoveItem((int32)0);
 		} else {
-			mCurrent ++;
+			mCurrent++;
 		}
 	} else {
 		delete e;
 	}
 }
 
-void History::AddPosition(int page, int16 zoom, int32 left, int32 top, float rotation) {
+void History::AddPosition(int page, int16 zoom, int32 left, int32 top, float rotation)
+{
 	assert(mFile != NULL);
 	Add(new HistoryPosition(mFile, page, zoom, left, top, rotation));
 }
 
-void History::SetFile(entry_ref ref, const char* ownerPassword, const char* userPassword) {
+void History::SetFile(entry_ref ref, const char* ownerPassword, const char* userPassword)
+{
 	if (mFile != NULL && mFile->GetUseCount() == 0) {
 		delete mFile;
 	}
 	mFile = new HistoryFile(ref, ownerPassword, userPassword);
 }
 
-HistoryEntry* History::GetTop() {
+HistoryEntry* History::GetTop()
+{
 	if (mCurrent != -1) {
-		HistoryEntry *item = (HistoryEntry*)mList.ItemAt(mCurrent);
+		HistoryEntry* item = (HistoryEntry*)mList.ItemAt(mCurrent);
 		return item;
 	} else {
 		return NULL;
 	}
 }
 
-bool History::Back() {
+bool History::Back()
+{
 	if (mCurrent > 0) {
-		mCurrent --;
+		mCurrent--;
 		UpdateFile();
 		return true;
 	} else {
@@ -126,9 +136,10 @@ bool History::Back() {
 	}
 }
 
-bool History::Forward() {
+bool History::Forward()
+{
 	if (mCurrent < GetElements() - 1) {
-		mCurrent ++;
+		mCurrent++;
 		UpdateFile();
 		return true;
 	} else {
@@ -136,7 +147,8 @@ bool History::Forward() {
 	}
 }
 
-void History::UpdateFile() {
+void History::UpdateFile()
+{
 	HistoryEntry* e = GetTop();
 	HistoryPosition* pos = dynamic_cast<HistoryPosition*>(e);
 	if (pos != NULL) {

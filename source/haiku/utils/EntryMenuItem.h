@@ -25,21 +25,20 @@
 #include <MenuItem.h>
 #include <Mime.h>
 
-class EntryMenuItem : public BMenuItem
-{
+class EntryMenuItem : public BMenuItem {
 public:
 	EntryMenuItem(entry_ref* entry, const char* label, BMessage* message, char shortcut = 0, uint32 modifiers = 0);
 	~EntryMenuItem();
-	
+
 	void GetContentSize(float* width, float* height);
 	void DrawContent();
-	
+
 private:
 	enum {
 		kIconSize = 16,
 		kTextIndent = kIconSize + 4,
 	};
-	
+
 	BBitmap* GetIcon(BMimeType* mimeType);
 	BBitmap* LoadIcon();
 

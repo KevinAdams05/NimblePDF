@@ -38,49 +38,46 @@
 #define B_TRANSLATION_CONTEXT "AnnotationWindow"
 
 
-AnnotationWindow::AnnotationWindow(GlobalSettings *settings,
-	BLooper *looper)
-	: BWindow(BRect(0, 0, 100, 100), B_TRANSLATE("Annotation"),
-		B_FLOATING_WINDOW_LOOK, B_FLOATING_APP_WINDOW_FEEL,
-		B_AUTO_UPDATE_SIZE_LIMITS)
-	, mSendNotification(true)
-	, mLooper(looper)
-	, mSettings(settings)
-	, mAnnotation(NULL) {
-
+AnnotationWindow::AnnotationWindow(GlobalSettings* settings, BLooper* looper)
+    : BWindow(
+          BRect(0, 0, 100, 100), B_TRANSLATE("Annotation"), B_FLOATING_WINDOW_LOOK, B_FLOATING_APP_WINDOW_FEEL, B_AUTO_UPDATE_SIZE_LIMITS),
+      mSendNotification(true),
+      mLooper(looper),
+      mSettings(settings),
+      mAnnotation(NULL)
+{
 	AddCommonFilter(new EscapeMessageFilter(this, B_QUIT_REQUESTED));
 
-	BStringView *titleStatic = new BStringView("titleStatic",
-		B_TRANSLATE("Title:"));
+	BStringView* titleStatic = new BStringView("titleStatic", B_TRANSLATE("Title:"));
 	mLabel = new BStringView("mLabel", "");
 
-	BStringView *dateStatic = new BStringView("dateStatic", B_TRANSLATE("Date:"));
+	BStringView* dateStatic = new BStringView("dateStatic", B_TRANSLATE("Date:"));
 	mDate = new BStringView("mDate", "");
 
-	BPopUpMenu *alignmentInner = new BPopUpMenu("");
+	BPopUpMenu* alignmentInner = new BPopUpMenu("");
 	mAlignment = new BMenuField("mAlignment", B_TRANSLATE("Align:"), alignmentInner);
 
-	BPopUpMenu *fontInner = new BPopUpMenu("");
+	BPopUpMenu* fontInner = new BPopUpMenu("");
 	mFont = new BMenuField("mFont", B_TRANSLATE("Font:"), fontInner);
 
-	BPopUpMenu *sizeInner = new BPopUpMenu("");
+	BPopUpMenu* sizeInner = new BPopUpMenu("");
 	mSize = new BMenuField("mSize", B_TRANSLATE("Size:"), sizeInner);
 
 	mContents = new TextView("mContents");
-	BScrollView *scroll = new BScrollView("scroll", mContents, 0, false, true);
+	BScrollView* scroll = new BScrollView("scroll", mContents, 0, false, true);
 
 	BLayoutBuilder::Group<>(this, B_VERTICAL)
-		.SetInsets(B_USE_WINDOW_INSETS)
-		.AddGrid()
-			.Add(titleStatic, 0, 0)
-			.Add(mLabel, 1, 0)
-			.Add(dateStatic, 0, 1)
-			.Add(mDate, 1, 1)
-			.AddMenuField(mFont, 0, 2)
-			.AddMenuField(mSize, 0, 3)
-			.AddMenuField(mAlignment, 0, 4)
-		.End()
-		.Add(scroll);
+	    .SetInsets(B_USE_WINDOW_INSETS)
+	    .AddGrid()
+	    .Add(titleStatic, 0, 0)
+	    .Add(mLabel, 1, 0)
+	    .Add(dateStatic, 0, 1)
+	    .Add(mDate, 1, 1)
+	    .AddMenuField(mFont, 0, 2)
+	    .AddMenuField(mSize, 0, 3)
+	    .AddMenuField(mAlignment, 0, 4)
+	    .End()
+	    .Add(scroll);
 
 	PopulateFontMenu(mFont->Menu());
 	PopulateSizeMenu(mSize->Menu());
@@ -96,10 +93,11 @@ AnnotationWindow::AnnotationWindow(GlobalSettings *settings,
 	Show();
 }
 
-void AnnotationWindow::PopulateFontMenu(BMenu* menu) {
+void AnnotationWindow::PopulateFontMenu(BMenu* menu)
+{
 	BMenuItem* item;
 	PDFStandardFonts* stdFonts = BePDFAcroForm::GetStandardFonts();
-	for (int i = 0; i < stdFonts->CountFonts(); i ++) {
+	for (int i = 0; i < stdFonts->CountFonts(); i++) {
 		PDFFont* font = stdFonts->FontAt(i);
 		BMessage* msg = new BMessage(FONT_SELECTED);
 		msg->AddString("font", font->GetName());
@@ -108,7 +106,8 @@ void AnnotationWindow::PopulateFontMenu(BMenu* menu) {
 	}
 }
 
-void AnnotationWindow::AddSizeItem(BMenu* menu, const char* label, float value) {
+void AnnotationWindow::AddSizeItem(BMenu* menu, const char* label, float value)
+{
 	BMenuItem* item;
 	BMessage* msg = new BMessage(SIZE_CHANGED);
 	msg->AddFloat("size", value);
@@ -116,7 +115,8 @@ void AnnotationWindow::AddSizeItem(BMenu* menu, const char* label, float value) 
 	menu->AddItem(item);
 }
 
-void AnnotationWindow::PopulateSizeMenu(BMenu* menu) {
+void AnnotationWindow::PopulateSizeMenu(BMenu* menu)
+{
 	AddSizeItem(menu, B_TRANSLATE("Automatic"), 0.0);
 	menu->AddSeparatorItem();
 	for (float f = 8; f < 97; f += 1.0) {
@@ -126,12 +126,11 @@ void AnnotationWindow::PopulateSizeMenu(BMenu* menu) {
 	}
 }
 
-static char* gAlignment[] = {
-	"left", "centered", "right"
-};
+static char* gAlignment[] = {"left", "centered", "right"};
 
-void AnnotationWindow::PopulateAlignmentMenu(BMenu* menu) {
-	for (uint32 i = 0; i < sizeof(gAlignment)/sizeof(char*); i ++) {
+void AnnotationWindow::PopulateAlignmentMenu(BMenu* menu)
+{
+	for (uint32 i = 0; i < sizeof(gAlignment) / sizeof(char*); i++) {
 		BMessage* msg = new BMessage(ALIGNMENT_CHANGED);
 		msg->AddString("alignment", gAlignment[i]);
 		BMenuItem* item = new BMenuItem(B_TRANSLATE(gAlignment[i]), msg);
@@ -139,19 +138,22 @@ void AnnotationWindow::PopulateAlignmentMenu(BMenu* menu) {
 	}
 }
 
-void AnnotationWindow::FrameMoved(BPoint point) {
+void AnnotationWindow::FrameMoved(BPoint point)
+{
 	mWindowPos = point;
 	mSettings->SetAnnotationWindowPosition(point);
 	BWindow::FrameMoved(point);
 }
 
-void AnnotationWindow::FrameResized(float w, float h) {
+void AnnotationWindow::FrameResized(float w, float h)
+{
 	mSettings->SetAnnotationWindowSize(w, h);
 	BWindow::FrameResized(w, h);
 }
 
 
-BMessage* AnnotationWindow::FindMarked(BMenu* menu) {
+BMessage* AnnotationWindow::FindMarked(BMenu* menu)
+{
 	BMessage* m = NULL;
 	BMenuItem* item;
 	item = menu->FindMarked();
@@ -165,11 +167,12 @@ BMessage* AnnotationWindow::FindMarked(BMenu* menu) {
 	return m;
 }
 
-void AnnotationWindow::WriteMessage(BMessage* msg) {
+void AnnotationWindow::WriteMessage(BMessage* msg)
+{
 	msg->AddPointer("annotation", mAnnotation);
 	msg->AddString("contents", mContents->Text());
 
-	const char* font, *align;
+	const char *font, *align;
 	float size;
 	BMessage* m;
 	m = FindMarked(mFont->Menu());
@@ -186,7 +189,8 @@ void AnnotationWindow::WriteMessage(BMessage* msg) {
 	}
 }
 
-void AnnotationWindow::Notify(uint32 what) {
+void AnnotationWindow::Notify(uint32 what)
+{
 	if (mSendNotification) {
 		BMessage msg(what);
 		WriteMessage(&msg);
@@ -196,63 +200,73 @@ void AnnotationWindow::Notify(uint32 what) {
 	}
 }
 
-bool AnnotationWindow::QuitRequested() {
+bool AnnotationWindow::QuitRequested()
+{
 	Notify(QUIT_NOTIFY);
 	mSendNotification = false;
 	return true;
 }
 
-void AnnotationWindow::MessageReceived(BMessage *msg) {
+void AnnotationWindow::MessageReceived(BMessage* msg)
+{
 	switch (msg->what) {
-		case FONT_SELECTED:
-		case SIZE_CHANGED:
-		case ALIGNMENT_CHANGED:
-		case TextView::CHANGED_NOTIFY:
-			Notify(CHANGE_NOTIFY);
-			break;
+	case FONT_SELECTED:
+	case SIZE_CHANGED:
+	case ALIGNMENT_CHANGED:
+	case TextView::CHANGED_NOTIFY:
+		Notify(CHANGE_NOTIFY);
+		break;
 	default:
 		BWindow::MessageReceived(msg);
 	}
 }
 
-BMenuItem* AnnotationWindow::FindItem(BMenu* menu, const char* key, const char* name) {
+BMenuItem* AnnotationWindow::FindItem(BMenu* menu, const char* key, const char* name)
+{
 	BMenuItem* item;
 	BMessage* msg;
 	const char* string;
-	for (int32 i = 0; i < menu->CountItems(); i ++) {
+	for (int32 i = 0; i < menu->CountItems(); i++) {
 		item = menu->ItemAt(i);
 		msg = item->Message();
 		if (msg && msg->FindString(key, &string) == B_OK) {
-			if (strcmp(string, name) == 0) return item;
+			if (strcmp(string, name) == 0)
+				return item;
 		}
 	}
 	return menu->ItemAt(0);
 }
 
-BMenuItem* AnnotationWindow::FindFontItem(const char* name) {
+BMenuItem* AnnotationWindow::FindFontItem(const char* name)
+{
 	return FindItem(mFont->Menu(), "font", name);
 }
 
-BMenuItem* AnnotationWindow::FindSizeItem(float value) {
+BMenuItem* AnnotationWindow::FindSizeItem(float value)
+{
 	BMenu* menu = mSize->Menu();
 	BMenuItem* item;
 	BMessage* msg;
 	float size;
-	for (int32 i = 0; i < menu->CountItems(); i ++) {
+	for (int32 i = 0; i < menu->CountItems(); i++) {
 		item = menu->ItemAt(i);
 		msg = item->Message();
 		if (msg && msg->FindFloat("size", &size) == B_OK) {
-			if (size >= value) return item;
+			if (size >= value)
+				return item;
 		}
 	}
 	return menu->ItemAt(0);
 }
 
-BMenuItem* AnnotationWindow::FindAlignmentItem(const char* name) {
+BMenuItem* AnnotationWindow::FindAlignmentItem(const char* name)
+{
 	return FindItem(mAlignment->Menu(), "alignment", name);
 }
 
-void AnnotationWindow::Update(Annotation* a, const char* label, const char* date, const char* contents, const char* font, float size, const char* align) {
+void AnnotationWindow::Update(
+    Annotation* a, const char* label, const char* date, const char* contents, const char* font, float size, const char* align)
+{
 	mAnnotation = a;
 	if (a) {
 		BString title(B_TRANSLATE("Annotation"));
@@ -283,19 +297,22 @@ void AnnotationWindow::Update(Annotation* a, const char* label, const char* date
 	}
 }
 
-void AnnotationWindow::EnableFreeTextControls(bool enable) {
+void AnnotationWindow::EnableFreeTextControls(bool enable)
+{
 	mFont->Menu()->SetEnabled(enable);
 	mSize->Menu()->SetEnabled(enable);
 	mAlignment->Menu()->SetEnabled(enable);
 }
 
-void AnnotationWindow::MakeEditable(bool e) {
+void AnnotationWindow::MakeEditable(bool e)
+{
 	mEditable = e;
 	mContents->MakeEditable(e);
 	EnableFreeTextControls(e);
 }
 
-void AnnotationWindow::GetContents(Annotation* a, BMessage* msg) {
+void AnnotationWindow::GetContents(Annotation* a, BMessage* msg)
+{
 	if (mAnnotation == a) {
 		WriteMessage(msg);
 	}

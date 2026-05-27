@@ -39,8 +39,8 @@ class BStringView;
 
 class AnnotationWindow : public BWindow {
 public:
-	AnnotationWindow(GlobalSettings *settings, BLooper *looper);
-	void MessageReceived(BMessage *msg);
+	AnnotationWindow(GlobalSettings* settings, BLooper* looper);
+	void MessageReceived(BMessage* msg);
 	void Update(Annotation* a, const char* label, const char* date, const char* contents, const char* font, float size, const char* align);
 	void MakeEditable(bool e);
 	void GetContents(Annotation* forAnnot, BMessage* data);
@@ -48,12 +48,12 @@ public:
 		// notify main window that this window quits
 		QUIT_NOTIFY = 'AnnQ',
 		// or contents has changed
-		CHANGE_NOTIFY = 'AncH', 
+		CHANGE_NOTIFY = 'AncH',
 	};
 	virtual void FrameMoved(BPoint point);
 	virtual void FrameResized(float w, float h);
 	bool QuitRequested();
-	
+
 protected:
 	enum private_messages {
 		FONT_SELECTED = 'Font',
@@ -74,11 +74,11 @@ protected:
 	void Notify(uint32 what);
 	void EnableFreeTextControls(bool enable);
 	bool mSendNotification;
-	BLooper *mLooper;
-	GlobalSettings *mSettings;
+	BLooper* mLooper;
+	GlobalSettings* mSettings;
 	BPoint mWindowPos;
 	BStringView *mLabel, *mDate;
-	BTextView *mContents;
+	BTextView* mContents;
 	BMenuField* mFont;
 	BMenuField* mSize;
 	BMenuField* mAlignment;

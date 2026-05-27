@@ -35,11 +35,17 @@
 #undef B_TRANSLATION_CONTEXT
 #define B_TRANSLATION_CONTEXT "PrintSettingsWindow"
 
-PrintSettingsWindow::PrintSettingsWindow(PDFDoc *doc, GlobalSettings *settings, BLooper *looper)
-	: BWindow(BRect(0, 0, 100, 100), B_TRANSLATE("Print settings"),
-		B_TITLED_WINDOW_LOOK, B_FLOATING_APP_WINDOW_FEEL, B_AUTO_UPDATE_SIZE_LIMITS),
-	mDoc(doc), mLooper(looper), mSettings(settings), mZoomValue(settings->GetZoomPrinter()) {
-
+PrintSettingsWindow::PrintSettingsWindow(PDFDoc* doc, GlobalSettings* settings, BLooper* looper)
+    : BWindow(BRect(0, 0, 100, 100),
+          B_TRANSLATE("Print settings"),
+          B_TITLED_WINDOW_LOOK,
+          B_FLOATING_APP_WINDOW_FEEL,
+          B_AUTO_UPDATE_SIZE_LIMITS),
+      mDoc(doc),
+      mLooper(looper),
+      mSettings(settings),
+      mZoomValue(settings->GetZoomPrinter())
+{
 	AddCommonFilter(new EscapeMessageFilter(this, B_QUIT_REQUESTED));
 
 	MoveTo(settings->GetPrinterWindowPosition());
@@ -49,16 +55,16 @@ PrintSettingsWindow::PrintSettingsWindow(PDFDoc *doc, GlobalSettings *settings, 
 
 	mPrint = new BButton("mPrint", B_TRANSLATE("Print"), new BMessage(MSG_PRINT));
 
-	BGridLayout *grid;
+	BGridLayout* grid;
 	BLayoutBuilder::Group<>(this, B_VERTICAL)
-		.SetInsets(B_USE_WINDOW_INSETS)
-		.AddGrid()
-			.GetLayout(&grid)
-		.End()
-		.AddGroup(B_HORIZONTAL)
-			.AddGlue()
-			.Add(mPrint)
-		.End();
+	    .SetInsets(B_USE_WINDOW_INSETS)
+	    .AddGrid()
+	    .GetLayout(&grid)
+	    .End()
+	    .AddGroup(B_HORIZONTAL)
+	    .AddGlue()
+	    .Add(mPrint)
+	    .End();
 
 	int32 row = 0;
 
@@ -80,8 +86,7 @@ PrintSettingsWindow::PrintSettingsWindow(PDFDoc *doc, GlobalSettings *settings, 
 	AddItem(order, B_TRANSLATE("Reverse"), MSG_ORDER_CHANGED);
 
 	// Rotation
-	BPopUpMenu* rotation = MakePopup(MakeLabel(B_TRANSLATE("Rotation")), grid,
-		row);
+	BPopUpMenu* rotation = MakePopup(MakeLabel(B_TRANSLATE("Rotation")), grid, row);
 	AddItem(rotation, "0°", MSG_ROTATION_CHANGED);
 	AddItem(rotation, "90°", MSG_ROTATION_CHANGED);
 	AddItem(rotation, "180°", MSG_ROTATION_CHANGED);
@@ -95,25 +100,23 @@ PrintSettingsWindow::PrintSettingsWindow(PDFDoc *doc, GlobalSettings *settings, 
 	char zoomStr[10];
 	sprintf(zoomStr, "%d", (int)mZoomValue);
 
-	mZoom = new BTextControl("mZoom", MakeLabel(B_TRANSLATE("Zoom (%)")),
-		zoomStr, new BMessage(MSG_ZOOM_CHANGED));
+	mZoom = new BTextControl("mZoom", MakeLabel(B_TRANSLATE("Zoom (%)")), zoomStr, new BMessage(MSG_ZOOM_CHANGED));
 	grid->AddItem(mZoom->CreateLabelLayoutItem(), 0, row);
 	grid->AddItem(mZoom->CreateTextViewLayoutItem(), 1, row);
 	row++;
 
-	mPage = new BTextControl("mPage", MakeLabel(B_TRANSLATE("Page")), "1",
-		new BMessage(MSG_PAGE_CHANGED));
+	mPage = new BTextControl("mPage", MakeLabel(B_TRANSLATE("Page")), "1", new BMessage(MSG_PAGE_CHANGED));
 	grid->AddItem(mPage->CreateLabelLayoutItem(), 0, row);
 	grid->AddItem(mPage->CreateTextViewLayoutItem(), 1, row);
 	row++;
 
-	BStringView *width = new BStringView("width", B_TRANSLATE("Width: "));
+	BStringView* width = new BStringView("width", B_TRANSLATE("Width: "));
 	mWidth = new BStringView("mWidth", "");
 	grid->AddView(width, 0, row);
 	grid->AddView(mWidth, 1, row);
 	row++;
 
-	BStringView *height = new BStringView("height", B_TRANSLATE("Height: "));
+	BStringView* height = new BStringView("height", B_TRANSLATE("Height: "));
 	mHeight = new BStringView("mHeight", "");
 	grid->AddView(height, 0, row);
 	grid->AddView(mHeight, 1, row);
@@ -127,13 +130,23 @@ PrintSettingsWindow::PrintSettingsWindow(PDFDoc *doc, GlobalSettings *settings, 
 
 	// Resolution
 	i = 0;
-	switch(settings->GetDPI()) {
-		case 0:   i = 0; break;
-		case 72:  i = 2; break;
-		case 300: i = 3; break;
-		case 600: i = 4; break;
-		case 720: i = 5; break;
-//		case 1440: i = 5; break;
+	switch (settings->GetDPI()) {
+	case 0:
+		i = 0;
+		break;
+	case 72:
+		i = 2;
+		break;
+	case 300:
+		i = 3;
+		break;
+	case 600:
+		i = 4;
+		break;
+	case 720:
+		i = 5;
+		break;
+		//		case 1440: i = 5; break;
 	}
 	resolution->ItemAt(i)->SetMarked(true);
 
@@ -172,93 +185,103 @@ PrintSettingsWindow::PrintSettingsWindow(PDFDoc *doc, GlobalSettings *settings, 
 	Show();
 }
 
-void PrintSettingsWindow::Refresh(PDFDoc *doc) {
+void PrintSettingsWindow::Refresh(PDFDoc* doc)
+{
 	mDoc = doc;
 	mPrint->SetEnabled(mDoc->okToPrint());
 	GetPageSize(1);
 }
 
-void PrintSettingsWindow::MessageReceived(BMessage *msg) {
-int32 index;
-	if (B_OK != msg->FindInt32("index", &index)) index = -1;
+void PrintSettingsWindow::MessageReceived(BMessage* msg)
+{
+	int32 index;
+	if (B_OK != msg->FindInt32("index", &index))
+		index = -1;
 
 	switch (msg->what) {
-		case MSG_DPI_CHANGED:
-			switch (index) {
-				case 0: mSettings->SetDPI(0);
-					break;
-				case 2: mSettings->SetDPI(72);
-					break;
-				case 3: mSettings->SetDPI(300);
-					break;
-				case 4: mSettings->SetDPI(600);
-					break;
-				case 5: mSettings->SetDPI(720);
-					break;
-				case 6: mSettings->SetDPI(1440);
-					break;
-			}
+	case MSG_DPI_CHANGED:
+		switch (index) {
+		case 0:
+			mSettings->SetDPI(0);
 			break;
-		case MSG_ROTATION_CHANGED:
-			if (index != -1) {
-				mSettings->SetRotationPrinter(90 * index);
-			}
+		case 2:
+			mSettings->SetDPI(72);
 			break;
-		case MSG_SELECTION_CHANGED:
-			if (index != -1) {
-				mSettings->SetPrintSelection(index);
-			}
+		case 3:
+			mSettings->SetDPI(300);
 			break;
-		case MSG_ORDER_CHANGED:
-			if (index != -1) {
-				mSettings->SetPrintOrder(index);
-			}
+		case 4:
+			mSettings->SetDPI(600);
 			break;
-		case MSG_ZOOM_CHANGED: {
-				int32 z = mZoomValue = atoi(mZoom->Text());
+		case 5:
+			mSettings->SetDPI(720);
+			break;
+		case 6:
+			mSettings->SetDPI(1440);
+			break;
+		}
+		break;
+	case MSG_ROTATION_CHANGED:
+		if (index != -1) {
+			mSettings->SetRotationPrinter(90 * index);
+		}
+		break;
+	case MSG_SELECTION_CHANGED:
+		if (index != -1) {
+			mSettings->SetPrintSelection(index);
+		}
+		break;
+	case MSG_ORDER_CHANGED:
+		if (index != -1) {
+			mSettings->SetPrintOrder(index);
+		}
+		break;
+	case MSG_ZOOM_CHANGED: {
+		int32 z = mZoomValue = atoi(mZoom->Text());
 
-				if (z < 25) {
-					z = 25;
-				} else if (z > 400) {
-					z = 400;
-				}
-				mSettings->SetZoomPrinter(z);
-			}
-			break;
-		case MSG_COLOR_MODE_CHANGED:
-			if (index == 0) {
-				mSettings->SetPrintColorMode(GlobalSettings::PRINT_COLOR_MODE);
-			} else if (index == 1) {
-				mSettings->SetPrintColorMode(GlobalSettings::PRINT_MONOCHROME_MODE);
-			}
-			break;
-		case MSG_PRINT: {
-				BMessage msg(PRINT_NOTIFY);
-				mLooper->PostMessage(&msg);
-			}
-			break;
-		case MSG_PAGE_CHANGED: {
-				int32 z = atoi(mPage->Text());
-				if (z < 1) {
-					z = 1;
-				} else if (z > mDoc->getNumPages()) {
-					z = mDoc->getNumPages();
-				}
-				GetPageSize(z);
-			}
-			break;
+		if (z < 25) {
+			z = 25;
+		} else if (z > 400) {
+			z = 400;
+		}
+		mSettings->SetZoomPrinter(z);
+	} break;
+	case MSG_COLOR_MODE_CHANGED:
+		if (index == 0) {
+			mSettings->SetPrintColorMode(GlobalSettings::PRINT_COLOR_MODE);
+		} else if (index == 1) {
+			mSettings->SetPrintColorMode(GlobalSettings::PRINT_MONOCHROME_MODE);
+		}
+		break;
+	case MSG_PRINT: {
+		BMessage msg(PRINT_NOTIFY);
+		mLooper->PostMessage(&msg);
+	} break;
+	case MSG_PAGE_CHANGED: {
+		int32 z = atoi(mPage->Text());
+		if (z < 1) {
+			z = 1;
+		} else if (z > mDoc->getNumPages()) {
+			z = mDoc->getNumPages();
+		}
+		GetPageSize(z);
+	} break;
 	}
 
 	BWindow::MessageReceived(msg);
 }
 
-bool PrintSettingsWindow::QuitRequested() {
+bool PrintSettingsWindow::QuitRequested()
+{
 	bool quit = (mZoomValue >= 25) && (mZoomValue <= 400);
 	if (!quit) {
-		BAlert *warning = new BAlert(B_TRANSLATE("Wrong parameter!"),
-			B_TRANSLATE("Zoom must be between 25 and 400!"), B_TRANSLATE("OK"),
-			NULL, NULL,
-			B_WIDTH_AS_USUAL, B_STOP_ALERT);
+		BAlert* warning = new BAlert(B_TRANSLATE("Wrong parameter!"),
+		    B_TRANSLATE("Zoom must be between 25 and 400!"),
+		    B_TRANSLATE("OK"),
+		    NULL,
+		    NULL,
+		    B_WIDTH_AS_USUAL,
+		    B_STOP_ALERT);
 		warning->Go();
 	} else if (mLooper) {
 		BMessage msg(QUIT_NOTIFY);
@@ -267,19 +290,23 @@ bool PrintSettingsWindow::QuitRequested() {
 	return quit;
 }
 
-void PrintSettingsWindow::FrameMoved(BPoint p) {
+void PrintSettingsWindow::FrameMoved(BPoint p)
+{
 	mSettings->SetPrinterWindowPosition(p);
 	BWindow::FrameMoved(p);
 }
 
-void PrintSettingsWindow::FrameResized(float w, float h) {
+void PrintSettingsWindow::FrameResized(float w, float h)
+{
 	mSettings->SetPrinterWindowSize(w, h);
 	BWindow::FrameResized(w, h);
 }
 
-void PrintSettingsWindow::GetPageSize(uint32 page) {
+void PrintSettingsWindow::GetPageSize(uint32 page)
+{
 	PDFLock lock;
-	BString s; char size[40];
+	BString s;
+	char size[40];
 	sprintf(size, "%4.2f", mDoc->getPageCropWidth(page) / 72.0);
 	s << size << B_TRANSLATE(" in");
 	mWidth->SetText(s.String());
@@ -291,26 +318,25 @@ void PrintSettingsWindow::GetPageSize(uint32 page) {
 }
 
 // Appends ":" to text and returns it.
-const char* PrintSettingsWindow::MakeLabel(const char* text) {
+const char* PrintSettingsWindow::MakeLabel(const char* text)
+{
 	static BString tmp;
 	tmp = "";
 	tmp << text << ":";
 	return tmp.String();
 }
 
-void PrintSettingsWindow::AddItem(BPopUpMenu* popup, const char* label, uint32 what) {
+void PrintSettingsWindow::AddItem(BPopUpMenu* popup, const char* label, uint32 what)
+{
 	popup->AddItem(new BMenuItem(label, new BMessage(what)));
 }
 
-BPopUpMenu* PrintSettingsWindow::MakePopup(const char *label,
-	BGridLayout *layout, int32 &row)
+BPopUpMenu* PrintSettingsWindow::MakePopup(const char* label, BGridLayout* layout, int32& row)
 {
-	BPopUpMenu *menu = new BPopUpMenu("menu");
-	BMenuField *mf = new BMenuField("mf", label, menu);
+	BPopUpMenu* menu = new BPopUpMenu("menu");
+	BMenuField* mf = new BMenuField("mf", label, menu);
 	layout->AddItem(mf->CreateLabelLayoutItem(), 0, row);
 	layout->AddItem(mf->CreateMenuBarLayoutItem(), 1, row);
 	row++;
 	return menu;
 }
-
-

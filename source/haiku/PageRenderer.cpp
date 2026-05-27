@@ -43,14 +43,15 @@
 
 #define MEASURE_RENDERING_TIME 0
 
-inline static float RealSize (float x, float zoomDPI)
+inline static float RealSize(float x, float zoomDPI)
 {
 	return zoomDPI / 72 * x;
 }
 
 ///////////////////////////////////////////////////////////////////////////
 
-static SplashColorPtr getPaperColor() {
+static SplashColorPtr getPaperColor()
+{
 	static SplashColor color;
 	color[0] = 255;
 	color[1] = 255;
@@ -58,47 +59,51 @@ static SplashColorPtr getPaperColor() {
 	return color;
 }
 
-void PageRenderer::RedrawCallback(void *data, int left, int top, int right, int bottom, bool composited) {
+void PageRenderer::RedrawCallback(void* data, int left, int top, int right, int bottom, bool composited)
+{
 	PageRenderer* renderer = static_cast<PageRenderer*>(data);
 	BView* view = renderer->mOffscreenView;
 	BeSplashOutputDev* outputDev = renderer->mOutputDev;
-	outputDev->redraw(left, top, view, left, top, right-left+1, bottom-top+1, composited);
+	outputDev->redraw(left, top, view, left, top, right - left + 1, bottom - top + 1, composited);
 	renderer->Notify(UPDATE_MSG);
 }
 
-GBool PageRenderer::AbortCheckCallback(void *data) {
+GBool PageRenderer::AbortCheckCallback(void* data)
+{
 	PageRenderer* renderer = static_cast<PageRenderer*>(data);
 	return !renderer->mDoRendering;
 }
 
-GBool PageRenderer::AnnotDisplayDecideCallback(Annot *annot, void *data) {
+GBool PageRenderer::AnnotDisplayDecideCallback(Annot* annot, void* data)
+{
 	return false;
 }
 
 ///////////////////////////////////////////////////////////////////////////
-PageRenderer::PageRenderer() :
-	mOwnerPassword(NULL),
-	mUserPassword(NULL),
-	mDoc(NULL),
-	mOffscreenView(
-		new BView(BRect(0, 0, 100, 100), "", B_FOLLOW_NONE, B_WILL_DRAW | B_SUBPIXEL_PRECISE)),
-	mOutputDev(new BeSplashOutputDev(gFalse,
-		getPaperColor(),
-		gTrue, // incremental
-		RedrawCallback, this)),
-	mLooper(NULL),
-	mHandler(NULL),
-	mRenderingThread(-1),
-	mPage(NULL),
-	mBitmap(NULL),
-	mBePDFAcroForm(NULL)
-	/* mPageMode(ONE_PAGE) */
+PageRenderer::PageRenderer()
+    : mOwnerPassword(NULL),
+      mUserPassword(NULL),
+      mDoc(NULL),
+      mOffscreenView(new BView(BRect(0, 0, 100, 100), "", B_FOLLOW_NONE, B_WILL_DRAW | B_SUBPIXEL_PRECISE)),
+      mOutputDev(new BeSplashOutputDev(gFalse,
+          getPaperColor(),
+          gTrue, // incremental
+          RedrawCallback,
+          this)),
+      mLooper(NULL),
+      mHandler(NULL),
+      mRenderingThread(-1),
+      mPage(NULL),
+      mBitmap(NULL),
+      mBePDFAcroForm(NULL)
+/* mPageMode(ONE_PAGE) */
 {
 	mOutputDev->startDoc(NULL);
 }
 
 ///////////////////////////////////////////////////////////////////////////
-PageRenderer::~PageRenderer() {
+PageRenderer::~PageRenderer()
+{
 	delete mOutputDev;
 	delete mOffscreenView;
 	delete mOwnerPassword;
@@ -106,20 +111,25 @@ PageRenderer::~PageRenderer() {
 }
 
 ///////////////////////////////////////////////////////////////////////////
-void PageRenderer::SetDoc(PDFDoc *doc, BePDFAcroForm* acroForm) {
+void PageRenderer::SetDoc(PDFDoc* doc, BePDFAcroForm* acroForm)
+{
 	mDoc = doc;
 	mBePDFAcroForm = acroForm;
 	mAnnotations.SetSize(doc->getNumPages());
 	mOutputDev->startDoc(doc->getXRef());
 }
 
-void PageRenderer::SetPassword(BString *owner, BString *user) {
-	delete mOwnerPassword; mOwnerPassword = owner ? new BString(*owner) : NULL;
-	delete mUserPassword;  mUserPassword  = user  ? new BString(*user)  : NULL;
+void PageRenderer::SetPassword(BString* owner, BString* user)
+{
+	delete mOwnerPassword;
+	mOwnerPassword = owner ? new BString(*owner) : NULL;
+	delete mUserPassword;
+	mUserPassword = user ? new BString(*user) : NULL;
 }
 
 ///////////////////////////////////////////////////////////////////////////
-void PageRenderer::StartDoc(color_space colorSpace) {
+void PageRenderer::StartDoc(color_space colorSpace)
+{
 	mColorSpace = colorSpace;
 	if (mDoc != NULL) {
 		// flush font engine / cache
@@ -141,12 +151,15 @@ PageRenderer::PageMode PageRenderer::GetPageMode() const {
 #endif
 
 ///////////////////////////////////////////////////////////////////////////
-void PageRenderer::SetListener(BLooper *looper, BHandler *handler) {
-	mLooper = looper; mHandler = handler;
+void PageRenderer::SetListener(BLooper* looper, BHandler* handler)
+{
+	mLooper = looper;
+	mHandler = handler;
 }
 
 ///////////////////////////////////////////////////////////////////////////
-void PageRenderer::SetPDFPage(int index, bool valid, float width, float height) {
+void PageRenderer::SetPDFPage(int index, bool valid, float width, float height)
+{
 	if ((index >= 0) && (index <= 1)) {
 		mPDFPage[index].valid = valid;
 		mPDFPage[index].width = width;
@@ -155,30 +168,34 @@ void PageRenderer::SetPDFPage(int index, bool valid, float width, float height) 
 }
 
 ///////////////////////////////////////////////////////////////////////////
-void PageRenderer::GetSize(int pageNo, float *width, float *height, int32 zoom) {
+void PageRenderer::GetSize(int pageNo, float* width, float* height, int32 zoom)
+{
 	// determine width and height
-	*width = ceil(RealSize (mDoc->getPageCropWidth (pageNo), zoom));
-	*height = ceil(RealSize (mDoc->getPageCropHeight (pageNo), zoom));
+	*width = ceil(RealSize(mDoc->getPageCropWidth(pageNo), zoom));
+	*height = ceil(RealSize(mDoc->getPageCropHeight(pageNo), zoom));
 
-	if ((mDoc->getPageRotate(pageNo) == 90) ||
-		(mDoc->getPageRotate(pageNo) == 270)) {
-		float h = *width; *width = *height; *height = h;
+	if ((mDoc->getPageRotate(pageNo) == 90) || (mDoc->getPageRotate(pageNo) == 270)) {
+		float h = *width;
+		*width = *height;
+		*height = h;
 	}
 
 	if ((mRotate == 90) || (mRotate == 270)) {
-		float h = *width; *width = *height; *height = h;
+		float h = *width;
+		*width = *height;
+		*height = h;
 	}
 }
 
 ///////////////////////////////////////////////////////////////////////////
-void PageRenderer::ResizeBitmap(float width, float height) {
+void PageRenderer::ResizeBitmap(float width, float height)
+{
 	// (re-)create bitmap
 	mBitmap = mPage->GetBitmap();
 	if (!mBitmap || (mColorSpace != mBitmap->ColorSpace()) || (width > mPage->GetWidth()) || (height > mPage->GetHeight())) {
 		delete mBitmap;
 
-		mBitmap = new BBitmap(BRect (0, 0, width, height),
-								mColorSpace, true, false);
+		mBitmap = new BBitmap(BRect(0, 0, width, height), mColorSpace, true, false);
 		mPage->SetBitmap(mBitmap, width, height);
 	} else {
 		mPage->SetBitmapSize(width, height);
@@ -187,9 +204,10 @@ void PageRenderer::ResizeBitmap(float width, float height) {
 
 ///////////////////////////////////////////////////////////////////////////
 // prototype
-int32 page_rendering_thread(void *data);
+int32 page_rendering_thread(void* data);
 
-void PageRenderer::Start(CachedPage *page, int pageNo, int zoom, int rotation, thread_id *id, bool editAnnot) {
+void PageRenderer::Start(CachedPage* page, int pageNo, int zoom, int rotation, thread_id* id, bool editAnnot)
+{
 	// stop thread
 	if (mRenderingThread != -1) {
 		Abort();
@@ -199,7 +217,9 @@ void PageRenderer::Start(CachedPage *page, int pageNo, int zoom, int rotation, t
 	mZoom = zoom;
 	mPage = page;
 	mEditAnnot = editAnnot;
-	mPageNo = pageNo; mZoom = zoom; mRotate = rotation;
+	mPageNo = pageNo;
+	mZoom = zoom;
+	mRotate = rotation;
 
 	GetSize(pageNo, &mWidth, &mHeight, mZoom);
 
@@ -227,11 +247,13 @@ void PageRenderer::Start(CachedPage *page, int pageNo, int zoom, int rotation, t
 }
 
 ///////////////////////////////////////////////////////////////////////////
-void PageRenderer::Abort() {
+void PageRenderer::Abort()
+{
 	mDoRendering = false;
 }
 ///////////////////////////////////////////////////////////////////////////
-void PageRenderer::Wait() {
+void PageRenderer::Wait()
+{
 	if (mRenderingThread != -1) {
 		status_t status;
 		wait_for_thread(mRenderingThread, &status);
@@ -240,15 +262,17 @@ void PageRenderer::Wait() {
 }
 
 ///////////////////////////////////////////////////////////////////////////
-int32 page_rendering_thread(void *data) {
-	PageRenderer *pr = (PageRenderer*)data;
+int32 page_rendering_thread(void* data)
+{
+	PageRenderer* pr = (PageRenderer*)data;
 	pr->Render();
 	return 0;
 }
 
-void PageRenderer::Draw(int page, int pageNo, float left, float top) {
+void PageRenderer::Draw(int page, int pageNo, float left, float top)
+{
 #if MEASURE_RENDERING_TIME
-	BStopWatch *timer = new BStopWatch("Renderer");
+	BStopWatch* timer = new BStopWatch("Renderer");
 #endif
 	// set view to right position and size
 	mOffscreenView->MoveTo(left, top);
@@ -257,14 +281,17 @@ void PageRenderer::Draw(int page, int pageNo, float left, float top) {
 	mBitmap->AddChild(mOffscreenView);
 	// render pdf page
 
-	mDoc->displayPage (mOutputDev, pageNo,
-		mZoom, mZoom, // h/v DPI
-		mRotate,
-		gFalse, // use media box
-		gFalse, // crop
-		gTrue, // printing
-		AbortCheckCallback, this); // , AnnotDisplayDecideCallback, this
-	mOffscreenView->Sync ();
+	mDoc->displayPage(mOutputDev,
+	    pageNo,
+	    mZoom,
+	    mZoom, // h/v DPI
+	    mRotate,
+	    gFalse, // use media box
+	    gFalse, // crop
+	    gTrue,  // printing
+	    AbortCheckCallback,
+	    this); // , AnnotDisplayDecideCallback, this
+	mOffscreenView->Sync();
 	// detach offscreen view
 	mOffscreenView->RemoveSelf();
 #if MEASURE_RENDERING_TIME
@@ -273,9 +300,9 @@ void PageRenderer::Draw(int page, int pageNo, float left, float top) {
 }
 
 
-
-Annotations* PageRenderer::GetAnnotationsForPage(int pageNo) {
-	int i = pageNo-1;
+Annotations* PageRenderer::GetAnnotationsForPage(int pageNo)
+{
+	int i = pageNo - 1;
 	if (mAnnotations.Get(i) == NULL) {
 		Object annotsDict;
 		mDoc->getCatalog()->getPage(pageNo)->getAnnots(&annotsDict);
@@ -286,17 +313,20 @@ Annotations* PageRenderer::GetAnnotationsForPage(int pageNo) {
 }
 
 
-Annotations* PageRenderer::GetAnnotations() {
+Annotations* PageRenderer::GetAnnotations()
+{
 	return GetAnnotationsForPage(mPageNo);
 }
 
 
-void PageRenderer::DrawAnnotations(BView* view, bool edit) {
+void PageRenderer::DrawAnnotations(BView* view, bool edit)
+{
 	AnnotationRenderer ar(view, mPage->GetCTM(), mZoom, edit);
 	mPage->GetAnnotations()->Iterate(&ar);
 }
 
-void PageRenderer::DrawAnnotations() {
+void PageRenderer::DrawAnnotations()
+{
 	if (!mEditAnnot) {
 		// attach view
 		mBitmap->AddChild(mOffscreenView);
@@ -311,25 +341,27 @@ void PageRenderer::DrawAnnotations() {
 	}
 }
 
-Links *PageRenderer::CreateLinks(int pageNo) {
-	Page *page = mDoc->getCatalog()->getPage(pageNo);
+Links* PageRenderer::CreateLinks(int pageNo)
+{
+	Page* page = mDoc->getCatalog()->getPage(pageNo);
 	Object obj;
-	Links *links = new Links(page->getAnnots(&obj), mDoc->getCatalog()->getBaseURI());
+	Links* links = new Links(page->getAnnots(&obj), mDoc->getCatalog()->getBaseURI());
 	obj.free();
 	return links;
 }
 
-void PageRenderer::Render() {
+void PageRenderer::Render()
+{
 	gPdfLock->Lock();
-	mBitmap->Lock ();
+	mBitmap->Lock();
 	mPage->SetAnnotations(GetAnnotations());
 	// attach offscreen view
 	mOffscreenView->MoveTo(0, 0);
 	mOffscreenView->ResizeTo(mWidth, mHeight);
 	mBitmap->AddChild(mOffscreenView);
 	// fill page with background color
-	mOffscreenView->SetHighColor (255, 255, 255);
-	mOffscreenView->FillRect (BRect(0, 0, mWidth, mHeight));
+	mOffscreenView->SetHighColor(255, 255, 255);
+	mOffscreenView->FillRect(BRect(0, 0, mWidth, mHeight));
 	mOffscreenView->Sync();
 	// detach offscreen view
 	mOffscreenView->RemoveSelf();
@@ -343,7 +375,7 @@ void PageRenderer::Render() {
 		Draw(1, mPageNo+1, mPDFPage[0].width, 0);
 	}
 #endif
-	mBitmap->Unlock ();
+	mBitmap->Unlock();
 
 	// notify listener
 	uint32 what;
@@ -359,7 +391,8 @@ void PageRenderer::Render() {
 	Notify(what);
 }
 
-void PageRenderer::Notify(uint32 what) {
+void PageRenderer::Notify(uint32 what)
+{
 	BMessage msg(what);
 	msg.AddInt32("bepdf:id", mRenderingThread);
 	msg.AddPointer("bepdf:bitmap", mBitmap);
@@ -371,12 +404,10 @@ void PageRenderer::Notify(uint32 what) {
 #endif
 }
 
-void PageRenderer::GetParameter(BMessage *msg, thread_id *id, BBitmap **bitmap) {
+void PageRenderer::GetParameter(BMessage* msg, thread_id* id, BBitmap** bitmap)
+{
 	if (B_OK != msg->FindInt32("bepdf:id", id))
 		*id = -1;
 	if (B_OK != msg->FindPointer("bepdf:bitmap", (void**)bitmap))
 		*bitmap = NULL;
 }
-
-
-

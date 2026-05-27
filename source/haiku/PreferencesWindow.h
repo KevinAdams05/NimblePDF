@@ -46,55 +46,55 @@ public:
 	// message sent to mLooper has this fields:
 	enum {
 		// what
-		CHANGE_NOTIFY            = 'PreC',
-		QUIT_NOTIFY              = 'PreQ',
-		FONT_CHANGED_NOTIFY      = 'FntC',
-		RESTART_DOC_NOTIFY       = 'PreR',
-		UPDATE_NOTIFY            = 'PruP',
+		CHANGE_NOTIFY = 'PreC',
+		QUIT_NOTIFY = 'PreQ',
+		FONT_CHANGED_NOTIFY = 'FntC',
+		RESTART_DOC_NOTIFY = 'PreR',
+		UPDATE_NOTIFY = 'PruP',
 		// kind
-		DISPLAY                  = 0,
+		DISPLAY = 0,
 		// which
 		DISPLAY_FILLED_SELECTION = 0,
 		DISPLAY_FULLSCREEN,
 		DISPLAY_NUM_MAX,
 		// font
-		FONT_PREDECESSOR_INDEX   = -1,
+		FONT_PREDECESSOR_INDEX = -1,
 		NO_OF_FONTS,
 	};
 
-	static bool DecodeMessage(BMessage *msg, int16 &kind, int16 &which, int16 &index);
+	static bool DecodeMessage(BMessage* msg, int16& kind, int16& which, int16& index);
 
-	PreferencesWindow(GlobalSettings *settings, BLooper *looper);
+	PreferencesWindow(GlobalSettings* settings, BLooper* looper);
 	~PreferencesWindow();
 
-	void MessageReceived(BMessage *msg);
+	void MessageReceived(BMessage* msg);
 	virtual bool QuitRequested();
 
 private:
 	int DISPLAY_NUM;
 
 	enum {
-		PREFERENCE_SELECTED           = 'Sele',
-		RESTORE_PAGE_NO_CHANGED       = 'RPch',
-		RESTORE_WINDOW_FRAME_CHANGED  = 'RWch',
-		QUASI_FULLSCREEN_MODE_ON      = 'FSc0',
-		QUASI_FULLSCREEN_MODE_OFF     = 'FSc1',
-		FILLED_SELECTION_FILLED       = 'FlS0',
-		FILLED_SELECTION_STROKED      = 'FlS1',
-		FONT_SELECTED                 = 'FtSl',
-		OPEN_IN_WORKSPACE_CHANGED     = 'OpWS',
-		WORKSPACE_CHANGED             = 'WSch',
-		AUTHOR_CHANGED                = 'Atch',
+		PREFERENCE_SELECTED = 'Sele',
+		RESTORE_PAGE_NO_CHANGED = 'RPch',
+		RESTORE_WINDOW_FRAME_CHANGED = 'RWch',
+		QUASI_FULLSCREEN_MODE_ON = 'FSc0',
+		QUASI_FULLSCREEN_MODE_OFF = 'FSc1',
+		FILLED_SELECTION_FILLED = 'FlS0',
+		FILLED_SELECTION_STROKED = 'FlS1',
+		FONT_SELECTED = 'FtSl',
+		OPEN_IN_WORKSPACE_CHANGED = 'OpWS',
+		WORKSPACE_CHANGED = 'WSch',
+		AUTHOR_CHANGED = 'Atch',
 		INVERT_VERTICAL_SCROLLING_CHANGED = 'IvSl',
-		DISPLAY_CID_FONT_SELECTED     = 'DCFs',
+		DISPLAY_CID_FONT_SELECTED = 'DCFs',
 	};
-	BLooper          *mLooper;
-	BOutlineListView *mPreferences;
-	BCardLayout      *mLayers;
-	GlobalSettings   *mSettings;
-	BMenuField       *mOpenInWorkspace;
-	DisplayCIDFonts  *mDisplayCIDFonts;
-	BMessage          mFontMenuFields;
+	BLooper* mLooper;
+	BOutlineListView* mPreferences;
+	BCardLayout* mLayers;
+	GlobalSettings* mSettings;
+	BMenuField* mOpenInWorkspace;
+	DisplayCIDFonts* mDisplayCIDFonts;
+	BMessage mFontMenuFields;
 
 	void SetupView();
 	BView* BuildAsianFontsView();
@@ -103,7 +103,7 @@ private:
 	void FillFontFileMenu(BMenuField* menuField, directory_which which, const char* name, const char* label, const char* file);
 	void DisplayCIDFontSelected(BMessage* msg);
 	void ClearView();
-	void BuildWorkspaceMenu(BMenu *menu);
+	void BuildWorkspaceMenu(BMenu* menu);
 	void SelectMenuItem(int kind, BMessage* msg);
 	void Notify(uint32 what);
 	void NotifyRestartDoc();

@@ -31,14 +31,14 @@ class XRef;
 // Save thread with status window
 class SaveThread : public Thread {
 public:
-	SaveThread(const char* statusText, XRef* xref) 
-		: Thread("save", B_LOW_PRIORITY)
-		, mXRef(xref)
-		, mShowStatusWindow(statusText)
+	SaveThread(const char* statusText, XRef* xref)
+	    : Thread("save", B_LOW_PRIORITY),
+	      mXRef(xref),
+	      mShowStatusWindow(statusText)
 	{
 		SetPriority(suggest_thread_priority(B_OFFLINE_PROCESSING));
 	}
-	
+
 	XRef* GetXRef();
 
 	void SetTotal(int32 total);
@@ -46,10 +46,9 @@ public:
 	void SetText(const char* text);
 
 private:
-	XRef*            mXRef;
+	XRef* mXRef;
 	ShowStatusWindow mShowStatusWindow;
 };
 
 
 #endif
-

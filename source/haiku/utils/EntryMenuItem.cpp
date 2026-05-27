@@ -24,9 +24,9 @@
 #include "EntryMenuItem.h"
 
 EntryMenuItem::EntryMenuItem(entry_ref* ref, const char* label, BMessage* message, char shortcut, uint32 modifiers)
-	: BMenuItem(label, message, shortcut, modifiers)
-	, fEntry(*ref)
-	, fSmallIcon(NULL)
+    : BMenuItem(label, message, shortcut, modifiers),
+      fEntry(*ref),
+      fSmallIcon(NULL)
 {
 	BNode node(ref);
 	BString title;
@@ -43,8 +43,7 @@ EntryMenuItem::~EntryMenuItem()
 	delete fSmallIcon;
 }
 
-void 
-EntryMenuItem::GetContentSize(float* width, float* height)
+void EntryMenuItem::GetContentSize(float* width, float* height)
 {
 	BMenuItem::GetContentSize(width, height);
 	*width += kTextIndent;
@@ -53,8 +52,7 @@ EntryMenuItem::GetContentSize(float* width, float* height)
 	}
 }
 
-void
-EntryMenuItem::DrawContent()
+void EntryMenuItem::DrawContent()
 {
 	BView* view = Menu();
 	BPoint pos(view->PenLocation());
@@ -65,40 +63,40 @@ EntryMenuItem::DrawContent()
 
 	view->MovePenBy(kTextIndent, 0);
 	BMenuItem::DrawContent();
-	
+
 	if (fSmallIcon) {
 		view->SetDrawingMode(B_OP_OVER);
 		view->DrawBitmap(fSmallIcon, pos);
 	}
 }
 
-BBitmap*
-EntryMenuItem::GetIcon(BMimeType* mimeType)
+BBitmap* EntryMenuItem::GetIcon(BMimeType* mimeType)
 {
 	BBitmap* icon;
-	icon = new BBitmap(BRect(0, 0, kIconSize-1, kIconSize-1), B_CMAP8);
+	icon = new BBitmap(BRect(0, 0, kIconSize - 1, kIconSize - 1), B_CMAP8);
 	if (mimeType->GetIcon(icon, B_MINI_ICON) != B_OK) {
-		delete icon; icon = NULL;
+		delete icon;
+		icon = NULL;
 	}
 	return icon;
 }
 
-BBitmap*
-EntryMenuItem::LoadIcon()
+BBitmap* EntryMenuItem::LoadIcon()
 {
 	BBitmap* icon = NULL;
 	BNode node(&fEntry);
 	BNodeInfo info(&node);
-	char type[B_MIME_TYPE_LENGTH+1];
+	char type[B_MIME_TYPE_LENGTH + 1];
 
 	// Note: BNodeInfo::GetTrackerIcon does not work as expected!
 
 	// try to get the icon stored in file attribute
-	icon = new BBitmap(BRect(0, 0, kIconSize-1, kIconSize-1), B_CMAP8);
+	icon = new BBitmap(BRect(0, 0, kIconSize - 1, kIconSize - 1), B_CMAP8);
 	if (info.GetIcon(icon, B_MINI_ICON) == B_OK) {
 		return icon;
-	} 
-	delete icon; icon = NULL;
+	}
+	delete icon;
+	icon = NULL;
 
 	// get the icon from type
 	if (info.GetType(type) == B_OK) {

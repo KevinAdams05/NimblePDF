@@ -34,12 +34,12 @@
 class AnnotWriter;
 
 class GraphicsStream {
-	GString     mStream;
+	GString mStream;
 
-public:	
-	int         GetLength()   { return mStream.getLength(); }
-	const char* GetStream()   { return mStream.getCString(); }
-	GString*    GetString()   { return &mStream; }
+public:
+	int GetLength() { return mStream.getLength(); }
+	const char* GetStream() { return mStream.getCString(); }
+	GString* GetString() { return &mStream; }
 
 	void Append(const char* s);
 	void Append(GString* s);
@@ -52,28 +52,17 @@ public:
 
 	void Transform(float sx, float sy, float dx, float dy);
 
-	enum {
-		stroke = true,
-		fill   = false
-	};	
+	enum { stroke = true, fill = false };
 
 	void SetColor(bool stroke, GfxColorComp r, GfxColorComp g, GfxColorComp b);
 	void SetColor(bool stroke, GfxRGB* c);
 
 	void SetLineWidth(float w);
-	enum line_cap_style {
-		butt_cap = 0,
-		round_cap = 1,
-		square_cap = 2
-	};
+	enum line_cap_style { butt_cap = 0, round_cap = 1, square_cap = 2 };
 	void SetLineCap(line_cap_style style);
-	enum line_join_style {
-		line_join = 0,
-		round_join = 1,
-		bevel_join = 2
-	};
+	enum line_join_style { line_join = 0, round_join = 1, bevel_join = 2 };
 	void SetLineJoin(line_join_style style);
-	
+
 	void MoveTo(PDFPoint p);
 	void LineTo(PDFPoint p);
 	void BezierTo(PDFPoint p1, PDFPoint p2, PDFPoint p3);
@@ -85,12 +74,12 @@ public:
 
 // ASCII 85 Encoder
 class A85Encoder {
-	GString*      mStream;
+	GString* mStream;
 	unsigned char mInput[4];
-	int           mLength;
+	int mLength;
 
 	void Encode(unsigned char* output, bool* isNull);
-	
+
 public:
 	A85Encoder(GString* stream);
 	void Append(unsigned char byte);
@@ -103,8 +92,8 @@ public:
 	AnnotAppearance();
 	~AnnotAppearance();
 
-	int      GetLength()   { return mAS.GetLength(); }
-	GString* GetStream()   { return mAS.GetString(); }
+	int GetLength() { return mAS.GetLength(); }
+	GString* GetStream() { return mAS.GetString(); }
 
 	// visitor functionality
 	void DoText(TextAnnot* a);
@@ -133,15 +122,15 @@ private:
 	void DoStyledAnnot(StyledAnnot* a);
 	PDFPoint PointBetween(PDFPoint p1, PDFPoint p2, float f);
 
-	void Stroke(PDFQuadPoints &qp, float f);
+	void Stroke(PDFQuadPoints& qp, float f);
 	void DoMarkupAnnot(MarkupAnnot* a, float f);
-	void Stroke(PDFQuadPoints &qp);
+	void Stroke(PDFQuadPoints& qp);
 	void StrokeSquiggly(PDFPoint p1, PDFPoint p2, float height);
 
 	GraphicsStream mAS;
-	PDFRectangle   mBBox;
-	PDFPoint       mDelta;
-	A85Encoder     mEncoder;
+	PDFRectangle mBBox;
+	PDFPoint mDelta;
+	A85Encoder mEncoder;
 };
 
 #endif

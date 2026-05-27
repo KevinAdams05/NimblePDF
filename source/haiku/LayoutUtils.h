@@ -28,23 +28,27 @@
 #include <OutlineListView.h>
 #include <TextView.h>
 
-void MakeEmpty(BListView *list);
-void MakeEmpty(BOutlineListView *list);
+void MakeEmpty(BListView* list);
+void MakeEmpty(BOutlineListView* list);
 
 class EscapeMessageFilter : public BMessageFilter {
-	private:
-		BWindow *mWindow;
-		int32    mWhat;
-		
-	public:
-		EscapeMessageFilter(BWindow *window, int32 what) : BMessageFilter(B_ANY_DELIVERY, B_ANY_SOURCE, '_KYD'), mWindow(window), mWhat(what) { }
-		filter_result Filter(BMessage *msg, BHandler **target);
+private:
+	BWindow* mWindow;
+	int32 mWhat;
+
+public:
+	EscapeMessageFilter(BWindow* window, int32 what)
+	    : BMessageFilter(B_ANY_DELIVERY, B_ANY_SOURCE, '_KYD'),
+	      mWindow(window),
+	      mWhat(what)
+	{}
+	filter_result Filter(BMessage* msg, BHandler** target);
 };
 
 class Bitset {
-	int32 * mBitset;
-	int32   mBitsetElems;
-	int32   mLength;
+	int32* mBitset;
+	int32 mBitsetElems;
+	int32 mLength;
 
 	void Resize(int32 length);
 
@@ -64,23 +68,17 @@ bool IsOn(BMessage* msg);
 class TextView : public BTextView {
 public:
 	typedef BTextView inherited;
-	TextView(const char *);
+	TextView(const char*);
 	TextView(BMessage*);
-	
-	enum {
-		CHANGED_NOTIFY = 'TVch'
-	};
-	
+
+	enum { CHANGED_NOTIFY = 'TVch' };
+
 protected:
 	void InitColors();
 	void Notify();
-	
-	void			InsertText(const char				*inText, 
-								   int32					inLength, 
-								   int32					inOffset,
-								   const text_run_array		*inRuns);
-	void			DeleteText(int32 fromOffset, int32 toOffset);
-	
+
+	void InsertText(const char* inText, int32 inLength, int32 inOffset, const text_run_array* inRuns);
+	void DeleteText(int32 fromOffset, int32 toOffset);
 };
 
 

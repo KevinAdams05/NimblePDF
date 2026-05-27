@@ -50,16 +50,12 @@ class OutlineStyleList {
 	BFont mFonts[4];
 
 	static void Initialize();
+
 public:
 	OutlineStyleList();
 	~OutlineStyleList();
 
-	enum {
-		PLAIN_STYLE,
-		BOLD_STYLE,
-		ITALIC_STYLE,
-		BOLD_ITALIC_STYLE
-	};
+	enum { PLAIN_STYLE, BOLD_STYLE, ITALIC_STYLE, BOLD_ITALIC_STYLE };
 
 	const BFont* GetFont(int style) const;
 	OutlineStyle* GetStyle(int style, rgb_color color);
@@ -68,52 +64,47 @@ public:
 
 class OutlineListItem : public BListItem {
 	BString mString;
-	enum {
-		linkDest,
-		linkPageNum,
-		linkString,
-		linkUndefined
-	} mType;
+	enum { linkDest, linkPageNum, linkString, linkUndefined } mType;
 	union {
-		LinkDest *dest;
-		GString  *string;
-		int       pageNum;
+		LinkDest* dest;
+		GString* string;
+		int pageNum;
 	} mLink;
-	OutlineStyle *mStyle;
+	OutlineStyle* mStyle;
 
 public:
-	OutlineListItem(const char *string, uint32 level, bool expanded, OutlineStyle* style);
+	OutlineListItem(const char* string, uint32 level, bool expanded, OutlineStyle* style);
 	virtual ~OutlineListItem();
 	const char* Text() const { return mString.String(); }
 	void SetStyle(OutlineStyle* style) { mStyle = style; }
-	void SetLink(LinkDest *dest);
-	void SetLink(GString *s);
+	void SetLink(LinkDest* dest);
+	void SetLink(GString* s);
 	void SetPageNum(int pageNum);
 
 	void DrawItem(BView* owner, BRect frame, bool complete);
 
-	bool isDest() const        { return mType == linkDest; }
-	bool isString() const      { return mType == linkString; }
-	bool isPageNum() const     { return mType == linkPageNum; }
-	LinkDest *getDest() const  { return mLink.dest; }
-	GString *getString() const { return mLink.string; }
-	int getPageNum() const     { return mLink.pageNum; }
+	bool isDest() const { return mType == linkDest; }
+	bool isString() const { return mType == linkString; }
+	bool isPageNum() const { return mType == linkPageNum; }
+	LinkDest* getDest() const { return mLink.dest; }
+	GString* getString() const { return mLink.string; }
+	int getPageNum() const { return mLink.pageNum; }
 };
 
 class OutlinesView : public BScrollView {
-	BLooper          *mLooper;
-	OutlineStyleList  mOutlineStyleList;
-	BOutlineListView *mList;
-	Catalog          *mCatalog;
-	BMessage         *mBookmarks;    // archived bookmarks
-	bool              mNeedsUpdate;
-	OutlineListItem  *mUserDefined;
-	OutlineListItem  *mEmptyUserBM;  // cached value
-	Bitset            mBookmark;
+	BLooper* mLooper;
+	OutlineStyleList mOutlineStyleList;
+	BOutlineListView* mList;
+	Catalog* mCatalog;
+	BMessage* mBookmarks; // archived bookmarks
+	bool mNeedsUpdate;
+	OutlineListItem* mUserDefined;
+	OutlineListItem* mEmptyUserBM; // cached value
+	Bitset mBookmark;
 
-	void ReadOutlines(Object *o, uint32 level);
+	void ReadOutlines(Object* o, uint32 level);
 	OutlineListItem* FindUserBookmark(int pageNum);
-	void InsertUserBookmark(int pageNum, const char *label);
+	void InsertUserBookmark(int pageNum, const char* label);
 	void InitUserBookmarks(bool initOnly);
 	OutlineStyle* GetDefaultStyle() { return mOutlineStyleList.GetDefaultStyle(); }
 
@@ -121,27 +112,27 @@ public:
 	// message sent to mLooper has this fields:
 	enum {
 		// what                          attribute(s):
-		PAGE_NOTIFY         = 'OWPg', // "page"
-		REF_NOTIFY          = 'OWRf', // "num", "gen"
-		STRING_NOTIFY       = 'OWSt', // "string"
-		DEST_NOTIFY         = 'OWDt', // "dest" pointer to LinkDest
-		QUIT_NOTIFY         = 'ORQt',
+		PAGE_NOTIFY = 'OWPg',   // "page"
+		REF_NOTIFY = 'OWRf',    // "num", "gen"
+		STRING_NOTIFY = 'OWSt', // "string"
+		DEST_NOTIFY = 'OWDt',   // "dest" pointer to LinkDest
+		QUIT_NOTIFY = 'ORQt',
 		STATE_CHANGE_NOTIFY = 'OWCg'
 	};
 
-	OutlinesView(Catalog *catalog, BMessage *bookmarks, GlobalSettings *settings, BLooper *looper, uint32 flags);
+	OutlinesView(Catalog* catalog, BMessage* bookmarks, GlobalSettings* settings, BLooper* looper, uint32 flags);
 	~OutlinesView();
 	void AttachedToWindow();
-	void MessageReceived(BMessage *msg);
+	void MessageReceived(BMessage* msg);
 
-	void SetCatalog(Catalog *catalog, BMessage* bookmarks);
+	void SetCatalog(Catalog* catalog, BMessage* bookmarks);
 	bool HasUserBookmark(int pageNum);
 	bool IsUserBMSelected();
-	const char *GetUserBMLabel(int pageNum);
-	void AddUserBookmark(int pageNum, const char *label);
+	const char* GetUserBMLabel(int pageNum);
+	void AddUserBookmark(int pageNum, const char* label);
 	void RemoveUserBookmark(int pageNum);
 	// fills BMessage with bookmarks to be stored in FileAttributes
-	bool GetBookmarks(BMessage *bookmarks);
+	bool GetBookmarks(BMessage* bookmarks);
 
 	void Activate();
 };
@@ -150,17 +141,16 @@ class BTextControl;
 
 class BookmarkWindow : public BWindow {
 public:
-	BookmarkWindow(int pageNum, const char* title, BRect rect, BLooper *looper);
-	void MessageReceived(BMessage *msg);
+	BookmarkWindow(int pageNum, const char* title, BRect rect, BLooper* looper);
+	void MessageReceived(BMessage* msg);
 	bool QuitRequested();
 
-	enum {
-		BOOKMARK_ENTERED_NOTIFY = 'BMEt'
-	};
+	enum { BOOKMARK_ENTERED_NOTIFY = 'BMEt' };
+
 protected:
-	BLooper      *mLooper;
-	BTextControl *mTitle;
-	int           mPageNum;
+	BLooper* mLooper;
+	BTextControl* mTitle;
+	int mPageNum;
 };
 
 

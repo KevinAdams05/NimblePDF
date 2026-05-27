@@ -26,7 +26,7 @@
 // xpdf
 #include <Object.h>
 #include <Link.h>
-#include <Page.h>  // for PDFRectangle
+#include <Page.h>     // for PDFRectangle
 #include <GfxState.h> // for GfxRGB
 #include <list>
 
@@ -36,16 +36,16 @@
 class TextAnnot;
 class LinkAnnot;
 class StyledAnnot;
-class   FreeTextAnnot;
-class   LineAnnot;
-class   SquareAnnot;
-class   CircleAnnot;
-class   MarkupAnnot;
-class     HighlightAnnot;
-class     UnderlineAnnot;
-class     SquigglyAnnot;
-class     StrikeOutAnnot;
-class   InkAnnot;
+class FreeTextAnnot;
+class LineAnnot;
+class SquareAnnot;
+class CircleAnnot;
+class MarkupAnnot;
+class HighlightAnnot;
+class UnderlineAnnot;
+class SquigglyAnnot;
+class StrikeOutAnnot;
+class InkAnnot;
 class StampAnnot;
 class PopupAnnot;
 class FileAttachmentAnnot;
@@ -65,31 +65,29 @@ const char* to_date(const char* date, char* buffer); // min. buffer length == 80
 
 class PDFFont {
 private:
-	Ref     mRef;
+	Ref mRef;
 	GString mName;
 	GString mShortName;
-	
+
 public:
 	PDFFont();
-	
+
 	Ref GetRef() const;
 	void SetRef(Ref ref);
 	const char* GetName();
 	void SetName(const char* name);
-	const char* GetShortName();	
+	const char* GetShortName();
 	void SetShortName(const char* name);
-	
+
 	void Print();
 };
 
 class PDFStandardFonts {
 private:
-	enum {
-		num_of_standard_fonts = 12
-	};
+	enum { num_of_standard_fonts = 12 };
 	static const char* mNames[num_of_standard_fonts];
 	PDFFont mFonts[num_of_standard_fonts];
-	
+
 public:
 	PDFStandardFonts();
 	void Reset(); // refs and short name
@@ -103,9 +101,12 @@ public:
 class PDFPoint {
 public:
 	double x, y;
-	PDFPoint() { }
-	PDFPoint(double x, double y) : x(x), y(y) { }
-	
+	PDFPoint() {}
+	PDFPoint(double x, double y)
+	    : x(x),
+	      y(y)
+	{}
+
 	PDFPoint operator+(const PDFPoint& p) const;
 	PDFPoint operator-(const PDFPoint& p) const;
 	bool operator==(const PDFPoint& p) const;
@@ -116,19 +117,27 @@ public:
 
 class PDFPoints {
 private:
-	int       mLength;
-	PDFPoint *mPoints;
-	
-public:
-	PDFPoints() : mLength(0), mPoints(NULL) { }
-	PDFPoints(PDFPoints* copy);
-	~PDFPoints()     { delete mPoints; }
+	int mLength;
+	PDFPoint* mPoints;
 
-	void SetLength(int l) { delete []mPoints; mLength = l; mPoints = new PDFPoint[l]; }
-	int GetLength()  { return mLength; }
+public:
+	PDFPoints()
+	    : mLength(0),
+	      mPoints(NULL)
+	{}
+	PDFPoints(PDFPoints* copy);
+	~PDFPoints() { delete mPoints; }
+
+	void SetLength(int l)
+	{
+		delete[] mPoints;
+		mLength = l;
+		mPoints = new PDFPoint[l];
+	}
+	int GetLength() { return mLength; }
 	PDFPoint* PointAt(int i) { return &mPoints[i]; }
-	PDFPoint* Points()       { return mPoints; }
-	
+	PDFPoint* Points() { return mPoints; }
+
 	PDFPoints& operator=(PDFPoints& p);
 };
 
@@ -166,26 +175,20 @@ public:
 
 class BorderStyle {
 public:
-	enum border_style_type {
-		solid_style,
-		dashed_style,
-		beveled_style,
-		inset_style,
-		underline_style
-	};
+	enum border_style_type { solid_style, dashed_style, beveled_style, inset_style, underline_style };
 
 private:
-	int               mWidth;
+	int mWidth;
 	border_style_type mStyle;
 	// dash array not supported yet!
-	
+
 public:
 	BorderStyle();
 	void Set(Dict* d, bool check_type = true);
-	
-	int GetWidth()               { return mWidth; }
+
+	int GetWidth() { return mWidth; }
 	border_style_type GetStyle() { return mStyle; }
-	
+
 	void SetWidth(int w) { mWidth = w; }
 	void SetStyle(border_style_type style) { mStyle = style; }
 };
@@ -193,103 +196,112 @@ public:
 
 enum {
 	invisible_flag = 1 << 0,
-	hidden_flag    = 1 << 1,
-	print_flag     = 1 << 2,
-	no_zoom_flag   = 1 << 3,
+	hidden_flag = 1 << 1,
+	print_flag = 1 << 2,
+	no_zoom_flag = 1 << 3,
 	no_rotate_flag = 1 << 4,
-	no_view_flag   = 1 << 5,
+	no_view_flag = 1 << 5,
 	read_only_flag = 1 << 6
 };
-	
+
 class AnnotFlags {
 private:
 	unsigned int mFlags;
-	
+
 public:
-	AnnotFlags() : mFlags(0) { }
+	AnnotFlags()
+	    : mFlags(0)
+	{}
 
 	void Set(int f) { mFlags = f; }
 	unsigned int Flags() { return mFlags; }
 
 	bool IsSet(unsigned int mask) const { return (mFlags & mask) == mask; }
-	void ClearMask(unsigned int mask)   { mFlags = mFlags & ~mask; }
-	void SetMask(unsigned int mask)     { mFlags |= mask; }
+	void ClearMask(unsigned int mask) { mFlags = mFlags & ~mask; }
+	void SetMask(unsigned int mask) { mFlags |= mask; }
 
 	bool Invisible() const { return IsSet(invisible_flag); }
-	bool Hidden() const    { return IsSet(hidden_flag); }
-	bool Print() const     { return IsSet(print_flag); }
-	bool NoZoom() const    { return IsSet(no_zoom_flag); }
-	bool NoRotate() const  { return IsSet(no_rotate_flag); }
-	bool NoView() const    { return IsSet(no_view_flag); }
-	bool ReadOnly() const  { return IsSet(read_only_flag); }
+	bool Hidden() const { return IsSet(hidden_flag); }
+	bool Print() const { return IsSet(print_flag); }
+	bool NoZoom() const { return IsSet(no_zoom_flag); }
+	bool NoRotate() const { return IsSet(no_rotate_flag); }
+	bool NoView() const { return IsSet(no_view_flag); }
+	bool ReadOnly() const { return IsSet(read_only_flag); }
 };
 
 class Annotation {
 private:
-	Ref             mRef;
-	GString			mContents; // in PDFDocEncoding or UCS2
-	PDFRectangle	mRect;	
-	GString*        mDate; // optional (can be NULL)
-	AnnotFlags      mFlags;
+	Ref mRef;
+	GString mContents; // in PDFDocEncoding or UCS2
+	PDFRectangle mRect;
+	GString* mDate; // optional (can be NULL)
+	AnnotFlags mFlags;
 	// border style and border -> StyledAnnot
 	// appearence stream
-	bool            mHasAppearanceStream;
+	bool mHasAppearanceStream;
 	// appearence state
-	GfxRGB			mColor;
-	bool            mHasColor;
-	double          mOpacity;
-	GString*        mTitle; // optional
+	GfxRGB mColor;
+	bool mHasColor;
+	double mOpacity;
+	GString* mTitle; // optional
 	// popup
-	PopupAnnot*     mPopup; // optional
+	PopupAnnot* mPopup; // optional
 	// action
 	// additional action
 	// structural parent tree
-	
-	bool			mValid;
+
+	bool mValid;
 
 	// editing
-	bool            mDeleted;
-	bool            mChanged;
-	bool            mSelected;
-	
+	bool mDeleted;
+	bool mChanged;
+	bool mSelected;
+
 protected:
 	// This method should be the first statement in the constructor
 	// of a child class.
 	// Returns false if constructor in parent class has failed.
-	bool CheckInvalid() { if (mValid) { mValid = false; return false; } else return true; }
-	// This method should be called as the last statement 
+	bool CheckInvalid()
+	{
+		if (mValid) {
+			mValid = false;
+			return false;
+		} else
+			return true;
+	}
+	// This method should be called as the last statement
 	// in the constructor if there were no errors.
-	void SetValid()     { mValid = true; }
+	void SetValid() { mValid = true; }
 	bool ReadNum(Array* a, int i, double& d);
-	bool ReadPoint(Array* a, int i, PDFPoint* p); 
-	void SetString(GString* &s, const char* t);
-	
+	bool ReadPoint(Array* a, int i, PDFPoint* p);
+	void SetString(GString*& s, const char* t);
+
 public:
 	Annotation(PDFRectangle rect);
 	Annotation(Annotation* copy);
 	Annotation(Dict* annot);
 	virtual ~Annotation();
-	
+
 	virtual Annotation* Clone() = 0;
 
 	bool IsValid() const { return mValid; }
 
-	Ref           GetRef()           { return mRef; }
-	GString*      GetContents()      { return &mContents; }
-	PDFRectangle* GetRect()          { return &mRect; }
-	const char*   GetDate()          { return mDate ? mDate->getCString() : ""; }
-	AnnotFlags*   GetFlags()         { return &mFlags; }
-	bool          HasAppearanceStream() { return mHasAppearanceStream; }
-	GfxRGB*       GetColor()         { return &mColor; }
-	bool          HasColor()         { return mHasColor; }
-	double        GetOpacity()       { return mOpacity; }
-	GString*      GetTitle()         { return mTitle; }
-	PopupAnnot*   GetPopup()         { return mPopup; }
+	Ref GetRef() { return mRef; }
+	GString* GetContents() { return &mContents; }
+	PDFRectangle* GetRect() { return &mRect; }
+	const char* GetDate() { return mDate ? mDate->getCString() : ""; }
+	AnnotFlags* GetFlags() { return &mFlags; }
+	bool HasAppearanceStream() { return mHasAppearanceStream; }
+	GfxRGB* GetColor() { return &mColor; }
+	bool HasColor() { return mHasColor; }
+	double GetOpacity() { return mOpacity; }
+	GString* GetTitle() { return mTitle; }
+	PopupAnnot* GetPopup() { return mPopup; }
 
 	virtual void Visit(AnnotVisitor* v) = 0;
 	virtual void Print();
-	
-	PDFPoint     LeftTop()          { return PDFPoint(mRect.x1, mRect.y2); }
+
+	PDFPoint LeftTop() { return PDFPoint(mRect.x1, mRect.y2); }
 	virtual void MoveTo(PDFPoint p);
 	virtual void ResizeTo(double w, double h);
 
@@ -297,15 +309,20 @@ public:
 	void SetRef(const Ref ref);
 	void SetContents(GString* contents);
 	void SetDate(const char* date);
-	void SetHasColor(bool color)   { mHasColor = color; }
+	void SetHasColor(bool color) { mHasColor = color; }
 	void SetTitle(GString* title);
-	void SetPopup(PopupAnnot* a)   { mPopup = a; }
-	void SetDeleted(bool d)        { mDeleted = d; if (d) SetChanged(); }
-	bool IsDeleted() const         { return mDeleted; }
+	void SetPopup(PopupAnnot* a) { mPopup = a; }
+	void SetDeleted(bool d)
+	{
+		mDeleted = d;
+		if (d)
+			SetChanged();
+	}
+	bool IsDeleted() const { return mDeleted; }
 	void SetChanged(bool c = true) { mChanged = c; }
-	bool HasChanged() const        { return mChanged; }
-	void SetSelected(bool s)       { mSelected = s; }	
-	bool IsSelected() const        { return mSelected; }
+	bool HasChanged() const { return mChanged; }
+	void SetSelected(bool s) { mSelected = s; }
+	bool IsSelected() const { return mSelected; }
 };
 
 
@@ -324,21 +341,21 @@ public:
 	};
 
 private:
-	bool		         mOpen;
-	GString		         mName;  // default Note
+	bool mOpen;
+	GString mName; // default Note
 	enum text_annot_type mType;
-	
-	static const char *mTypeNames[no_of_types-1];
-	
+
+	static const char* mTypeNames[no_of_types - 1];
+
 public:
 	TextAnnot(PDFRectangle rect, text_annot_type type);
 	TextAnnot(TextAnnot* copy);
 	TextAnnot(Dict* annot);
-	
+
 	Annotation* Clone() { return new TextAnnot(this); }
 
-	bool IsOpen()                  { return mOpen; }
-	const char* GetName()          { return mName.getCString(); }
+	bool IsOpen() { return mOpen; }
+	const char* GetName() { return mName.getCString(); }
 	enum text_annot_type GetType() { return mType; }
 
 	virtual void Visit(AnnotVisitor* v) { v->DoText(this); }
@@ -347,7 +364,7 @@ public:
 
 class LinkAnnot : public Annotation {
 private:
-	LinkAction			 *mLinkAction;
+	LinkAction* mLinkAction;
 
 public:
 	LinkAnnot(LinkAnnot* copy);
@@ -355,7 +372,7 @@ public:
 
 	Annotation* Clone() { return new LinkAnnot(this); }
 
-	LinkAction* GetLinkAction()    { return mLinkAction; }
+	LinkAction* GetLinkAction() { return mLinkAction; }
 
 	virtual void Visit(AnnotVisitor* v) { v->DoLink(this); }
 	virtual void Print();
@@ -364,7 +381,7 @@ public:
 class StyledAnnot : public Annotation {
 private:
 	BorderStyle mStyle;
-	
+
 public:
 	StyledAnnot(PDFRectangle rect, float r, float g, float b);
 	StyledAnnot(StyledAnnot* copy);
@@ -374,30 +391,26 @@ public:
 	virtual void Print();
 };
 
-enum free_text_justification {
-	left_justify  = 0,
-	centered      = 1,
-	right_justify = 2
-};
+enum free_text_justification { left_justify = 0, centered = 1, right_justify = 2 };
 
 free_text_justification ToFreeTextJustification(const char* name);
 const char* ToString(free_text_justification j);
 
 class FreeTextAnnot : public StyledAnnot {
 private:
-	GString		            mAppearance;  
+	GString mAppearance;
 	free_text_justification mJustification;
-	PDFFont*                mFont; 
-	GfxRGB                  mFontColor;
-	float                   mFontSize;            
+	PDFFont* mFont;
+	GfxRGB mFontColor;
+	float mFontSize;
 
 	void Init();
-			
+
 public:
 	FreeTextAnnot(PDFRectangle rect, PDFFont* font);
 	FreeTextAnnot(FreeTextAnnot* copy);
 	FreeTextAnnot(Dict* annot, BePDFAcroForm* acroForm);
-	
+
 	Annotation* Clone() { return new FreeTextAnnot(this); }
 
 	GString* GetAppearance() { return &mAppearance; }
@@ -416,15 +429,15 @@ public:
 
 class LineAnnot : public StyledAnnot {
 private:
-	PDFPoint    mLine[2];
+	PDFPoint mLine[2];
 
 public:
 	LineAnnot(PDFRectangle rect, PDFPoint* line);
 	LineAnnot(LineAnnot* copy);
 	LineAnnot(Dict* annot);
 	Annotation* Clone() { return new LineAnnot(this); }
-	
-	PDFPoint* GetLine()     { return mLine; }	
+
+	PDFPoint* GetLine() { return mLine; }
 
 	virtual void Visit(AnnotVisitor* v) { v->DoLine(this); }
 	virtual void Print();
@@ -432,9 +445,15 @@ public:
 
 class SquareAnnot : public StyledAnnot {
 public:
-	SquareAnnot(PDFRectangle rect) : StyledAnnot(rect, 0.0, 0.6, 1.0) { }
-	SquareAnnot(SquareAnnot* copy) : StyledAnnot(copy) { }
-	SquareAnnot(Dict* d) : StyledAnnot(d) { }
+	SquareAnnot(PDFRectangle rect)
+	    : StyledAnnot(rect, 0.0, 0.6, 1.0)
+	{}
+	SquareAnnot(SquareAnnot* copy)
+	    : StyledAnnot(copy)
+	{}
+	SquareAnnot(Dict* d)
+	    : StyledAnnot(d)
+	{}
 	Annotation* Clone() { return new SquareAnnot(this); }
 	virtual void Visit(AnnotVisitor* v) { v->DoSquare(this); }
 	virtual void Print();
@@ -442,9 +461,15 @@ public:
 
 class CircleAnnot : public StyledAnnot {
 public:
-	CircleAnnot(PDFRectangle rect) : StyledAnnot(rect, 0.0, 0.6, 1.0) { }
-	CircleAnnot(CircleAnnot* copy) : StyledAnnot(copy) { }
-	CircleAnnot(Dict* d) : StyledAnnot(d) { }
+	CircleAnnot(PDFRectangle rect)
+	    : StyledAnnot(rect, 0.0, 0.6, 1.0)
+	{}
+	CircleAnnot(CircleAnnot* copy)
+	    : StyledAnnot(copy)
+	{}
+	CircleAnnot(Dict* d)
+	    : StyledAnnot(d)
+	{}
 	Annotation* Clone() { return new CircleAnnot(this); }
 	virtual void Visit(AnnotVisitor* v) { v->DoCircle(this); }
 	virtual void Print();
@@ -452,18 +477,18 @@ public:
 
 class MarkupAnnot : public StyledAnnot {
 private:
-	int            mLength;
-	PDFQuadPoints *mQuadPoints;
-	
+	int mLength;
+	PDFQuadPoints* mQuadPoints;
+
 public:
 	MarkupAnnot(PDFRectangle rect, float r, float g, float b, PDFQuadPoints* p, int l);
 	MarkupAnnot(MarkupAnnot* copy);
 	MarkupAnnot(Dict* annot);
 	~MarkupAnnot();
-	
-	int QuadPointsLength()             { return mLength; }
-	PDFQuadPoints *QuadPointsAt(int i) { return &mQuadPoints[i]; }
-	
+
+	int QuadPointsLength() { return mLength; }
+	PDFQuadPoints* QuadPointsAt(int i) { return &mQuadPoints[i]; }
+
 	virtual void Visit(AnnotVisitor* v) = 0;
 	virtual void Print();
 
@@ -474,8 +499,12 @@ public:
 class HighlightAnnot : public MarkupAnnot {
 public:
 	HighlightAnnot(PDFRectangle rect);
-	HighlightAnnot(HighlightAnnot* copy) : MarkupAnnot(copy) { }
-	HighlightAnnot(Dict* annot) : MarkupAnnot(annot) { }
+	HighlightAnnot(HighlightAnnot* copy)
+	    : MarkupAnnot(copy)
+	{}
+	HighlightAnnot(Dict* annot)
+	    : MarkupAnnot(annot)
+	{}
 	Annotation* Clone() { return new HighlightAnnot(this); }
 	virtual void Visit(AnnotVisitor* v) { v->DoHighlight(this); }
 };
@@ -483,8 +512,12 @@ public:
 class UnderlineAnnot : public MarkupAnnot {
 public:
 	UnderlineAnnot(PDFRectangle rect);
-	UnderlineAnnot(UnderlineAnnot* copy) : MarkupAnnot(copy) { }
-	UnderlineAnnot(Dict* annot) : MarkupAnnot(annot) { }
+	UnderlineAnnot(UnderlineAnnot* copy)
+	    : MarkupAnnot(copy)
+	{}
+	UnderlineAnnot(Dict* annot)
+	    : MarkupAnnot(annot)
+	{}
 	Annotation* Clone() { return new UnderlineAnnot(this); }
 	virtual void Visit(AnnotVisitor* v) { v->DoUnderline(this); }
 };
@@ -492,8 +525,12 @@ public:
 class SquigglyAnnot : public MarkupAnnot {
 public:
 	SquigglyAnnot(PDFRectangle rect);
-	SquigglyAnnot(SquigglyAnnot* copy) : MarkupAnnot(copy) { }
-	SquigglyAnnot(Dict* annot) : MarkupAnnot(annot) { }
+	SquigglyAnnot(SquigglyAnnot* copy)
+	    : MarkupAnnot(copy)
+	{}
+	SquigglyAnnot(Dict* annot)
+	    : MarkupAnnot(annot)
+	{}
 	Annotation* Clone() { return new SquigglyAnnot(this); }
 	virtual void Visit(AnnotVisitor* v) { v->DoSquiggly(this); }
 };
@@ -501,21 +538,25 @@ public:
 class StrikeOutAnnot : public MarkupAnnot {
 public:
 	StrikeOutAnnot(PDFRectangle rect);
-	StrikeOutAnnot(StrikeOutAnnot* copy) : MarkupAnnot(copy) { }
-	StrikeOutAnnot(Dict* annot) : MarkupAnnot(annot) { }
+	StrikeOutAnnot(StrikeOutAnnot* copy)
+	    : MarkupAnnot(copy)
+	{}
+	StrikeOutAnnot(Dict* annot)
+	    : MarkupAnnot(annot)
+	{}
 	Annotation* Clone() { return new StrikeOutAnnot(this); }
 	virtual void Visit(AnnotVisitor* v) { v->DoStrikeOut(this); }
 };
 
 class StampAnnot : public Annotation {
-	GString		mName;  // default Draft
+	GString mName; // default Draft
 
 public:
 	StampAnnot(StampAnnot* copy);
 	StampAnnot(Dict* annot);
 	Annotation* Clone() { return new StampAnnot(this); }
 
-	const char* GetName()       { return mName.getCString(); }
+	const char* GetName() { return mName.getCString(); }
 
 	virtual void Visit(AnnotVisitor* v) { v->DoStamp(this); }
 	virtual void Print();
@@ -523,15 +564,15 @@ public:
 
 class InkAnnot : public StyledAnnot {
 private:
-	int        mLength;
-	PDFPoints* mInkList;		
+	int mLength;
+	PDFPoints* mInkList;
 
 public:
 	InkAnnot(InkAnnot* copy);
 	InkAnnot(Dict* annot);
 	~InkAnnot();
 	Annotation* Clone() { return new InkAnnot(this); }
-	
+
 	int GetLength() { return mLength; }
 	PDFPoints* PathAt(int i) { return &mInkList[i]; }
 	virtual void Visit(AnnotVisitor* v) { v->DoInk(this); }
@@ -540,7 +581,7 @@ public:
 
 class PopupAnnot : public Annotation {
 	Ref mParentRef;
-	
+
 public:
 	PopupAnnot(PDFRectangle rect);
 	PopupAnnot(PopupAnnot* copy);
@@ -548,30 +589,23 @@ public:
 	Annotation* Clone() { return new PopupAnnot(this); }
 
 	void SetParentRef(Ref ref) { mParentRef = ref; }
-	Ref  GetParentRef()        { return mParentRef; }
+	Ref GetParentRef() { return mParentRef; }
 
-	virtual void Visit(AnnotVisitor* v) { v->DoPopup(this); }	
+	virtual void Visit(AnnotVisitor* v) { v->DoPopup(this); }
 	virtual void Print();
 };
 
 class FileAttachmentAnnot : public Annotation {
 public:
-	enum attachment_type {
-		graphic_type,
-		paper_clip_type,
-		push_pin_type,
-		tag_type,
-		unknown_type,
-		no_of_types
-	};
-	
+	enum attachment_type { graphic_type, paper_clip_type, push_pin_type, tag_type, unknown_type, no_of_types };
+
 private:
-	GString              mName;
-	GString              mFileName;
+	GString mName;
+	GString mFileName;
 	enum attachment_type mType;
-	static const char* mTypeNames[no_of_types-1];
-	FileSpec             mFileSpec;
-	
+	static const char* mTypeNames[no_of_types - 1];
+	FileSpec mFileSpec;
+
 public:
 	FileAttachmentAnnot(FileAttachmentAnnot* copy);
 	FileAttachmentAnnot(Dict* annot);
@@ -582,8 +616,8 @@ public:
 	// Return file name
 	const char* GetFileName() { return mFileSpec.GetFileName()->getCString(); }
 	// Save file
-	bool Save(XRef *xref, const char* file);
-	
+	bool Save(XRef* xref, const char* file);
+
 	virtual void Visit(AnnotVisitor* v) { v->DoFileAttachment(this); }
 	virtual void Print();
 };
@@ -592,7 +626,7 @@ class AnnotSorter : public AnnotVisitor {
 public:
 	AnnotSorter();
 	~AnnotSorter();
-	
+
 	virtual void DoText(TextAnnot* a) { mResult = 1; }
 	virtual void DoLink(LinkAnnot* a) { mResult = 2; }
 	virtual void DoFreeText(FreeTextAnnot* a) { mResult = 3; }
@@ -612,8 +646,8 @@ public:
 	virtual void DoWidget(WidgetAnnot* a) { mResult = 17; }
 	virtual void DoPrinterMark(PrinterMarkAnnot* a) { mResult = 18; }
 	virtual void DoTrapNet(TrapNetAnnot* a) { mResult = 19; }
-	
-	int GetResult() { return mResult; }	
+
+	int GetResult() { return mResult; }
 
 private:
 	int mResult;
@@ -643,8 +677,8 @@ public:
 	virtual void DoWidget(WidgetAnnot* a) { mResult = "Widget"; }
 	virtual void DoPrinterMark(PrinterMarkAnnot* a) { mResult = "PrinterMark"; }
 	virtual void DoTrapNet(TrapNetAnnot* a) { mResult = "TrapNet"; }
-	
-	const char* GetResult() { return mResult; }	
+
+	const char* GetResult() { return mResult; }
 
 private:
 	const char* mResult;
@@ -653,64 +687,64 @@ private:
 class BePDFAcroForm {
 private:
 	static PDFStandardFonts* mStandardFonts;
-	Ref                      mRef;
-	GString                  mAppearance;
-	free_text_justification  mJustification;
-	std::list<PDFFont*>           mFonts;
-	
+	Ref mRef;
+	GString mAppearance;
+	free_text_justification mJustification;
+	std::list<PDFFont*> mFonts;
+
 	void ParseFont(const char* shortName, Ref ref, Dict* font);
-	
+
 public:
 	BePDFAcroForm(XRef* xref, Object* acroForm);
 	~BePDFAcroForm();
-	
+
 	static PDFStandardFonts* GetStandardFonts();
-	
+
 	Ref GetRef() { return mRef; }
 	void SetRef(Ref ref) { mRef = ref; }
-	
+
 	const char* GetAppearance() { return mAppearance.getCString(); }
 	void SetAppearance(const char* a) { mAppearance.clear()->append(a); }
-	
+
 	free_text_justification GetJustification() const { return mJustification; }
 	void SetJustification(free_text_justification j) { mJustification = j; }
-	
+
 	std::list<PDFFont*>* GetFonts() { return &mFonts; }
 	PDFFont* FindFontByShortName(const char* name);
 };
 
-typedef Annotation *AnnotationPtr;
+typedef Annotation* AnnotationPtr;
 
 class Annotations {
-private:	
-	int               mMax;
-	int               mLength;
-	AnnotationPtr*    mAnnots;
-	
+private:
+	int mMax;
+	int mLength;
+	AnnotationPtr* mAnnots;
+
 	void Resize(int max);
-	
+
 public:
 	Annotations(Annotations* copy);
 	Annotations(Object* annots, BePDFAcroForm* acroForm);
 	~Annotations();
-	
-	int Length() const    { return mLength; }
+
+	int Length() const { return mLength; }
 	Annotation* At(int i) const { return mAnnots[i]; }
 	void Append(Annotation* a);
 	Annotation* Remove(int i);
-	
+
 	void Iterate(AnnotVisitor* visitor);
 	Annotation* OverAnnotation(double x, double y, bool edit = false);
 	void Sort(AnnotSorter* sort); // not thread safe!!!
 	bool HasChanged() const;
 };
 
-typedef Annotations *AnnotationsPtr;
+typedef Annotations* AnnotationsPtr;
 
 
 class AnnotsList {
 	AnnotationsPtr* mAnnots;
-	int             mLength;
+	int mLength;
 
 	void MakeEmpty();
 
@@ -719,7 +753,7 @@ public:
 	AnnotsList();
 	~AnnotsList();
 	void SetSize(int size);
-	Annotations* Get(int i) const;	
+	Annotations* Get(int i) const;
 	void Set(int i, Annotations* a);
 	bool HasChanged() const;
 };
@@ -728,17 +762,17 @@ public:
 class AppearanceStringParser {
 public:
 	AppearanceStringParser(const char* as);
-	
+
 	bool IsOK() const { return mOK; }
 	const char* GetFontName() { return mFontName.getCString(); }
 	float GetFontSize() const { return mFontSize; }
 	GfxRGB* GetColor() { return &mColor; }
-	
+
 private:
-	bool    mOK;
+	bool mOK;
 	GString mFontName;
-	float   mFontSize;
-	GfxRGB  mColor;
+	float mFontSize;
+	GfxRGB mColor;
 };
 
 class AnnotUtils {

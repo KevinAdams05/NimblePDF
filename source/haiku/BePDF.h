@@ -27,14 +27,14 @@
 #include <be/interface/Screen.h>
 
 // global lock
-extern BLocker *gPdfLock;
+extern BLocker* gPdfLock;
 // the BScreen initialized with InitBePDF()
-extern BScreen *gScreen;
+extern BScreen* gScreen;
 
 // Automatically locks and unlocks gPdfLock in constructor and destructor.
 class PDFLock {
 public:
-	PDFLock()  { gPdfLock->Lock();   }
+	PDFLock() { gPdfLock->Lock(); }
 	~PDFLock() { gPdfLock->Unlock(); }
 };
 

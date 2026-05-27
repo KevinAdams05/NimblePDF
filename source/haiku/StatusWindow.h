@@ -33,15 +33,15 @@ class BStringView;
 class BStatusBar;
 
 class StatusWindow : public BWindow {
-	BStringView*  mText;
+	BStringView* mText;
 	BStatusBar* mStatus;
-	int           mTotal;
-	
+	int mTotal;
+
 public:
-	enum {                         // BMessage attributes:
-		TOTAL_NOTIFY = 'npgs',     // int32 "pages"
-		CURRENT_NOTIFY = 'ldpg',   // int32 "page"
-		TEXT_NOTIFY  = 'text'      // char* "text"
+	enum {                       // BMessage attributes:
+		TOTAL_NOTIFY = 'npgs',   // int32 "pages"
+		CURRENT_NOTIFY = 'ldpg', // int32 "page"
+		TEXT_NOTIFY = 'text'     // char* "text"
 	};
 
 
@@ -50,16 +50,16 @@ public:
 
 	static void SetTotal(BMessenger* msgr, int32 total);
 	static void SetCurrent(BMessenger* msgr, int32 current);
-	static void SetText(BMessenger* msgr, const char* text);	
+	static void SetText(BMessenger* msgr, const char* text);
 };
 
 class ShowStatusWindow {
 public:
 	ShowStatusWindow(const char* name);
 	virtual ~ShowStatusWindow();
-	
+
 	BMessenger* GetMessenger() { return &mMessenger; }
-	
+
 private:
 	BMessenger mMessenger;
 };

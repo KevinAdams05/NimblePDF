@@ -38,23 +38,23 @@ class BButton;
 
 class FindTextWindow : public BWindow {
 public:
-	FindTextWindow(GlobalSettings *settings, const char *text, BLooper *looper);
+	FindTextWindow(GlobalSettings* settings, const char* text, BLooper* looper);
 
-	void MessageReceived(BMessage *msg);
+	void MessageReceived(BMessage* msg);
 
 	enum {
-		FIND_START_NOTIFY_MSG     = 'TSrt',
-		FIND_STOP_NOTIFY_MSG      = 'TStp',
-		FIND_ABORT_NOTIFY_MSG     = 'SAbt',
-		TEXT_FOUND_NOTIFY_MSG     = 'TFnd',
+		FIND_START_NOTIFY_MSG = 'TSrt',
+		FIND_STOP_NOTIFY_MSG = 'TStp',
+		FIND_ABORT_NOTIFY_MSG = 'SAbt',
+		TEXT_FOUND_NOTIFY_MSG = 'TFnd',
 		TEXT_NOT_FOUND_NOTIFY_MSG = 'TNFd',
-		FIND_SET_PAGE_MSG         = 'FStP',
-		FIND_QUIT_REQUESTED_MSG   = 'QTrq',
-		FIND_MSG                  = 'Find',
-		FIND_STOP_MSG             = 'Stop',
-		FIND_ABORT_MSG            = 'Abrt',
-		FIND_IGNORE_CASE_MSG      = 'TIgr',
-		FIND_BACKWARD_MSG         = 'TRvr',
+		FIND_SET_PAGE_MSG = 'FStP',
+		FIND_QUIT_REQUESTED_MSG = 'QTrq',
+		FIND_MSG = 'Find',
+		FIND_STOP_MSG = 'Stop',
+		FIND_ABORT_MSG = 'Abrt',
+		FIND_IGNORE_CASE_MSG = 'TIgr',
+		FIND_BACKWARD_MSG = 'TRvr',
 	};
 
 	virtual void FrameMoved(BPoint point);
@@ -68,10 +68,10 @@ protected:
 	bool mSearching;
 	BLooper* mLooper;
 	GlobalSettings* mSettings;
-	BButton*      mFindStop;
+	BButton* mFindStop;
 	BTextControl* mText;
-	BCheckBox*    mIgnoreCase;
-	BCheckBox*    mBackward;
-	BStringView*  mPage;
+	BCheckBox* mIgnoreCase;
+	BCheckBox* mBackward;
+	BStringView* mPage;
 };
 #endif

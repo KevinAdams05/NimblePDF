@@ -34,19 +34,16 @@ class BTextControl;
 
 class PasswordWindow : public BWindow {
 public:
-	PasswordWindow(entry_ref *ref, BRect rect, BLooper *looper);
-	void MessageReceived(BMessage *msg);
+	PasswordWindow(entry_ref* ref, BRect rect, BLooper* looper);
+	void MessageReceived(BMessage* msg);
 	bool QuitRequested();
-	
+
 protected:
-	BLooper *mLooper;
-	BTextControl *mPassword;
+	BLooper* mLooper;
+	BTextControl* mPassword;
 	bool mPasswordSent;
 	entry_ref mEntry;
-	enum PwdKind {
-		OWNER_PASSWORD,
-		USER_PASSWORD
-	};
+	enum PwdKind { OWNER_PASSWORD, USER_PASSWORD };
 	static enum PwdKind mPwdKind;
 };
 #endif

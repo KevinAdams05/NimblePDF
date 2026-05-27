@@ -24,36 +24,36 @@
 #define _PAGE_CACHE_H
 
 // xpdf
-#include<XRef.h>
-#include<Link.h>
-#include<TextOutputDev.h>
-#include<PDFDoc.h>
+#include <XRef.h>
+#include <Link.h>
+#include <TextOutputDev.h>
+#include <PDFDoc.h>
 // BeOS
-#include<Bitmap.h>
-#include<SupportDefs.h>
-#include<Looper.h>
+#include <Bitmap.h>
+#include <SupportDefs.h>
+#include <Looper.h>
 
 #include "CachedPage.h"
 
-class PageCache { 
+class PageCache {
 public:
 	PageCache();
 	virtual ~PageCache();
 
-	void SetDoc(PDFDoc *doc);
+	void SetDoc(PDFDoc* doc);
 	void StartDoc(bool useT1lib, bool t1libAA, bool t1libAAHigh, bool useFreeType, bool freeTypeAA, color_space colorSpace);
 	void EndDoc();
-	
-	void SetListener(BLooper *looper, BHandler *handler);
+
+	void SetListener(BLooper* looper, BHandler* handler);
 
 	// start rendering of a page asynchronosly
 	// returns an unique identifier in id (id is greater than or equal to zero)
-	void Start(CachedPage *page, int pageNo, int zoom, int rotate, GBool doLinks, thread_id *id);
+	void Start(CachedPage* page, int pageNo, int zoom, int rotate, GBool doLinks, thread_id* id);
 	// abort rendering process asynchronosly
 	void Abort();
 	// waits for rendering process to finish; returns immediatly when no process runs
 	void Wait();
-/*	
+	/*	
 	void DisplayPage(int32 page, int32 zoom, int32 rotation, BBitmap **bitmap);
 	void RenderPage(int32 page, int32 zoom, int32 rotation);
 
@@ -66,7 +66,7 @@ public:
 	void Empty();
 */
 protected:
-	PDFDoc *mDoc;
+	PDFDoc* mDoc;
 	CachedPage mPage[3];
 };
 

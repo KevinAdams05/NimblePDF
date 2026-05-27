@@ -22,15 +22,15 @@
 #include <Cursor.h>
 #include <TranslatorFormats.h>
 
-BBitmap *LoadLargeIcon(const char *name);
-BBitmap *LoadLargeIcon(int32 id);
+BBitmap* LoadLargeIcon(const char* name);
+BBitmap* LoadLargeIcon(int32 id);
 
-BBitmap *LoadMiniIcon(const char *name);
-BBitmap *LoadMiniIcon(int32 id);
+BBitmap* LoadMiniIcon(const char* name);
+BBitmap* LoadMiniIcon(int32 id);
 
 BBitmap* LoadVectorIcon(const char* name, int32 size = 21);
 
-BBitmap *LoadBitmap(const char *name, uint32 type_code = B_TRANSLATOR_BITMAP);
-BBitmap *LoadBitmap(int32 id, uint32 type_code = B_TRANSLATOR_BITMAP);
+BBitmap* LoadBitmap(const char* name, uint32 type_code = B_TRANSLATOR_BITMAP);
+BBitmap* LoadBitmap(int32 id, uint32 type_code = B_TRANSLATOR_BITMAP);
 
 #endif

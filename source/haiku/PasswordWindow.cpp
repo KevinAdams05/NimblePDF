@@ -37,11 +37,10 @@
 // remember last settings in class static variable
 enum PasswordWindow::PwdKind PasswordWindow::mPwdKind = USER_PASSWORD;
 
-PasswordWindow::PasswordWindow(entry_ref *ref, BRect aRect, BLooper *looper)
-	: BWindow(aRect, B_TRANSLATE("Enter Password"),
-		B_TITLED_WINDOW_LOOK,
-		B_MODAL_APP_WINDOW_FEEL,
-		B_NOT_ZOOMABLE | B_AUTO_UPDATE_SIZE_LIMITS) {
+PasswordWindow::PasswordWindow(entry_ref* ref, BRect aRect, BLooper* looper)
+    : BWindow(
+          aRect, B_TRANSLATE("Enter Password"), B_TITLED_WINDOW_LOOK, B_MODAL_APP_WINDOW_FEEL, B_NOT_ZOOMABLE | B_AUTO_UPDATE_SIZE_LIMITS)
+{
 	mLooper = looper;
 	mPasswordSent = false;
 	mEntry = *ref;
@@ -56,24 +55,22 @@ PasswordWindow::PasswordWindow(entry_ref *ref, BRect aRect, BLooper *looper)
 	MoveTo(aRect.left, aRect.top);
 	ResizeTo(width, height);
 
-	BPopUpMenu *pwdKind = new BPopUpMenu("pwdKind");
-	BMenuField *pwdKindField = new BMenuField("pwdKindField", "", pwdKind);
-	BMenuItem *item;
+	BPopUpMenu* pwdKind = new BPopUpMenu("pwdKind");
+	BMenuField* pwdKindField = new BMenuField("pwdKindField", "", pwdKind);
+	BMenuItem* item;
 	pwdKind->AddItem(item = new BMenuItem(B_TRANSLATE("User password"), new BMessage('user')));
-	if (mPwdKind == USER_PASSWORD) item->SetMarked(true);
+	if (mPwdKind == USER_PASSWORD)
+		item->SetMarked(true);
 	pwdKind->AddItem(item = new BMenuItem(B_TRANSLATE("Owner password"), new BMessage('ownr')));
-	if (mPwdKind == OWNER_PASSWORD) item->SetMarked(true);
+	if (mPwdKind == OWNER_PASSWORD)
+		item->SetMarked(true);
 
 	mPassword = new BTextControl("mPassword", "", "", NULL);
 	mPassword->TextView()->HideTyping(true);
 
-	BButton *button = new BButton("button", B_TRANSLATE("OK"), new BMessage('OK'));
+	BButton* button = new BButton("button", B_TRANSLATE("OK"), new BMessage('OK'));
 
-	BLayoutBuilder::Group<>(this, B_HORIZONTAL)
-		.SetInsets(B_USE_WINDOW_INSETS)
-		.Add(pwdKindField, 0)
-		.Add(mPassword, 1)
-		.Add(button, 0);
+	BLayoutBuilder::Group<>(this, B_HORIZONTAL).SetInsets(B_USE_WINDOW_INSETS).Add(pwdKindField, 0).Add(mPassword, 1).Add(button, 0);
 
 	SetDefaultButton(button);
 
@@ -83,32 +80,36 @@ PasswordWindow::PasswordWindow(entry_ref *ref, BRect aRect, BLooper *looper)
 
 #include "BepdfApplication.h"
 
-bool PasswordWindow::QuitRequested() {
+bool PasswordWindow::QuitRequested()
+{
 	if (!mPasswordSent) {
 		gApp->OpenFilePanel();
 	}
 	return true;
 }
 
-void PasswordWindow::MessageReceived(BMessage *msg) {
+void PasswordWindow::MessageReceived(BMessage* msg)
+{
 	switch (msg->what) {
 	case 'OK': {
 		// post message to application to open file with password
-		const char *text = mPassword->Text();
+		const char* text = mPassword->Text();
 
 		BMessage msg(B_REFS_RECEIVED);
 		msg.AddRef("refs", &mEntry);
-		msg.AddString(mPwdKind == OWNER_PASSWORD ?
-						"ownerPassword" : "userPassword",
-						text);
+		msg.AddString(mPwdKind == OWNER_PASSWORD ? "ownerPassword" : "userPassword", text);
 		mLooper->PostMessage(&msg, NULL);
 		mPasswordSent = true;
 		Quit();
-		break; }
-	case 'user': mPwdKind = USER_PASSWORD; break;
-	case 'ownr': mPwdKind = OWNER_PASSWORD; break;
+		break;
+	}
+	case 'user':
+		mPwdKind = USER_PASSWORD;
+		break;
+	case 'ownr':
+		mPwdKind = OWNER_PASSWORD;
+		break;
 	default:
 		BWindow::MessageReceived(msg);
 	}
 }
-

@@ -28,8 +28,8 @@
 #include <malloc.h>
 
 
-GlobalSettings::GlobalSettings() :
-	mChanged(false)
+GlobalSettings::GlobalSettings()
+    : mChanged(false)
 {
 	SETTINGS(DEFINE_VARIABLE)
 	STRING_SETTINGS(DEFINE_STRING_VARIABLE)
@@ -41,10 +41,10 @@ GlobalSettings::GlobalSettings() :
 		mDefaultPanelDirectory = "/boot/home/Desktop";
 	}
 	mPanelDirectory = mDefaultPanelDirectory;
-
 }
 
-bool GlobalSettings::HasChanged() const {
+bool GlobalSettings::HasChanged() const
+{
 	return mChanged;
 }
 
@@ -53,25 +53,31 @@ SETTINGS(DEFINE_GETTER)
 STRING_SETTINGS(DEFINE_STRING_SETTER)
 STRING_SETTINGS(DEFINE_STRING_GETTER)
 
-void GlobalSettings::SetPanelDirectory(const char *dir) {
-	mChanged = mChanged || (mPanelDirectory != dir); mPanelDirectory = dir;
+void GlobalSettings::SetPanelDirectory(const char* dir)
+{
+	mChanged = mChanged || (mPanelDirectory != dir);
+	mPanelDirectory = dir;
 }
 
 
-const char * GlobalSettings::GetPanelDirectory() const {
+const char* GlobalSettings::GetPanelDirectory() const
+{
 	return mPanelDirectory.String();
 }
 
-void GlobalSettings::SetDisplayCIDFonts(const BMessage& fonts) {
+void GlobalSettings::SetDisplayCIDFonts(const BMessage& fonts)
+{
 	mChanged = true;
 	mDisplayCIDFonts = fonts;
 }
 
-void GlobalSettings::GetDisplayCIDFonts(BMessage& fonts) const {
+void GlobalSettings::GetDisplayCIDFonts(BMessage& fonts) const
+{
 	fonts = mDisplayCIDFonts;
 }
 
-BRect GlobalSettings::GetWindowRect() const {
+BRect GlobalSettings::GetWindowRect() const
+{
 	BRect rect;
 	float w, h;
 	rect.SetLeftTop(GetWindowPosition());
@@ -82,11 +88,12 @@ BRect GlobalSettings::GetWindowRect() const {
 }
 
 // BArchivable:
-GlobalSettings::GlobalSettings(BMessage *archive) {
+GlobalSettings::GlobalSettings(BMessage* archive)
+{
 	mChanged = false;
 
-    SETTINGS(LOAD_SETTINGS)
-    STRING_SETTINGS(LOAD_STRING_SETTINGS)
+	SETTINGS(LOAD_SETTINGS)
+	STRING_SETTINGS(LOAD_STRING_SETTINGS)
 
 	if (B_OK != archive->FindString("panelDirectory", &mPanelDirectory))
 		mPanelDirectory = mDefaultPanelDirectory;
@@ -94,7 +101,8 @@ GlobalSettings::GlobalSettings(BMessage *archive) {
 	archive->FindMessage("displayCIDFonts", &mDisplayCIDFonts);
 }
 
-status_t GlobalSettings::Archive(BMessage *archive, bool deep) const {
+status_t GlobalSettings::Archive(BMessage* archive, bool deep) const
+{
 	archive->AddString("class", "GlobalSettings");
 
 	SETTINGS(STORE_SETTINGS)
@@ -105,31 +113,35 @@ status_t GlobalSettings::Archive(BMessage *archive, bool deep) const {
 	return B_OK;
 }
 
-BArchivable *GlobalSettings::Instantiate(BMessage *archive) {
+BArchivable* GlobalSettings::Instantiate(BMessage* archive)
+{
 	if (validate_instantiation(archive, "GlobalSettings")) {
 		return new GlobalSettings(archive);
 	} else
 		return NULL;
 }
 
-void GlobalSettings::Load(const char* filename) {
+void GlobalSettings::Load(const char* filename)
+{
 	BPath path(filename);
 	if (path.InitCheck() == B_OK) {
 		BFile file(path.Path(), B_READ_ONLY);
 		if (file.InitCheck() == B_OK) {
 			BMessage archive;
 			archive.Unflatten(&file);
-			GlobalSettings *s = (GlobalSettings*)GlobalSettings::Instantiate(&archive);
+			GlobalSettings* s = (GlobalSettings*)GlobalSettings::Instantiate(&archive);
 
 			if (s != NULL) {
-				*this = *s; delete s;
+				*this = *s;
+				delete s;
 			}
 		}
 	}
 }
 
-void GlobalSettings::Save(const char* filename, bool force) {
-BPath path(filename);
+void GlobalSettings::Save(const char* filename, bool force)
+{
+	BPath path(filename);
 	if (HasChanged() || force) {
 		BFile file(path.Path(), B_WRITE_ONLY | B_CREATE_FILE | B_ERASE_FILE);
 		if (file.InitCheck() == B_OK) {
@@ -144,24 +156,30 @@ BPath path(filename);
 // #pragma mark - FileAttributes
 
 
-void FileAttributes::SetPage(int32 page) {
+void FileAttributes::SetPage(int32 page)
+{
 	this->page = page;
 }
 
-int32 FileAttributes::GetPage() const {
+int32 FileAttributes::GetPage() const
+{
 	return page;
 }
 
-void FileAttributes::SetLeftTop(float left, float top) {
+void FileAttributes::SetLeftTop(float left, float top)
+{
 	this->left = left;
 	this->top = top;
 }
 
-void FileAttributes::GetLeftTop(float &left, float &top) {
-	left = this->left; top = this->top;
+void FileAttributes::GetLeftTop(float& left, float& top)
+{
+	left = this->left;
+	top = this->top;
 }
 
-bool FileAttributes::Read(entry_ref *ref, GlobalSettings *s) {
+bool FileAttributes::Read(entry_ref* ref, GlobalSettings* s)
+{
 	BNode node(ref);
 	if (node.InitCheck() == B_OK) {
 		int16 zoom;
@@ -172,17 +190,18 @@ bool FileAttributes::Read(entry_ref *ref, GlobalSettings *s) {
 		if (sizeof(rotation) != node.ReadAttr("bepdf:rotation", B_INT32_TYPE, 0, &rotation, sizeof(rotation))) {
 			rotation = (int32)s->GetRotation();
 		}
-		if ((sizeof(pos_x) != node.ReadAttr("bepdf:pos_x", B_INT32_TYPE, 0, &pos_x, sizeof(pos_x))) ||
-		   (sizeof(pos_y) != node.ReadAttr("bepdf:pos_y", B_INT32_TYPE, 0, &pos_y, sizeof(pos_y)))) {
+		if ((sizeof(pos_x) != node.ReadAttr("bepdf:pos_x", B_INT32_TYPE, 0, &pos_x, sizeof(pos_x)))
+		    || (sizeof(pos_y) != node.ReadAttr("bepdf:pos_y", B_INT32_TYPE, 0, &pos_y, sizeof(pos_y)))) {
 			BPoint pos = s->GetWindowPosition();
 			pos_x = (int32)pos.x;
 			pos_y = (int32)pos.y;
 		}
-		if ((sizeof(width) != node.ReadAttr("bepdf:width", B_INT32_TYPE, 0, &width, sizeof(width))) ||
-			(sizeof(height) != node.ReadAttr("bepdf:height", B_INT32_TYPE, 0, &height, sizeof(height)))) {
+		if ((sizeof(width) != node.ReadAttr("bepdf:width", B_INT32_TYPE, 0, &width, sizeof(width)))
+		    || (sizeof(height) != node.ReadAttr("bepdf:height", B_INT32_TYPE, 0, &height, sizeof(height)))) {
 			float w, h;
 			s->GetWindowSize(w, h);
-			width = (int32)w; height = (int32)h;
+			width = (int32)w;
+			height = (int32)h;
 		}
 		if (sizeof(page) != node.ReadAttr("bepdf:page", B_INT32_TYPE, 0, &page, sizeof(page))) {
 			page = 1;
@@ -207,7 +226,7 @@ bool FileAttributes::Read(entry_ref *ref, GlobalSettings *s) {
 		// read bookmarks
 		ssize_t buf_size = 65536;
 		ssize_t attr_size = 0;
-		char *buffer = (char*)malloc(buf_size);
+		char* buffer = (char*)malloc(buf_size);
 		while (buffer) {
 			attr_size = node.ReadAttr("bepdf:bookmarks", B_MESSAGE_TYPE, 0, buffer, buf_size);
 			if (attr_size == buf_size) {
@@ -224,44 +243,55 @@ bool FileAttributes::Read(entry_ref *ref, GlobalSettings *s) {
 		} else {
 			bookmarks.Unflatten(buffer);
 		}
-		if (buffer) free(buffer);
+		if (buffer)
+			free(buffer);
 		return true;
 	}
 	return false;
 }
 
-bool FileAttributes::Write(entry_ref *ref, GlobalSettings *s) {
+bool FileAttributes::Write(entry_ref* ref, GlobalSettings* s)
+{
 	BNode node(ref);
 	if (node.InitCheck() == B_OK) {
 		int32 i;
 		BPoint pos = s->GetWindowPosition();
 		i = (int32)pos.x;
-		if (sizeof(int32) != node.WriteAttr("bepdf:pos_x", B_INT32_TYPE, 0, &i, sizeof(i))) return false;
+		if (sizeof(int32) != node.WriteAttr("bepdf:pos_x", B_INT32_TYPE, 0, &i, sizeof(i)))
+			return false;
 		i = (int32)pos.y;
-		if (sizeof(int32) != node.WriteAttr("bepdf:pos_y", B_INT32_TYPE, 0, &i, sizeof(i))) return false;
+		if (sizeof(int32) != node.WriteAttr("bepdf:pos_y", B_INT32_TYPE, 0, &i, sizeof(i)))
+			return false;
 		float width, height;
 		s->GetWindowSize(width, height);
 		i = (int32)width;
-		if (sizeof(int32) != node.WriteAttr("bepdf:width", B_INT32_TYPE, 0, &i, sizeof(i))) return false;
+		if (sizeof(int32) != node.WriteAttr("bepdf:width", B_INT32_TYPE, 0, &i, sizeof(i)))
+			return false;
 		i = (int32)height;
-		if (sizeof(int32) != node.WriteAttr("bepdf:height", B_INT32_TYPE, 0, &i, sizeof(i))) return false;
+		if (sizeof(int32) != node.WriteAttr("bepdf:height", B_INT32_TYPE, 0, &i, sizeof(i)))
+			return false;
 		// current page
 		int16 zoom = s->GetZoom();
-		if (sizeof(zoom) != node.WriteAttr("bepdf:zoom", B_INT16_TYPE, 0, &zoom, sizeof(zoom))) return false;
+		if (sizeof(zoom) != node.WriteAttr("bepdf:zoom", B_INT16_TYPE, 0, &zoom, sizeof(zoom)))
+			return false;
 		i = (int32)s->GetRotation();
-		if (sizeof(int32) != node.WriteAttr("bepdf:rotation", B_INT32_TYPE, 0, &i, sizeof(i))) return false;
-		if (sizeof(page) != node.WriteAttr("bepdf:page", B_INT32_TYPE, 0, &page, sizeof(page))) return false;
-		if (sizeof(left) != node.WriteAttr("bepdf:left", B_FLOAT_TYPE, 0, &left, sizeof(left))) return false;
-		if (sizeof(top) != node.WriteAttr("bepdf:top", B_FLOAT_TYPE, 0, &top, sizeof(top))) return false;
+		if (sizeof(int32) != node.WriteAttr("bepdf:rotation", B_INT32_TYPE, 0, &i, sizeof(i)))
+			return false;
+		if (sizeof(page) != node.WriteAttr("bepdf:page", B_INT32_TYPE, 0, &page, sizeof(page)))
+			return false;
+		if (sizeof(left) != node.WriteAttr("bepdf:left", B_FLOAT_TYPE, 0, &left, sizeof(left)))
+			return false;
+		if (sizeof(top) != node.WriteAttr("bepdf:top", B_FLOAT_TYPE, 0, &top, sizeof(top)))
+			return false;
 		if (bookmarks.IsEmpty()) {
 			node.RemoveAttr("bepdf:bookmarks");
 		} else {
 			ssize_t size = bookmarks.FlattenedSize();
-			char *buffer = new char[size];
+			char* buffer = new char[size];
 			if (buffer && B_OK == bookmarks.Flatten(buffer, size)) {
 				node.WriteAttr("bepdf:bookmarks", B_MESSAGE_TYPE, 0, buffer, size);
 			}
-			delete []buffer;
+			delete[] buffer;
 		}
 		return true;
 	}

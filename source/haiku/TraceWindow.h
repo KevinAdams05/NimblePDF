@@ -37,8 +37,8 @@ class BTextView;
 
 class TraceWindow : public BWindow {
 public:
-	TraceWindow(GlobalSettings *settings);
-	void MessageReceived(BMessage *msg);
+	TraceWindow(GlobalSettings* settings);
+	void MessageReceived(BMessage* msg);
 
 	virtual void FrameMoved(BPoint point);
 	virtual void FrameResized(float w, float h);
@@ -46,47 +46,46 @@ public:
 	void WriteData(const char* name, int fd, const char* data, int len);
 	void EnableCheckboxes();
 	void UpdateWindowLookAndFeel();
-	
+
 protected:
 	enum {
-		AUTO_OPEN_MSG   = 'Auto',
+		AUTO_OPEN_MSG = 'Auto',
 		SHOW_STDOUT_MSG = 'Sout',
 		SHOW_STDERR_MSG = 'Serr',
-		CLEAR_MSG       = 'Clr ',
-		FLOATING_MSG    = 'Flot',
-		HIDE_MSG        = 'Hide'
+		CLEAR_MSG = 'Clr ',
+		FLOATING_MSG = 'Flot',
+		HIDE_MSG = 'Hide'
 	};
 
-	GlobalSettings *mSettings;
-	BPoint          mWindowPos;
-	BTextView      *mOutput;
-	BCheckBox      *mStdoutCB, 
-				   *mStderrCB;
+	GlobalSettings* mSettings;
+	BPoint mWindowPos;
+	BTextView* mOutput;
+	BCheckBox *mStdoutCB, *mStderrCB;
 
-	bool            mAutoOpen;
-	bool            mShowStdout, mShowStderr;
+	bool mAutoOpen;
+	bool mShowStdout, mShowStderr;
 };
 
 class OutputTracer {
 private:
 	static TraceWindow* mWindow;
-	static BLocker      mLock;
-	static int          mTracerCount;
-	
-	int                 mDupFd;
-	int                 mOutFd;
-	int                 mInFd;
-	BString             mName;
-	GlobalSettings*     mSettings;
-	thread_id           mPipeThread;
-	
+	static BLocker mLock;
+	static int mTracerCount;
+
+	int mDupFd;
+	int mOutFd;
+	int mInFd;
+	BString mName;
+	GlobalSettings* mSettings;
+	thread_id mPipeThread;
+
 	void WriteData(const char* data, int len);
 	void Run();
-	static int32 start_thread(void *data);
+	static int32 start_thread(void* data);
 	static TraceWindow* CreateWindow(GlobalSettings* s);
-	
+
 public:
-	OutputTracer(int fd, const char* name, GlobalSettings *settings);
+	OutputTracer(int fd, const char* name, GlobalSettings* settings);
 	~OutputTracer();
 	static void ShowWindow(GlobalSettings* s);
 };

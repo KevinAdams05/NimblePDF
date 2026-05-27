@@ -33,77 +33,73 @@
 #include "AnnotAppearance.h"
 
 struct XRefItem {
-	int offset;  // the file offset
-	int num;     // the reference number
-	int gen;     // the reference generation
-	bool used;   // is reference used?
+	int offset; // the file offset
+	int num;    // the reference number
+	int gen;    // the reference generation
+	bool used;  // is reference used?
 };
 
 class XRefTable {
-	enum {
-		INITIAL_INCREMENT = 30,
-		INCREMENT         = 10,
-		DEAD_GEN          = 65535
-	};
+	enum { INITIAL_INCREMENT = 30, INCREMENT = 10, DEAD_GEN = 65535 };
 
-	XRef*      mXRef;    // points to the files xref table
-	int        mLength;  // allocated entries
-	int        mSize;    // used entries
+	XRef* mXRef;         // points to the files xref table
+	int mLength;         // allocated entries
+	int mSize;           // used entries
 	XRefEntry* mEntries; // the updated xref table
-	
+
 	// resize mEntries to at least length elements
-	void       Resize(int length); 
-	bool       InRange(int num);
+	void Resize(int length);
+	bool InRange(int num);
 	XRefEntry* GetUnusedHead();
-	void       InsertInUnusedList(int num, XRefEntry* e);
-	Ref        ActivateUnusedEntry(XRefEntryType type);
-	Ref        AppendNewRef(XRefEntryType type);
-	
-	XRefTable() { }	
+	void InsertInUnusedList(int num, XRefEntry* e);
+	Ref ActivateUnusedEntry(XRefEntryType type);
+	Ref AppendNewRef(XRefEntryType type);
+
+	XRefTable() {}
 
 public:
 	XRefTable(XRef* xref);
 	~XRefTable();
-	
+
 	XRefEntry* GetXRef(int num);
-	int        GetSize();
-	bool       HasChanged(int num);
+	int GetSize();
+	bool HasChanged(int num);
 
 	void DeleteRef(Ref ref);
-	Ref  GetNewRef(XRefEntryType type);
+	Ref GetNewRef(XRefEntryType type);
 	void SetOffset(Ref ref, int offset);
 
 	bool NextGroup(int start, int* num, int* nof);
 };
 
 // We CAN write Line and Ink, but adding new annotations of this type is
-// not implemented. 
+// not implemented.
 class AnnotTester : public AnnotVisitor {
 public:
 	AnnotTester();
 	~AnnotTester();
 
-	void DoText(TextAnnot* a)                     { mResult = true; }
-	void DoLink(LinkAnnot* a)                     { mResult = false; }
-	void DoFreeText(FreeTextAnnot* a)             { mResult = true; }
-	void DoLine(LineAnnot* a)                     { mResult = false; }
-	void DoSquare(SquareAnnot* a)                 { mResult = true; }
-	void DoCircle(CircleAnnot* a)                 { mResult = true; }
-	void DoHighlight(HighlightAnnot* a)           { mResult = true; }
-	void DoUnderline(UnderlineAnnot* a)           { mResult = true; }
-	void DoSquiggly(SquigglyAnnot* a)             { mResult = true; }
-	void DoStrikeOut(StrikeOutAnnot* a)           { mResult = true; }
-	void DoStamp(StampAnnot* a)                   { mResult = false; }
-	void DoInk(InkAnnot* a)                       { mResult = false; }
-	void DoPopup(PopupAnnot* a)                   { mResult = true; }
+	void DoText(TextAnnot* a) { mResult = true; }
+	void DoLink(LinkAnnot* a) { mResult = false; }
+	void DoFreeText(FreeTextAnnot* a) { mResult = true; }
+	void DoLine(LineAnnot* a) { mResult = false; }
+	void DoSquare(SquareAnnot* a) { mResult = true; }
+	void DoCircle(CircleAnnot* a) { mResult = true; }
+	void DoHighlight(HighlightAnnot* a) { mResult = true; }
+	void DoUnderline(UnderlineAnnot* a) { mResult = true; }
+	void DoSquiggly(SquigglyAnnot* a) { mResult = true; }
+	void DoStrikeOut(StrikeOutAnnot* a) { mResult = true; }
+	void DoStamp(StampAnnot* a) { mResult = false; }
+	void DoInk(InkAnnot* a) { mResult = false; }
+	void DoPopup(PopupAnnot* a) { mResult = true; }
 	void DoFileAttachment(FileAttachmentAnnot* a) { mResult = false; }
-	void DoSound(SoundAnnot* a)                   { mResult = false; }
-	void DoMovie(MovieAnnot* a)                   { mResult = false; }
-	void DoWidget(WidgetAnnot* a)                 { mResult = false; }
-	void DoPrinterMark(PrinterMarkAnnot* a)       { mResult = false; }
-	void DoTrapNet(TrapNetAnnot* a)               { mResult = false; }
-	
-	bool CanWrite() { return mResult; }	
+	void DoSound(SoundAnnot* a) { mResult = false; }
+	void DoMovie(MovieAnnot* a) { mResult = false; }
+	void DoWidget(WidgetAnnot* a) { mResult = false; }
+	void DoPrinterMark(PrinterMarkAnnot* a) { mResult = false; }
+	void DoTrapNet(TrapNetAnnot* a) { mResult = false; }
+
+	bool CanWrite() { return mResult; }
 
 private:
 	bool mResult;
@@ -112,23 +108,23 @@ private:
 bool CanWrite(Annotation* annot);
 
 class AnnotWriter : public AnnotVisitor {
-	PDFDoc*         mDoc;
-	AnnotsList      mAnnots;
-	BePDFAcroForm*       mBePDFAcroForm;
-	XRef*           mXRef;
-	XRefTable       mXRefTable;
+	PDFDoc* mDoc;
+	AnnotsList mAnnots;
+	BePDFAcroForm* mBePDFAcroForm;
+	XRef* mXRef;
+	XRefTable mXRefTable;
 	// changed during pdf generation:
-	Ref             mPageRef;
-	Ref             mASRef;
-	Ref             mInfoRef;
-	Ref             mBePDFAcroFormRef;
-	std::list<PDFFont*>  mTemporaryFonts; // not already stored in old PDF file
-	std::list<PDFFont*>  mWrittenFonts;
+	Ref mPageRef;
+	Ref mASRef;
+	Ref mInfoRef;
+	Ref mBePDFAcroFormRef;
+	std::list<PDFFont*> mTemporaryFonts; // not already stored in old PDF file
+	std::list<PDFFont*> mWrittenFonts;
 
 	FILE* mFile;
-	int   mXRefOffset;
+	int mXRefOffset;
 	Object mAnnot; // used by UpdateAnnot & visitor
-	bool   mAnnotValid;
+	bool mAnnotValid;
 
 	friend void test_annot_writer(PDFDoc* doc, int page, AnnotsList* list);
 
@@ -137,7 +133,7 @@ class AnnotWriter : public AnnotVisitor {
 	void Write(Ref ref);
 	void WriteCr();
 	void WriteCrLf();
-	int  Tell();
+	int Tell();
 	void InsertWhiteSpace(Object* o);
 	void WriteObject(Object* o);
 	void WriteObject(Ref ref, Object* obj, GString* stream = NULL);
@@ -145,15 +141,15 @@ class AnnotWriter : public AnnotVisitor {
 	void CopyDict(Object* in, Object* out, char* excludeKeys[] = NULL);
 	bool WriteXRefTable();
 
-	Ref  GetModDateRef(Ref infoDictRef);
-	Ref  GetInfoDictRef();
+	Ref GetModDateRef(Ref infoDictRef);
+	Ref GetInfoDictRef();
 	void CopyInfoDict(Object* dict);
 	void GetCurrentDate(GString* date);
 	void WriteModDate(Ref ref);
 	void UpdateInfoDict();
 	bool WriteFileTrailer();
 
-/* AcroFrom:
+	/* AcroFrom:
 	1. Assign unique short names to fonts
 	   1.1. Take names from existing AcroFrom DR assign ref to font (done in BePDFAcroForm constructor)
 	   1.2. Assign to remainig fonts names in the form /F%d
@@ -174,11 +170,11 @@ class AnnotWriter : public AnnotVisitor {
 	void AddFonts(Object* dict, std::list<PDFFont*>* fonts);
 	void UpdateBePDFAcroForm();
 	void UpdateCatalog();
-	
+
 	bool CopyFile(const char* name);
 
 	bool HasRef(Object* dict, const char* key, Ref& ref);
-	bool HasAnnotRef(Object* page, Ref &annotRef);
+	bool HasAnnotRef(Object* page, Ref& annotRef);
 	bool HasEmbeddedContent(Object* page);
 	bool CopyContentStream(Object* page);
 	bool CopyPage(Object* page, Ref pageRef, Ref annotsArray);
@@ -186,7 +182,7 @@ class AnnotWriter : public AnnotVisitor {
 
 	void AddToAnnots(Object* array, Annotation* a);
 	bool UpdateAnnotArray(int pageNo, Annotations* annots, Ref annotsArray);
-	
+
 	void AddRef(Object* dict, char* key, Ref r);
 	void AddBool(Object* dict, char* key, bool b);
 	void AddName(Object* dict, char* key, char* name);
