@@ -70,8 +70,19 @@ Rules:
 
 - No underscores in type or function names (other than the `_` prefix on
   private methods).
-- No abbreviations. Write `message` not `msg`, `menuItem` not `mi`,
-  `rectangle` not `r`.
+- **Descriptive names always beat short ones.** No abbreviations, no
+  letter-soup names, even for "obvious" things. Spell it out — the few
+  extra characters pay for themselves the first time someone unfamiliar
+  reads the code.
+  - Variables: `message` not `msg`, `menuItem` not `mi`, `rectangle` not
+    `rect`/`r`, `index` not `idx`, `pointer` not `ptr`, `bookmark` not `bk`.
+  - File and class names: `AnnotationWindow` not `AWindow` or `AnnotWin`;
+    `BookmarkList` not `BKmrkLst` or `BMList`; `PageRenderer` not `PgRndr`.
+  - Method names: `LoadAnnotations()` not `LoadAnnots()`;
+    `GetCurrentPageNumber()` not `GetCurPgNum()`.
+- Exception: a few well-known abbreviations are fine when their full form
+  would be noise — `id`, `url`, `pdf`, `dpi`, `rgb`, `min`/`max`, `i`/`j`/`k`
+  for tight loop indices. When in doubt, spell it out.
 - No articles in names — avoid `aMessage`, `theView`, `MyDraw`. Prefer
   `message`, `view`, `Draw`.
 - Avoid ambiguous pairs like `ProcessMessage` / `DoProcessMessage`. Pick one
