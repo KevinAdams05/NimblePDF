@@ -51,26 +51,26 @@ public:
 	// Is this page displayed?
 	bool GetDisplayed() const { return fDisplayed; }
 
-	GBool FindText(Unicode* s,
+	bool FindText(Unicode* s,
 	    int len,
-	    GBool startAtTop,
-	    GBool stopAtBottom,
-	    GBool startAtLast,
-	    GBool stopAtLast,
-	    GBool caseSensitive,
-	    GBool backward,
+	    bool startAtTop,
+	    bool stopAtBottom,
+	    bool startAtLast,
+	    bool stopAtLast,
+	    bool caseSensitive,
+	    bool backward,
 	    double* xMin,
 	    double* yMin,
 	    double* xMax,
 	    double* yMax);
-	GString* GetText(int xMin, int yMin, int xMax, int yMax);
+	GooString* GetText(int xMin, int yMin, int xMax, int yMax);
 
 	// If point <x>,<y> is in a link, return the associated action;
 	// else return NULL.
 	LinkAction* FindLink(double x, double y);
 
 	// Return true if <x>,<y> is in a link.
-	GBool OnLink(double x, double y);
+	bool OnLink(double x, double y);
 
 	void CvtDevToUser(int dx, int dy, double* ux, double* uy);
 	void CvtUserToDev(double ux, double uy, int* dx, int* dy);

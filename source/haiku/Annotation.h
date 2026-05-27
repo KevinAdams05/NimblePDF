@@ -66,8 +66,8 @@ const char* to_date(const char* date, char* buffer); // min. buffer length == 80
 class PDFFont {
 private:
 	Ref fRef;
-	GString fName;
-	GString fShortName;
+	GooString fName;
+	GooString fShortName;
 
 public:
 	PDFFont();
@@ -232,9 +232,9 @@ public:
 class Annotation {
 private:
 	Ref fRef;
-	GString fContents; // in PDFDocEncoding or UCS2
+	GooString fContents; // in PDFDocEncoding or UCS2
 	PDFRectangle fRect;
-	GString* fDate; // optional (can be NULL)
+	GooString* fDate; // optional (can be NULL)
 	AnnotFlags fFlags;
 	// border style and border -> StyledAnnot
 	// appearence stream
@@ -243,7 +243,7 @@ private:
 	GfxRGB fColor;
 	bool fHasColor;
 	double fOpacity;
-	GString* fTitle; // optional
+	GooString* fTitle; // optional
 	// popup
 	PopupAnnot* fPopup; // optional
 	// action
@@ -274,7 +274,7 @@ protected:
 	void SetValid() { fValid = true; }
 	bool ReadNum(Array* a, int i, double& d);
 	bool ReadPoint(Array* a, int i, PDFPoint* p);
-	void SetString(GString*& s, const char* t);
+	void SetString(GooString*& s, const char* t);
 
 public:
 	Annotation(PDFRectangle rect);
@@ -287,7 +287,7 @@ public:
 	bool IsValid() const { return fValid; }
 
 	Ref GetRef() { return fRef; }
-	GString* GetContents() { return &fContents; }
+	GooString* GetContents() { return &fContents; }
 	PDFRectangle* GetRect() { return &fRect; }
 	const char* GetDate() { return fDate ? fDate->getCString() : ""; }
 	AnnotFlags* GetFlags() { return &fFlags; }
@@ -295,7 +295,7 @@ public:
 	GfxRGB* GetColor() { return &fColor; }
 	bool HasColor() { return fHasColor; }
 	double GetOpacity() { return fOpacity; }
-	GString* GetTitle() { return fTitle; }
+	GooString* GetTitle() { return fTitle; }
 	PopupAnnot* GetPopup() { return fPopup; }
 
 	virtual void Visit(AnnotVisitor* v) = 0;
@@ -307,10 +307,10 @@ public:
 
 	// Editing
 	void SetRef(const Ref ref);
-	void SetContents(GString* contents);
+	void SetContents(GooString* contents);
 	void SetDate(const char* date);
 	void SetHasColor(bool color) { fHasColor = color; }
-	void SetTitle(GString* title);
+	void SetTitle(GooString* title);
 	void SetPopup(PopupAnnot* a) { fPopup = a; }
 	void SetDeleted(bool d)
 	{
@@ -342,7 +342,7 @@ public:
 
 private:
 	bool fOpen;
-	GString fName; // default Note
+	GooString fName; // default Note
 	enum text_annot_type fType;
 
 	static const char* fTypeNames[no_of_types - 1];
@@ -398,7 +398,7 @@ const char* ToString(free_text_justification j);
 
 class FreeTextAnnot : public StyledAnnot {
 private:
-	GString fAppearance;
+	GooString fAppearance;
 	free_text_justification fJustification;
 	PDFFont* fFont;
 	GfxRGB fFontColor;
@@ -413,8 +413,8 @@ public:
 
 	Annotation* Clone() { return new FreeTextAnnot(this); }
 
-	GString* GetAppearance() { return &fAppearance; }
-	void SetAppearance(GString* ap);
+	GooString* GetAppearance() { return &fAppearance; }
+	void SetAppearance(GooString* ap);
 	free_text_justification GetJustification() { return fJustification; }
 	void SetJustification(free_text_justification j);
 	PDFFont* GetFont() const { return fFont; }
@@ -549,7 +549,7 @@ public:
 };
 
 class StampAnnot : public Annotation {
-	GString fName; // default Draft
+	GooString fName; // default Draft
 
 public:
 	StampAnnot(StampAnnot* copy);
@@ -600,8 +600,8 @@ public:
 	enum attachment_type { graphic_type, paper_clip_type, push_pin_type, tag_type, unknown_type, no_of_types };
 
 private:
-	GString fName;
-	GString fFileName;
+	GooString fName;
+	GooString fFileName;
 	enum attachment_type fType;
 	static const char* fTypeNames[no_of_types - 1];
 	FileSpec fFileSpec;
@@ -688,7 +688,7 @@ class BePDFAcroForm {
 private:
 	static PDFStandardFonts* fStandardFonts;
 	Ref fRef;
-	GString fAppearance;
+	GooString fAppearance;
 	free_text_justification fJustification;
 	std::list<PDFFont*> fFonts;
 
@@ -770,7 +770,7 @@ public:
 
 private:
 	bool fOK;
-	GString fFontName;
+	GooString fFontName;
 	float fFontSize;
 	GfxRGB fColor;
 };
@@ -778,10 +778,10 @@ private:
 class AnnotUtils {
 public:
 	// helper functions
-	static bool InUCS2(GString* s);
-	static GString* EscapeString(GString* text);
-	static GString* EscapeName(const char* text);
-	static void CurrentDate(GString* date);
+	static bool InUCS2(GooString* s);
+	static GooString* EscapeString(GooString* text);
+	static GooString* EscapeName(const char* text);
+	static void CurrentDate(GooString* date);
 };
 
 #endif

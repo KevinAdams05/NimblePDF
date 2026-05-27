@@ -129,14 +129,14 @@ class AnnotWriter : public AnnotVisitor {
 	friend void test_annot_writer(PDFDoc* doc, int page, AnnotsList* list);
 
 	void Write(const char* s);
-	void Write(GString* s);
+	void Write(GooString* s);
 	void Write(Ref ref);
 	void WriteCr();
 	void WriteCrLf();
 	int Tell();
 	void InsertWhiteSpace(Object* o);
 	void WriteObject(Object* o);
-	void WriteObject(Ref ref, Object* obj, GString* stream = NULL);
+	void WriteObject(Ref ref, Object* obj, GooString* stream = NULL);
 	bool IsInList(char* s, char* list[]);
 	void CopyDict(Object* in, Object* out, char* excludeKeys[] = NULL);
 	bool WriteXRefTable();
@@ -144,7 +144,7 @@ class AnnotWriter : public AnnotVisitor {
 	Ref GetModDateRef(Ref infoDictRef);
 	Ref GetInfoDictRef();
 	void CopyInfoDict(Object* dict);
-	void GetCurrentDate(GString* date);
+	void GetCurrentDate(GooString* date);
 	void WriteModDate(Ref ref);
 	void UpdateInfoDict();
 	bool WriteFileTrailer();
@@ -186,7 +186,7 @@ class AnnotWriter : public AnnotVisitor {
 	void AddRef(Object* dict, char* key, Ref r);
 	void AddBool(Object* dict, char* key, bool b);
 	void AddName(Object* dict, char* key, char* name);
-	void AddString(Object* dict, char* key, GString* string);
+	void AddString(Object* dict, char* key, GooString* string);
 	void AddString(Object* dict, char* key, char* string);
 	void AddInteger(Object* dict, char* key, int i);
 	void AddReal(Object* dict, char* key, double r);

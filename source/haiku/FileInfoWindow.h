@@ -68,7 +68,7 @@ class FileInfoWindow : public BWindow {
 	struct Font {
 		Ref ref;
 		BString name;
-		Font(Ref r, GString* s)
+		Font(Ref r, GooString* s)
 		{
 			ref = r;
 			if (s) {

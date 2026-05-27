@@ -75,7 +75,7 @@ public:
 private:
 	static void RedrawCallback(void* data, int left, int top, int right, int bottom, bool composited);
 	void Redraw(int left, int top, int right, int bottom, bool composited);
-	static GBool AbortCheckCallback(void* data);
+	static bool AbortCheckCallback(void* data);
 
 	PDFView* fView;
 	PDFDoc* fDoc;
@@ -128,7 +128,7 @@ PrintView::PrintView(PDFView* view, PDFDoc* doc, PageRenderer* pageRenderer, BMe
 		colorMode = BeSplashOutputDev::kGrayScaleMode;
 	}
 
-	fOutputDev = new BeSplashOutputDev(gFalse, backgroundColor, gFalse, RedrawCallback, this, colorMode);
+	fOutputDev = new BeSplashOutputDev(false, backgroundColor, false, RedrawCallback, this, colorMode);
 
 	fOutputDev->startDoc(NULL);
 	fOutputDev->startDoc(doc->getXRef());
@@ -136,7 +136,7 @@ PrintView::PrintView(PDFView* view, PDFDoc* doc, PageRenderer* pageRenderer, BMe
 
 
 ///////////////////////////////////////////////////////////////////////////
-GBool PrintView::AbortCheckCallback(void* data)
+bool PrintView::AbortCheckCallback(void* data)
 {
 	PrintView* printView = static_cast<PrintView*>(data);
 	PrintingProgressWindow* progress = printView->fProgressWindow;
@@ -203,9 +203,9 @@ void PrintView::Draw(BRect updateRect)
 			    dpi,
 			    dpi, // h/v DPI
 			    fRotation,
-			    gFalse, // use media box
-			    gFalse, // crop
-			    gTrue,  // printing
+			    false, // use media box
+			    false, // crop
+			    true,  // printing
 			    0,      // slice X
 			    fSliceY,
 			    fPageWidth, // slice width
@@ -219,9 +219,9 @@ void PrintView::Draw(BRect updateRect)
 		    dpi,
 		    dpi, // h/v DPI
 		    fRotation,
-		    gFalse, // use media box
-		    gFalse, // crop
-		    gTrue,  // printing
+		    false, // use media box
+		    false, // crop
+		    true,  // printing
 		    AbortCheckCallback,
 		    this);
 #endif

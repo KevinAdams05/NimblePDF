@@ -75,7 +75,7 @@ LinkAction* CachedPage::FindLink(double x, double y)
 	}
 }
 
-GBool CachedPage::OnLink(double x, double y)
+bool CachedPage::OnLink(double x, double y)
 {
 	if (fLinks) {
 		return fLinks->onLink(x, y);
@@ -90,14 +90,14 @@ void CachedPage::SetText(TextPage* text)
 	fText = text;
 }
 
-GBool CachedPage::FindText(Unicode* s,
+bool CachedPage::FindText(Unicode* s,
     int len,
-    GBool startAtTop,
-    GBool stopAtBottom,
-    GBool startAtLast,
-    GBool stopAtLast,
-    GBool caseSensitive,
-    GBool backward,
+    bool startAtTop,
+    bool stopAtBottom,
+    bool startAtLast,
+    bool stopAtLast,
+    bool caseSensitive,
+    bool backward,
     double* xMin,
     double* yMin,
     double* xMax,
@@ -117,12 +117,12 @@ GBool CachedPage::FindText(Unicode* s,
 	        yMin,
 	        xMax,
 	        yMax)) {
-		return gTrue;
+		return true;
 	}
-	return gFalse;
+	return false;
 }
 
-GString* CachedPage::GetText(int xMin, int yMin, int xMax, int yMax)
+GooString* CachedPage::GetText(int xMin, int yMin, int xMax, int yMax)
 {
 	if (fText) {
 		return fText->getText((double)xMin, (double)yMin, (double)xMax, (double)yMax);

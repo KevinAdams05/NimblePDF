@@ -48,7 +48,7 @@ public:
 
 	// start rendering of a page asynchronosly
 	// returns an unique identifier in id (id is greater than or equal to zero)
-	void Start(CachedPage* page, int pageNo, int zoom, int rotate, GBool doLinks, thread_id* id);
+	void Start(CachedPage* page, int pageNo, int zoom, int rotate, bool doLinks, thread_id* id);
 	// abort rendering process asynchronosly
 	void Abort();
 	// waits for rendering process to finish; returns immediatly when no process runs

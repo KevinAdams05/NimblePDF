@@ -32,7 +32,7 @@ class TreeParser {
 	bool ParseEntries(Array* nums);
 	bool ParseKids(Array* kids);
 
-	GString entryKey;
+	GooString entryKey;
 	char* GetEntryKey() { return entryKey.getCString(); };
 
 public:

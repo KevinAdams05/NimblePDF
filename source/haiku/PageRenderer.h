@@ -53,8 +53,8 @@ protected:
 	// callback from rendering thread; does the rendering
 	void Render();
 	static void RedrawCallback(void* data, int left, int top, int right, int bottom, bool composited);
-	static GBool AbortCheckCallback(void* data);
-	static GBool AnnotDisplayDecideCallback(Annot* annot, void* data);
+	static bool AbortCheckCallback(void* data);
+	static bool AnnotDisplayDecideCallback(Annot* annot, void* data);
 	void Notify(uint32 what);
 
 	BString fGSDriver;

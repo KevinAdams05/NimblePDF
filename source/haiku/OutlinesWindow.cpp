@@ -157,7 +157,7 @@ void OutlineListItem::SetLink(LinkDest* dest)
 	}
 };
 
-void OutlineListItem::SetLink(GString* s)
+void OutlineListItem::SetLink(GooString* s)
 {
 	if (fType == linkUndefined) {
 		fType = linkString;
@@ -214,7 +214,7 @@ void OutlinesView::ReadOutlines(Object* o, uint32 level)
 			Object dest;
 			if (current->dictLookup("Dest", &dest)) {
 				if (dest.isName()) {
-					item->SetLink(new GString(dest.getName()));
+					item->SetLink(new GooString(dest.getName()));
 				} else if (dest.isArray()) {
 					item->SetLink(new LinkDest(dest.getArray()));
 				} else if (dest.isString()) {
@@ -231,7 +231,7 @@ void OutlinesView::ReadOutlines(Object* o, uint32 level)
 				if (s.isName("GoTo")) {
 					dict.dictLookup("D", &dest);
 					if (dest.isName()) {
-						item->SetLink(new GString(dest.getName()));
+						item->SetLink(new GooString(dest.getName()));
 					} else if (dest.isArray()) {
 						item->SetLink(new LinkDest(dest.getArray()));
 					} else if (dest.isString()) {

@@ -399,7 +399,7 @@ Annotation::Annotation(Dict* d)
 	obj.free();
 
 	if (d->lookup("M", &obj) && obj.isString()) {
-		fDate = new GString(obj.getString()->getCString());
+		fDate = new GooString(obj.getString()->getCString());
 	}
 	obj.free();
 
@@ -440,7 +440,7 @@ Annotation::Annotation(Dict* d)
 	obj.free();
 
 	if (d->lookup("T", &obj) && obj.isString()) {
-		fTitle = new GString(obj.getString());
+		fTitle = new GooString(obj.getString());
 	}
 	obj.free();
 
@@ -535,18 +535,18 @@ void Annotation::SetRef(const Ref ref)
 	fRef = ref;
 }
 
-void Annotation::SetContents(GString* c)
+void Annotation::SetContents(GooString* c)
 {
 	fContents.clear()->append(c);
 }
 
-void Annotation::SetString(GString*& s, const char* t)
+void Annotation::SetString(GooString*& s, const char* t)
 {
 	if (t) {
 		if (s) {
 			s->clear()->append(t);
 		} else {
-			s = new GString(t);
+			s = new GooString(t);
 		}
 	} else {
 		delete s;
@@ -559,12 +559,12 @@ void Annotation::SetDate(const char* date)
 	SetString(fDate, date);
 }
 
-void Annotation::SetTitle(GString* title)
+void Annotation::SetTitle(GooString* title)
 {
 	if (fTitle) {
 		fTitle->clear()->append(title);
 	} else {
-		fTitle = new GString(title);
+		fTitle = new GooString(title);
 	}
 }
 
@@ -793,7 +793,7 @@ void FreeTextAnnot::Print()
 	}
 }
 
-void FreeTextAnnot::SetAppearance(GString* ap)
+void FreeTextAnnot::SetAppearance(GooString* ap)
 {
 	fAppearance.clear()->append(ap);
 }
@@ -1328,8 +1328,8 @@ BePDFAcroForm::~BePDFAcroForm()
 void BePDFAcroForm::ParseFont(const char* shortName, Ref ref, Dict* dict)
 {
 	bool isType1;
-	GString baseFont;
-	GString encoding;
+	GooString baseFont;
+	GooString encoding;
 	bool hasSupportedEncoding = false;
 	PDFFont* font;
 	int firstChar = 0;
@@ -1717,7 +1717,7 @@ AppearanceStringParser::AppearanceStringParser(const char* as)
 
 // Implementation of AnnotUtils
 
-bool AnnotUtils::InUCS2(GString* s)
+bool AnnotUtils::InUCS2(GooString* s)
 {
 	if (s->getLength() < 2) {
 		return false;
@@ -1726,11 +1726,11 @@ bool AnnotUtils::InUCS2(GString* s)
 	return t[0] == 0xfe && t[1] == 0xff;
 }
 
-GString* AnnotUtils::EscapeString(GString* text)
+GooString* AnnotUtils::EscapeString(GooString* text)
 {
 	const char* t = text->getCString();
 	int len = text->getLength();
-	GString* s = new GString();
+	GooString* s = new GooString();
 	while (len > 0) {
 		len--;
 
@@ -1764,9 +1764,9 @@ GString* AnnotUtils::EscapeString(GString* text)
 	return s;
 }
 
-GString* AnnotUtils::EscapeName(const char* t)
+GooString* AnnotUtils::EscapeName(const char* t)
 {
-	GString* s = new GString();
+	GooString* s = new GooString();
 	char b[80];
 	if (t != NULL) {
 		while (*t != 0) {
@@ -1782,7 +1782,7 @@ GString* AnnotUtils::EscapeName(const char* t)
 	return s;
 }
 
-void AnnotUtils::CurrentDate(GString* date)
+void AnnotUtils::CurrentDate(GooString* date)
 {
 	time_t tme;
 	struct tm tm;

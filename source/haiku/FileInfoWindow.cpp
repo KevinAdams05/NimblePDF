@@ -161,7 +161,7 @@ BString* FileInfoWindow::GetProperty(Dict* dict, const char* key, time_t* time)
 	if ((item = dict->lookup((char*)key, &obj)) != NULL) {
 		ObjType type = item->getType();
 		if (type == objString) {
-			GString* string = item->getString();
+			GooString* string = item->getString();
 			const char* s = string->getCString();
 			const char* date = ToDate(s, time);
 			if (date != s) {
@@ -204,7 +204,7 @@ bool FileInfoWindow::AddFont(BList* list, GfxFont* font)
 	return true;
 }
 
-static void GetGString(BString& s, GString* g)
+static void GetGString(BString& s, GooString* g)
 {
 	if (g) {
 		BString* utf8 = TextToUtf8(g->getCString(), g->getLength());

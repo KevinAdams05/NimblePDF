@@ -118,12 +118,12 @@ bool FileSpec::IsValid()
 	return fFileName.getLength() > 0 && !is_empty_ref(fRef);
 }
 
-GString* FileSpec::GetDescription()
+GooString* FileSpec::GetDescription()
 {
 	return &fDescription;
 }
 
-GString* FileSpec::GetFileName()
+GooString* FileSpec::GetFileName()
 {
 	return &fFileName;
 }

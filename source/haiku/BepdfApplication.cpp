@@ -33,14 +33,16 @@
 #include <Deskbar.h>
 #include <Alert.h>
 
-#include <gtypes.h>
-#include <GHash.h>
-#include <parseargs.h>
 #include "Logging.h"
-#include "config.h"
+// xpdf "config.h" and "Error.h" replaced by poppler headers; pkg-config
+// adds the poppler header path.
 #include "Error.h"
 
-#include "Init.h"
+// xpdf-era "Init.h" + parseargs / GetGlobalArgDesc / GetPrintHelp are
+// gone in the poppler migration. argv parsing and global init are now
+// inlined in ArgvReceived (see TODO there). Phase G will replace
+// InitXpdf with poppler's GlobalParams setup.
+
 #include "PDFWindow.h"
 #include "BepdfApplication.h"
 #include "ResourceLoader.h"
@@ -191,14 +193,16 @@ BepdfApplication::BepdfApplication()
 	InitBePDF();
 }
 
+#include <memory>
+#include <vector>
+
 #include <GlobalParams.h>
-#include <GList.h>
-#include <GString.h>
+#include <GooString.h>
 #include "DisplayCIDFonts.h"
 
 static void setGlobalParameter(const char* type, const char* arg1, const char* arg2 = NULL)
 {
-	GString line;
+	GooString line;
 	line.append(type);
 	line.append(" ");
 	line.append(arg1);
@@ -206,23 +210,28 @@ static void setGlobalParameter(const char* type, const char* arg1, const char* a
 		line.append(" ");
 		line.append(arg2);
 	}
-	GString name("BepdfApplication");
+	GooString name("BepdfApplication");
 	globalParams->parseLine(line.getCString(), &name, 0);
 }
 
-/* copied from xpdf/GlobalParams.cc as it was removed in XPDF 4 */
-GList* getCIDToUnicodeNames(GlobalParams* globalParams)
+/*
+ * Originally copied from xpdf/GlobalParams.cc (the function was removed
+ * in XPDF 4). xpdf's cidToUnicodes was a GHash<GooString*, void*>
+ * iterated via startIter/getNext/killIter. Poppler's GlobalParams does
+ * not expose cidToUnicodes; the equivalent walk needs a different
+ * accessor.
+ *
+ * TODO(poppler-migration, phase G): rewrite against poppler's GlobalParams
+ * CID-font enumeration API (likely getCIDToUnicode / mapCIDToUnicode
+ * iteration, or fall back to walking the CIDFont resource directly).
+ *
+ * For now this returns an empty vector so Phase A type swaps compile.
+ * Effect at runtime: CJK display-CID-font auto-discovery in
+ * BepdfApplication::Initialize is a no-op until the rewrite lands.
+ */
+std::vector<GooString*>* getCIDToUnicodeNames(GlobalParams* globalParams)
 {
-	GList* list = new GList();
-	GString* key;
-	void* value;
-	GHashIter* iter = NULL;
-	globalParams->cidToUnicodes->startIter(&iter);
-	while (globalParams->cidToUnicodes->getNext(&iter, &key, &value)) {
-		list->append(key->copy());
-	}
-	globalParams->cidToUnicodes->killIter(&iter);
-	return list;
+	return new std::vector<GooString*>();
 }
 
 void BepdfApplication::Initialize()
@@ -238,7 +247,15 @@ void BepdfApplication::Initialize()
 		BPath encodingDirectory(fAppPath);
 		encodingDirectory.Append("encodings");
 
-		InitXpdf(NULL, fontDirectory.Path(), encodingDirectory.Path());
+		// TODO(poppler-migration, phase G): replace the bundled-font and
+		// encoding-dir setup that InitXpdf() did with the poppler
+		// equivalent. Poppler's GlobalParams reads system fontconfig
+		// rather than a custom encodings/ tree; the dist/encodings tree
+		// becomes superfluous on Haiku once this lands. For Phase A we
+		// just instantiate GlobalParams so document opens don't crash.
+		globalParams = std::make_unique<GlobalParams>();
+		(void)fontDirectory;
+		(void)encodingDirectory;
 
 		// system fonts
 		BPath systemFontsPath;
@@ -262,9 +279,9 @@ void BepdfApplication::Initialize()
 
 		// record new names
 		bool foundNewName = false;
-		GList* list = getCIDToUnicodeNames(globalParams);
-		for (int i = 0; i < list->getLength(); i++) {
-			GString* name = (GString*)list->get(i);
+		std::vector<GooString*>* list = getCIDToUnicodeNames(globalParams);
+		for (size_t i = 0; i < list->size(); i++) {
+			GooString* name = list->at(i);
 			if (displayNames.Contains(name->getCString())) {
 				continue;
 			}
@@ -282,7 +299,7 @@ void BepdfApplication::Initialize()
 
 		// set CID fonts
 		for (int i = 0; i < list->getLength(); i++) {
-			GString* name = (GString*)list->get(i);
+			GooString* name = (GooString*)list->get(i);
 			BString file;
 			DisplayCIDFonts::Type type;
 
@@ -298,7 +315,7 @@ void BepdfApplication::Initialize()
 			}
 		}
 
-		deleteGList(list, GString);
+		deleteGList(list, GooString);
 	}
 }
 
@@ -684,24 +701,24 @@ void BepdfApplication::MessageReceived(BMessage* msg)
 ///////////////////////////////////////////////////////////
 void BepdfApplication::ArgvReceived(int32 argc, char** argv)
 {
-	GBool ok;
+	// TODO(poppler-migration, phase G): xpdf provided parseArgs() with
+	// ArgDesc tables for flag-style command-line parsing (e.g. -h, -v).
+	// Reimplement that against a Haiku-friendly option parser or just
+	// drop the flag handling — the GUI launch path doesn't need it.
+	// For Phase A we accept argv[1] as the PDF path and argv[2] (if
+	// given) as the page number; no flags.
 	int pg;
 	entry_ref fileToOpen;
 
-	// copy args because parseArgs might be change it
 	char** argvCopy = new char*[argc];
 	for (int i = 0; i < argc; i++) {
 		argvCopy[i] = argv[i];
 	}
 
-	int intArgc = argc;
-	ok = parseArgs(GetGlobalArgDesc(), &intArgc, argvCopy);
-	argc = intArgc;
-
-	// check command line
-	if (!ok || !(argc == 2 || argc == 3) || GetPrintHelp()) {
-		printUsage(argvCopy[0], "[<PDF-file> [<page>]]", GetGlobalArgDesc());
-		exit(1);
+	if (!(argc == 2 || argc == 3)) {
+		Trace(LOG_ERR, "usage: %s <pdf-path> [<page>]", argv[0]);
+		be_app->PostMessage(B_QUIT_REQUESTED);
+		return;
 	}
 	if (argc == 3) {
 		pg = atoi(argvCopy[2]);

@@ -93,8 +93,10 @@ RSRCS =
 #	- 	if your library does not follow the standard library naming scheme,
 #		you need to specify the path to the library and it's name.
 #		(e.g. for mylib.a, specify "mylib.a" or "path/mylib.a")
+#	xpdf removed in poppler migration; poppler is linked via pkg-config in
+#	LINKER_FLAGS above.
 LIBS = shared be textencoding columnlistview tracker translation localestub \
-	../xpdf/libxpdf.a $(STDCPPLIBS)
+	$(STDCPPLIBS)
 
 #	Specify additional paths to directories following the standard libXXX.so
 #	or libXXX.a naming scheme. You can specify full paths or paths relative
@@ -106,13 +108,11 @@ LIBPATHS =
 #	Additional paths to look for system headers. These use the form
 #	"#include <header>". Directories that contain the files in SRCS are
 #	NOT auto-included here.
-SYSTEM_INCLUDE_PATHS = ../xpdf \
-	../xpdf/beos \
-	../xpdf/fofi \
-	../xpdf/goo \
-	../xpdf/splash \
-	../xpdf/xpdf \
-	/system/develop/headers/private/interface
+#
+#	xpdf paths removed in poppler migration; poppler include paths come
+#	from `pkg-config --cflags poppler` in COMPILER_FLAGS above. This list
+#	now only carries Haiku-private headers we still need.
+SYSTEM_INCLUDE_PATHS = /system/develop/headers/private/interface
 
 #	Additional paths paths to look for local headers. These use the form
 #	#include "header". Directories that contain the files in SRCS are
@@ -150,10 +150,11 @@ SYMBOLS :=
 DEBUGGER :=
 
 #	Specify any additional compiler flags to be used.
-COMPILER_FLAGS = -Wno-write-strings
+#	Poppler 25.12's UnicodeMap.h uses std::span, which is C++20.
+COMPILER_FLAGS = -std=c++20 -Wno-write-strings $(shell pkg-config --cflags poppler)
 
 #	Specify any additional linker flags to be used.
-LINKER_FLAGS = $(shell pkg-config --libs freetype2)
+LINKER_FLAGS = $(shell pkg-config --libs poppler)
 
 #	Specify the version of this binary. Example:
 #		-app 3 4 0 d 0 -short 340 -long "340 "`echo -n -e '\302\251'`"1999 GNU GPL"

@@ -67,7 +67,7 @@ class OutlineListItem : public BListItem {
 	enum { linkDest, linkPageNum, linkString, linkUndefined } fType;
 	union {
 		LinkDest* dest;
-		GString* string;
+		GooString* string;
 		int pageNum;
 	} fLink;
 	OutlineStyle* fStyle;
@@ -78,7 +78,7 @@ public:
 	const char* Text() const { return fString.String(); }
 	void SetStyle(OutlineStyle* style) { fStyle = style; }
 	void SetLink(LinkDest* dest);
-	void SetLink(GString* s);
+	void SetLink(GooString* s);
 	void SetPageNum(int pageNum);
 
 	void DrawItem(BView* owner, BRect frame, bool complete);
@@ -87,7 +87,7 @@ public:
 	bool isString() const { return fType == linkString; }
 	bool isPageNum() const { return fType == linkPageNum; }
 	LinkDest* getDest() const { return fLink.dest; }
-	GString* getString() const { return fLink.string; }
+	GooString* getString() const { return fLink.string; }
 	int getPageNum() const { return fLink.pageNum; }
 };
 

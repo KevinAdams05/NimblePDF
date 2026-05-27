@@ -34,7 +34,7 @@
 
 // Implementation of A85Encoder
 
-A85Encoder::A85Encoder(GString* stream)
+A85Encoder::A85Encoder(GooString* stream)
     : fStream(stream),
       fLength(0)
 {}
@@ -100,7 +100,7 @@ void GraphicsStream::Append(const char* s)
 	fStream.append(s);
 }
 
-void GraphicsStream::Append(GString* s)
+void GraphicsStream::Append(GooString* s)
 {
 	fStream.append(s);
 }
@@ -379,7 +379,7 @@ void AnnotAppearance::DoFreeText(FreeTextAnnot* a)
 	fAS.Add("BT");
 		fAS.AddCr(a->GetAppearance()->getCString());
 		fAS.AddCr("0 0 Td");
-		GString* s = AnnotUtils::EscapeString(a->GetContents());
+		GooString* s = AnnotUtils::EscapeString(a->GetContents());
 		fAS.Append("(");
 		fAS.Append(s);
 		fAS.AddCr(") Tj");

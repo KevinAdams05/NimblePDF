@@ -52,7 +52,6 @@
 // xpdf
 #include <TextOutputDev.h>
 #include <Gfx.h>
-#include <gfile.h>
 // BePDF
 #include "Logging.h"
 #include "AnnotationWindow.h"
@@ -177,13 +176,13 @@ void PDFView::SetPassword(const char* ownerPassword, const char* userPassword)
 }
 
 ///////////////////////////////////////////////////////////////////////////
-GString* PDFView::ConvertPassword(const char* password)
+GooString* PDFView::ConvertPassword(const char* password)
 {
-	GString* pwd = NULL;
+	GooString* pwd = NULL;
 	if (password != NULL) {
 		BString* s = ToAscii(password);
 		if (s) {
-			pwd = new GString(s->String());
+			pwd = new GooString(s->String());
 			delete s;
 		}
 	}
@@ -236,9 +235,9 @@ bool PDFView::OpenFile(entry_ref* ref, const char* ownerPassword, const char* us
 	BPath path;
 	entry.GetPath(&path);
 
-	GString* fileName = new GString((char*)path.Path());
-	GString* owner = ConvertPassword(ownerPassword);
-	GString* user = ConvertPassword(userPassword);
+	GooString* fileName = new GooString((char*)path.Path());
+	GooString* owner = ConvertPassword(ownerPassword);
+	GooString* user = ConvertPassword(userPassword);
 
 	PDFDoc* newDoc = new PDFDoc(fileName, owner, user, NULL);
 	delete owner;
@@ -799,7 +798,7 @@ bool PDFView::OnAnnotation(BPoint point)
 ///////////////////////////////////////////////////////////////////////////
 void PDFView::CurrentDate(BString& date)
 {
-	GString s;
+	GooString s;
 	AnnotUtils::CurrentDate(&s);
 	date = s.getCString();
 }
@@ -824,7 +823,7 @@ void PDFView::InsertAnnotation(BPoint where, bool* hasFixedSize)
 	}
 
 	fAnnotation->MoveTo(CvtDevToUser(CorrectMousePos(where)));
-	GString* t = Utf8ToUcs2(gApp->GetSettings()->GetAuthor());
+	GooString* t = Utf8ToUcs2(gApp->GetSettings()->GetAuthor());
 	fAnnotation->SetTitle(t);
 	delete t;
 	fAnnotation->SetDate(date.String());
@@ -1330,8 +1329,8 @@ LinkAction* PDFView::OnLink(BPoint point)
 bool PDFView::IsLinkToPDF(LinkAction* action, BString* path)
 {
 	LinkDest* dest = NULL;
-	GString* namedDest = NULL;
-	GString* fileName;
+	GooString* namedDest = NULL;
+	GooString* fileName;
 	char* s;
 
 	if (action->getKind() == actionGoToR) {
@@ -1343,7 +1342,7 @@ bool PDFView::IsLinkToPDF(LinkAction* action, BString* path)
 			namedDest = namedDest->copy();
 		s = ((LinkGoToR*)action)->getFileName()->getCString();
 		if (isAbsolutePath(s))
-			fileName = new GString(s);
+			fileName = new GooString(s);
 		else
 			fileName = appendToPath(grabPath(fDoc->getFileName()->getCString()), s);
 		*path = fileName->getCString();
@@ -1371,9 +1370,9 @@ bool PDFView::HandleLink(BPoint point)
 	LinkAction* action = NULL;
 	LinkActionKind kind;
 	LinkDest* dest = NULL;
-	GString* namedDest = NULL;
-	GString* fileName;
-	GString* actionName;
+	GooString* namedDest = NULL;
+	GooString* fileName;
+	GooString* actionName;
 	BString pdfFile;
 
 	action = OnLink(point);
@@ -1919,7 +1918,7 @@ void PDFView::MoveToPage(int num, int gen, bool top)
 void PDFView::MoveToPage(const char* string, bool top)
 {
 	WaitForPage(true);
-	GString* s = new GString(string);
+	GooString* s = new GooString(string);
 	LinkDest* link = fDoc->getCatalog()->findDest(s);
 	delete s;
 	if (link) {
@@ -2180,7 +2179,7 @@ void PDFView::GetSelection(int& xMin, int& yMin, int& xMax, int& yMax)
 BString* PDFView::GetSelectedText()
 {
 	if (!fRendering && (fSelected == SELECTED) && (fSelection.left < fSelection.right) && (fSelection.top < fSelection.bottom)) {
-		GString* s = fPage->GetText(fSelection.left, fSelection.top, fSelection.right, fSelection.bottom);
+		GooString* s = fPage->GetText(fSelection.left, fSelection.top, fSelection.right, fSelection.bottom);
 		if (s) {
 			BString* str = new BString(s->getCString());
 			delete s;
@@ -2494,7 +2493,7 @@ void PDFView::UpdateAnnotation(Annotation* a, const char* contents, const char* 
 {
 	if (fAnnotInEditor == a) {
 		ASSERT(a != NULL);
-		GString* c = Utf8ToUcs2(contents);
+		GooString* c = Utf8ToUcs2(contents);
 		fAnnotInEditor->SetContents(c);
 		fAnnotInEditor->SetChanged();
 		FreeTextAnnot* ft = dynamic_cast<FreeTextAnnot*>(fAnnotInEditor);

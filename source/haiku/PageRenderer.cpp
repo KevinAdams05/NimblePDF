@@ -22,7 +22,6 @@
 
 #include <Message.h>
 
-#include <gtypes.h>
 #include <Object.h>
 #include <Gfx.h>
 #include <PSOutputDev.h>
@@ -69,13 +68,13 @@ void PageRenderer::RedrawCallback(void* data, int left, int top, int right, int 
 	renderer->Notify(UPDATE_MSG);
 }
 
-GBool PageRenderer::AbortCheckCallback(void* data)
+bool PageRenderer::AbortCheckCallback(void* data)
 {
 	PageRenderer* renderer = static_cast<PageRenderer*>(data);
 	return !renderer->fDoRendering;
 }
 
-GBool PageRenderer::AnnotDisplayDecideCallback(Annot* annot, void* data)
+bool PageRenderer::AnnotDisplayDecideCallback(Annot* annot, void* data)
 {
 	return false;
 }
@@ -86,9 +85,9 @@ PageRenderer::PageRenderer()
       fUserPassword(NULL),
       fDoc(NULL),
       fOffscreenView(new BView(BRect(0, 0, 100, 100), "", B_FOLLOW_NONE, B_WILL_DRAW | B_SUBPIXEL_PRECISE)),
-      fOutputDev(new BeSplashOutputDev(gFalse,
+      fOutputDev(new BeSplashOutputDev(false,
           getPaperColor(),
-          gTrue, // incremental
+          true, // incremental
           RedrawCallback,
           this)),
       fLooper(NULL),
@@ -264,9 +263,9 @@ void PageRenderer::Draw(int page, int pageNo, float left, float top)
 	    fZoom,
 	    fZoom, // h/v DPI
 	    fRotate,
-	    gFalse, // use media box
-	    gFalse, // crop
-	    gTrue,  // printing
+	    false, // use media box
+	    false, // crop
+	    true,  // printing
 	    AbortCheckCallback,
 	    this); // , AnnotDisplayDecideCallback, this
 	fOffscreenView->Sync();

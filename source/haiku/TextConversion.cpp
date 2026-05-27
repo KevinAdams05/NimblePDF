@@ -76,7 +76,7 @@ BString* TextToUtf8(const char* string, int32 len)
 	}
 }
 
-bool TextToUtf8(GString* string, BString* result)
+bool TextToUtf8(GooString* string, BString* result)
 {
 	if (string->getCString() == NULL) {
 		return false;
@@ -92,14 +92,14 @@ bool TextToUtf8(GString* string, BString* result)
 	return true;
 }
 
-GString* Utf8ToUcs2(const char* string, bool addOrderMarker)
+GooString* Utf8ToUcs2(const char* string, bool addOrderMarker)
 {
 	int32 len = strlen(string);
 	int32 srcLen = len, destLen = 255;
 	int32 state = 0;
 	char buffer[256];
 	int32 srcStart = 0;
-	GString* str = new GString();
+	GooString* str = new GooString();
 	if (len == 0)
 		return str;
 	if (addOrderMarker) {
@@ -121,7 +121,7 @@ GString* Utf8ToUcs2(const char* string, bool addOrderMarker)
 
 Unicode* Utf8ToUnicode(const char* string, int32* length)
 {
-	GString* ucs2 = Utf8ToUcs2(string, false);
+	GooString* ucs2 = Utf8ToUcs2(string, false);
 	if (ucs2 == NULL) {
 		return NULL;
 	}

@@ -24,7 +24,7 @@
 #define FILE_SPEC_H
 
 // xpdf
-#include <GString.h>
+#include <GooString.h>
 #include <Object.h>
 #include <XRef.h>
 
@@ -41,8 +41,8 @@ public:
 	};
 
 private:
-	GString fDescription;
-	GString fFileName;
+	GooString fDescription;
+	GooString fFileName;
 	Ref fRef;
 
 	bool ReadFileName(Dict* fileSpec);
@@ -61,9 +61,9 @@ public:
 
 	bool SetTo(Dict* fileSpec);
 	// Returns description. Can be empty.
-	GString* GetDescription();
+	GooString* GetDescription();
 	// Returns file name.
-	GString* GetFileName();
+	GooString* GetFileName();
 	// Save embedded file to file
 	SaveReturnCode Save(XRef* xref, const char* file);
 };

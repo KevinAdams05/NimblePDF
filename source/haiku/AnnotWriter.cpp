@@ -224,7 +224,7 @@ void AnnotWriter::Write(const char* s)
 	fprintf(fFile, "%s", s);
 }
 
-void AnnotWriter::Write(GString* s)
+void AnnotWriter::Write(GooString* s)
 {
 	fwrite(s->getCString(), s->getLength(), 1, fFile);
 }
@@ -273,7 +273,7 @@ void AnnotWriter::WriteObject(Object* obj)
 	ASSERT(fFile != NULL);
 	int i;
 	Object o;
-	GString* s = NULL;
+	GooString* s = NULL;
 
 	switch (obj->getType()) {
 		// simple objects
@@ -347,7 +347,7 @@ void AnnotWriter::WriteObject(Object* obj)
 	delete s;
 }
 
-void AnnotWriter::WriteObject(Ref ref, Object* obj, GString* stream)
+void AnnotWriter::WriteObject(Ref ref, Object* obj, GooString* stream)
 {
 	fXRefTable.SetOffset(ref, Tell());
 	Write(ref);
@@ -451,7 +451,7 @@ void AnnotWriter::CopyInfoDict(Object* dict)
 
 void AnnotWriter::WriteModDate(Ref ref)
 {
-	GString* date = new GString();
+	GooString* date = new GooString();
 	AnnotUtils::CurrentDate(date);
 
 	Object obj;
@@ -502,7 +502,7 @@ bool AnnotWriter::WriteFileTrailer()
 
 bool AnnotWriter::CopyFile(const char* name)
 {
-	GString n(name);
+	GooString n(name);
 	return fDoc->saveAs(&n);
 }
 
@@ -769,11 +769,11 @@ void AnnotWriter::AddName(Object* dict, char* key, char* name)
 }
 
 
-void AnnotWriter::AddString(Object* dict, char* key, GString* string)
+void AnnotWriter::AddString(Object* dict, char* key, GooString* string)
 {
 	ASSERT(dict->isDict());
 	Object n;
-	n.initString(new GString(string));
+	n.initString(new GooString(string));
 	dict->dictAdd(copyString(key), &n);
 }
 
@@ -782,7 +782,7 @@ void AnnotWriter::AddString(Object* dict, char* key, char* string)
 {
 	ASSERT(dict->isDict());
 	Object n;
-	n.initString(new GString(string));
+	n.initString(new GooString(string));
 	dict->dictAdd(copyString(key), &n);
 }
 
@@ -959,7 +959,7 @@ void AnnotWriter::DoLink(LinkAnnot* a)
 
 void AnnotWriter::DoFreeText(FreeTextAnnot* a)
 {
-	GString appearance;
+	GooString appearance;
 	char buf[250];
 	PDFFont* font;
 	GfxRGB* color;
@@ -1127,7 +1127,7 @@ void AnnotWriter::AssignShortFontNames()
 	for (int i = 0; i < stdFonts->CountFonts(); i++) {
 		PDFFont* font = stdFonts->FontAt(i);
 		if (strcmp(font->GetShortName(), "") == 0) {
-			GString shortName("F");
+			GooString shortName("F");
 			char number[80];
 			while (it != fontIDs.end() && id == *it) {
 				id++;

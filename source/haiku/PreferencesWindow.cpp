@@ -240,7 +240,7 @@ static bool endsWith(const BString& string, const char* suffix)
 	int stringLength = string.Length();
 	int suffixLength = strlen(suffix);
 	if (stringLength < suffixLength) {
-		return gFalse;
+		return false;
 	}
 
 	return strcmp(suffix, &stringPtr[stringLength - suffixLength]) == 0;

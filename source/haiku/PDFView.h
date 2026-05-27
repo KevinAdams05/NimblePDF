@@ -136,7 +136,7 @@ public:
 	virtual ~PDFView();
 
 	void SetPassword(const char* owner, const char* user);
-	GString* ConvertPassword(const char* password);
+	GooString* ConvertPassword(const char* password);
 
 	void EndDoc();
 

@@ -25,7 +25,7 @@
 
 #include <String.h>
 #include <support/UTF8.h>  // bypass xpdf UTF8.h shadowing; revert after poppler migration
-#include <GString.h>
+#include <GooString.h>
 
 #include "CharTypes.h" // from xpdf
 
@@ -33,9 +33,9 @@ BString* ToUtf8(uint32 encoding, const char* string, int32 len);
 
 // PDF Text to Utf8-String
 BString* TextToUtf8(const char* string, int32 len);
-bool TextToUtf8(GString* string, BString* result);
+bool TextToUtf8(GooString* string, BString* result);
 // UTF -> UCS2
-GString* Utf8ToUcs2(const char* string, bool addOrderMarker = true);
+GooString* Utf8ToUcs2(const char* string, bool addOrderMarker = true);
 // UTF -> Unicode (length returned in len)
 Unicode* Utf8ToUnicode(const char* string, int32* len);
 // Utf8 To Ascii
