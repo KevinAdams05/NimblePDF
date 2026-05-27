@@ -411,7 +411,7 @@ void AnnotWriter::CopyDict(Object* in, Object* out, const char* excludeKeys[])
 		if (excludeKeys == NULL || !IsInList(key, excludeKeys)) {
 			Object val;
 			val = in->dictGetValNF(i);
-			out->dictAdd(copyString(key), &val);
+			out->dictAdd(key, std::move(val));
 		}
 	}
 }
@@ -470,7 +470,8 @@ void AnnotWriter::UpdateInfoDict()
 		} else {
 			CopyInfoDict(&info);
 		}
-		info.dictAdd(copyString("ModDate"), val = Object(Ref{modDate.num, modDate.gen}));
+		val = Object(Ref{modDate.num, modDate.gen});
+		info.dictAdd("ModDate", std::move(val));
 		WriteObject(fInfoRef, &info);
 	}
 	WriteModDate(modDate);
@@ -484,10 +485,14 @@ bool AnnotWriter::WriteFileTrailer()
 	Object trailer;
 	Object val;
 	CopyDict(fXRef->getTrailerDict(), &trailer, fileTrailerExcludeKeys);
-	trailer.dictAdd(copyString("Size"), val = Object(fXRefTable.GetSize()));
-	trailer.dictAdd(copyString("Prev"), val = Object(fXRef->getLastXRefPos()));
-	trailer.dictAdd(copyString("Root"), val = Object(Ref{fXRef->getRootNum(), fXRef->getRootGen(})));
-	trailer.dictAdd(copyString("Info"), val = Object(Ref{fInfoRef.num, fInfoRef.gen}));
+	val = Object(fXRefTable.GetSize());
+	trailer.dictAdd("Size", std::move(val));
+	val = Object(fXRef->getLastXRefPos());
+	trailer.dictAdd("Prev", std::move(val));
+	val = Object(Ref{fXRef->getRootNum(), fXRef->getRootGen()});
+	trailer.dictAdd("Root", std::move(val));
+	val = Object(Ref{fInfoRef.num, fInfoRef.gen});
+	trailer.dictAdd("Info", std::move(val));
 	WriteObject(&trailer);
 	Write("\rstartxref\r");
 	fprintf(fFile, "%d\r", fXRefOffset);
@@ -543,7 +548,7 @@ bool AnnotWriter::CopyPage(Object* page, Ref pageRef, Ref arrayRef)
 
 	ar = Object(Ref{arrayRef.num, arrayRef.gen});
 	CopyDict(page, &copy, pageDictExcludeKeys);
-	copy.dictAdd(copyString("Annots"), &ar);
+	copy.dictAdd("Annots", std::move(ar));
 
 	// write to file
 	WriteObject(pageRef, &copy);
@@ -598,7 +603,7 @@ void AnnotWriter::AddToAnnots(Object* array, Annotation* a)
 	}
 	Object ref;
 	ref = Object(Ref{r.num, r.gen});
-	array->arrayAdd(&ref);
+	array->arrayAdd(std::move(ref));
 }
 
 bool AnnotWriter::UpdateAnnotArray(int pageNo, Annotations* annots, Ref annotArray)
@@ -640,9 +645,9 @@ bool AnnotWriter::WriteAS(Ref& ref, Annotation* a)
 	resources = Object(new Dict(fXRef));
 	array = Object(new Array(fXRef));
 	name = Object(objName, "PDF");
-	array.arrayAdd(&name);
-	resources.dictAdd(copyString("ProcSet"), &array);
-	xobj.dictAdd(copyString("Resources"), &resources);
+	array.arrayAdd(std::move(name));
+	resources.dictAdd("ProcSet", std::move(array));
+	xobj.dictAdd("Resources", std::move(resources));
 
 	// create appearance stream
 	BePDFAnnotAppearance as;
@@ -735,7 +740,7 @@ void AnnotWriter::AddRef(Object* dict, char* key, Ref ref)
 	ASSERT(dict->isDict());
 	Object n;
 	n = Object(Ref{ref.num, ref.gen});
-	dict->dictAdd(copyString(key), &n);
+	dict->dictAdd(key, std::move(n));
 }
 
 
@@ -744,7 +749,7 @@ void AnnotWriter::AddBool(Object* dict, char* key, bool b)
 	ASSERT(dict->isDict());
 	Object n;
 	n = Object(static_cast<bool>(b));
-	dict->dictAdd(copyString(key), &n);
+	dict->dictAdd(key, std::move(n));
 }
 
 
@@ -753,7 +758,7 @@ void AnnotWriter::AddName(Object* dict, char* key, char* name)
 	ASSERT(dict->isDict());
 	Object n;
 	n = Object(objName, name);
-	dict->dictAdd(copyString(key), &n);
+	dict->dictAdd(key, std::move(n));
 }
 
 
@@ -761,7 +766,7 @@ void AnnotWriter::AddString(Object* dict, char* key, GooString* string)
 {
 	ASSERT(dict->isDict());
 	Object n(std::make_unique<GooString>(string));
-	dict->dictAdd(copyString(key), &n);
+	dict->dictAdd(key, std::move(n));
 }
 
 
@@ -769,7 +774,7 @@ void AnnotWriter::AddString(Object* dict, char* key, char* string)
 {
 	ASSERT(dict->isDict());
 	Object n(std::make_unique<GooString>(string));
-	dict->dictAdd(copyString(key), &n);
+	dict->dictAdd(key, std::move(n));
 }
 
 
@@ -778,7 +783,7 @@ void AnnotWriter::AddInteger(Object* dict, char* key, int i)
 	ASSERT(dict->isDict());
 	Object n;
 	n = Object(i);
-	dict->dictAdd(copyString(key), &n);
+	dict->dictAdd(key, std::move(n));
 }
 
 
@@ -787,7 +792,7 @@ void AnnotWriter::AddReal(Object* dict, char* key, double r)
 	ASSERT(dict->isDict());
 	Object n;
 	n = Object(static_cast<double>(r));
-	dict->dictAdd(copyString(key), &n);
+	dict->dictAdd(key, std::move(n));
 }
 
 
@@ -796,7 +801,7 @@ void AnnotWriter::AddReal(Object* array, double r)
 	ASSERT(array->isArray());
 	Object n;
 	n = Object(static_cast<double>(r));
-	array->arrayAdd(&n);
+	array->arrayAdd(std::move(n));
 }
 
 
@@ -809,7 +814,7 @@ void AnnotWriter::AddRect(Object* dict, char* key, PDFRectangle* rect)
 	AddReal(&a, rect->y1);
 	AddReal(&a, rect->x2);
 	AddReal(&a, rect->y2);
-	dict->dictAdd(copyString(key), &a);
+	dict->dictAdd(key, std::move(a));
 }
 
 
@@ -820,7 +825,7 @@ void AnnotWriter::AddColor(Object* dict, char* key, GfxRGB* c)
 	AddReal(&a, colToDbl(c->r));
 	AddReal(&a, colToDbl(c->g));
 	AddReal(&a, colToDbl(c->b));
-	dict->dictAdd(copyString(key), &a);
+	dict->dictAdd(key, std::move(a));
 }
 
 
@@ -925,7 +930,7 @@ void AnnotWriter::DoMarkupAnnot(MarkupAnnot* m)
 			array.arrayAdd(val = Object(static_cast<double>(p.y)));
 		}
 	}
-	fAnnot.dictAdd(copyString("QuadPoints"), &array);
+	fAnnot.dictAdd("QuadPoints", std::move(array));
 }
 
 // Annotation visitor implementation
@@ -986,7 +991,7 @@ void AnnotWriter::DoLine(LineAnnot* a)
 	array.arrayAdd(val = Object(static_cast<double>(line[0].y)));
 	array.arrayAdd(val = Object(static_cast<double>(line[1].x)));
 	array.arrayAdd(val = Object(static_cast<double>(line[1].y)));
-	fAnnot.dictAdd(copyString("L"), &array);
+	fAnnot.dictAdd("L", std::move(array));
 }
 
 
