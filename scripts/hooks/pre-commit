@@ -1,0 +1,41 @@
+#!/bin/sh
+# NimblePDF pre-commit hook.
+#   1. Runs clang-format --dry-run on staged C++ sources; fails on diffs.
+#   2. Runs checkstyle-nimblepdf.py on staged C++ sources.
+#
+# Skip with: git commit --no-verify  (use sparingly — CI runs the same checks)
+
+set -eu
+
+REPO_ROOT="$(git rev-parse --show-toplevel)"
+
+STAGED=$(git diff --cached --name-only --diff-filter=ACM \
+    | grep -E '^source/.*\.(cpp|h|cc)$' || true)
+
+if [ -z "${STAGED}" ]; then
+    exit 0
+fi
+
+echo "[pre-commit] clang-format --dry-run on $(echo "${STAGED}" | wc -l | tr -d ' ') file(s)"
+FAILED=0
+for f in ${STAGED}; do
+    if ! clang-format --dry-run --Werror --style=file "${REPO_ROOT}/${f}" >/dev/null 2>&1; then
+        echo "  formatting violation: ${f}"
+        FAILED=1
+    fi
+done
+
+if [ "${FAILED}" -ne 0 ]; then
+    echo
+    echo "[pre-commit] clang-format reported violations. Fix with:"
+    echo "    clang-format -i <file>"
+    exit 1
+fi
+
+echo "[pre-commit] checkstyle-nimblepdf.py"
+if ! python3 "${REPO_ROOT}/scripts/checkstyle-nimblepdf.py" ${STAGED}; then
+    echo "[pre-commit] checkstyle failed"
+    exit 1
+fi
+
+echo "[pre-commit] OK"

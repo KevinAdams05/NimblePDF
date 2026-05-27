@@ -1,0 +1,52 @@
+NimblePDF is licensed under the GNU General Public License, version 2 or
+(at your option) any later version. See COPYING for the full text of GPL v2
+and COPYING3 for GPL v3.
+
+NimblePDF is a derivative work of BePDF, whose license obliges this work to
+be distributed under GPL v2 or later.
+
+--------------------------------------------------------------------------------
+
+Copyright notices on existing source files:
+
+  * BePDF — derivative origin of NimblePDF
+      Copyright (C) 1997      Benoit Triquet
+      Copyright (C) 1998-2000 Hubert Figuiere
+      Copyright (C) 2000-2011 Michael Pfeiffer
+      Copyright (C) 2013      waddlesplash
+      Licensed under GPL v2 or later.
+
+  * NimblePDF — new code and modifications
+      Copyright (C) 2026 Kevin Adams <kevinadams05@gmail.com>
+      Licensed under GPL v2 or later.
+
+--------------------------------------------------------------------------------
+
+Bundled third-party components (not relicensable by this project):
+
+  * xpdf  — Glyph & Cog, LLC, GPL v3 (see xpdf/COPYING3). To be removed
+            during the poppler migration.
+
+  * poppler (planned)  — GPL v2 (most files) with some GPL v2+ files.
+
+Each component retains its own license. Together with NimblePDF's GPL v2+
+licensing, the combined distribution is GPL v2+ when xpdf is removed, or
+GPL v3 while xpdf is bundled (xpdf is GPL v3, the most restrictive).
+
+--------------------------------------------------------------------------------
+
+The remainder of this file is a verbatim copy of GPL v2 for convenience.
+The same text is in COPYING.
+
+--------------------------------------------------------------------------------
+
+		    GNU GENERAL PUBLIC LICENSE
+		       Version 2, June 1991
+
+ Copyright (C) 1989, 1991 Free Software Foundation, Inc.
+ 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA
+ Everyone is permitted to copy and distribute verbatim copies
+ of this license document, but changing it is not allowed.
+
+For the full GPL v2 license text, see the COPYING file in this directory.
+For the full GPL v3 license text, see COPYING3.

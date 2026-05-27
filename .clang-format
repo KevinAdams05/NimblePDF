@@ -1,0 +1,97 @@
+# NimblePDF .clang-format
+# Based on Haiku Project Coding Guidelines, with one NimblePDF deviation:
+#   ColumnLimit: 140 (Haiku is 100). See docs/STYLE_GUIDE.md §1.1.
+
+Language:        Cpp
+Standard:        c++17
+
+# --- Indentation ---
+UseTab:                       ForIndentation
+TabWidth:                     4
+IndentWidth:                  4
+ContinuationIndentWidth:      4
+AccessModifierOffset:        -4
+NamespaceIndentation:         None
+
+# --- Line width ---
+ColumnLimit:                  140
+
+# --- Braces ---
+BreakBeforeBraces:            Custom
+BraceWrapping:
+  AfterClass:                 false
+  AfterControlStatement:      false
+  AfterEnum:                  false
+  AfterFunction:              true
+  AfterNamespace:             false
+  AfterStruct:                false
+  AfterUnion:                 false
+  AfterExternBlock:           false
+  BeforeCatch:                false
+  BeforeElse:                 false
+  IndentBraces:               false
+  SplitEmptyFunction:         false
+  SplitEmptyRecord:           false
+  SplitEmptyNamespace:        false
+
+# --- Pointers & references ---
+PointerAlignment:             Left
+DerivePointerAlignment:       false
+
+# --- Spacing ---
+SpaceAfterCStyleCast:         false
+SpaceAfterTemplateKeyword:    true
+SpaceBeforeAssignmentOperators: true
+SpaceBeforeCpp11BracedList:   true
+SpaceBeforeCtorInitializerColon: true
+SpaceBeforeInheritanceColon:  true
+SpaceBeforeParens:            ControlStatements
+SpaceBeforeRangeBasedForLoopColon: true
+SpaceInEmptyParentheses:      false
+SpacesBeforeTrailingComments: 1
+SpacesInAngles:               false
+SpacesInCStyleCastParentheses: false
+SpacesInContainerLiterals:    false
+SpacesInParentheses:          false
+SpacesInSquareBrackets:       false
+
+# --- Short forms ---
+AllowShortBlocksOnASingleLine: Never
+AllowShortCaseLabelsOnASingleLine: false
+AllowShortFunctionsOnASingleLine: InlineOnly
+AllowShortIfStatementsOnASingleLine: Never
+AllowShortLambdasOnASingleLine: All
+AllowShortLoopsOnASingleLine: false
+
+# --- Wrapping ---
+BinPackArguments:             false
+BinPackParameters:            false
+AllowAllArgumentsOnNextLine:  true
+AllowAllParametersOfDeclarationOnNextLine: true
+BreakBeforeBinaryOperators:   NonAssignment
+BreakConstructorInitializers: BeforeColon
+ConstructorInitializerAllOnOneLineOrOnePerLine: true
+ConstructorInitializerIndentWidth: 4
+PackConstructorInitializers:  Never
+
+# --- Alignment ---
+AlignAfterOpenBracket:        DontAlign
+AlignConsecutiveAssignments:  false
+AlignConsecutiveDeclarations: false
+AlignEscapedNewlines:         Left
+AlignOperands:                true
+AlignTrailingComments:        true
+
+# --- Includes ---
+# NimblePDF maintains include groups manually (style guide §14.1).
+SortIncludes:                 false
+IncludeBlocks:                Preserve
+
+# --- Comments ---
+ReflowComments:               false
+
+# --- Misc ---
+KeepEmptyLinesAtTheStartOfBlocks: false
+MaxEmptyLinesToKeep:          2
+Cpp11BracedListStyle:         true
+FixNamespaceComments:         true

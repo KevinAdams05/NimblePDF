@@ -1,0 +1,254 @@
+1	Indonesian	application/x-vnd.mp-xpdf	1765081836
+ in	PrintSettingsWindow		dalam
+All pages	PrintSettingsWindow		Semua halaman
+Color	PrintSettingsWindow		Warna
+DPI	PrintSettingsWindow		DPI
+Even pages	PrintSettingsWindow		Halaman genap
+Gray scale	PrintSettingsWindow		Skala abu-abu
+Height: 	PrintSettingsWindow		Tinggi:
+Max. printer resolution	PrintSettingsWindow		Maks. resolusi printer
+Mode	PrintSettingsWindow		Moda
+Normal	PrintSettingsWindow		Normal
+Odd pages	PrintSettingsWindow		Halaman ganjil
+OK	PrintSettingsWindow		OKE
+Order	PrintSettingsWindow		Order
+Page	PrintSettingsWindow		Halaman
+Pages	PrintSettingsWindow		Halaman
+Print	PrintSettingsWindow		Mencetak
+Print settings	PrintSettingsWindow		Pengaturan cetak
+Reverse	PrintSettingsWindow		Membalikkan
+Rotation	PrintSettingsWindow		Rotasi
+Width: 	PrintSettingsWindow		Width:
+Wrong parameter!	PrintSettingsWindow		Parameter salah!
+Zoom (%)	PrintSettingsWindow		Perbesaran (%)
+Zoom must be between 25 and 400!	PrintSettingsWindow		Perbesaran harus diantara 25 dan 400!
+[internal link]	PDFView		[tautan internal]
+[link type 'movie' not supported]	PDFView		[tipe tautan 'film' tidak didukung]
+[unknown link]	PDFView		[tautan tak-diketahui]
+Annotation	PDFView		Anotasi
+BePDF reading file: 	PDFView		BePDF membaca file:
+BePDF: Launch	PDFView		BePDF: Luncurkan
+Cancel	PDFView		Batal
+Copy link	PDFView		Salin Tautan
+Delete	PDFView		Hapus
+Edit	PDFView		Sunting
+Execute the command:	PDFView		Menjalankan perintah:
+Go to page %d	PDFView		Menuju ke halaman %d
+Leave annotation editing mode	PDFView		Tinggalkan mode pengeditan anotasi
+OK	PDFView		OKE
+Open in new window	PDFView		Buka di jendela baru
+Properties	PDFView		Properti
+Save file attachment as…	PDFView		Simpan lampiran file sebagai…
+Saving file attachment:	PDFView		Menyimpan lampiran file:
+Unknown link action type: '%s'	PDFView		Jenis tindakan tautan tidak dikenal: '%s'
+<empty>	OutlinesWindow		<kosong>
+Document	OutlinesWindow		Dokumen
+Edit title for bookmark	OutlinesWindow		Sunting judul bookmark
+No title	OutlinesWindow		Tiada judul
+OK	OutlinesWindow		OKE
+User defined	OutlinesWindow		Ditetapkan pengguna
+<empty>	AttachmentView		<kosong>
+Description	AttachmentView		Deskripsi
+File name	AttachmentView		Nama berkas
+Save attachment(s) as	AttachmentView		Simpan sisipan sebagai
+Save selected attachment to file	AttachmentView		Simpan lampiran yang dipilih ke file
+Save selected attachments into directory	AttachmentView		Simpan lampiran yang dipilih ke dalam direktori
+Saving attachment(s):	AttachmentView		Simpan lampiran:
+Abort	PrintingProgressWindow		Batal
+BePDF printing	PrintingProgressWindow		Pencetakan BePDF
+BePDF printing document: 	PrintingProgressWindow		Pencetakan dokumen BePDF:
+Page:	PrintingProgressWindow		Halaman:
+Page: %d	PrintingProgressWindow		Halaman: %d
+Stop	PrintingProgressWindow		Berhenti
+Abort	FileInfoWindow		Batal
+Allowed	FileInfoWindow		Diijinkan
+Annotations:	FileInfoWindow		Catatan:
+Author:	FileInfoWindow		Penulis:
+Copy & paste:	FileInfoWindow		Salin & tempel:
+Created:	FileInfoWindow		Dibuat:
+Creator:	FileInfoWindow		Pencipta:
+Denied	FileInfoWindow		Ditolak
+Document	FileInfoWindow		Dokumen
+Editing:	FileInfoWindow		suntingan:
+Embedded name	FileInfoWindow		Nama tertanam
+Encrypted:	FileInfoWindow		Terenkripsi:
+File info	FileInfoWindow		Info berkas
+Filename:	FileInfoWindow		Namaberkas:
+Fonts of this page	FileInfoWindow		Font halaman ini
+Keywords:	FileInfoWindow		Katakunci:
+Linearized:	FileInfoWindow		Linier:
+Modified:	FileInfoWindow		Diubah:
+Name	FileInfoWindow		Nama
+No	FileInfoWindow		Tidak
+Path:	FileInfoWindow		Jalur:
+Printing:	FileInfoWindow		Pencetekan:
+Producer:	FileInfoWindow		Produsen:
+Security	FileInfoWindow		Keamanan
+Show all fonts	FileInfoWindow		Tunjukkan semua font
+Subject:	FileInfoWindow		Subyek:
+Title:	FileInfoWindow		Judul:
+Type	FileInfoWindow		Tipe
+Version:	FileInfoWindow		Versi:
+Yes	FileInfoWindow		Ya
+About BePDF…	PDFWindow		Tentang BePDF…
+Add	PDFWindow		Tambah
+Add circle annotation	PDFWindow		Tambahkan anotasi lingkaran
+Add comment text annotation	PDFWindow		Tambahkan anotasi teks komentar
+Add file attachment annotation	PDFWindow		Tambahkan anotasi lampiran file
+Add free text annotation	PDFWindow		Tambahkan anotasi teks bebas
+Add help text annotation	PDFWindow		Tambahkan anotasi teks bantuan
+Add highlight annotation	PDFWindow		Tambahkan anotasi sorot
+Add ink annotation	PDFWindow		Tambahkan anotasi tinta
+Add insert text annotation	PDFWindow		Tambahkan sisipan anotasi teks
+Add key text annotation	PDFWindow		Tambahkan anotasi teks kunci
+Add line annotation	PDFWindow		Tambahkan anotasi garis
+Add link annotation	PDFWindow		Tambahkan anotasi tautan
+Add movie annotation	PDFWindow		Tambahkan anotasi film
+Add new paragraph text annotation	PDFWindow		Tambahkan anotasi teks paragraf baru
+Add note text annotation	PDFWindow		Tambahkan catatan teks catatan
+Add paragraph text annotation	PDFWindow		Tambahkan anotasi teks paragraf
+Add popup annotation	PDFWindow		Tambahkan anotasi munculan
+Add printer mark annotation	PDFWindow		Tambahkan anotasi tanda pencetak
+Add sound annotation	PDFWindow		Tambahkan anotasi suara
+Add square annotation	PDFWindow		Tambahkan anotasi persegi
+Add squiggly annotation	PDFWindow		Tambahkan anotasi bentuk-lekukan
+Add stamp annotation	PDFWindow		Tambahkan anotasi stempel
+Add strikeout annotation	PDFWindow		Tambahkan anotasi coretan
+Add trapnet annotation	PDFWindow		Tambahkan anotasi trapnet
+Add underline annotation	PDFWindow		Tambahkan anotasi garis bawah
+Add widget annotation	PDFWindow		Tambahkan anotasi widget
+Back	PDFWindow		Kembali
+Back in page history list	PDFWindow		Kembali ke daftar riwayat halaman
+Bookmark	PDFWindow		Penunjuk halaman buku
+Can not overwrite a PDF file that's currently opened in BePDF! Please choose another file name.	PDFWindow		Tidak dapat menimpa file PDF yang saat ini dibuka di BePDF! Silakan pilih nama file lain.
+Close	PDFWindow		Tutup
+Copy selection	PDFWindow		Salin pilihan
+Could not write PDF file!	PDFWindow		Tidak dapat menulis file PDF!
+Custom zoom factor (%d%%)	PDFWindow		Faktor pembesaran kastem(%d%%)
+Delete	PDFWindow		Hapus
+Edit	PDFWindow		Sunting
+Editing of annotations in an encrypted PDF file isn't supported yet!	PDFWindow		Mengedit anotasi dalam file PDF terenkripsi belum didukung!
+English.pdf	PDFWindow	Replace with the PDF name of the help document, if there is one for your language.	English.pdf
+File	PDFWindow		Berkas
+File info…	PDFWindow		Info file…
+Find	PDFWindow		Menemukan
+Find next	PDFWindow		Temukan selanjutnya
+Find next…	PDFWindow		Temukan selanjutnya
+Find…	PDFWindow		Temukan…
+First	PDFWindow		Pertama
+Fit to page	PDFWindow		Sesuaikan dengan halaman
+Fit to page width	PDFWindow		Sesuaikan dengan lebar halaman
+Forward	PDFWindow		Selanjutnya
+Forward in page history list	PDFWindow		Selanjutnya dalam daftar riwayat halaman
+Fullscreen	PDFWindow		LayarPenuh
+Fullscreen mode	PDFWindow		Mode LayarPenuh
+Go back 10 pages	PDFWindow		Mundur 10 halaman
+Go forward 10 pages	PDFWindow		Maju 10 halaman
+Go to end of document	PDFWindow		Menuju ke akhir dokumen
+Go to next page	PDFWindow		Ke halaman berikutnya
+Go to previous page	PDFWindow		ke halaman sebelumnya
+Go to start of document	PDFWindow		Pergi ke awal dari dokumen
+Help	PDFWindow		Tolong
+Hide side bar	PDFWindow		Sembunyikan bilah samping
+Issue tracker…	PDFWindow		Pelacak masalah…
+Jump to page	PDFWindow		Lompat ke halaman
+Last	PDFWindow		Terakhir
+Leave annotation editing mode	PDFWindow		Tinggalkan mode pengeditan anotasi
+Next	PDFWindow		Selanjutnya
+of %d	PDFWindow		dari %d
+OK	PDFWindow		OKE
+Online help…	PDFWindow		Bantuan online…
+Open file	PDFWindow		Membuka berkas
+Open in new window…	PDFWindow		Buka di jendela baru…
+Open…	PDFWindow		Buka…
+Page	PDFWindow		Halaman
+Page %d	PDFWindow		Halaman %d
+Page setup…	PDFWindow		Pengaturan halaman…
+PDF file successfully written!	PDFWindow		File PDF berhasil ditulis!
+Preferences…	PDFWindow		Preferensi…
+Previous	PDFWindow		Sebelumya
+Print	PDFWindow		Cetak
+Print…	PDFWindow		Cetak…
+Quit	PDFWindow		Keluar
+Reload	PDFWindow		Muat-ulang
+Reload file	PDFWindow		Muat ulang file
+Rotate clockwise	PDFWindow		Putar searah jarum jam
+Rotate counter-clockwise	PDFWindow		Putar berlawanan arah jarum jam
+Rotation	PDFWindow		Rotasi
+Save as…	PDFWindow		Simpan sebagai…
+Save file as	PDFWindow		Simpan file sebagai
+Saving copy of PDF file:	PDFWindow		Menyimpan salinan file PDF:
+Search	PDFWindow		Pencarian
+Select all	PDFWindow		Pilih Semua
+Select none	PDFWindow		Takada yang dipilih
+Show annotation tool bar	PDFWindow		Tampilkan bilah alat anotasi
+Show annotation toolbar	PDFWindow		Tampilkan bilah alat anotasi
+Show attachments	PDFWindow		Tampilkan lampiran
+Show bookmarks	PDFWindow		Tampilkan bookmark
+Show error messages	PDFWindow		Tampilkan pesan kesalahan
+Show help…	PDFWindow		Menunjukkan bantuan…
+Show page list	PDFWindow		Tampilkan daftar halaman
+View	PDFWindow		Tinjau
+Visit homepage…	PDFWindow		Kunjungi laman…
+Warning	PDFWindow		Peringatan
+Zoom	PDFWindow		Perbesaran
+Zoom in	PDFWindow		Perbesar
+Zoom out	PDFWindow		Perkecil
+Align:	AnnotationWindow		Rata:
+Annotation	AnnotationWindow		Anotasi
+Asian fonts	AnnotationWindow		Font asia
+Author	AnnotationWindow		Penulis
+Automatic	AnnotationWindow		Otomatis
+current	AnnotationWindow		sekarang
+Date:	AnnotationWindow		Tanggal:
+Display	AnnotationWindow		Tampilan
+Document	AnnotationWindow		Dokumen
+Filled rectangle	AnnotationWindow		Persegi terisi
+Font:	AnnotationWindow		Fonta:
+Fullscreen mode	AnnotationWindow		Moda layar penuh
+Invert vertical mouse scrolling	AnnotationWindow		Balikkan gulir mouse vertikal
+Open in workspace:	AnnotationWindow		buka di workspace:
+Preferences	AnnotationWindow		Preferensi
+Restore page number	AnnotationWindow		Kembalikan nomor halaman
+Restore window position and size	AnnotationWindow		Kembalikan posisi dan ukuran jendela
+Selection rectangle	AnnotationWindow		Seleksi persegi
+Show document view only	AnnotationWindow		Tampilkan hanya tampilan dokumen
+Show toolbar, statusbar and scrollbars, too	AnnotationWindow		Tampilkan juga bilah alat, bilah status, dan bilah gulir
+Size:	AnnotationWindow		Ukuran:
+Stroked rectangle	AnnotationWindow		Persegi tercoret
+System fonts	AnnotationWindow		Huruf system
+Title:	AnnotationWindow		Judul:
+User fonts	AnnotationWindow		Huruf user
+Will take effect at next program launch.	AnnotationWindow		Akan berlaku pada peluncuran program berikutnya.
+Alpha	BepdfApplication		Alfa
+BePDF is based on XPDF %s, %s.	BepdfApplication	XPDF version, copyright	BePDF didasarkan pada XPDF %s, %s.
+BePDF: Error opening file!	BepdfApplication		BePDF: Ada kesalahan saat buka berkas!
+Beta	BepdfApplication		Beta
+Close	BepdfApplication		Tutup
+Development	BepdfApplication		Pengembangan
+Error	BepdfApplication		Kesalahan
+Final	BepdfApplication		Final
+Gamma	BepdfApplication		Gama
+Golden Master	BepdfApplication		Master emas
+Unknown	BepdfApplication		Tak-diketahui
+Version	BepdfApplication		Versi
+Auto open	TraceWindow		buka Auto
+Clear	TraceWindow		Bersih
+Error messages	TraceWindow		Pesan kesalahan
+Floating	TraceWindow		Mengambang
+BePDF status	StatusWindow		status BePDF
+Enter Password	PasswordWindow		Masukkan sandi
+OK	PasswordWindow		OKE
+Owner password	PasswordWindow		Sandi pemilik
+User password	PasswordWindow		Sandi pengguna
+Find	FindTextWindow		Temukan
+Find text	FindTextWindow		Temukan teks
+Find: 	FindTextWindow		Temukan:
+Ignore case	FindTextWindow		Abaikan besar-kecil huruf
+Options	FindTextWindow		Pilihan
+Page:	FindTextWindow		Halaman:
+Page: %d	FindTextWindow		Halaman: %d
+Search backwards	FindTextWindow		Search backwards
+Stop	FindTextWindow		Berhenti
+OK	PDFSearch		OKE
+Search string not found.	PDFSearch		Pencarian kata tidak ditemukan.

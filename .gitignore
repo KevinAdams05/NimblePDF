@@ -1,0 +1,48 @@
+# Haiku Generic Makefile build artifacts
+objects.*-*-*-debug/
+objects.*-*-*-release/
+*.o
+*.d
+
+# Built binaries (real output lives in dist/; binaries dropped at repo root are stray)
+/NimblePDF
+/BePDF
+
+# Packaging artifacts
+*.hpkg
+*.tar.gz
+*.zip
+!assets/NimblePDF_Assets.zip
+
+# Editors / IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*.swn
+*~
+.cproject
+.project
+.settings/
+
+# OS junk
+.DS_Store
+Thumbs.db
+
+# Generated docs
+docs/html/
+docs/latex/
+*.pdf
+
+# Local config / scratch
+.env
+.local/
+scratch/
+TODO.local.md
+
+# Pre-commit / hooks
+.git/hooks/
+
+# Python caches (for scripts/)
+__pycache__/
+*.pyc
