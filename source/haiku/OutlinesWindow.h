@@ -135,6 +135,12 @@ public:
 	bool GetBookmarks(BMessage* bookmarks);
 
 	void Activate();
+
+	// True once Activate() has populated the list from the bookmarks
+	// attribute. Used by PDFWindow::StoreFileAttributes() to avoid
+	// overwriting saved bookmarks with an empty list when the panel
+	// was never opened during the session. See BePDF issue #115.
+	bool WasActivated() const { return !fNeedsUpdate; }
 };
 
 class BTextControl;

@@ -310,9 +310,17 @@ void PDFWindow::StoreFileAttributes()
 		entry_ref cur_ref;
 		if (fCurrentFile.InitCheck() == B_OK) {
 			fCurrentFile.GetRef(&cur_ref);
-			BMessage bm;
-			if (fOutlinesView->GetBookmarks(&bm))
-				fFileAttributes.SetBookmarks(&bm);
+			// BePDF #115 defensive guard: only update bookmarks if the
+			// outlines view actually loaded them this session. Without
+			// this check, closing a file whose bookmark panel was never
+			// opened would write an empty list back to the
+			// bepdf:bookmarks attribute and silently destroy the user's
+			// saved bookmarks.
+			if (fOutlinesView->WasActivated()) {
+				BMessage bm;
+				if (fOutlinesView->GetBookmarks(&bm))
+					fFileAttributes.SetBookmarks(&bm);
+			}
 			fFileAttributes.Write(&cur_ref, gApp->GetSettings());
 		}
 		Unlock();
@@ -1554,9 +1562,15 @@ void PDFWindow::ShowLeftPanel(int panel)
 	if (fLayerView->CardLayout()->VisibleIndex() != panel) {
 		gApp->GetSettings()->SetLeftPanel(panel);
 		fLayerView->CardLayout()->SetVisibleItem(panel);
-		if (panel == BOOKMARKS_PANEL) {
-			ActivateOutlines();
-		}
+	}
+	// BePDF #115: Activate must fire whenever BOOKMARKS_PANEL becomes
+	// (or already is) the visible panel — not only when the index
+	// transitions. At startup the default visible index is 0, which
+	// equals BOOKMARKS_PANEL, so the old `!=` guard skipped Activate
+	// and the bookmark list stayed empty even though the panel was
+	// shown. ActivateOutlines() is idempotent (gated on fNeedsUpdate).
+	if (panel == BOOKMARKS_PANEL) {
+		ActivateOutlines();
 	}
 	UpdateInputEnabler();
 }
