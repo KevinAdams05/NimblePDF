@@ -62,7 +62,7 @@ public:
 	void LoadSettings();
 	void SaveSettings();
 
-	GlobalSettings* GetSettings() { return mSettings; };
+	GlobalSettings* GetSettings() { return fSettings; };
 
 	BCursor* pointerCursor;
 	BCursor* linkCursor;
@@ -73,9 +73,9 @@ public:
 	BCursor* splitVCursor;
 	BCursor* resizeCursor;
 
-	BPath* GetAppPath() { return &mAppPath; }
-	BPath* DefaultPDF() { return &mDefaultPDF; }
-	team_id GetTeamID() { return mTeamID; }
+	BPath* GetAppPath() { return &fAppPath; }
+	BPath* DefaultPDF() { return &fDefaultPDF; }
+	team_id GetTeamID() { return fTeamID; }
 
 	enum {
 		NOTIFY_OPEN_MSG = 'BPop',   // BePDF document opened
@@ -85,10 +85,10 @@ public:
 	};
 
 	void Notify(uint32 cmd);
-	void WindowClosed() { mWindow = NULL; }
+	void WindowClosed() { fWindow = NULL; }
 
-	BBitmap* GetAttachmentImage(int i) { return mAttachmentImages[i]; }
-	BBitmap* GetTextAnnotImage(int i) { return mTextAnnotImages[i]; }
+	BBitmap* GetAttachmentImage(int i) { return fAttachmentImages[i]; }
+	BBitmap* GetTextAnnotImage(int i) { return fTextAnnotImages[i]; }
 
 	static void UpdateAttr(BNode& node, const char* name, type_code type, off_t offset, void* buffer, size_t length);
 	static void UpdateFileAttributes(PDFDoc* doc, entry_ref* ref);
@@ -100,23 +100,23 @@ private:
 	void FreeImages(BBitmap* images[], int num);
 	void OpenSaveFilePanel(BHandler* handler, bool fileMode, BRefFilter* filter, BMessage* msg, const char* name);
 
-	bool mInitialized;
-	bool mGotSomething;
-	bool mReadyToQuit;
-	BFilePanel* mOpenFilePanel;
-	BFilePanel* mSaveFilePanel;
-	BFilePanel* mSaveToDirectoryFilePanel;
-	BPath mAppPath;
-	BPath mDefaultPDF;
-	team_id mTeamID;
-	PDFWindow* mWindow;
+	bool fInitialized;
+	bool fGotSomething;
+	bool fReadyToQuit;
+	BFilePanel* fOpenFilePanel;
+	BFilePanel* fSaveFilePanel;
+	BFilePanel* fSaveToDirectoryFilePanel;
+	BPath fAppPath;
+	BPath fDefaultPDF;
+	team_id fTeamID;
+	PDFWindow* fWindow;
 
-	GlobalSettings* mSettings;
-	OutputTracer* mStdoutTracer;
-	OutputTracer* mStderrTracer;
+	GlobalSettings* fSettings;
+	OutputTracer* fStdoutTracer;
+	OutputTracer* fStderrTracer;
 
-	BBitmap* mAttachmentImages[FileAttachmentAnnot::no_of_types];
-	BBitmap* mTextAnnotImages[TextAnnot::no_of_types];
+	BBitmap* fAttachmentImages[FileAttachmentAnnot::no_of_types];
+	BBitmap* fTextAnnotImages[TextAnnot::no_of_types];
 };
 
 #define gApp ((BepdfApplication*)(be_app))

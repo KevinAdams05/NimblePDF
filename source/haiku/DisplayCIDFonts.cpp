@@ -44,38 +44,38 @@ public:
 	void Set(const char* name, const char* file, DisplayCIDFonts::Type type);
 
 private:
-	BString mName;
-	BString mFile;
-	DisplayCIDFonts::Type mType;
+	BString fName;
+	BString fFile;
+	DisplayCIDFonts::Type fType;
 };
 
 // implementation of DisplayCIDFont
 DisplayCIDFont::DisplayCIDFont(const char* name, const char* file, DisplayCIDFonts::Type type)
-    : mName(name),
-      mFile(file),
-      mType(type)
+    : fName(name),
+      fFile(file),
+      fType(type)
 {}
 
 const char* DisplayCIDFont::GetName() const
 {
-	return mName.String();
+	return fName.String();
 }
 
 const char* DisplayCIDFont::GetFile() const
 {
-	return mFile.String();
+	return fFile.String();
 }
 
 DisplayCIDFonts::Type DisplayCIDFont::GetType() const
 {
-	return mType;
+	return fType;
 }
 
 void DisplayCIDFont::Set(const char* name, const char* file, DisplayCIDFonts::Type type)
 {
-	mName = name;
-	mFile = file;
-	mType = type;
+	fName = name;
+	fFile = file;
+	fType = type;
 }
 
 
@@ -97,7 +97,7 @@ DisplayCIDFonts::DisplayCIDFonts(const BMessage& DisplayCIDFonts)
 		} else if (typeString == TRUE_TYPE) {
 			type = kTrueType;
 		}
-		mFonts.AddItem(new DisplayCIDFont(name.String(), file.String(), type));
+		fFonts.AddItem(new DisplayCIDFont(name.String(), file.String(), type));
 	}
 }
 
@@ -106,7 +106,7 @@ DisplayCIDFonts::~DisplayCIDFonts()
 	for (int32 index = 0; index < GetSize(); index++) {
 		delete Get(index);
 	}
-	mFonts.MakeEmpty();
+	fFonts.MakeEmpty();
 }
 
 bool DisplayCIDFonts::Contains(const char* name) const
@@ -116,12 +116,12 @@ bool DisplayCIDFonts::Contains(const char* name) const
 
 int32 DisplayCIDFonts::GetSize() const
 {
-	return mFonts.CountItems();
+	return fFonts.CountItems();
 }
 
 DisplayCIDFont* DisplayCIDFonts::Get(int32 index) const
 {
-	return (DisplayCIDFont*)mFonts.ItemAt(index);
+	return (DisplayCIDFont*)fFonts.ItemAt(index);
 }
 
 DisplayCIDFont* DisplayCIDFonts::Find(const char* name) const
@@ -183,7 +183,7 @@ void DisplayCIDFonts::Set(const char* name, const char* file, Type type)
 	DisplayCIDFont* font = Find(name);
 	if (font == NULL) {
 		font = new DisplayCIDFont(name, file, type);
-		mFonts.AddItem(font);
+		fFonts.AddItem(font);
 	} else {
 		font->Set(name, file, type);
 	}

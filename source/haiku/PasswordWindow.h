@@ -39,11 +39,11 @@ public:
 	bool QuitRequested();
 
 protected:
-	BLooper* mLooper;
-	BTextControl* mPassword;
-	bool mPasswordSent;
-	entry_ref mEntry;
+	BLooper* fLooper;
+	BTextControl* fPassword;
+	bool fPasswordSent;
+	entry_ref fEntry;
 	enum PwdKind { OWNER_PASSWORD, USER_PASSWORD };
-	static enum PwdKind mPwdKind;
+	static enum PwdKind fPwdKind;
 };
 #endif

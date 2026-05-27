@@ -42,11 +42,11 @@ public:
 	void MessageReceived(BMessage* msg);
 
 protected:
-	enum { OK, STOPPED, ABORTED } mState;
-	int32 mPages, mPrintedPages;
-	BStringView* mPageString;
-	BButton *mAbort, *mStop;
-	BStatusBar* mProgress;
+	enum { OK, STOPPED, ABORTED } fState;
+	int32 fPages, fPrintedPages;
+	BStringView* fPageString;
+	BButton *fAbort, *fStop;
+	BStatusBar* fProgress;
 };
 
 class PrintingHiddenWindow : public BWindow {

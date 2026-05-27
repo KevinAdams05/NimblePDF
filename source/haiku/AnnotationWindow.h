@@ -73,17 +73,17 @@ protected:
 	void WriteMessage(BMessage* msg);
 	void Notify(uint32 what);
 	void EnableFreeTextControls(bool enable);
-	bool mSendNotification;
-	BLooper* mLooper;
-	GlobalSettings* mSettings;
-	BPoint mWindowPos;
-	BStringView *mLabel, *mDate;
-	BTextView* mContents;
-	BMenuField* mFont;
-	BMenuField* mSize;
-	BMenuField* mAlignment;
-	Annotation* mAnnotation;
-	bool mEditable;
+	bool fSendNotification;
+	BLooper* fLooper;
+	GlobalSettings* fSettings;
+	BPoint fWindowPos;
+	BStringView *fLabel, *fDate;
+	BTextView* fContents;
+	BMenuField* fFont;
+	BMenuField* fSize;
+	BMenuField* fAlignment;
+	Annotation* fAnnotation;
+	bool fEditable;
 };
 
 #endif

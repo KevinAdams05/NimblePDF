@@ -57,46 +57,46 @@ protected:
 	static GBool AnnotDisplayDecideCallback(Annot* annot, void* data);
 	void Notify(uint32 what);
 
-	BString mGSDriver;
+	BString fGSDriver;
 
-	BString* mOwnerPassword;
-	BString* mUserPassword;
-	PDFDoc* mDoc;
-	BView* mOffscreenView;
-	float mWidth, mHeight;
-	BeSplashOutputDev* mOutputDev;
-	BLooper* mLooper;
-	BHandler* mHandler;
-	color_space mColorSpace;
+	BString* fOwnerPassword;
+	BString* fUserPassword;
+	PDFDoc* fDoc;
+	BView* fOffscreenView;
+	float fWidth, fHeight;
+	BeSplashOutputDev* fOutputDev;
+	BLooper* fLooper;
+	BHandler* fHandler;
+	color_space fColorSpace;
 #if 0
-	PageMode       mPageMode;
+	PageMode       fPageMode;
 #endif
 	// temporary fields valid while rendering
 	struct {
 		bool valid;
 		float width, height;
-	} mPDFPage[2];
+	} fPDFPage[2];
 
-	thread_id mRenderingThread;
-	CachedPage* mPage;
-	BBitmap* mBitmap;
-	int mPageNo;
-	int mZoom;
-	int mRotate;
-	bool mEditAnnot;
-	bool mDoRendering;
+	thread_id fRenderingThread;
+	CachedPage* fPage;
+	BBitmap* fBitmap;
+	int fPageNo;
+	int fZoom;
+	int fRotate;
+	bool fEditAnnot;
+	bool fDoRendering;
 
-	BePDFAcroForm* mBePDFAcroForm;
+	BePDFAcroForm* fBePDFAcroForm;
 	// the annotation of the current document
-	AnnotsList mAnnotations;
+	AnnotsList fAnnotations;
 	Annotations* GetAnnotations();
 
 public:
 	PageRenderer();
 	~PageRenderer();
-	AnnotsList* GetAnnotsList() { return &mAnnotations; }
+	AnnotsList* GetAnnotsList() { return &fAnnotations; }
 	Annotations* GetAnnotationsForPage(int pageNo);
-	BePDFAcroForm* GetBePDFAcroForm() { return mBePDFAcroForm; }
+	BePDFAcroForm* GetBePDFAcroForm() { return fBePDFAcroForm; }
 
 	// have to be set, before Start() may be called
 	void NewFile(entry_ref* ref);
@@ -127,9 +127,9 @@ public:
 
 	static void GetParameter(BMessage* msg, thread_id* id, BBitmap** bitmap);
 
-	float GetWidth() const { return mWidth; }
-	float GetHeight() const { return mHeight; }
-	BeSplashOutputDev* GetOutputDev() const { return mOutputDev; }
+	float GetWidth() const { return fWidth; }
+	float GetHeight() const { return fHeight; }
+	BeSplashOutputDev* GetOutputDev() const { return fOutputDev; }
 
 #if 0
 	enum PageMode {

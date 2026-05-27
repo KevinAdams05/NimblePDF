@@ -43,7 +43,7 @@ class BCardLayout;
 
 class PreferencesWindow : public BWindow {
 public:
-	// message sent to mLooper has this fields:
+	// message sent to fLooper has this fields:
 	enum {
 		// what
 		CHANGE_NOTIFY = 'PreC',
@@ -88,13 +88,13 @@ private:
 		INVERT_VERTICAL_SCROLLING_CHANGED = 'IvSl',
 		DISPLAY_CID_FONT_SELECTED = 'DCFs',
 	};
-	BLooper* mLooper;
-	BOutlineListView* mPreferences;
-	BCardLayout* mLayers;
-	GlobalSettings* mSettings;
-	BMenuField* mOpenInWorkspace;
-	DisplayCIDFonts* mDisplayCIDFonts;
-	BMessage mFontMenuFields;
+	BLooper* fLooper;
+	BOutlineListView* fPreferences;
+	BCardLayout* fLayers;
+	GlobalSettings* fSettings;
+	BMenuField* fOpenInWorkspace;
+	DisplayCIDFonts* fDisplayCIDFonts;
+	BMessage fFontMenuFields;
 
 	void SetupView();
 	BView* BuildAsianFontsView();

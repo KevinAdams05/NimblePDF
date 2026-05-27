@@ -39,15 +39,15 @@ class BPopUpMenu;
 class BGridLayout;
 
 class PrintSettingsWindow : public BWindow {
-	PDFDoc* mDoc;
-	BLooper* mLooper;
-	GlobalSettings* mSettings;
-	int32 mZoomValue;
-	BTextControl* mZoom;
+	PDFDoc* fDoc;
+	BLooper* fLooper;
+	GlobalSettings* fSettings;
+	int32 fZoomValue;
+	BTextControl* fZoom;
 
-	BButton* mPrint;
-	BTextControl* mPage;
-	BStringView *mWidth, *mHeight;
+	BButton* fPrint;
+	BTextControl* fPage;
+	BStringView *fWidth, *fHeight;
 
 	enum {
 		MSG_SELECTION_CHANGED = 'Sele',

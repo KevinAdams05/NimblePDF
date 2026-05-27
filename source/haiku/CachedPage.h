@@ -47,9 +47,9 @@ public:
 		READY = 3      // Has been rendered
 	};
 
-	enum State GetState() const { return mState; }
+	enum State GetState() const { return fState; }
 	// Is this page displayed?
-	bool GetDisplayed() const { return mDisplayed; }
+	bool GetDisplayed() const { return fDisplayed; }
 
 	GBool FindText(Unicode* s,
 	    int len,
@@ -75,50 +75,50 @@ public:
 	void CvtDevToUser(int dx, int dy, double* ux, double* uy);
 	void CvtUserToDev(double ux, double uy, int* dx, int* dy);
 
-	BBitmap* GetBitmap() const { return mBitmap; }
-	int32 GetWidth() const { return mWidth; }
-	int32 GetHeight() const { return mHeight; }
+	BBitmap* GetBitmap() const { return fBitmap; }
+	int32 GetWidth() const { return fWidth; }
+	int32 GetHeight() const { return fHeight; }
 
-	float GetDeltaX() { return mGSdeltaX; }
-	float GetDeltaY() { return mGSdeltaY; }
+	float GetDeltaX() { return fGSdeltaX; }
+	float GetDeltaY() { return fGSdeltaY; }
 
-	void SetAnnotations(Annotations* a) { mAnnotations = a; }
-	Annotations* GetAnnotations() { return mAnnotations; }
+	void SetAnnotations(Annotations* a) { fAnnotations = a; }
+	Annotations* GetAnnotations() { return fAnnotations; }
 
 	friend class PageCache;
 	friend class PageRenderer;
 	friend int gsdll_callback(int message, char* str, unsigned long count);
 
-	double* GetCTM() { return mCtm; }
+	double* GetCTM() { return fCtm; }
 
 protected:
 	void MakeEmpty();
-	void SetState(enum State state) { mState = state; };
-	void SetDisplayed(bool displayed) { mDisplayed = displayed; };
+	void SetState(enum State state) { fState = state; };
+	void SetDisplayed(bool displayed) { fDisplayed = displayed; };
 	void SetText(TextPage* text);
 	void SetLinks(Links* links);
 	void InitCTM(OutputDev* outputDev);
 	void SetBitmap(BBitmap* bitmap, int32 width, int32 height);
 	void SetBitmapSize(int32 width, int32 height)
 	{
-		mWidth = width;
-		mHeight = height;
+		fWidth = width;
+		fHeight = height;
 	};
-	enum State mState;
-	bool mDisplayed;
+	enum State fState;
+	bool fDisplayed;
 
-	BBitmap* mBitmap;
-	int32 mWidth, mHeight;
-	int32 mPage, mZoom, mRotation;
+	BBitmap* fBitmap;
+	int32 fWidth, fHeight;
+	int32 fPage, fZoom, fRotation;
 	// correction for Ghostscript
-	double mGSdeltaX, mGSdeltaY;
+	double fGSdeltaX, fGSdeltaY;
 	// from BeOutputDev
-	TextPage* mText;
+	TextPage* fText;
 	// from PDFDoc
-	Links* mLinks;
+	Links* fLinks;
 	// from OutputDev
-	double mCtm[6], mIctm[6];
-	Annotations* mAnnotations;
+	double fCtm[6], fIctm[6];
+	Annotations* fAnnotations;
 };
 
 #endif

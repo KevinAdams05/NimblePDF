@@ -40,9 +40,9 @@ PrintingProgressWindow::PrintingProgressWindow(const char* text, BRect aRect, in
           B_MODAL_APP_WINDOW_FEEL,
           B_NOT_RESIZABLE | B_NOT_ZOOMABLE | B_NOT_CLOSABLE | B_AUTO_UPDATE_SIZE_LIMITS)
 {
-	mPages = pages;
-	mPrintedPages = 0;
-	mState = OK;
+	fPages = pages;
+	fPrintedPages = 0;
+	fState = OK;
 
 	BString s(B_TRANSLATE("BePDF printing document: "));
 	s << text;
@@ -50,30 +50,30 @@ PrintingProgressWindow::PrintingProgressWindow(const char* text, BRect aRect, in
 
 	BStringView* stringView = new BStringView("stringView", s.String());
 
-	mPageString = new BStringView("mPageString", B_TRANSLATE("Page:"));
+	fPageString = new BStringView("fPageString", B_TRANSLATE("Page:"));
 
-	mProgress = new BStatusBar("mProgress");
-	mProgress->SetMaxValue(1);
+	fProgress = new BStatusBar("fProgress");
+	fProgress->SetMaxValue(1);
 
-	mStop = new BButton("mStop", B_TRANSLATE("Stop"), new BMessage('STOP'));
-	mAbort = new BButton("mAbort", B_TRANSLATE("Abort"), new BMessage('ABRT'));
+	fStop = new BButton("fStop", B_TRANSLATE("Stop"), new BMessage('STOP'));
+	fAbort = new BButton("fAbort", B_TRANSLATE("Abort"), new BMessage('ABRT'));
 
 	BLayoutBuilder::Group<>(this, B_HORIZONTAL)
 	    .SetInsets(B_USE_WINDOW_INSETS)
 	    .AddGroup(B_VERTICAL)
 	    .Add(stringView)
-	    .Add(mPageString)
-	    .Add(mProgress)
+	    .Add(fPageString)
+	    .Add(fProgress)
 	    .End()
 	    .AddGroup(B_VERTICAL)
-	    .Add(mStop)
-	    .Add(mAbort)
+	    .Add(fStop)
+	    .Add(fAbort)
 	    .End();
 
 	ResizeToPreferred();
 	CenterOnScreen();
 
-	SetDefaultButton(mStop);
+	SetDefaultButton(fStop);
 	Show();
 }
 
@@ -82,34 +82,34 @@ void PrintingProgressWindow::SetPage(int32 page)
 	char buffer[256];
 	sprintf(buffer, B_TRANSLATE("Page: %d"), page);
 	Lock();
-	mPageString->SetText(buffer);
-	mPrintedPages++;
-	mProgress->SetTo(mPrintedPages / (float)mPages);
+	fPageString->SetText(buffer);
+	fPrintedPages++;
+	fProgress->SetTo(fPrintedPages / (float)fPages);
 	Unlock();
 }
 
 bool PrintingProgressWindow::Aborted()
 {
-	return mState == ABORTED;
+	return fState == ABORTED;
 }
 
 bool PrintingProgressWindow::Stopped()
 {
-	return mState == STOPPED;
+	return fState == STOPPED;
 }
 
 void PrintingProgressWindow::MessageReceived(BMessage* msg)
 {
 	switch (msg->what) {
 	case 'ABRT':
-		mState = ABORTED;
-		mStop->SetEnabled(false);
-		mAbort->SetEnabled(false);
+		fState = ABORTED;
+		fStop->SetEnabled(false);
+		fAbort->SetEnabled(false);
 		break;
 	case 'STOP':
-		mState = STOPPED;
-		mStop->SetEnabled(false);
-		mAbort->SetEnabled(false);
+		fState = STOPPED;
+		fStop->SetEnabled(false);
+		fAbort->SetEnabled(false);
 		break;
 	default:
 		BWindow::MessageReceived(msg);

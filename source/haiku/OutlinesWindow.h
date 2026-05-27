@@ -36,18 +36,18 @@
 #include "Settings.h"
 
 class OutlineStyle {
-	const BFont* mFont;
-	rgb_color mColor;
+	const BFont* fFont;
+	rgb_color fColor;
 
 public:
 	OutlineStyle(const BFont* font, rgb_color color);
-	const BFont* GetFont() const { return mFont; }
-	const rgb_color* GetColor() const { return &mColor; }
+	const BFont* GetFont() const { return fFont; }
+	const rgb_color* GetColor() const { return &fColor; }
 };
 
 class OutlineStyleList {
-	BList mList; // of OutlineStyle
-	BFont mFonts[4];
+	BList fList; // of OutlineStyle
+	BFont fFonts[4];
 
 	static void Initialize();
 
@@ -63,53 +63,53 @@ public:
 };
 
 class OutlineListItem : public BListItem {
-	BString mString;
-	enum { linkDest, linkPageNum, linkString, linkUndefined } mType;
+	BString fString;
+	enum { linkDest, linkPageNum, linkString, linkUndefined } fType;
 	union {
 		LinkDest* dest;
 		GString* string;
 		int pageNum;
-	} mLink;
-	OutlineStyle* mStyle;
+	} fLink;
+	OutlineStyle* fStyle;
 
 public:
 	OutlineListItem(const char* string, uint32 level, bool expanded, OutlineStyle* style);
 	virtual ~OutlineListItem();
-	const char* Text() const { return mString.String(); }
-	void SetStyle(OutlineStyle* style) { mStyle = style; }
+	const char* Text() const { return fString.String(); }
+	void SetStyle(OutlineStyle* style) { fStyle = style; }
 	void SetLink(LinkDest* dest);
 	void SetLink(GString* s);
 	void SetPageNum(int pageNum);
 
 	void DrawItem(BView* owner, BRect frame, bool complete);
 
-	bool isDest() const { return mType == linkDest; }
-	bool isString() const { return mType == linkString; }
-	bool isPageNum() const { return mType == linkPageNum; }
-	LinkDest* getDest() const { return mLink.dest; }
-	GString* getString() const { return mLink.string; }
-	int getPageNum() const { return mLink.pageNum; }
+	bool isDest() const { return fType == linkDest; }
+	bool isString() const { return fType == linkString; }
+	bool isPageNum() const { return fType == linkPageNum; }
+	LinkDest* getDest() const { return fLink.dest; }
+	GString* getString() const { return fLink.string; }
+	int getPageNum() const { return fLink.pageNum; }
 };
 
 class OutlinesView : public BScrollView {
-	BLooper* mLooper;
-	OutlineStyleList mOutlineStyleList;
-	BOutlineListView* mList;
-	Catalog* mCatalog;
-	BMessage* mBookmarks; // archived bookmarks
-	bool mNeedsUpdate;
-	OutlineListItem* mUserDefined;
-	OutlineListItem* mEmptyUserBM; // cached value
-	Bitset mBookmark;
+	BLooper* fLooper;
+	OutlineStyleList fOutlineStyleList;
+	BOutlineListView* fList;
+	Catalog* fCatalog;
+	BMessage* fBookmarks; // archived bookmarks
+	bool fNeedsUpdate;
+	OutlineListItem* fUserDefined;
+	OutlineListItem* fEmptyUserBM; // cached value
+	Bitset fBookmark;
 
 	void ReadOutlines(Object* o, uint32 level);
 	OutlineListItem* FindUserBookmark(int pageNum);
 	void InsertUserBookmark(int pageNum, const char* label);
 	void InitUserBookmarks(bool initOnly);
-	OutlineStyle* GetDefaultStyle() { return mOutlineStyleList.GetDefaultStyle(); }
+	OutlineStyle* GetDefaultStyle() { return fOutlineStyleList.GetDefaultStyle(); }
 
 public:
-	// message sent to mLooper has this fields:
+	// message sent to fLooper has this fields:
 	enum {
 		// what                          attribute(s):
 		PAGE_NOTIFY = 'OWPg',   // "page"
@@ -148,9 +148,9 @@ public:
 	enum { BOOKMARK_ENTERED_NOTIFY = 'BMEt' };
 
 protected:
-	BLooper* mLooper;
-	BTextControl* mTitle;
-	int mPageNum;
+	BLooper* fLooper;
+	BTextControl* fTitle;
+	int fPageNum;
 };
 
 

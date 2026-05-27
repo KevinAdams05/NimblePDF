@@ -66,8 +66,8 @@ public:
 	void Empty();
 */
 protected:
-	PDFDoc* mDoc;
-	CachedPage mPage[3];
+	PDFDoc* fDoc;
+	CachedPage fPage[3];
 };
 
 #endif

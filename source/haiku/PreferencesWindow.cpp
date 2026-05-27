@@ -50,7 +50,7 @@ void PreferencesWindow::UpdateWorkspace()
 	GlobalSettings* settings = gApp->GetSettings();
 	bool enabled = settings->GetOpenInWorkspace();
 	int32 ws = settings->GetWorkspace();
-	BMenu* m = mOpenInWorkspace->Menu();
+	BMenu* m = fOpenInWorkspace->Menu();
 	int32 n = m->CountItems();
 	int32 i;
 	i = (enabled) ? 1 + ws : 0;
@@ -81,18 +81,18 @@ void PreferencesWindow::SetupView()
 
 	GlobalSettings* settings = gApp->GetSettings();
 	sprintf(workspace, "%d", (int)settings->GetWorkspace());
-	mPreferences = new BOutlineListView("mPreferences");
-	BScrollView* prefScroll = new BScrollView("SV", mPreferences, B_FRAME_EVENTS | B_WILL_DRAW, false, true);
+	fPreferences = new BOutlineListView("fPreferences");
+	BScrollView* prefScroll = new BScrollView("SV", fPreferences, B_FRAME_EVENTS | B_WILL_DRAW, false, true);
 
 	BListItem* item;
-	mPreferences->AddItem(new BStringItem(B_TRANSLATE("Document")));
+	fPreferences->AddItem(new BStringItem(B_TRANSLATE("Document")));
 
-	mPreferences->AddItem(item = new BStringItem(B_TRANSLATE("Display")));
+	fPreferences->AddItem(item = new BStringItem(B_TRANSLATE("Display")));
 	// reverse order:
-	mPreferences->AddUnder(new BStringItem(B_TRANSLATE("Asian fonts")), item);
+	fPreferences->AddUnder(new BStringItem(B_TRANSLATE("Asian fonts")), item);
 
-	mPreferences->SetSelectionMessage(new BMessage(PREFERENCE_SELECTED));
-	mPreferences->SetExplicitMinSize(BSize(200, 0));
+	fPreferences->SetSelectionMessage(new BMessage(PREFERENCE_SELECTED));
+	fPreferences->SetExplicitMinSize(BSize(200, 0));
 
 	BCheckBox* pageNumber = new BCheckBox("pageNumber", B_TRANSLATE("Restore page number"), new BMessage(RESTORE_PAGE_NO_CHANGED));
 	pageNumber->SetValue(settings->GetRestorePageNumber());
@@ -102,7 +102,7 @@ void PreferencesWindow::SetupView()
 	windowPos->SetValue(settings->GetRestoreWindowFrame());
 
 	BPopUpMenu* openMenu = new BPopUpMenu("openMenu");
-	mOpenInWorkspace = new BMenuField("mOpeninWorkspace", B_TRANSLATE("Open in workspace:"), openMenu);
+	fOpenInWorkspace = new BMenuField("fOpeninWorkspace", B_TRANSLATE("Open in workspace:"), openMenu);
 
 	BTextControl* author = new BTextControl("author", B_TRANSLATE("Author"), settings->GetAuthor(), new BMessage(AUTHOR_CHANGED));
 
@@ -111,7 +111,7 @@ void PreferencesWindow::SetupView()
 	                           .Add(pageNumber)
 	                           .Add(windowPos)
 	                           .AddStrut(B_USE_ITEM_INSETS)
-	                           .Add(mOpenInWorkspace)
+	                           .Add(fOpenInWorkspace)
 	                           .AddStrut(B_USE_SMALL_INSETS)
 	                           .Add(author)
 	                           .AddGlue();
@@ -173,16 +173,16 @@ void PreferencesWindow::SetupView()
 	    .AddGlue()
 	    .End()
 	    .Add(asian)
-	    .GetLayout(&mLayers)
+	    .GetLayout(&fLayers)
 	    .End();
 
 	author->SetModificationMessage(new BMessage(AUTHOR_CHANGED));
 
-	mLayers->SetVisibleItem((int32)1);
-	mLayers->SetVisibleItem((int32)0);
-	mPreferences->Select(0);
+	fLayers->SetVisibleItem((int32)1);
+	fLayers->SetVisibleItem((int32)0);
+	fPreferences->Select(0);
 
-	BuildWorkspaceMenu(mOpenInWorkspace->Menu());
+	BuildWorkspaceMenu(fOpenInWorkspace->Menu());
 	UpdateWorkspace();
 	ResizeTo(0, 0);
 	CenterOnScreen();
@@ -195,16 +195,16 @@ static int comparePopupLabels(const BMenuField* p1, const BMenuField* p2)
 
 BView* PreferencesWindow::BuildAsianFontsView()
 {
-	if (mDisplayCIDFonts->GetSize() == 0) {
+	if (fDisplayCIDFonts->GetSize() == 0) {
 		return new BView("languages", 0);
 	}
 
 	BObjectList<BMenuField> menus;
-	for (int32 index = 0; index < mDisplayCIDFonts->GetSize(); index++) {
+	for (int32 index = 0; index < fDisplayCIDFonts->GetSize(); index++) {
 		BString name;
 		BString file;
 		DisplayCIDFonts::Type type;
-		mDisplayCIDFonts->Get(index, name, file, type);
+		fDisplayCIDFonts->Get(index, name, file, type);
 
 		BString label(B_TRANSLATE(name.String()));
 		label << ":";
@@ -274,7 +274,7 @@ void PreferencesWindow::FillFontFileMenu(
     BMenuField* menuField, directory_which which, const char* label, const char* name, const char* file)
 {
 	BMenu* menu = menuField->Menu();
-	mFontMenuFields.AddPointer(name, menuField);
+	fFontMenuFields.AddPointer(name, menuField);
 
 	BPath path;
 	if (find_directory(which, &path) != B_OK) {
@@ -344,12 +344,12 @@ void PreferencesWindow::ClearView()
 PreferencesWindow::PreferencesWindow(GlobalSettings* settings, BLooper* looper)
     : BWindow(
           BRect(0, 0, 100, 100), B_TRANSLATE("Preferences"), B_TITLED_WINDOW_LOOK, B_FLOATING_APP_WINDOW_FEEL, B_AUTO_UPDATE_SIZE_LIMITS),
-      mLooper(looper),
-      mSettings(settings)
+      fLooper(looper),
+      fSettings(settings)
 {
 	BMessage msg;
 	settings->GetDisplayCIDFonts(msg);
-	mDisplayCIDFonts = new DisplayCIDFonts(msg);
+	fDisplayCIDFonts = new DisplayCIDFonts(msg);
 
 	AddCommonFilter(new EscapeMessageFilter(this, B_QUIT_REQUESTED));
 
@@ -360,19 +360,19 @@ PreferencesWindow::PreferencesWindow(GlobalSettings* settings, BLooper* looper)
 
 PreferencesWindow::~PreferencesWindow()
 {
-	delete mDisplayCIDFonts;
-	mDisplayCIDFonts = NULL;
+	delete fDisplayCIDFonts;
+	fDisplayCIDFonts = NULL;
 }
 
 class TranslatedFileItem : public BStringItem {
-	BString mFileName;
+	BString fFileName;
 
 public:
 	TranslatedFileItem(const char* name, const char* filename)
 	    : BStringItem(name),
-	      mFileName(filename)
+	      fFileName(filename)
 	{}
-	const char* FileName() const { return mFileName.String(); }
+	const char* FileName() const { return fFileName.String(); }
 };
 
 bool PreferencesWindow::DecodeMessage(BMessage* msg, int16& kind, int16& which, int16& index)
@@ -385,7 +385,7 @@ bool PreferencesWindow::DecodeMessage(BMessage* msg, int16& kind, int16& which, 
 void PreferencesWindow::Notify(uint32 what)
 {
 	BMessage m(what);
-	mLooper->PostMessage(&m);
+	fLooper->PostMessage(&m);
 }
 
 void PreferencesWindow::NotifyRestartDoc()
@@ -403,14 +403,14 @@ void PreferencesWindow::DisplayCIDFontSelected(BMessage* msg)
 	DisplayCIDFonts::Type type = GetType(file.String());
 
 	// save new font to global settings
-	mDisplayCIDFonts->Set(name.String(), file.String(), type);
+	fDisplayCIDFonts->Set(name.String(), file.String(), type);
 	BMessage archive;
-	mDisplayCIDFonts->Archive(archive);
-	mSettings->SetDisplayCIDFonts(archive);
+	fDisplayCIDFonts->Archive(archive);
+	fSettings->SetDisplayCIDFonts(archive);
 
 	// set menu field label
 	void* pointer;
-	if (mFontMenuFields.FindPointer(name.String(), &pointer) != B_OK) {
+	if (fFontMenuFields.FindPointer(name.String(), &pointer) != B_OK) {
 		return;
 	}
 
@@ -423,15 +423,15 @@ void PreferencesWindow::MessageReceived(BMessage* msg)
 {
 	switch (msg->what) {
 	case PREFERENCE_SELECTED:
-		if (mPreferences->FullListCurrentSelection() >= 0) {
-			mLayers->SetVisibleItem(mPreferences->FullListCurrentSelection());
+		if (fPreferences->FullListCurrentSelection() >= 0) {
+			fLayers->SetVisibleItem(fPreferences->FullListCurrentSelection());
 		}
 		break;
 	case RESTORE_PAGE_NO_CHANGED:
-		mSettings->SetRestorePageNumber(IsOn(msg));
+		fSettings->SetRestorePageNumber(IsOn(msg));
 		break;
 	case RESTORE_WINDOW_FRAME_CHANGED:
-		mSettings->SetRestoreWindowFrame(IsOn(msg));
+		fSettings->SetRestoreWindowFrame(IsOn(msg));
 		break;
 	case QUASI_FULLSCREEN_MODE_ON:
 		gApp->GetSettings()->SetQuasiFullscreenMode(true);
@@ -459,7 +459,7 @@ void PreferencesWindow::MessageReceived(BMessage* msg)
 		}
 	} break;
 	case INVERT_VERTICAL_SCROLLING_CHANGED:
-		mSettings->SetInvertVerticalScrolling(IsOn(msg));
+		fSettings->SetInvertVerticalScrolling(IsOn(msg));
 		Notify(UPDATE_NOTIFY);
 		break;
 	case DISPLAY_CID_FONT_SELECTED:
@@ -472,7 +472,7 @@ void PreferencesWindow::MessageReceived(BMessage* msg)
 		nmsg.AddInt16("which", DISPLAY_FILLED_SELECTION);
 
 		nmsg.AddInt16("index", msg->what == FILLED_SELECTION_FILLED ? 0 : 1);
-		mLooper->PostMessage(&nmsg);
+		fLooper->PostMessage(&nmsg);
 	} break;
 	}
 
@@ -481,9 +481,9 @@ void PreferencesWindow::MessageReceived(BMessage* msg)
 
 bool PreferencesWindow::QuitRequested()
 {
-	if (mLooper) {
+	if (fLooper) {
 		BMessage msg(QUIT_NOTIFY);
-		mLooper->PostMessage(&msg);
+		fLooper->PostMessage(&msg);
 	}
 	ClearView();
 	return true;

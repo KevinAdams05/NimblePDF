@@ -46,49 +46,49 @@
 // Implementation of OutlineStyle
 
 OutlineStyle::OutlineStyle(const BFont* font, rgb_color color)
-    : mFont(font),
-      mColor(color)
+    : fFont(font),
+      fColor(color)
 {}
 
 // Implementation of OutlineStyle
 
 OutlineStyleList::OutlineStyleList()
 {
-	mFonts[PLAIN_STYLE] = *be_plain_font;
-	mFonts[BOLD_STYLE] = *be_plain_font;
-	mFonts[BOLD_STYLE].SetFace(B_BOLD_FACE);
-	mFonts[ITALIC_STYLE] = *be_plain_font;
-	mFonts[ITALIC_STYLE].SetFace(B_ITALIC_FACE);
-	mFonts[BOLD_ITALIC_STYLE] = *be_plain_font;
-	mFonts[BOLD_ITALIC_STYLE].SetFace(B_BOLD_FACE | B_ITALIC_FACE);
+	fFonts[PLAIN_STYLE] = *be_plain_font;
+	fFonts[BOLD_STYLE] = *be_plain_font;
+	fFonts[BOLD_STYLE].SetFace(B_BOLD_FACE);
+	fFonts[ITALIC_STYLE] = *be_plain_font;
+	fFonts[ITALIC_STYLE].SetFace(B_ITALIC_FACE);
+	fFonts[BOLD_ITALIC_STYLE] = *be_plain_font;
+	fFonts[BOLD_ITALIC_STYLE].SetFace(B_BOLD_FACE | B_ITALIC_FACE);
 }
 
 OutlineStyleList::~OutlineStyleList()
 {
-	const int32 n = mList.CountItems();
+	const int32 n = fList.CountItems();
 	for (int32 i = 0; i < n; i++) {
-		OutlineStyle* style = (OutlineStyle*)mList.ItemAt(i);
+		OutlineStyle* style = (OutlineStyle*)fList.ItemAt(i);
 		delete style;
 	}
-	mList.MakeEmpty();
+	fList.MakeEmpty();
 }
 
 const BFont* OutlineStyleList::GetFont(int style) const
 {
-	return &mFonts[style];
+	return &fFonts[style];
 }
 
 OutlineStyle* OutlineStyleList::GetStyle(int style, rgb_color color)
 {
-	const int32 n = mList.CountItems();
+	const int32 n = fList.CountItems();
 	for (int32 i = 0; i < n; i++) {
-		OutlineStyle* os = (OutlineStyle*)mList.ItemAt(i);
+		OutlineStyle* os = (OutlineStyle*)fList.ItemAt(i);
 		if (os->GetFont() == GetFont(style) && memcmp(os->GetColor(), &color, sizeof(color)) == 0) {
 			return os;
 		}
 	}
 	OutlineStyle* os = new OutlineStyle(GetFont(style), color);
-	mList.AddItem(os);
+	fList.AddItem(os);
 	return os;
 }
 
@@ -102,17 +102,17 @@ OutlineStyle* OutlineStyleList::GetDefaultStyle()
 
 OutlineListItem::OutlineListItem(const char* string, uint32 level, bool expanded, OutlineStyle* style)
     : BListItem(level, expanded),
-      mString(string),
-      mType(linkUndefined),
-      mStyle(style)
+      fString(string),
+      fType(linkUndefined),
+      fStyle(style)
 {}
 
 OutlineListItem::~OutlineListItem()
 {
-	if (mType == linkDest)
-		delete mLink.dest;
-	else if (mType == linkString)
-		delete mLink.string;
+	if (fType == linkDest)
+		delete fLink.dest;
+	else if (fType == linkString)
+		delete fLink.string;
 }
 
 
@@ -132,25 +132,25 @@ void OutlineListItem::DrawItem(BView* owner, BRect frame, bool complete)
 	owner->FillRect(frame);
 	// set font color
 	if (IsEnabled()) {
-		owner->SetHighColor(*mStyle->GetColor());
+		owner->SetHighColor(*fStyle->GetColor());
 	} else {
-		owner->SetHighColor(*mStyle->GetColor());
+		owner->SetHighColor(*fStyle->GetColor());
 	}
 	// set background color
 	owner->SetLowColor(color);
 	// display text
 	owner->MovePenTo(frame.left + 4, frame.bottom - 2);
-	owner->SetFont(mStyle->GetFont());
-	owner->DrawString(mString.String());
+	owner->SetFont(fStyle->GetFont());
+	owner->DrawString(fString.String());
 
 	owner->PopState();
 }
 
 void OutlineListItem::SetLink(LinkDest* dest)
 {
-	if (dest->isOk() && (mType == linkUndefined)) {
-		mType = linkDest;
-		mLink.dest = dest;
+	if (dest->isOk() && (fType == linkUndefined)) {
+		fType = linkDest;
+		fLink.dest = dest;
 	} else {
 		delete dest;
 	}
@@ -158,17 +158,17 @@ void OutlineListItem::SetLink(LinkDest* dest)
 
 void OutlineListItem::SetLink(GString* s)
 {
-	if (mType == linkUndefined) {
-		mType = linkString;
-		mLink.string = s;
+	if (fType == linkUndefined) {
+		fType = linkString;
+		fLink.string = s;
 	}
 }
 
 void OutlineListItem::SetPageNum(int pageNum)
 {
-	if (mType == linkUndefined) {
-		mType = linkPageNum;
-		mLink.pageNum = pageNum;
+	if (fType == linkUndefined) {
+		fType = linkPageNum;
+		fLink.pageNum = pageNum;
 	}
 }
 
@@ -208,7 +208,7 @@ void OutlinesView::ReadOutlines(Object* o, uint32 level)
 			} else {
 				item = new OutlineListItem(B_TRANSLATE("No title"), level, open, GetDefaultStyle());
 			}
-			mList->AddItem(item);
+			fList->AddItem(item);
 
 			Object dest;
 			if (current->dictLookup("Dest", &dest)) {
@@ -280,7 +280,7 @@ void OutlinesView::ReadOutlines(Object* o, uint32 level)
 			}
 			style.free();
 
-			item->SetStyle(mOutlineStyleList.GetStyle(item_style, item_color));
+			item->SetStyle(fOutlineStyleList.GetStyle(item_style, item_color));
 			/*
 			Object aa;
 			if (current->dictLookup("AA", &aa) && !aa.isNull()) {
@@ -302,9 +302,9 @@ void OutlinesView::ReadOutlines(Object* o, uint32 level)
 
 			// expanded argument of OutlineListItem constructor does not work!
 			if (open)
-				mList->Expand(item);
+				fList->Expand(item);
 			else
-				mList->Collapse(item);
+				fList->Collapse(item);
 		}
 		title.free();
 
@@ -326,67 +326,67 @@ void OutlinesView::ReadOutlines(Object* o, uint32 level)
 
 OutlinesView::OutlinesView(Catalog* catalog, BMessage* bookmarks, GlobalSettings* settings, BLooper* looper, uint32 flags)
     : BScrollView("BookmarksScroll", NULL, 0, true, true),
-      mLooper(looper),
-      mList(NULL),
-      mCatalog(NULL),
-      mBookmarks(NULL),
-      mNeedsUpdate(true),
-      mUserDefined(NULL),
-      mEmptyUserBM(NULL)
+      fLooper(looper),
+      fList(NULL),
+      fCatalog(NULL),
+      fBookmarks(NULL),
+      fNeedsUpdate(true),
+      fUserDefined(NULL),
+      fEmptyUserBM(NULL)
 {
-	SetTarget(mList = new BOutlineListView("", B_SINGLE_SELECTION_LIST));
-	mEmptyUserBM = new OutlineListItem(B_TRANSLATE("<empty>"), 1, true, GetDefaultStyle());
+	SetTarget(fList = new BOutlineListView("", B_SINGLE_SELECTION_LIST));
+	fEmptyUserBM = new OutlineListItem(B_TRANSLATE("<empty>"), 1, true, GetDefaultStyle());
 	SetCatalog(catalog, bookmarks);
 }
 
 OutlinesView::~OutlinesView()
 {
-	if (mLooper) {
+	if (fLooper) {
 		BMessage msg(QUIT_NOTIFY);
-		mLooper->PostMessage(&msg);
+		fLooper->PostMessage(&msg);
 	}
-	if (mList) {
-		mList->RemoveItem(mEmptyUserBM);
-		delete mEmptyUserBM;
-		MakeEmpty(mList);
+	if (fList) {
+		fList->RemoveItem(fEmptyUserBM);
+		delete fEmptyUserBM;
+		MakeEmpty(fList);
 	}
 }
 
 void OutlinesView::AttachedToWindow()
 {
-	mList->SetSelectionMessage(new BMessage('Outl'));
-	mList->SetTarget(this);
+	fList->SetSelectionMessage(new BMessage('Outl'));
+	fList->SetTarget(this);
 }
 
 void OutlinesView::SetCatalog(Catalog* catalog, BMessage* bookmarks)
 {
-	if (mCatalog != catalog) {
-		mCatalog = catalog;
-		mBookmarks = bookmarks;
-		mNeedsUpdate = true;
+	if (fCatalog != catalog) {
+		fCatalog = catalog;
+		fBookmarks = bookmarks;
+		fNeedsUpdate = true;
 		InitUserBookmarks(true);
 	}
 }
 
 void OutlinesView::Activate()
 {
-	if (mNeedsUpdate) {
-		mNeedsUpdate = false;
-		mList->RemoveItem(mEmptyUserBM); // keep mEmptyUserBM
-		MakeEmpty(mList);
+	if (fNeedsUpdate) {
+		fNeedsUpdate = false;
+		fList->RemoveItem(fEmptyUserBM); // keep fEmptyUserBM
+		MakeEmpty(fList);
 		Object obj;
-		mList->AddItem(new OutlineListItem(B_TRANSLATE("Document"), 0, true, GetDefaultStyle()));
+		fList->AddItem(new OutlineListItem(B_TRANSLATE("Document"), 0, true, GetDefaultStyle()));
 		gPdfLock->Lock();
-		if (mCatalog->getOutline()->isDict() && mCatalog->getOutline()->dictLookup("First", &obj) && !obj.isNull()) {
+		if (fCatalog->getOutline()->isDict() && fCatalog->getOutline()->dictLookup("First", &obj) && !obj.isNull()) {
 			ReadOutlines(&obj, 1);
 		}
 		gPdfLock->Unlock();
-		if (mList->CountItems() == 1) {
-			mList->AddItem(new OutlineListItem(B_TRANSLATE("<empty>"), 1, true, GetDefaultStyle()));
+		if (fList->CountItems() == 1) {
+			fList->AddItem(new OutlineListItem(B_TRANSLATE("<empty>"), 1, true, GetDefaultStyle()));
 		}
 		obj.free();
-		mUserDefined = new OutlineListItem(B_TRANSLATE("User defined"), 0, true, GetDefaultStyle());
-		mList->AddItem(mUserDefined);
+		fUserDefined = new OutlineListItem(B_TRANSLATE("User defined"), 0, true, GetDefaultStyle());
+		fList->AddItem(fUserDefined);
 		InitUserBookmarks(false);
 	}
 }
@@ -395,20 +395,20 @@ void OutlinesView::Activate()
 // handling of user bookmarks
 void OutlinesView::InitUserBookmarks(bool initOnly)
 {
-	mBookmark.Clear();
-	if (mBookmarks == NULL || mBookmarks->IsEmpty()) {
+	fBookmark.Clear();
+	if (fBookmarks == NULL || fBookmarks->IsEmpty()) {
 		if (!initOnly) {
-			mList->AddItem(mEmptyUserBM);
+			fList->AddItem(fEmptyUserBM);
 		}
 	} else {
 		BString label;
 		int32 pageNum, i = 0;
-		while (B_OK == mBookmarks->FindString("l", i, &label) && B_OK == mBookmarks->FindInt32("p", i, &pageNum)) {
-			mBookmark.Set(pageNum, true);
+		while (B_OK == fBookmarks->FindString("l", i, &label) && B_OK == fBookmarks->FindInt32("p", i, &pageNum)) {
+			fBookmark.Set(pageNum, true);
 			if (!initOnly) {
 				OutlineListItem* item = new OutlineListItem(label.String(), 1, true, GetDefaultStyle());
 				item->SetPageNum(pageNum);
-				mList->AddItem(item);
+				fList->AddItem(item);
 			}
 			i++;
 		}
@@ -428,10 +428,10 @@ static BListItem* store_bookmarks(BListItem* i, void* d)
 
 bool OutlinesView::GetBookmarks(BMessage* bm)
 {
-	if (mList == NULL) {
+	if (fList == NULL) {
 		return false;
 	}
-	mList->EachItemUnder(mUserDefined, true, store_bookmarks, bm);
+	fList->EachItemUnder(fUserDefined, true, store_bookmarks, bm);
 	return true;
 }
 
@@ -446,24 +446,24 @@ static BListItem* find_bookmark(BListItem* i, void* d)
 
 OutlineListItem* OutlinesView::FindUserBookmark(int pageNum)
 {
-	if (mList == NULL) {
+	if (fList == NULL) {
 		return NULL;
 	}
-	return (OutlineListItem*)mList->EachItemUnder(mUserDefined, true, find_bookmark, &pageNum);
+	return (OutlineListItem*)fList->EachItemUnder(fUserDefined, true, find_bookmark, &pageNum);
 }
 
 bool OutlinesView::HasUserBookmark(int pageNum)
 {
-	return mBookmark.IsSet(pageNum);
+	return fBookmark.IsSet(pageNum);
 }
 
 bool OutlinesView::IsUserBMSelected()
 {
-	if (mNeedsUpdate)
+	if (fNeedsUpdate)
 		return false;
-	int i = mList->CurrentSelection(0);
+	int i = fList->CurrentSelection(0);
 	if (i >= 0) {
-		OutlineListItem* item = (OutlineListItem*)mList->ItemAt(i);
+		OutlineListItem* item = (OutlineListItem*)fList->ItemAt(i);
 		return item->isPageNum();
 	}
 	return false;
@@ -472,26 +472,26 @@ bool OutlinesView::IsUserBMSelected()
 void OutlinesView::AddUserBookmark(int pageNum, const char* label)
 {
 	RemoveUserBookmark(pageNum);
-	if (mList->CountItemsUnder(mUserDefined, true) == 1) {
-		mList->RemoveItem(mEmptyUserBM);
+	if (fList->CountItemsUnder(fUserDefined, true) == 1) {
+		fList->RemoveItem(fEmptyUserBM);
 	}
 	OutlineListItem* item;
 	int32 i = 0;
-	int32 index = mList->FullListIndexOf(mUserDefined) + 1;
-	item = (OutlineListItem*)mList->ItemUnderAt(mUserDefined, true, i);
+	int32 index = fList->FullListIndexOf(fUserDefined) + 1;
+	item = (OutlineListItem*)fList->ItemUnderAt(fUserDefined, true, i);
 	while (item != NULL) {
 		if (item->isPageNum() && item->getPageNum() > pageNum) {
 			// insert new OutlineListItem before item
 			break;
 		}
 		i++;
-		item = (OutlineListItem*)mList->ItemUnderAt(mUserDefined, true, i);
+		item = (OutlineListItem*)fList->ItemUnderAt(fUserDefined, true, i);
 	}
 	index += i;
 	OutlineListItem* n = new OutlineListItem(label, 1, true, GetDefaultStyle());
 	n->SetPageNum(pageNum);
-	mList->AddItem(n, index);
-	mBookmark.Set(pageNum, true);
+	fList->AddItem(n, index);
+	fBookmark.Set(pageNum, true);
 }
 
 void OutlinesView::RemoveUserBookmark(int pageNum)
@@ -499,26 +499,26 @@ void OutlinesView::RemoveUserBookmark(int pageNum)
 	Activate();
 	OutlineListItem* item;
 	int32 i = 0;
-	item = (OutlineListItem*)mList->ItemUnderAt(mUserDefined, true, i);
+	item = (OutlineListItem*)fList->ItemUnderAt(fUserDefined, true, i);
 	while (item != NULL) {
 		if (item->isPageNum() && item->getPageNum() == pageNum) {
 			// remove item
-			mList->RemoveItem(item);
+			fList->RemoveItem(item);
 			delete item;
-			mBookmark.Set(pageNum, false);
+			fBookmark.Set(pageNum, false);
 			break;
 		}
 		i++;
-		item = (OutlineListItem*)mList->ItemUnderAt(mUserDefined, true, i);
+		item = (OutlineListItem*)fList->ItemUnderAt(fUserDefined, true, i);
 	}
-	if (mList->CountItemsUnder(mUserDefined, true) == 0) {
-		mList->AddItem(mEmptyUserBM);
+	if (fList->CountItemsUnder(fUserDefined, true) == 0) {
+		fList->AddItem(fEmptyUserBM);
 	}
 }
 
 const char* OutlinesView::GetUserBMLabel(int pageNum)
 {
-	if (mNeedsUpdate)
+	if (fNeedsUpdate)
 		return NULL;
 	OutlineListItem* item = FindUserBookmark(pageNum);
 	if (item)
@@ -530,10 +530,10 @@ void OutlinesView::MessageReceived(BMessage* msg)
 {
 	if (msg->what == 'Outl') {
 		// get first selected item
-		int32 selected = mList->CurrentSelection(0);
+		int32 selected = fList->CurrentSelection(0);
 		if (selected >= 0) {
 			bool msgSent = false;
-			OutlineListItem* item = (OutlineListItem*)mList->ItemAt(selected);
+			OutlineListItem* item = (OutlineListItem*)fList->ItemAt(selected);
 			if (item) {
 				LinkDest* link = NULL;
 				bool deleteLink = false;
@@ -546,12 +546,12 @@ void OutlinesView::MessageReceived(BMessage* msg)
 					// to check in the handler of this message if still contains a vaild pointer.
 					BMessage msg(DEST_NOTIFY);
 					msg.AddPointer("dest", link);
-					mLooper->PostMessage(&msg);
+					fLooper->PostMessage(&msg);
 					msgSent = true;
 				} else if (item->isString()) {
 					BMessage msg(STRING_NOTIFY);
 					msg.AddString("string", item->getString()->getCString());
-					mLooper->PostMessage(&msg);
+					fLooper->PostMessage(&msg);
 					msgSent = true;
 				} else if (link && link->isPageRef()) {
 					BMessage msg(REF_NOTIFY);
@@ -559,7 +559,7 @@ void OutlinesView::MessageReceived(BMessage* msg)
 					int32 num = r.num, gen = r.gen;
 					msg.AddInt32("num", num);
 					msg.AddInt32("gen", gen);
-					mLooper->PostMessage(&msg);
+					fLooper->PostMessage(&msg);
 					msgSent = true;
 				} else {
 					int32 p = -1;
@@ -571,7 +571,7 @@ void OutlinesView::MessageReceived(BMessage* msg)
 					if (p != -1) {
 						BMessage msg(PAGE_NOTIFY);
 						msg.AddInt32("page", p);
-						mLooper->PostMessage(&msg);
+						fLooper->PostMessage(&msg);
 						msgSent = true;
 					}
 				}
@@ -580,7 +580,7 @@ void OutlinesView::MessageReceived(BMessage* msg)
 				if (!msgSent) {
 					// notify window that state has changed
 					BMessage msg(STATE_CHANGE_NOTIFY);
-					mLooper->PostMessage(&msg);
+					fLooper->PostMessage(&msg);
 				}
 			}
 		}
@@ -599,8 +599,8 @@ BookmarkWindow::BookmarkWindow(int pageNum, const char* title, BRect aRect, BLoo
           B_MODAL_APP_WINDOW_FEEL,
           B_NOT_ZOOMABLE | B_AUTO_UPDATE_SIZE_LIMITS)
 {
-	mLooper = looper;
-	mPageNum = pageNum;
+	fLooper = looper;
+	fPageNum = pageNum;
 
 	AddCommonFilter(new EscapeMessageFilter(this, B_QUIT_REQUESTED));
 
@@ -613,15 +613,15 @@ BookmarkWindow::BookmarkWindow(int pageNum, const char* title, BRect aRect, BLoo
 	MoveTo(aRect.left, aRect.top);
 	ResizeTo(width, height);
 
-	mTitle = new BTextControl("mTitle", "", title, NULL);
+	fTitle = new BTextControl("fTitle", "", title, NULL);
 
 	BButton* button = new BButton("button", B_TRANSLATE("OK"), new BMessage('OK'));
 
-	BLayoutBuilder::Group<>(this, B_HORIZONTAL).SetInsets(B_USE_WINDOW_INSETS).Add(mTitle).Add(button);
+	BLayoutBuilder::Group<>(this, B_HORIZONTAL).SetInsets(B_USE_WINDOW_INSETS).Add(fTitle).Add(button);
 
 	SetDefaultButton(button);
 
-	mTitle->MakeFocus();
+	fTitle->MakeFocus();
 	Show();
 }
 
@@ -638,9 +638,9 @@ void BookmarkWindow::MessageReceived(BMessage* msg)
 		// post message to application
 
 		BMessage msg(BOOKMARK_ENTERED_NOTIFY);
-		msg.AddString("label", mTitle->Text());
-		msg.AddInt32("pageNum", mPageNum);
-		mLooper->PostMessage(&msg, NULL);
+		msg.AddString("label", fTitle->Text());
+		msg.AddInt32("pageNum", fPageNum);
+		fLooper->PostMessage(&msg, NULL);
 		Quit();
 		break;
 	}

@@ -50,7 +50,7 @@ public:
 private:
 	static int32 DoRun(void* data);
 
-	thread_id mThreadId;
+	thread_id fThreadId;
 };
 
 #endif

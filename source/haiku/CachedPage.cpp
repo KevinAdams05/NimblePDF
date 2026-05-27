@@ -24,52 +24,52 @@
 
 /////////////////////////////////////////////////////////////////////////
 CachedPage::CachedPage()
-    : mState(EMPTY),
-      mBitmap(NULL),
-      mText(NULL),
-      mLinks(NULL),
-      mAnnotations(NULL)
+    : fState(EMPTY),
+      fBitmap(NULL),
+      fText(NULL),
+      fLinks(NULL),
+      fAnnotations(NULL)
 {}
 
 CachedPage::~CachedPage()
 {
-	delete mBitmap;
-	delete mText;
-	delete mLinks;
+	delete fBitmap;
+	delete fText;
+	delete fLinks;
 }
 
 /////////////////////////////////////////////////////////////////////////
 void CachedPage::InitCTM(OutputDev* outputDev)
 {
 	for (int i = 0; i < 6; i++)
-		mCtm[i] = outputDev->getDefCTM()[i];
+		fCtm[i] = outputDev->getDefCTM()[i];
 	for (int i = 0; i < 6; i++)
-		mIctm[i] = outputDev->getDefICTM()[i];
+		fIctm[i] = outputDev->getDefICTM()[i];
 }
 
 void CachedPage::CvtDevToUser(int dx, int dy, double* ux, double* uy)
 {
-	*ux = mIctm[0] * dx + mIctm[2] * dy + mIctm[4];
-	*uy = mIctm[1] * dx + mIctm[3] * dy + mIctm[5];
+	*ux = fIctm[0] * dx + fIctm[2] * dy + fIctm[4];
+	*uy = fIctm[1] * dx + fIctm[3] * dy + fIctm[5];
 }
 
 void CachedPage::CvtUserToDev(double ux, double uy, int* dx, int* dy)
 {
-	*dx = (int)(mCtm[0] * ux + mCtm[2] * uy + mCtm[4] + 0.5);
-	*dy = (int)(mCtm[1] * ux + mCtm[3] * uy + mCtm[5] + 0.5);
+	*dx = (int)(fCtm[0] * ux + fCtm[2] * uy + fCtm[4] + 0.5);
+	*dy = (int)(fCtm[1] * ux + fCtm[3] * uy + fCtm[5] + 0.5);
 }
 
 /////////////////////////////////////////////////////////////////////////
 void CachedPage::SetLinks(Links* links)
 {
-	// ASSERT(mLinks == NULL);
-	mLinks = links;
+	// ASSERT(fLinks == NULL);
+	fLinks = links;
 }
 
 LinkAction* CachedPage::FindLink(double x, double y)
 {
-	if (mLinks) {
-		return mLinks->find(x, y);
+	if (fLinks) {
+		return fLinks->find(x, y);
 	} else {
 		return NULL;
 	}
@@ -77,8 +77,8 @@ LinkAction* CachedPage::FindLink(double x, double y)
 
 GBool CachedPage::OnLink(double x, double y)
 {
-	if (mLinks) {
-		return mLinks->onLink(x, y);
+	if (fLinks) {
+		return fLinks->onLink(x, y);
 	} else {
 		return false;
 	}
@@ -86,8 +86,8 @@ GBool CachedPage::OnLink(double x, double y)
 
 void CachedPage::SetText(TextPage* text)
 {
-	// ASSERT(mText == NULL);
-	mText = text;
+	// ASSERT(fText == NULL);
+	fText = text;
 }
 
 GBool CachedPage::FindText(Unicode* s,
@@ -103,8 +103,8 @@ GBool CachedPage::FindText(Unicode* s,
     double* xMax,
     double* yMax)
 {
-	if (mText
-	    && mText->findText(s,
+	if (fText
+	    && fText->findText(s,
 	        len,
 	        startAtTop,
 	        stopAtBottom,
@@ -124,8 +124,8 @@ GBool CachedPage::FindText(Unicode* s,
 
 GString* CachedPage::GetText(int xMin, int yMin, int xMax, int yMax)
 {
-	if (mText) {
-		return mText->getText((double)xMin, (double)yMin, (double)xMax, (double)yMax);
+	if (fText) {
+		return fText->getText((double)xMin, (double)yMin, (double)xMax, (double)yMax);
 	} else {
 		return NULL;
 	}
@@ -134,16 +134,16 @@ GString* CachedPage::GetText(int xMin, int yMin, int xMax, int yMax)
 /////////////////////////////////////////////////////////////////////////
 void CachedPage::SetBitmap(BBitmap* bitmap, int32 width, int32 height)
 {
-	mBitmap = bitmap;
-	mWidth = width;
-	mHeight = height;
+	fBitmap = bitmap;
+	fWidth = width;
+	fHeight = height;
 }
 
 void CachedPage::MakeEmpty()
 {
-	delete mLinks;
-	mLinks = NULL;
-	delete mText;
-	mText = NULL;
-	// don't delete mBitmap
+	delete fLinks;
+	fLinks = NULL;
+	delete fText;
+	fText = NULL;
+	// don't delete fBitmap
 }

@@ -35,7 +35,7 @@
 #define DEFINE_SETTER(type, Type, method, name, value) \
 	void GlobalSettings::Set##method(type name)        \
 	{                                                  \
-		mChanged = mChanged || (_##name == name);      \
+		fChanged = fChanged || (_##name == name);      \
 		_##name = name;                                \
 	}
 #define DEFINE_GETTER(type, Type, method, name, value) \
@@ -154,7 +154,7 @@
 #define DEFINE_STRING_SETTER(method, name, value)        \
 	void GlobalSettings::Set##method(const char* string) \
 	{                                                    \
-		mChanged = mChanged || (_##name == string);      \
+		fChanged = fChanged || (_##name == string);      \
 		_##name = string;                                \
 	}
 #define DEFINE_STRING_GETTER(method, name, value)   \
@@ -186,13 +186,13 @@
 // Renamed class Settings to GlobalSettings because of Linker warning
 // in PPC Crosscompiler (libtracker)
 class _EXPORT GlobalSettings : public BArchivable {
-	bool mChanged;
+	bool fChanged;
 
 	// file open settings
-	BString mPanelDirectory;
-	BString mDefaultPanelDirectory;
+	BString fPanelDirectory;
+	BString fDefaultPanelDirectory;
 	// CID display names
-	BMessage mDisplayCIDFonts;
+	BMessage fDisplayCIDFonts;
 
 	SETTINGS(DECLARE_VARIABLE)
 	STRING_SETTINGS(DECLARE_STRING_VARIABLE)

@@ -23,12 +23,12 @@
 #include "BitmapPool.h"
 #include <be/interface/Bitmap.h>
 
-BitmapPool* BitmapPool::mInstance = NULL;
+BitmapPool* BitmapPool::fInstance = NULL;
 
 BitmapPool::BitmapPool()
 {
-	mSize = 0;
-	mFree = NULL;
+	fSize = 0;
+	fFree = NULL;
 }
 
 int64 BitmapPool::size(int width, int height, color_space cs)
@@ -75,38 +75,38 @@ int64 BitmapPool::freeMemorySize()
 
 BitmapPool* BitmapPool::getInstance()
 {
-	if (mInstance == NULL) {
-		mInstance = new BitmapPool();
+	if (fInstance == NULL) {
+		fInstance = new BitmapPool();
 	}
-	return mInstance;
+	return fInstance;
 }
 
 int BitmapPool::newBitmap()
 {
-	Item* item = mFree;
+	Item* item = fFree;
 	if (item != NULL) {
-		mFree = item->next;
+		fFree = item->next;
 		return item->index;
 	}
 	item = new Item;
 	item->size = 0;
 	item->width = item->height = 0;
 	item->bitmap = NULL;
-	mPool.AddItem(item);
-	return mPool.CountItems() - 1;
+	fPool.AddItem(item);
+	return fPool.CountItems() - 1;
 }
 
 void BitmapPool::deleteBitmap(int id)
 {
 	Item* item = itemAt(id);
-	mSize += item->size;
+	fSize += item->size;
 
 	delete item->bitmap;
 	item->bitmap = NULL;
 	item->size = 0;
 	item->width = item->height = 0;
-	item->next = mFree;
-	mFree = item;
+	item->next = fFree;
+	fFree = item;
 }
 
 BBitmap* BitmapPool::getBitmap(int id, int width, int height, color_space cs)
@@ -116,9 +116,9 @@ BBitmap* BitmapPool::getBitmap(int id, int width, int height, color_space cs)
 
 	if (!bitmap || cs != bitmap->ColorSpace() || width > item->width || height > item->height) {
 		delete bitmap;
-		mSize += item->size;
+		fSize += item->size;
 		int64 s = size(width, height, cs);
-		int64 required = s - mSize;
+		int64 required = s - fSize;
 		if (required < 0)
 			required = 0;
 		// TODO: reserve some free space
@@ -130,9 +130,9 @@ BBitmap* BitmapPool::getBitmap(int id, int width, int height, color_space cs)
 			return NULL;
 		}
 
-		mSize -= s;
-		if (mSize < 0)
-			mSize = 0;
+		fSize -= s;
+		if (fSize < 0)
+			fSize = 0;
 		item->size = s;
 
 		bitmap = new BBitmap(BRect(0, 0, width, height), cs);

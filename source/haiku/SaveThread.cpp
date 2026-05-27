@@ -24,20 +24,20 @@
 
 XRef* SaveThread::GetXRef()
 {
-	return mXRef;
+	return fXRef;
 }
 
 void SaveThread::SetTotal(int32 total)
 {
-	StatusWindow::SetTotal(mShowStatusWindow.GetMessenger(), total);
+	StatusWindow::SetTotal(fShowStatusWindow.GetMessenger(), total);
 }
 
 void SaveThread::SetCurrent(int32 current)
 {
-	StatusWindow::SetCurrent(mShowStatusWindow.GetMessenger(), current);
+	StatusWindow::SetCurrent(fShowStatusWindow.GetMessenger(), current);
 }
 
 void SaveThread::SetText(const char* text)
 {
-	StatusWindow::SetText(mShowStatusWindow.GetMessenger(), text);
+	StatusWindow::SetText(fShowStatusWindow.GetMessenger(), text);
 }

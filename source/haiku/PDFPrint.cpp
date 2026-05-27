@@ -41,19 +41,19 @@ status_t PDFView::PageSetup()
 {
 	status_t result = B_ERROR;
 
-	BPrintJob printJob(this->mTitle->String());
+	BPrintJob printJob(this->fTitle->String());
 
 
-	if (mPrintSettings != NULL) {
+	if (fPrintSettings != NULL) {
 		/* page setup has already been run */
-		printJob.SetSettings(new BMessage(*mPrintSettings));
+		printJob.SetSettings(new BMessage(*fPrintSettings));
 	}
 
 	result = printJob.ConfigPage();
 
 	if (result == B_NO_ERROR) {
-		delete mPrintSettings;
-		mPrintSettings = printJob.Settings();
+		delete fPrintSettings;
+		fPrintSettings = printJob.Settings();
 	}
 
 	return result;
@@ -63,7 +63,7 @@ status_t PDFView::PageSetup()
 ///////////////////////////////////////////////////////////////////////////
 class PrintView : public BView {
 public:
-	PrintView(PDFView* view, PDFDoc* mDoc, PageRenderer* pageRenderer, BMessage* printSettings, const char* title, BRect rect);
+	PrintView(PDFView* view, PDFDoc* fDoc, PageRenderer* pageRenderer, BMessage* printSettings, const char* title, BRect rect);
 
 	void SetPage(int32 page);
 	void Draw(BRect updateRect);
@@ -76,25 +76,25 @@ private:
 	void Redraw(int left, int top, int right, int bottom, bool composited);
 	static GBool AbortCheckCallback(void* data);
 
-	PDFView* mView;
-	PDFDoc* mDoc;
-	bool mColorMode;
-	PageRenderer* mPageRenderer;
-	BeSplashOutputDev* mOutputDev;
-	int mPageWidth;  // of print page
-	int mPageHeight; // of print page
-	int mSliceY;
-	int mSliceHeight;
-	int32 mCurrentPage;
-	char* mTitle;
-	int mZoom;
-	double mScale;
-	int mRotation;
-	int16 mPrintSelection;
-	int16 mPrintOrder;
-	BMessage* mPrintSettings;
-	BRect mRect;
-	PrintingProgressWindow* mProgressWindow;
+	PDFView* fView;
+	PDFDoc* fDoc;
+	bool fColorMode;
+	PageRenderer* fPageRenderer;
+	BeSplashOutputDev* fOutputDev;
+	int fPageWidth;  // of print page
+	int fPageHeight; // of print page
+	int fSliceY;
+	int fSliceHeight;
+	int32 fCurrentPage;
+	char* fTitle;
+	int fZoom;
+	double fScale;
+	int fRotation;
+	int16 fPrintSelection;
+	int16 fPrintOrder;
+	BMessage* fPrintSettings;
+	BRect fRect;
+	PrintingProgressWindow* fProgressWindow;
 };
 
 ///////////////////////////////////////////////////////////////////////////
@@ -102,17 +102,17 @@ PrintView::PrintView(PDFView* view, PDFDoc* doc, PageRenderer* pageRenderer, BMe
     : BView(BRect(1000, 1000, 1000 + rect.Width(), 1000 + rect.Height()), "print_view", B_FOLLOW_NONE, B_WILL_DRAW)
 {
 	GlobalSettings* s = gApp->GetSettings();
-	mView = view; // PDFView
-	mDoc = doc;
-	mPageRenderer = pageRenderer;
-	mPrintSettings = printSettings;
-	mTitle = (char*)title;
-	mZoom = s->GetZoomPrinter();
-	mRotation = (int)s->GetRotationPrinter();
-	mRect = rect;
-	mScale = s->GetDPI() / 72.0;
-	mPrintSelection = s->GetPrintSelection();
-	mPrintOrder = s->GetPrintOrder();
+	fView = view; // PDFView
+	fDoc = doc;
+	fPageRenderer = pageRenderer;
+	fPrintSettings = printSettings;
+	fTitle = (char*)title;
+	fZoom = s->GetZoomPrinter();
+	fRotation = (int)s->GetRotationPrinter();
+	fRect = rect;
+	fScale = s->GetDPI() / 72.0;
+	fPrintSelection = s->GetPrintSelection();
+	fPrintOrder = s->GetPrintOrder();
 
 	SplashColor backgroundColor;
 	backgroundColor[0] = 255;
@@ -120,17 +120,17 @@ PrintView::PrintView(PDFView* view, PDFDoc* doc, PageRenderer* pageRenderer, BMe
 	backgroundColor[2] = 255;
 
 	BeSplashOutputDev::ColorMode colorMode;
-	mColorMode = s->GetPrintColorMode() == GlobalSettings::PRINT_COLOR_MODE;
-	if (mColorMode) {
+	fColorMode = s->GetPrintColorMode() == GlobalSettings::PRINT_COLOR_MODE;
+	if (fColorMode) {
 		colorMode = BeSplashOutputDev::kColorMode;
 	} else {
 		colorMode = BeSplashOutputDev::kGrayScaleMode;
 	}
 
-	mOutputDev = new BeSplashOutputDev(gFalse, backgroundColor, gFalse, RedrawCallback, this, colorMode);
+	fOutputDev = new BeSplashOutputDev(gFalse, backgroundColor, gFalse, RedrawCallback, this, colorMode);
 
-	mOutputDev->startDoc(NULL);
-	mOutputDev->startDoc(doc->getXRef());
+	fOutputDev->startDoc(NULL);
+	fOutputDev->startDoc(doc->getXRef());
 }
 
 
@@ -138,7 +138,7 @@ PrintView::PrintView(PDFView* view, PDFDoc* doc, PageRenderer* pageRenderer, BMe
 GBool PrintView::AbortCheckCallback(void* data)
 {
 	PrintView* printView = static_cast<PrintView*>(data);
-	PrintingProgressWindow* progress = printView->mProgressWindow;
+	PrintingProgressWindow* progress = printView->fProgressWindow;
 	return progress->Stopped() || progress->Aborted();
 }
 
@@ -154,16 +154,16 @@ void PrintView::RedrawCallback(void* data, int left, int top, int right, int bot
 void PrintView::Redraw(int left, int top, int right, int bottom, bool composited)
 {
 #if SLICE
-	mOutputDev->redraw(0, 0, this, 0, mSliceY, mPageWidth, mSliceHeight, composited);
+	fOutputDev->redraw(0, 0, this, 0, fSliceY, fPageWidth, fSliceHeight, composited);
 #else
-	mOutputDev->redraw(0, 0, this, 0, 0, mPageWidth, mPageHeight, composited);
+	fOutputDev->redraw(0, 0, this, 0, 0, fPageWidth, fPageHeight, composited);
 #endif
 }
 
 ///////////////////////////////////////////////////////////////////////////
 void PrintView::SetPage(int32 page)
 {
-	mCurrentPage = page;
+	fCurrentPage = page;
 }
 
 ///////////////////////////////////////////////////////////////////////////
@@ -171,56 +171,56 @@ void PrintView::Draw(BRect updateRect)
 {
 	if (Window()->Lock()) {
 		// PDFLock lock;
-		int32 zoomDPI = mZoom * 72 / 100;
-		double dpi = mScale * zoomDPI;
+		int32 zoomDPI = fZoom * 72 / 100;
+		double dpi = fScale * zoomDPI;
 #if SLICE
 		// About 4 MB per slice (color mode requires 4 bytes per pixel;
 		// monochrome mode requires 1 bytes per pixel).
 		// Note because xpdf rasterizes into a bitmap and when the
 		// rendered slice is drawn into the view, this it is converted to a
 		// BBitmap actually twice as much memory is allocated temporary.
-		const int64 maxSize = mColorMode ? 1024 * 1024 : 4 * 1024 * 1024;
-		int64 slices = mPageWidth * (int64)mPageHeight / maxSize;
+		const int64 maxSize = fColorMode ? 1024 * 1024 : 4 * 1024 * 1024;
+		int64 slices = fPageWidth * (int64)fPageHeight / maxSize;
 		if (slices <= 0) {
 			slices = 1;
 		}
-		mSliceHeight = mPageHeight / slices;
-		if (mSliceHeight <= 0) {
-			mSliceHeight = 1;
+		fSliceHeight = fPageHeight / slices;
+		if (fSliceHeight <= 0) {
+			fSliceHeight = 1;
 		}
-		for (mSliceY = 0; mSliceY < mPageHeight; mSliceY += mSliceHeight) {
-			if (mSliceY + mSliceHeight > mPageHeight) {
-				mSliceHeight = mPageHeight - mSliceY;
+		for (fSliceY = 0; fSliceY < fPageHeight; fSliceY += fSliceHeight) {
+			if (fSliceY + fSliceHeight > fPageHeight) {
+				fSliceHeight = fPageHeight - fSliceY;
 			}
 
 			// fprintf(stderr, "sliceY %d sliceHeight %d\n",
-			//	mSliceY, mSliceHeight);
+			//	fSliceY, fSliceHeight);
 
-			if (mSliceHeight <= 0) {
+			if (fSliceHeight <= 0) {
 				break;
 			}
 
-			mDoc->displayPageSlice(mOutputDev,
-			    mCurrentPage,
+			fDoc->displayPageSlice(fOutputDev,
+			    fCurrentPage,
 			    dpi,
 			    dpi, // h/v DPI
-			    mRotation,
+			    fRotation,
 			    gFalse, // use media box
 			    gFalse, // crop
 			    gTrue,  // printing
 			    0,      // slice X
-			    mSliceY,
-			    mPageWidth, // slice width
-			    mSliceHeight,
+			    fSliceY,
+			    fPageWidth, // slice width
+			    fSliceHeight,
 			    AbortCheckCallback,
 			    this);
 		}
 #else
-		mDoc->displayPage(mOutputDev,
-		    mCurrentPage,
+		fDoc->displayPage(fOutputDev,
+		    fCurrentPage,
 		    dpi,
 		    dpi, // h/v DPI
-		    mRotation,
+		    fRotation,
 		    gFalse, // use media box
 		    gFalse, // crop
 		    gTrue,  // printing
@@ -228,9 +228,9 @@ void PrintView::Draw(BRect updateRect)
 		    this);
 #endif
 
-		Annotations* annots = mPageRenderer->GetAnnotationsForPage(mCurrentPage);
+		Annotations* annots = fPageRenderer->GetAnnotationsForPage(fCurrentPage);
 		{ // Don't remove this block; ar-dtor must be called after Iterate()!
-			AnnotationRenderer ar(this, mOutputDev->getDefCTM(), mScale * zoomDPI, false);
+			AnnotationRenderer ar(this, fOutputDev->getDefCTM(), fScale * zoomDPI, false);
 			annots->Iterate(&ar);
 		}
 		Flush();
@@ -251,8 +251,8 @@ int32 printing_thread(void* data)
 
 void PrintView::Print()
 {
-	BPrintJob printJob(mTitle);
-	printJob.SetSettings(new BMessage(*mPrintSettings));
+	BPrintJob printJob(fTitle);
+	printJob.SetSettings(new BMessage(*fPrintSettings));
 	PrintingProgressWindow* progress = NULL;
 	PrintingHiddenWindow* hiddenWin = NULL;
 
@@ -263,7 +263,7 @@ void PrintView::Print()
 		int32 pagesInDocument;
 		BRect pageRect = printJob.PrintableRect();
 
-		pagesInDocument = mDoc->getNumPages();
+		pagesInDocument = fDoc->getNumPages();
 		firstPage = printJob.FirstPage();
 		lastPage = printJob.LastPage();
 		if (firstPage < 1) {
@@ -273,7 +273,7 @@ void PrintView::Print()
 			lastPage = pagesInDocument;
 		}
 
-		if (mScale == 0) { // set DPI to maximum of printer resolution
+		if (fScale == 0) { // set DPI to maximum of printer resolution
 			int32 xdpi, ydpi;
 			printJob.GetResolution(&xdpi, &ydpi);
 			// Max. 300 DPI otherwise we might run out of memory
@@ -290,20 +290,20 @@ void PrintView::Print()
 #endif
 			if (xdpi > 0 && ydpi > 0) {
 				if (xdpi > ydpi) {
-					mScale = xdpi / 72;
+					fScale = xdpi / 72;
 				} else {
-					mScale = ydpi / 72;
+					fScale = ydpi / 72;
 				}
 			} else {
-				mScale = 300 / 72; // default
+				fScale = 300 / 72; // default
 			}
 		}
 
-		bool normalOrder = mPrintOrder == GlobalSettings::NORMAL_PRINT_ORDER;
-		int16 incr = (mPrintSelection == GlobalSettings::PRINT_ALL_PAGES) ? 1 : 2;
+		bool normalOrder = fPrintOrder == GlobalSettings::NORMAL_PRINT_ORDER;
+		int16 incr = (fPrintSelection == GlobalSettings::PRINT_ALL_PAGES) ? 1 : 2;
 		int32 pages = 0;
 
-		switch (mPrintSelection) {
+		switch (fPrintSelection) {
 		case GlobalSettings::PRINT_ALL_PAGES:
 			pages = lastPage - firstPage + 1;
 			break;
@@ -331,15 +331,15 @@ void PrintView::Print()
 		}
 
 		hiddenWin = new PrintingHiddenWindow(BRect(-100, -100, -10, -10));
-		mProgressWindow = progress = new PrintingProgressWindow(mTitle, mRect, pages);
+		fProgressWindow = progress = new PrintingProgressWindow(fTitle, fRect, pages);
 		if (hiddenWin->Lock()) {
 			hiddenWin->AddChild(this);
-			SetScale(1.0 / mScale);
+			SetScale(1.0 / fScale);
 			hiddenWin->Unlock();
 		}
 
-		int32 zoomDPI = mZoom * 72 / 100;
-		zoomDPI = (int32)(zoomDPI * mScale);
+		int32 zoomDPI = fZoom * 72 / 100;
+		zoomDPI = (int32)(zoomDPI * fScale);
 
 		printJob.BeginJob();
 
@@ -347,26 +347,26 @@ void PrintView::Print()
 		     curPage += incr) {
 			SetPage(curPage);
 			progress->SetPage(curPage);
-			float width = RealSize(mDoc->getPageCropWidth(curPage), zoomDPI);
-			float height = RealSize(mDoc->getPageCropHeight(curPage), zoomDPI);
+			float width = RealSize(fDoc->getPageCropWidth(curPage), zoomDPI);
+			float height = RealSize(fDoc->getPageCropHeight(curPage), zoomDPI);
 
-			if ((mDoc->getPageRotate(curPage) == 90) || (mDoc->getPageRotate(curPage) == 270)) {
+			if ((fDoc->getPageRotate(curPage) == 90) || (fDoc->getPageRotate(curPage) == 270)) {
 				float h = width;
 				width = height;
 				height = h;
 			}
 
-			if ((mRotation == 90) || (mRotation == 270)) {
+			if ((fRotation == 90) || (fRotation == 270)) {
 				float h = width;
 				width = height;
 				height = h;
 			}
 
-			mPageWidth = (int)width;
-			mPageHeight = (int)height;
+			fPageWidth = (int)width;
+			fPageHeight = (int)height;
 			BRect curPageRect(0, 0, width, height);
 			// center page
-			BPoint origin((pageRect.Width() - width / mScale) / 2, (pageRect.Height() - height / mScale) / 2);
+			BPoint origin((pageRect.Width() - width / fScale) / 2, (pageRect.Height() - height / fScale) / 2);
 
 			printJob.DrawView(this, curPageRect, origin);
 
@@ -392,12 +392,12 @@ catastrophic_exit:
 		progress->PostMessage(B_QUIT_REQUESTED);
 	if (hiddenWin != NULL)
 		hiddenWin->PostMessage(B_QUIT_REQUESTED);
-	delete mOutputDev;
+	delete fOutputDev;
 
 	// restore the page
-	BWindow* w = mView->Window();
+	BWindow* w = fView->Window();
 	if (w->Lock()) {
-		mView->RestartDoc();
+		fView->RestartDoc();
 		w->Unlock();
 	}
 }
@@ -405,11 +405,11 @@ catastrophic_exit:
 ///////////////////////////////////////////////////////////////////////////
 void PDFView::Print()
 {
-	if (mPrintSettings == NULL && PageSetup() != B_NO_ERROR) {
+	if (fPrintSettings == NULL && PageSetup() != B_NO_ERROR) {
 		return;
 	}
 
-	PrintView* pView = new PrintView(this, mDoc, &mPageRenderer, mPrintSettings, mTitle->String(), Bounds());
+	PrintView* pView = new PrintView(this, fDoc, &fPageRenderer, fPrintSettings, fTitle->String(), Bounds());
 
 	thread_id tid = spawn_thread(printing_thread, "printing_thread", B_NORMAL_PRIORITY, pView);
 	resume_thread(tid);

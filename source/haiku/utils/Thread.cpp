@@ -20,7 +20,7 @@
 
 Thread::Thread(const char* name, int32 priority)
 {
-	mThreadId = spawn_thread(DoRun, name, priority, this);
+	fThreadId = spawn_thread(DoRun, name, priority, this);
 }
 
 Thread::~Thread()
@@ -28,18 +28,18 @@ Thread::~Thread()
 
 status_t Thread::InitCheck()
 {
-	return mThreadId >= 0 ? B_OK : B_ERROR;
+	return fThreadId >= 0 ? B_OK : B_ERROR;
 }
 
 thread_id Thread::GetThreadId()
 {
-	return mThreadId;
+	return fThreadId;
 }
 
 void Thread::SetPriority(int32 priority)
 {
 	if (InitCheck() == B_OK) {
-		set_thread_priority(mThreadId, priority);
+		set_thread_priority(fThreadId, priority);
 	}
 }
 
@@ -51,7 +51,7 @@ status_t Thread::Resume()
 		return result;
 	}
 
-	result = resume_thread(mThreadId);
+	result = resume_thread(fThreadId);
 	if (result != B_OK) {
 		delete this;
 	}

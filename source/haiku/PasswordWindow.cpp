@@ -35,15 +35,15 @@
 #define B_TRANSLATION_CONTEXT "PasswordWindow"
 
 // remember last settings in class static variable
-enum PasswordWindow::PwdKind PasswordWindow::mPwdKind = USER_PASSWORD;
+enum PasswordWindow::PwdKind PasswordWindow::fPwdKind = USER_PASSWORD;
 
 PasswordWindow::PasswordWindow(entry_ref* ref, BRect aRect, BLooper* looper)
     : BWindow(
           aRect, B_TRANSLATE("Enter Password"), B_TITLED_WINDOW_LOOK, B_MODAL_APP_WINDOW_FEEL, B_NOT_ZOOMABLE | B_AUTO_UPDATE_SIZE_LIMITS)
 {
-	mLooper = looper;
-	mPasswordSent = false;
-	mEntry = *ref;
+	fLooper = looper;
+	fPasswordSent = false;
+	fEntry = *ref;
 
 	AddCommonFilter(new EscapeMessageFilter(this, B_QUIT_REQUESTED));
 
@@ -59,22 +59,22 @@ PasswordWindow::PasswordWindow(entry_ref* ref, BRect aRect, BLooper* looper)
 	BMenuField* pwdKindField = new BMenuField("pwdKindField", "", pwdKind);
 	BMenuItem* item;
 	pwdKind->AddItem(item = new BMenuItem(B_TRANSLATE("User password"), new BMessage('user')));
-	if (mPwdKind == USER_PASSWORD)
+	if (fPwdKind == USER_PASSWORD)
 		item->SetMarked(true);
 	pwdKind->AddItem(item = new BMenuItem(B_TRANSLATE("Owner password"), new BMessage('ownr')));
-	if (mPwdKind == OWNER_PASSWORD)
+	if (fPwdKind == OWNER_PASSWORD)
 		item->SetMarked(true);
 
-	mPassword = new BTextControl("mPassword", "", "", NULL);
-	mPassword->TextView()->HideTyping(true);
+	fPassword = new BTextControl("fPassword", "", "", NULL);
+	fPassword->TextView()->HideTyping(true);
 
 	BButton* button = new BButton("button", B_TRANSLATE("OK"), new BMessage('OK'));
 
-	BLayoutBuilder::Group<>(this, B_HORIZONTAL).SetInsets(B_USE_WINDOW_INSETS).Add(pwdKindField, 0).Add(mPassword, 1).Add(button, 0);
+	BLayoutBuilder::Group<>(this, B_HORIZONTAL).SetInsets(B_USE_WINDOW_INSETS).Add(pwdKindField, 0).Add(fPassword, 1).Add(button, 0);
 
 	SetDefaultButton(button);
 
-	mPassword->MakeFocus();
+	fPassword->MakeFocus();
 	Show();
 }
 
@@ -82,7 +82,7 @@ PasswordWindow::PasswordWindow(entry_ref* ref, BRect aRect, BLooper* looper)
 
 bool PasswordWindow::QuitRequested()
 {
-	if (!mPasswordSent) {
+	if (!fPasswordSent) {
 		gApp->OpenFilePanel();
 	}
 	return true;
@@ -93,21 +93,21 @@ void PasswordWindow::MessageReceived(BMessage* msg)
 	switch (msg->what) {
 	case 'OK': {
 		// post message to application to open file with password
-		const char* text = mPassword->Text();
+		const char* text = fPassword->Text();
 
 		BMessage msg(B_REFS_RECEIVED);
-		msg.AddRef("refs", &mEntry);
-		msg.AddString(mPwdKind == OWNER_PASSWORD ? "ownerPassword" : "userPassword", text);
-		mLooper->PostMessage(&msg, NULL);
-		mPasswordSent = true;
+		msg.AddRef("refs", &fEntry);
+		msg.AddString(fPwdKind == OWNER_PASSWORD ? "ownerPassword" : "userPassword", text);
+		fLooper->PostMessage(&msg, NULL);
+		fPasswordSent = true;
 		Quit();
 		break;
 	}
 	case 'user':
-		mPwdKind = USER_PASSWORD;
+		fPwdKind = USER_PASSWORD;
 		break;
 	case 'ownr':
-		mPwdKind = OWNER_PASSWORD;
+		fPwdKind = OWNER_PASSWORD;
 		break;
 	default:
 		BWindow::MessageReceived(msg);

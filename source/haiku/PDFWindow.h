@@ -47,9 +47,9 @@ class AttachmentView;
 class OutlinesView;
 
 typedef struct {
-	int mCmd;
-	const char* mToolTip;
-	const char* mButtonPrefix;
+	int fCmd;
+	const char* fToolTip;
+	const char* fButtonPrefix;
 } AnnotDesc;
 
 class RecentDocumentsMenu : public BMenu {
@@ -203,50 +203,50 @@ public:
 	};
 
 private:
-	BEntry mCurrentFile;
-	FileAttributes mFileAttributes;
-	EntryChangedMonitor mEntryChangedMonitor;
+	BEntry fCurrentFile;
+	FileAttributes fFileAttributes;
+	EntryChangedMonitor fEntryChangedMonitor;
 
-	BToolBar* mToolBar;
-	BTextControl* mPageNumberItem;
-	BStringView* mTotalPageNumberItem;
-	BSplitView* mSplitView;
-	PDFView* mMainView;
+	BToolBar* fToolBar;
+	BTextControl* fPageNumberItem;
+	BStringView* fTotalPageNumberItem;
+	BSplitView* fSplitView;
+	PDFView* fMainView;
 	BView* fMainContainer;
-	BCardView* mLayerView;
-	BListView* mPagesView;
-	OutlinesView* mOutlinesView;
-	BToolBar* mAnnotationBar;
-	AttachmentView* mAttachmentView;
+	BCardView* fLayerView;
+	BListView* fPagesView;
+	OutlinesView* fOutlinesView;
+	BToolBar* fAnnotationBar;
+	AttachmentView* fAttachmentView;
 
-	BMessage* mPrintSettings;
-	FindTextWindow* mFindWindow;
+	BMessage* fPrintSettings;
+	FindTextWindow* fFindWindow;
 	BMenuBar* fMenuBar;
-	BMenuItem *mPreferencesItem, *mFileInfoItem, // *mPrintSettingsItem,
-	    *mFullScreenItem;
-	BMenu *mOpenMenu, *mNewMenu, *mWindowsMenu;
+	BMenuItem *fPreferencesItem, *fFileInfoItem, // *fPrintSettingsItem,
+	    *fFullScreenItem;
+	BMenu *fOpenMenu, *fNewMenu, *fWindowsMenu;
 
-	uint32 mFindState;
-	BString mFindText;
-	bool mFindInProgress;
+	uint32 fFindState;
+	BString fFindText;
+	bool fFindInProgress;
 
-	BMenu *mZoomMenu, *mRotationMenu;
-	BMessenger* mOWMessenger;  // outlines window messenger
-	BMessenger* mFIWMessenger; // file info window messenger
-	BMessenger* mPSWMessenger; // printing settings window messenger
-	BMessenger* mAWMessenger;  // annotation window messenger
-	bool mPrintSettingsWindowOpen;
+	BMenu *fZoomMenu, *fRotationMenu;
+	BMessenger* fOWMessenger;  // outlines window messenger
+	BMessenger* fFIWMessenger; // file info window messenger
+	BMessenger* fPSWMessenger; // printing settings window messenger
+	BMessenger* fAWMessenger;  // annotation window messenger
+	bool fPrintSettingsWindowOpen;
 
-	bool mShowLeftPanel;
+	bool fShowLeftPanel;
 
-	BRect mWindowFrame;
-	bool mFullScreen;
-	int32 mCurrentWorkspace;
+	BRect fWindowFrame;
+	bool fFullScreen;
+	int32 fCurrentWorkspace;
 
-	uint32 mPendingMask;
+	uint32 fPendingMask;
 
-	Annotation* mAnnotTemplates[NUM_ANNOTS];
-	BControl* mPressedAnnotationButton;
+	Annotation* fAnnotTemplates[NUM_ANNOTS];
+	BControl* fPressedAnnotationButton;
 
 public:
 	PDFWindow(entry_ref* ref, BRect frame, const char* ownerPassword, const char* userPassword, bool* encrypted);
@@ -265,7 +265,7 @@ public:
 	void Reload(void);
 	void EntryChanged();
 	void StoreFileAttributes();
-	FileAttributes* GetFileAttributes() { return &mFileAttributes; };
+	FileAttributes* GetFileAttributes() { return &fFileAttributes; };
 
 	virtual void FrameMoved(BPoint p);
 	virtual void FrameResized(float width, float height);
@@ -298,14 +298,14 @@ public:
 
 	static char* PAGE_MSG_LABEL;
 
-	const BEntry* CurrentFile() const { return &mCurrentFile; }
+	const BEntry* CurrentFile() const { return &fCurrentFile; }
 	void UpdateInputEnabler();
 
 	void UpdateWindowsMenu();
 
-	void ClearPending() { mPendingMask = 0; }
-	bool IsPending(uint32 mask) { return (mPendingMask & mask) != 0; }
-	void SetPending(uint32 mask) { mPendingMask |= mask; }
+	void ClearPending() { fPendingMask = 0; }
+	bool IsPending(uint32 mask) { return (fPendingMask & mask) != 0; }
+	void SetPending(uint32 mask) { fPendingMask |= mask; }
 	bool SetPendingIfLocked(uint32 mask);
 
 	void FillPageList();
@@ -354,8 +354,8 @@ protected:
 //////////////////////////////////////////////////////////////////
 inline bool PDFWindow::IsOk()
 {
-	if (mMainView != NULL) {
-		return mMainView->IsOk();
+	if (fMainView != NULL) {
+		return fMainView->IsOk();
 	} else {
 		return false;
 	}

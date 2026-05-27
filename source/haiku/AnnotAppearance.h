@@ -34,12 +34,12 @@
 class AnnotWriter;
 
 class GraphicsStream {
-	GString mStream;
+	GString fStream;
 
 public:
-	int GetLength() { return mStream.getLength(); }
-	const char* GetStream() { return mStream.getCString(); }
-	GString* GetString() { return &mStream; }
+	int GetLength() { return fStream.getLength(); }
+	const char* GetStream() { return fStream.getCString(); }
+	GString* GetString() { return &fStream; }
 
 	void Append(const char* s);
 	void Append(GString* s);
@@ -74,9 +74,9 @@ public:
 
 // ASCII 85 Encoder
 class A85Encoder {
-	GString* mStream;
-	unsigned char mInput[4];
-	int mLength;
+	GString* fStream;
+	unsigned char fInput[4];
+	int fLength;
 
 	void Encode(unsigned char* output, bool* isNull);
 
@@ -92,8 +92,8 @@ public:
 	AnnotAppearance();
 	~AnnotAppearance();
 
-	int GetLength() { return mAS.GetLength(); }
-	GString* GetStream() { return mAS.GetString(); }
+	int GetLength() { return fAS.GetLength(); }
+	GString* GetStream() { return fAS.GetString(); }
 
 	// visitor functionality
 	void DoText(TextAnnot* a);
@@ -127,10 +127,10 @@ private:
 	void Stroke(PDFQuadPoints& qp);
 	void StrokeSquiggly(PDFPoint p1, PDFPoint p2, float height);
 
-	GraphicsStream mAS;
-	PDFRectangle mBBox;
-	PDFPoint mDelta;
-	A85Encoder mEncoder;
+	GraphicsStream fAS;
+	PDFRectangle fBBox;
+	PDFPoint fDelta;
+	A85Encoder fEncoder;
 };
 
 #endif

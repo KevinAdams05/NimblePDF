@@ -56,10 +56,10 @@ public:
 private:
 	void NotifyListener();
 
-	EntryChangedListener* mListener;
-	bool mActive;
-	entry_ref mEntryRef;
-	node_ref mNodeRef;
+	EntryChangedListener* fListener;
+	bool fActive;
+	entry_ref fEntryRef;
+	node_ref fNodeRef;
 };
 
 #endif

@@ -48,9 +48,9 @@ class BButton;
 class PDFDoc;
 
 class FileInfoWindow : public BWindow {
-	BLooper* mLooper;
-	GlobalSettings* mSettings;
-	BView* mView;
+	BLooper* fLooper;
+	GlobalSettings* fSettings;
+	BView* fView;
 
 	static const int16 noKeys;
 	static const char* systemKeys[9];
@@ -61,10 +61,10 @@ class FileInfoWindow : public BWindow {
 		ALL_FONTS,       // shows all fonts of current document
 		STOP,            // query progress stopped by user
 		QUIT             //
-	} mState;
+	} fState;
 
 	// font list
-	BColumnListView* mFontList;
+	BColumnListView* fFontList;
 	struct Font {
 		Ref ref;
 		BString name;
@@ -82,7 +82,7 @@ class FileInfoWindow : public BWindow {
 	void AddPair(BGridView* dest, BView* lv, BView* rv);
 	void CreateProperty(BGridView* dest, Dict* dict, const char* key, const char* title);
 
-	BButton *mShowAllFonts, *mStop;
+	BButton *fShowAllFonts, *fStop;
 
 public:
 	static const char *authorKey, *creationDateKey, *modDateKey, *creatorKey, *producerKey, *titleKey, *subjectKey, *keywordsKey,

@@ -42,12 +42,12 @@ struct XRefItem {
 class XRefTable {
 	enum { INITIAL_INCREMENT = 30, INCREMENT = 10, DEAD_GEN = 65535 };
 
-	XRef* mXRef;         // points to the files xref table
-	int mLength;         // allocated entries
-	int mSize;           // used entries
-	XRefEntry* mEntries; // the updated xref table
+	XRef* fXRef;         // points to the files xref table
+	int fLength;         // allocated entries
+	int fSize;           // used entries
+	XRefEntry* fEntries; // the updated xref table
 
-	// resize mEntries to at least length elements
+	// resize fEntries to at least length elements
 	void Resize(int length);
 	bool InRange(int num);
 	XRefEntry* GetUnusedHead();
@@ -79,52 +79,52 @@ public:
 	AnnotTester();
 	~AnnotTester();
 
-	void DoText(TextAnnot* a) { mResult = true; }
-	void DoLink(LinkAnnot* a) { mResult = false; }
-	void DoFreeText(FreeTextAnnot* a) { mResult = true; }
-	void DoLine(LineAnnot* a) { mResult = false; }
-	void DoSquare(SquareAnnot* a) { mResult = true; }
-	void DoCircle(CircleAnnot* a) { mResult = true; }
-	void DoHighlight(HighlightAnnot* a) { mResult = true; }
-	void DoUnderline(UnderlineAnnot* a) { mResult = true; }
-	void DoSquiggly(SquigglyAnnot* a) { mResult = true; }
-	void DoStrikeOut(StrikeOutAnnot* a) { mResult = true; }
-	void DoStamp(StampAnnot* a) { mResult = false; }
-	void DoInk(InkAnnot* a) { mResult = false; }
-	void DoPopup(PopupAnnot* a) { mResult = true; }
-	void DoFileAttachment(FileAttachmentAnnot* a) { mResult = false; }
-	void DoSound(SoundAnnot* a) { mResult = false; }
-	void DoMovie(MovieAnnot* a) { mResult = false; }
-	void DoWidget(WidgetAnnot* a) { mResult = false; }
-	void DoPrinterMark(PrinterMarkAnnot* a) { mResult = false; }
-	void DoTrapNet(TrapNetAnnot* a) { mResult = false; }
+	void DoText(TextAnnot* a) { fResult = true; }
+	void DoLink(LinkAnnot* a) { fResult = false; }
+	void DoFreeText(FreeTextAnnot* a) { fResult = true; }
+	void DoLine(LineAnnot* a) { fResult = false; }
+	void DoSquare(SquareAnnot* a) { fResult = true; }
+	void DoCircle(CircleAnnot* a) { fResult = true; }
+	void DoHighlight(HighlightAnnot* a) { fResult = true; }
+	void DoUnderline(UnderlineAnnot* a) { fResult = true; }
+	void DoSquiggly(SquigglyAnnot* a) { fResult = true; }
+	void DoStrikeOut(StrikeOutAnnot* a) { fResult = true; }
+	void DoStamp(StampAnnot* a) { fResult = false; }
+	void DoInk(InkAnnot* a) { fResult = false; }
+	void DoPopup(PopupAnnot* a) { fResult = true; }
+	void DoFileAttachment(FileAttachmentAnnot* a) { fResult = false; }
+	void DoSound(SoundAnnot* a) { fResult = false; }
+	void DoMovie(MovieAnnot* a) { fResult = false; }
+	void DoWidget(WidgetAnnot* a) { fResult = false; }
+	void DoPrinterMark(PrinterMarkAnnot* a) { fResult = false; }
+	void DoTrapNet(TrapNetAnnot* a) { fResult = false; }
 
-	bool CanWrite() { return mResult; }
+	bool CanWrite() { return fResult; }
 
 private:
-	bool mResult;
+	bool fResult;
 };
 
 bool CanWrite(Annotation* annot);
 
 class AnnotWriter : public AnnotVisitor {
-	PDFDoc* mDoc;
-	AnnotsList mAnnots;
-	BePDFAcroForm* mBePDFAcroForm;
-	XRef* mXRef;
-	XRefTable mXRefTable;
+	PDFDoc* fDoc;
+	AnnotsList fAnnots;
+	BePDFAcroForm* fBePDFAcroForm;
+	XRef* fXRef;
+	XRefTable fXRefTable;
 	// changed during pdf generation:
-	Ref mPageRef;
-	Ref mASRef;
-	Ref mInfoRef;
-	Ref mBePDFAcroFormRef;
-	std::list<PDFFont*> mTemporaryFonts; // not already stored in old PDF file
-	std::list<PDFFont*> mWrittenFonts;
+	Ref fPageRef;
+	Ref fASRef;
+	Ref fInfoRef;
+	Ref fBePDFAcroFormRef;
+	std::list<PDFFont*> fTemporaryFonts; // not already stored in old PDF file
+	std::list<PDFFont*> fWrittenFonts;
 
-	FILE* mFile;
-	int mXRefOffset;
-	Object mAnnot; // used by UpdateAnnot & visitor
-	bool mAnnotValid;
+	FILE* fFile;
+	int fXRefOffset;
+	Object fAnnot; // used by UpdateAnnot & visitor
+	bool fAnnotValid;
 
 	friend void test_annot_writer(PDFDoc* doc, int page, AnnotsList* list);
 

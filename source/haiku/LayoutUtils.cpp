@@ -75,7 +75,7 @@ filter_result EscapeMessageFilter::Filter(BMessage* msg, BHandler** target)
 {
 	int32 key;
 	if (B_OK == msg->FindInt32("key", &key) && key == 1) {
-		mWindow->PostMessage(mWhat);
+		fWindow->PostMessage(fWhat);
 		return B_SKIP_MESSAGE;
 	}
 	return B_DISPATCH_MESSAGE;
@@ -85,14 +85,14 @@ filter_result EscapeMessageFilter::Filter(BMessage* msg, BHandler** target)
 #include <malloc.h>
 Bitset::Bitset()
 {
-	mBitsetElems = 1;
-	mLength = 0;
-	mBitset = (int32*)malloc(sizeof(int32) * mBitsetElems);
+	fBitsetElems = 1;
+	fLength = 0;
+	fBitset = (int32*)malloc(sizeof(int32) * fBitsetElems);
 }
 
 Bitset::~Bitset()
 {
-	free(mBitset);
+	free(fBitset);
 }
 
 void Bitset::Resize(int32 i)
@@ -100,17 +100,17 @@ void Bitset::Resize(int32 i)
 	int32 elems = 1 + i / 32;
 
 	// resize bitset
-	if (mBitsetElems < elems) {
-		mBitsetElems = elems;
-		mBitset = (int32*)realloc(mBitset, sizeof(int32) * mBitsetElems);
+	if (fBitsetElems < elems) {
+		fBitsetElems = elems;
+		fBitset = (int32*)realloc(fBitset, sizeof(int32) * fBitsetElems);
 	}
 
 	// initialize
-	if (i >= mLength) {
-		int32 s = (mLength + 31) / 32;
-		mLength = i + 1;
+	if (i >= fLength) {
+		int32 s = (fLength + 31) / 32;
+		fLength = i + 1;
 		while (s < elems) {
-			mBitset[s] = 0;
+			fBitset[s] = 0;
 			s++;
 		};
 	}
@@ -121,24 +121,24 @@ void Bitset::Set(int i, bool v)
 	if (i >= 0) {
 		Resize(i);
 		if (v) {
-			mBitset[i / 32] |= 1 << (i % 32);
+			fBitset[i / 32] |= 1 << (i % 32);
 		} else {
-			mBitset[i / 32] &= ~(1 << (i % 32));
+			fBitset[i / 32] &= ~(1 << (i % 32));
 		}
 	}
 }
 
 bool Bitset::IsSet(int i)
 {
-	if (i >= 0 && i < mLength)
-		return (mBitset[i / 32] & (1 << (i % 32))) != 0;
+	if (i >= 0 && i < fLength)
+		return (fBitset[i / 32] & (1 << (i % 32))) != 0;
 	else
 		return false;
 }
 
 void Bitset::Clear()
 {
-	mLength = 0;
+	fLength = 0;
 }
 
 bool IsOn(BMessage* msg)

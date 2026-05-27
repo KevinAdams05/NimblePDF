@@ -79,26 +79,26 @@ bool StandardFontToBeFont(const char* stdFont, const char** family, const char**
 }
 
 AnnotationRenderer::ClipToRect::ClipToRect(AnnotationRenderer* r, Annotation* a)
-    : mRenderer(r),
-      mAnnot(a),
-      mRect(r->ToRect(a->GetRect()))
+    : fRenderer(r),
+      fAnnot(a),
+      fRect(r->ToRect(a->GetRect()))
 {
-	BRect clip = mRect;
-	View()->GetClippingRegion(&mOldClippingRegion);
+	BRect clip = fRect;
+	View()->GetClippingRegion(&fOldClippingRegion);
 	BRegion region(clip);
 	View()->ConstrainClippingRegion(&region);
 }
 
 AnnotationRenderer::ClipToRect::~ClipToRect()
 {
-	mRenderer->DrawRect(mAnnot, mRect);
-	View()->ConstrainClippingRegion(&mOldClippingRegion);
+	fRenderer->DrawRect(fAnnot, fRect);
+	View()->ConstrainClippingRegion(&fOldClippingRegion);
 }
 
 float AnnotationRenderer::CvtUserToDev(float f)
 {
 	const float kMinSize = 1.0 / 32.0;
-	float size = f * (float)mZoom / 72.0;
+	float size = f * (float)fZoom / 72.0;
 	if (size < kMinSize)
 		size = kMinSize;
 	return size;
@@ -106,8 +106,8 @@ float AnnotationRenderer::CvtUserToDev(float f)
 
 void AnnotationRenderer::CvtUserToDev(double ux, double uy, int* dx, int* dy)
 {
-	*dx = (int)(mCtm[0] * ux + mCtm[2] * uy + mCtm[4] + 0.5);
-	*dy = (int)(mCtm[1] * ux + mCtm[3] * uy + mCtm[5] + 0.5);
+	*dx = (int)(fCtm[0] * ux + fCtm[2] * uy + fCtm[4] + 0.5);
+	*dy = (int)(fCtm[1] * ux + fCtm[3] * uy + fCtm[5] + 0.5);
 }
 
 void AnnotationRenderer::CvtUserToDev(PDFPoint* u, BPoint* d, int n)
@@ -142,28 +142,28 @@ BPoint AnnotationRenderer::PointBetween(BPoint p1, BPoint p2, float f)
 
 void AnnotationRenderer::SetPenSize(int w)
 {
-	mView->SetPenSize(CvtUserToDev(w));
+	fView->SetPenSize(CvtUserToDev(w));
 }
 
 AnnotationRenderer::AnnotationRenderer(BView* v, double* ctm, int zoom, bool edit)
-    : mView(v),
-      mZoom(zoom),
-      mEdit(edit)
+    : fView(v),
+      fZoom(zoom),
+      fEdit(edit)
 {
 	for (int i = 0; i < 6; i++)
-		mCtm[i] = ctm[i];
+		fCtm[i] = ctm[i];
 
-	mDrawingMode = mView->DrawingMode();
-	mView->GetBlendingMode(&mSourceAlpha, &mAlphaFunction);
+	fDrawingMode = fView->DrawingMode();
+	fView->GetBlendingMode(&fSourceAlpha, &fAlphaFunction);
 
-	mView->SetDrawingMode(B_OP_ALPHA);
-	mView->SetBlendingMode(B_CONSTANT_ALPHA, B_ALPHA_OVERLAY);
+	fView->SetDrawingMode(B_OP_ALPHA);
+	fView->SetBlendingMode(B_CONSTANT_ALPHA, B_ALPHA_OVERLAY);
 }
 
 AnnotationRenderer::~AnnotationRenderer()
 {
-	mView->SetDrawingMode(mDrawingMode);
-	mView->SetBlendingMode(mSourceAlpha, mAlphaFunction);
+	fView->SetDrawingMode(fDrawingMode);
+	fView->SetBlendingMode(fSourceAlpha, fAlphaFunction);
 }
 
 BRect AnnotationRenderer::ToRect(PDFRectangle* g)
@@ -234,26 +234,26 @@ void AnnotationRenderer::DrawBitmap(BBitmap* image, BPoint p)
 		destRect.top = p.y;
 		destRect.right = p.x + CvtUserToDev(image->Bounds().Width() + 1.0) - 1.0;
 		destRect.bottom = p.y + CvtUserToDev(image->Bounds().Height() + 1.0) - 1.0;
-		image = ColorBitmap(image, mView->HighColor());
-		mView->DrawBitmap(image, destRect);
-		mView->Sync();
+		image = ColorBitmap(image, fView->HighColor());
+		fView->DrawBitmap(image, destRect);
+		fView->Sync();
 		delete image;
 	}
 }
 
 void AnnotationRenderer::DrawRect(Annotation* a, BRect r)
 {
-	if (mEdit && CanWrite(a)) {
-		mView->SetHighColor(0, 0, 0);
-		mView->SetLowColor(B_TRANSPARENT_COLOR);
-		mView->SetPenSize(1.0);
-		drawing_mode m = mView->DrawingMode();
-		mView->SetDrawingMode(B_OP_OVER);
-		mView->StrokeRect(r, B_MIXED_COLORS);
+	if (fEdit && CanWrite(a)) {
+		fView->SetHighColor(0, 0, 0);
+		fView->SetLowColor(B_TRANSPARENT_COLOR);
+		fView->SetPenSize(1.0);
+		drawing_mode m = fView->DrawingMode();
+		fView->SetDrawingMode(B_OP_OVER);
+		fView->StrokeRect(r, B_MIXED_COLORS);
 		r.left = r.right - 5;
 		r.top = r.bottom - 5;
-		mView->FillRect(r, B_MIXED_COLORS);
-		mView->SetDrawingMode(m);
+		fView->FillRect(r, B_MIXED_COLORS);
+		fView->SetDrawingMode(m);
 	}
 }
 
@@ -274,9 +274,9 @@ void AnnotationRenderer::DoText(TextAnnot* a)
 
 	PDFRectangle* r = a->GetRect();
 	BRect t = ToRect(r);
-	mView->SetHighColor(GetColor(a->GetColor(), a->GetOpacity()));
+	fView->SetHighColor(GetColor(a->GetColor(), a->GetOpacity()));
 	//	SetPenSize(1);
-	//	mView->StrokeRect(t);
+	//	fView->StrokeRect(t);
 	BBitmap* image = gApp->GetTextAnnotImage((int)a->GetType());
 	DrawBitmap(image, BPoint(t.left, t.top));
 }
@@ -293,13 +293,13 @@ extern bool StandardFontToBeFont(const char* stdFont, const char** family, const
 // alternative: include "BeOutputFont.h" and put xpdf into search path
 
 class LineParser {
-	BString* mText;
-	const char* mString;
-	BFont mFont;
-	float mWidth;
+	BString* fText;
+	const char* fString;
+	BFont fFont;
+	float fWidth;
 
-	int mPos;
-	BString mLine;
+	int fPos;
+	BString fLine;
 
 	int SkipWhiteSpaces(int pos);
 	int SkipNonWhiteSpaces(int pos);
@@ -310,25 +310,25 @@ public:
 };
 
 LineParser::LineParser(BString* text, BFont font, float width)
-    : mText(text),
-      mFont(font),
-      mWidth(width),
-      mPos(0)
+    : fText(text),
+      fFont(font),
+      fWidth(width),
+      fPos(0)
 {
-	mString = mText->String();
-	mPos = SkipWhiteSpaces(0);
+	fString = fText->String();
+	fPos = SkipWhiteSpaces(0);
 }
 
 int LineParser::SkipWhiteSpaces(int pos)
 {
-	while (isspace(mString[pos]))
+	while (isspace(fString[pos]))
 		pos++;
 	return pos;
 }
 
 int LineParser::SkipNonWhiteSpaces(int pos)
 {
-	while (mString[pos] != 0 && !isspace(mString[pos]))
+	while (fString[pos] != 0 && !isspace(fString[pos]))
 		pos++;
 	return pos;
 }
@@ -337,36 +337,36 @@ const char* LineParser::NextLine()
 {
 	int afterLine, nextWord, afterNextWord;
 	float width;
-	if (mPos < mText->Length()) {
-		afterLine = mPos;
-		nextWord = mPos;
+	if (fPos < fText->Length()) {
+		afterLine = fPos;
+		nextWord = fPos;
 		for (;;) {
 			afterNextWord = SkipNonWhiteSpaces(nextWord);
 			if (nextWord == afterNextWord) { // at end of text
-				if (afterLine != mPos) {
-					mLine.SetTo(&mString[mPos], afterLine - mPos);
-					mPos = nextWord;
-					return mLine.String();
+				if (afterLine != fPos) {
+					fLine.SetTo(&fString[fPos], afterLine - fPos);
+					fPos = nextWord;
+					return fLine.String();
 				} else {
 					return NULL; // should not reach here anyway
 				}
 			}
 
-			width = mFont.StringWidth(&mString[mPos], afterNextWord - mPos);
+			width = fFont.StringWidth(&fString[fPos], afterNextWord - fPos);
 
-			if (mWidth > width) { // inside, try to append next word
+			if (fWidth > width) { // inside, try to append next word
 				nextWord = SkipWhiteSpaces(afterNextWord);
 				afterLine = afterNextWord;
 			} else {                     // outside
-				if (mPos == afterLine) { // return first word
-					mLine.SetTo(&mString[mPos], afterNextWord - mPos);
+				if (fPos == afterLine) { // return first word
+					fLine.SetTo(&fString[fPos], afterNextWord - fPos);
 					// move to next word
-					mPos = SkipWhiteSpaces(afterNextWord);
-					return mLine.String();
+					fPos = SkipWhiteSpaces(afterNextWord);
+					return fLine.String();
 				} else { // return string
-					mLine.SetTo(&mString[mPos], afterLine - mPos);
-					mPos = nextWord;
-					return mLine.String();
+					fLine.SetTo(&fString[fPos], afterLine - fPos);
+					fPos = nextWord;
+					return fLine.String();
 				}
 			}
 		};
@@ -407,7 +407,7 @@ float AnnotationRenderer::LayoutText(BString* text, BFont font, free_text_justif
 				break;
 			}
 
-			mView->DrawString(line, BPoint(x, y));
+			fView->DrawString(line, BPoint(x, y));
 		}
 		prevY = y;
 		y += lineHeight;
@@ -425,16 +425,16 @@ void AnnotationRenderer::DoFreeText(FreeTextAnnot* a)
 
 	if (a->HasColor()) {
 		// fill background
-		mView->SetHighColor(GetColor(a->GetColor()));
-		mView->FillRect(rect);
+		fView->SetHighColor(GetColor(a->GetColor()));
+		fView->FillRect(rect);
 	}
 
-	mView->SetHighColor(GetColor(a->GetFontColor()));
+	fView->SetHighColor(GetColor(a->GetFontColor()));
 
 	if (a->GetBorderStyle()->GetWidth() > 0) {
 		// draw border
-		mView->SetPenSize(CvtUserToDev(a->GetBorderStyle()->GetWidth()));
-		mView->StrokeRect(rect);
+		fView->SetPenSize(CvtUserToDev(a->GetBorderStyle()->GetWidth()));
+		fView->StrokeRect(rect);
 	}
 
 	// set font
@@ -495,7 +495,7 @@ void AnnotationRenderer::DoFreeText(FreeTextAnnot* a)
 		size = CvtUserToDev(a->GetFontSize());
 	}
 	font.SetSize(size);
-	mView->SetFont(&font);
+	fView->SetFont(&font);
 
 	if (text) {
 		LayoutText(text, font, a->GetJustification(), rect, true);
@@ -512,9 +512,9 @@ void AnnotationRenderer::DoLine(LineAnnot* a)
 
 	BPoint line[2];
 	CvtUserToDev(a->GetLine(), line, 2);
-	mView->SetHighColor(GetColor(a->GetColor(), 1));
+	fView->SetHighColor(GetColor(a->GetColor(), 1));
 	SetPenSize(a->GetBorderStyle()->GetWidth());
-	mView->StrokeLine(line[0], line[1]);
+	fView->StrokeLine(line[0], line[1]);
 }
 
 void AnnotationRenderer::DoSquare(SquareAnnot* a)
@@ -526,9 +526,9 @@ void AnnotationRenderer::DoSquare(SquareAnnot* a)
 
 	PDFRectangle* r = a->GetRect();
 	BRect t = ToRect(r);
-	mView->SetHighColor(GetColor(a->GetColor(), a->GetOpacity()));
+	fView->SetHighColor(GetColor(a->GetColor(), a->GetOpacity()));
 	SetPenSize(a->GetBorderStyle()->GetWidth());
-	mView->StrokeRect(t);
+	fView->StrokeRect(t);
 }
 
 void AnnotationRenderer::DoCircle(CircleAnnot* a)
@@ -540,9 +540,9 @@ void AnnotationRenderer::DoCircle(CircleAnnot* a)
 
 	PDFRectangle* r = a->GetRect();
 	BRect t = ToRect(r);
-	mView->SetHighColor(GetColor(a->GetColor(), a->GetOpacity()));
+	fView->SetHighColor(GetColor(a->GetColor(), a->GetOpacity()));
 	SetPenSize(a->GetBorderStyle()->GetWidth());
-	mView->StrokeEllipse(t);
+	fView->StrokeEllipse(t);
 }
 
 void AnnotationRenderer::DoHighlight(HighlightAnnot* a)
@@ -554,7 +554,7 @@ void AnnotationRenderer::DoHighlight(HighlightAnnot* a)
 
 	BPoint p[4];
 	rgb_color c = GetColor(a->GetColor(), 0.50);
-	mView->SetHighColor(c);
+	fView->SetHighColor(c);
 	SetPenSize(a->GetBorderStyle()->GetWidth());
 
 	for (int i = 0; i < a->QuadPointsLength(); i++) {
@@ -563,7 +563,7 @@ void AnnotationRenderer::DoHighlight(HighlightAnnot* a)
 		p[3] = p[2];
 		p[2] = swap;
 		BPolygon polygon(p, 4);
-		mView->FillPolygon(&polygon);
+		fView->FillPolygon(&polygon);
 	}
 }
 
@@ -577,7 +577,7 @@ void AnnotationRenderer::StrokeSquiggly(BPoint p1, BPoint p2, float height)
 	float len = sqrt(d.x * d.x + d.y * d.y);
 	if (len <= 0.001)
 		return;
-	mView->MovePenTo(p1);
+	fView->MovePenTo(p1);
 	d.x = width * d.x / len;
 	d.y = width * d.y / len;
 	BPoint h1(d.y, d.x), h2(-d.y, -d.x);
@@ -594,7 +594,7 @@ void AnnotationRenderer::StrokeSquiggly(BPoint p1, BPoint p2, float height)
 		bezier[2] = (i % 2 == 0) ? p1 + h1 : p1 + h2;
 		p1 += d;
 		bezier[3] = p1;
-		mView->StrokeBezier(bezier);
+		fView->StrokeBezier(bezier);
 	}
 }
 
@@ -607,14 +607,14 @@ void AnnotationRenderer::DoUnderline(UnderlineAnnot* a)
 
 	BPoint p[4];
 	rgb_color c = GetColor(a->GetColor(), 1);
-	mView->SetHighColor(c);
+	fView->SetHighColor(c);
 	SetPenSize(a->GetBorderStyle()->GetWidth());
 
 	for (int i = 0; i < a->QuadPointsLength(); i++) {
 		CvtUserToDev(a->QuadPointsAt(i)->q, p, 4);
 		BPoint p1 = PointBetween(p[0], p[2], 0.85);
 		BPoint p2 = PointBetween(p[1], p[3], 0.85);
-		mView->StrokeLine(p1, p2);
+		fView->StrokeLine(p1, p2);
 	}
 }
 
@@ -627,7 +627,7 @@ void AnnotationRenderer::DoSquiggly(SquigglyAnnot* a)
 
 	BPoint p[4];
 	rgb_color c = GetColor(a->GetColor(), 1);
-	mView->SetHighColor(c);
+	fView->SetHighColor(c);
 	SetPenSize(a->GetBorderStyle()->GetWidth());
 
 	for (int i = 0; i < a->QuadPointsLength(); i++) {
@@ -649,14 +649,14 @@ void AnnotationRenderer::DoStrikeOut(StrikeOutAnnot* a)
 
 	BPoint p[4];
 	rgb_color c = GetColor(a->GetColor(), 1);
-	mView->SetHighColor(c);
+	fView->SetHighColor(c);
 	SetPenSize(a->GetBorderStyle()->GetWidth());
 
 	for (int i = 0; i < a->QuadPointsLength(); i++) {
 		CvtUserToDev(a->QuadPointsAt(i)->q, p, 4);
 		BPoint p1 = PointBetween(p[0], p[2], 0.55);
 		BPoint p2 = PointBetween(p[1], p[3], 0.55);
-		mView->StrokeLine(p1, p2);
+		fView->StrokeLine(p1, p2);
 	}
 }
 
@@ -676,20 +676,20 @@ void AnnotationRenderer::DoInk(InkAnnot* a)
 	ClipToRect clip(this, a);
 
 	rgb_color c = GetColor(a->GetColor(), 1);
-	mView->SetHighColor(c);
+	fView->SetHighColor(c);
 	SetPenSize(a->GetBorderStyle()->GetWidth());
 	for (int i = 0; i < a->GetLength(); i++) {
 		PDFPoints* path = a->PathAt(i);
 		const int n = path->GetLength();
 		BPoint* points = new BPoint[n];
 		CvtUserToDev(path->Points(), points, path->GetLength());
-		mView->MovePenTo(points[0]);
+		fView->MovePenTo(points[0]);
 		for (int j = 0; j < path->GetLength(); j++) {
-			mView->StrokeLine(points[j]);
+			fView->StrokeLine(points[j]);
 		}
 		delete[] points;
 		// bug in Be's implementation of StrokePolygon?
-		// mView->StrokePolygon(points, path->GetLength(), false);
+		// fView->StrokePolygon(points, path->GetLength(), false);
 	}
 }
 
@@ -710,8 +710,8 @@ void AnnotationRenderer::DoFileAttachment(FileAttachmentAnnot* a)
 
 	PDFRectangle* r = a->GetRect();
 	BRect t = ToRect(r);
-	mView->SetHighColor(GetColor(a->GetColor(), a->GetOpacity()));
-	//	mView->StrokeRect(t, B_SOLID_HIGH);
+	fView->SetHighColor(GetColor(a->GetColor(), a->GetOpacity()));
+	//	fView->StrokeRect(t, B_SOLID_HIGH);
 	BBitmap* image = gApp->GetAttachmentImage((int)a->GetType());
 	DrawBitmap(image, BPoint(t.left, t.top));
 }

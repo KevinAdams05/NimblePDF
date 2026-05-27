@@ -43,10 +43,10 @@ FindTextWindow::FindTextWindow(GlobalSettings* settings, const char* text, BLoop
           B_FLOATING_WINDOW_LOOK,
           B_MODAL_APP_WINDOW_FEEL,
           B_NOT_ZOOMABLE | B_AUTO_UPDATE_SIZE_LIMITS),
-      mLooper(looper),
-      mSettings(settings)
+      fLooper(looper),
+      fSettings(settings)
 {
-	mSearching = false;
+	fSearching = false;
 
 	MoveTo(settings->GetFindWindowPosition());
 	float w, h;
@@ -55,25 +55,25 @@ FindTextWindow::FindTextWindow(GlobalSettings* settings, const char* text, BLoop
 
 	AddCommonFilter(new EscapeMessageFilter(this, FIND_ABORT_MSG));
 
-	mText = new BTextControl("mText", B_TRANSLATE("Find: "), text, NULL);
-	mText->TextView()->DisallowChar(B_ESCAPE);
+	fText = new BTextControl("fText", B_TRANSLATE("Find: "), text, NULL);
+	fText->TextView()->DisallowChar(B_ESCAPE);
 
-	mPage = new BStringView("mPage", B_TRANSLATE("Page:"));
+	fPage = new BStringView("fPage", B_TRANSLATE("Page:"));
 
-	mFindStop = new BButton("mFindStop", B_TRANSLATE("Find"), new BMessage(FIND_MSG));
+	fFindStop = new BButton("fFindStop", B_TRANSLATE("Find"), new BMessage(FIND_MSG));
 
-	mIgnoreCase = new BCheckBox("mIgnoreCase", B_TRANSLATE("Ignore case"), new BMessage(FIND_IGNORE_CASE_MSG));
-	mIgnoreCase->SetValue(settings->GetFindIgnoreCase());
+	fIgnoreCase = new BCheckBox("fIgnoreCase", B_TRANSLATE("Ignore case"), new BMessage(FIND_IGNORE_CASE_MSG));
+	fIgnoreCase->SetValue(settings->GetFindIgnoreCase());
 
-	mBackward = new BCheckBox("mBackward", B_TRANSLATE("Search backwards"), new BMessage(FIND_BACKWARD_MSG));
-	mBackward->SetValue(settings->GetFindBackward());
+	fBackward = new BCheckBox("fBackward", B_TRANSLATE("Search backwards"), new BMessage(FIND_BACKWARD_MSG));
+	fBackward->SetValue(settings->GetFindBackward());
 
 	BGroupLayout* optBox = BLayoutBuilder::Group<>(B_HORIZONTAL)
 	                           .SetInsets(B_USE_SMALL_SPACING)
 	                           .AddGroup(B_VERTICAL, 0)
 	                           .SetInsets(B_USE_SMALL_INSETS, 0, B_USE_SMALL_INSETS, 0)
-	                           .Add(mIgnoreCase)
-	                           .Add(mBackward)
+	                           .Add(fIgnoreCase)
+	                           .Add(fBackward)
 	                           .End()
 	                           .AddGlue();
 
@@ -83,38 +83,38 @@ FindTextWindow::FindTextWindow(GlobalSettings* settings, const char* text, BLoop
 
 	BLayoutBuilder::Group<>(this, B_VERTICAL)
 	    .SetInsets(B_USE_WINDOW_INSETS)
-	    .Add(mText)
+	    .Add(fText)
 	    .AddGroup(B_HORIZONTAL)
 	    .Add(options)
 	    .AddGroup(B_VERTICAL)
-	    .Add(mFindStop)
-	    .Add(mPage)
+	    .Add(fFindStop)
+	    .Add(fPage)
 	    .AddGlue()
 	    .End()
 	    .End();
 
-	SetDefaultButton(mFindStop);
+	SetDefaultButton(fFindStop);
 
-	mText->MakeFocus();
+	fText->MakeFocus();
 	Show();
 }
 
 void FindTextWindow::FrameMoved(BPoint point)
 {
 	BWindow::FrameMoved(point);
-	mSettings->SetFindWindowPosition(point);
+	fSettings->SetFindWindowPosition(point);
 }
 
 void FindTextWindow::FrameResized(float w, float h)
 {
 	BWindow::FrameResized(w, h);
-	mSettings->SetFindWindowSize(w, h);
+	fSettings->SetFindWindowSize(w, h);
 }
 
 bool FindTextWindow::QuitRequested()
 {
-	if (mSearching) {
-		mLooper->PostMessage((uint32)FIND_ABORT_NOTIFY_MSG, NULL);
+	if (fSearching) {
+		fLooper->PostMessage((uint32)FIND_ABORT_NOTIFY_MSG, NULL);
 		return false;
 	}
 	return true;
@@ -124,41 +124,41 @@ void FindTextWindow::MessageReceived(BMessage* msg)
 {
 	switch (msg->what) {
 	case FIND_IGNORE_CASE_MSG:
-		mSettings->SetFindIgnoreCase(mIgnoreCase->Value() == B_CONTROL_ON);
+		fSettings->SetFindIgnoreCase(fIgnoreCase->Value() == B_CONTROL_ON);
 		break;
 	case FIND_BACKWARD_MSG:
-		mSettings->SetFindBackward(mBackward->Value() == B_CONTROL_ON);
+		fSettings->SetFindBackward(fBackward->Value() == B_CONTROL_ON);
 		break;
 	case FIND_ABORT_MSG:
-		mLooper->PostMessage((uint32)FIND_ABORT_NOTIFY_MSG, NULL);
+		fLooper->PostMessage((uint32)FIND_ABORT_NOTIFY_MSG, NULL);
 		break;
 	case FIND_MSG: {
-		mSearching = true;
-		const char* text = mText->Text();
+		fSearching = true;
+		const char* text = fText->Text();
 		if (strlen(text) == 0)
 			return;
-		mFindStop->SetLabel(B_TRANSLATE("Stop"));
-		mFindStop->SetMessage(new BMessage(FIND_STOP_MSG));
-		mText->SetEnabled(false);
+		fFindStop->SetLabel(B_TRANSLATE("Stop"));
+		fFindStop->SetMessage(new BMessage(FIND_STOP_MSG));
+		fText->SetEnabled(false);
 
 		BMessage msg(FIND_START_NOTIFY_MSG);
 		msg.AddString("text", text);
-		msg.AddBool("ignoreCase", mIgnoreCase->Value() == B_CONTROL_ON);
-		msg.AddBool("backward", mBackward->Value() == B_CONTROL_ON);
-		mLooper->PostMessage(&msg, NULL);
+		msg.AddBool("ignoreCase", fIgnoreCase->Value() == B_CONTROL_ON);
+		msg.AddBool("backward", fBackward->Value() == B_CONTROL_ON);
+		fLooper->PostMessage(&msg, NULL);
 		break;
 	}
 	case FIND_ABORT_NOTIFY_MSG:
-		mFindStop->SetEnabled(false);
+		fFindStop->SetEnabled(false);
 		break;
 	case FIND_STOP_MSG:
-		mLooper->PostMessage((uint32)FIND_STOP_NOTIFY_MSG, NULL);
+		fLooper->PostMessage((uint32)FIND_STOP_NOTIFY_MSG, NULL);
 		break;
 	case FIND_STOP_NOTIFY_MSG:
-		mFindStop->SetLabel(B_TRANSLATE("Find"));
-		mFindStop->SetMessage(new BMessage(FIND_MSG));
-		mText->SetEnabled(true);
-		mSearching = false;
+		fFindStop->SetLabel(B_TRANSLATE("Find"));
+		fFindStop->SetMessage(new BMessage(FIND_MSG));
+		fText->SetEnabled(true);
+		fSearching = false;
 		break;
 	case FIND_SET_PAGE_MSG: {
 		int32 page;
@@ -167,7 +167,7 @@ void FindTextWindow::MessageReceived(BMessage* msg)
 		break;
 	}
 	case FIND_QUIT_REQUESTED_MSG:
-		mSearching = false;
+		fSearching = false;
 		PostMessage(B_QUIT_REQUESTED);
 		break;
 	default:
@@ -180,6 +180,6 @@ void FindTextWindow::SetPage(int32 page)
 	const char* fmt = B_TRANSLATE("Page: %d");
 	char* buffer = new char[strlen(fmt) + 30];
 	sprintf(buffer, fmt, page);
-	mPage->SetText(buffer);
+	fPage->SetText(buffer);
 	delete buffer;
 }

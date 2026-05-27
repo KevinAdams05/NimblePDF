@@ -41,19 +41,19 @@ public:
 	HistoryPosition(HistoryFile* file, int page, int16 zoom, int32 left, int32 top, float rotation);
 	~HistoryPosition();
 
-	HistoryFile* GetFile() const { return mFile; }
-	int GetPage() const { return mPage; }
-	int16 GetZoom() const { return mZoom; }
-	int32 GetLeft() const { return mLeft; }
-	int32 GetTop() const { return mTop; }
-	float GetRotation() const { return mRotation; }
+	HistoryFile* GetFile() const { return fFile; }
+	int GetPage() const { return fPage; }
+	int16 GetZoom() const { return fZoom; }
+	int32 GetLeft() const { return fLeft; }
+	int32 GetTop() const { return fTop; }
+	float GetRotation() const { return fRotation; }
 
 private:
-	HistoryFile* mFile;
-	int mPage;
-	int16 mZoom;
-	int32 mLeft, mTop;
-	float mRotation;
+	HistoryFile* fFile;
+	int fPage;
+	int16 fZoom;
+	int32 fLeft, fTop;
+	float fRotation;
 };
 
 class HistoryFile {
@@ -82,9 +82,9 @@ private:
 
 class History {
 protected:
-	BList mList;
-	int32 mCurrent;
-	HistoryFile* mFile;
+	BList fList;
+	int32 fCurrent;
+	HistoryFile* fFile;
 
 public:
 	History();
@@ -95,9 +95,9 @@ public:
 	void AddPosition(int page, int16 zoom, int32 left, int32 top, float rotation);
 	void SetFile(entry_ref ref, const char* ownerPassword, const char* userPassword);
 	HistoryEntry* GetTop();
-	int GetElements() { return mList.CountItems(); }
-	bool CanGoBack() { return mCurrent > 0 || (mCurrent == 0 && GetElements() == 1); }
-	bool CanGoForward() { return mCurrent < GetElements() - 1; }
+	int GetElements() { return fList.CountItems(); }
+	bool CanGoBack() { return fCurrent > 0 || (fCurrent == 0 && GetElements() == 1); }
+	bool CanGoForward() { return fCurrent < GetElements() - 1; }
 
 private:
 	void UpdateFile();

@@ -65,13 +65,13 @@ public:
 protected:
 	void SetPage(int32 page);
 
-	bool mSearching;
-	BLooper* mLooper;
-	GlobalSettings* mSettings;
-	BButton* mFindStop;
-	BTextControl* mText;
-	BCheckBox* mIgnoreCase;
-	BCheckBox* mBackward;
-	BStringView* mPage;
+	bool fSearching;
+	BLooper* fLooper;
+	GlobalSettings* fSettings;
+	BButton* fFindStop;
+	BTextControl* fText;
+	BCheckBox* fIgnoreCase;
+	BCheckBox* fBackward;
+	BStringView* fPage;
 };
 #endif

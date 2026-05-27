@@ -69,8 +69,8 @@ public:
 
 // AttachmentView displays attachments in a ColumnListView
 class AttachmentView : public BView {
-	BColumnListView* mList;
-	XRef* mXRef;
+	BColumnListView* fList;
+	XRef* fXRef;
 
 	typedef BView super;
 

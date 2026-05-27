@@ -147,17 +147,17 @@ void BepdfApplication::FreeImages(BBitmap* images[], int num)
 BepdfApplication::BepdfApplication()
     : BApplication(BEPDF_APP_SIG)
 {
-	mSettings = new GlobalSettings();
-	mOpenFilePanel = NULL;
-	mSaveFilePanel = NULL;
-	mSaveToDirectoryFilePanel = NULL;
-	mInitialized = false;
-	mGotSomething = false;
-	mReadyToQuit = false;
-	mWindow = NULL;
+	fSettings = new GlobalSettings();
+	fOpenFilePanel = NULL;
+	fSaveFilePanel = NULL;
+	fSaveToDirectoryFilePanel = NULL;
+	fInitialized = false;
+	fGotSomething = false;
+	fReadyToQuit = false;
+	fWindow = NULL;
 
-	mStdoutTracer = NULL;
-	mStderrTracer = NULL;
+	fStdoutTracer = NULL;
+	fStderrTracer = NULL;
 	pointerCursor = new BCursor(B_CURSOR_ID_SYSTEM_DEFAULT);
 	linkCursor = new BCursor(B_CURSOR_ID_CREATE_LINK);
 	handCursor = new BCursor(B_CURSOR_ID_GRAB);
@@ -167,24 +167,24 @@ BepdfApplication::BepdfApplication()
 	splitVCursor = new BCursor(B_CURSOR_ID_RESIZE_NORTH_SOUTH);
 	resizeCursor = new BCursor(B_CURSOR_ID_RESIZE_NORTH_WEST_SOUTH_EAST);
 
-	LoadImages(mAttachmentImages, attachmentNames, FileAttachmentAnnot::no_of_types);
-	LoadImages(mTextAnnotImages, textAnnotNames, TextAnnot::no_of_types);
+	LoadImages(fAttachmentImages, attachmentNames, FileAttachmentAnnot::no_of_types);
+	LoadImages(fTextAnnotImages, textAnnotNames, TextAnnot::no_of_types);
 
 	BEntry entry;
 	app_info info;
 	if (B_OK == be_app->GetAppInfo(&info)) {
-		mTeamID = info.team;
+		fTeamID = info.team;
 		entry = BEntry(&info.ref);
-		entry.GetPath(&mAppPath);
-		mAppPath.GetParent(&mAppPath);
+		entry.GetPath(&fAppPath);
+		fAppPath.GetParent(&fAppPath);
 	} else {
-		mAppPath.SetTo(".");
+		fAppPath.SetTo(".");
 	}
 
-	mDefaultPDF = mAppPath;
-	mDefaultPDF.Append("docs/Start.pdf");
+	fDefaultPDF = fAppPath;
+	fDefaultPDF.Append("docs/Start.pdf");
 
-	BPath path(mAppPath);
+	BPath path(fAppPath);
 	LoadSettings();
 
 	InitBePDF();
@@ -226,15 +226,15 @@ GList* getCIDToUnicodeNames(GlobalParams* globalParams)
 
 void BepdfApplication::Initialize()
 {
-	if (!mInitialized) {
-		mInitialized = true;
+	if (!fInitialized) {
+		fInitialized = true;
 
 		// built in fonts
-		BPath fontDirectory(mAppPath);
+		BPath fontDirectory(fAppPath);
 		fontDirectory.Append("fonts");
 
 		// built in encodings
-		BPath encodingDirectory(mAppPath);
+		BPath encodingDirectory(fAppPath);
 		encodingDirectory.Append("encodings");
 
 		InitXpdf(NULL, fontDirectory.Path(), encodingDirectory.Path());
@@ -256,7 +256,7 @@ void BepdfApplication::Initialize()
 
 		// CID fonts
 		BMessage msg;
-		mSettings->GetDisplayCIDFonts(msg);
+		fSettings->GetDisplayCIDFonts(msg);
 		DisplayCIDFonts displayNames(msg);
 
 		// record new names
@@ -276,7 +276,7 @@ void BepdfApplication::Initialize()
 		if (foundNewName) {
 			msg.MakeEmpty();
 			displayNames.Archive(msg);
-			mSettings->SetDisplayCIDFonts(msg);
+			fSettings->SetDisplayCIDFonts(msg);
 		}
 
 		// set CID fonts
@@ -306,8 +306,8 @@ BepdfApplication::~BepdfApplication()
 {
 	SaveSettings();
 
-	delete mSettings;
-	mSettings = NULL;
+	delete fSettings;
+	fSettings = NULL;
 
 	delete linkCursor;
 	linkCursor = NULL;
@@ -324,8 +324,8 @@ BepdfApplication::~BepdfApplication()
 	delete resizeCursor;
 	resizeCursor = NULL;
 
-	FreeImages(mAttachmentImages, FileAttachmentAnnot::no_of_types);
-	FreeImages(mTextAnnotImages, TextAnnot::no_of_types);
+	FreeImages(fAttachmentImages, FileAttachmentAnnot::no_of_types);
+	FreeImages(fTextAnnotImages, TextAnnot::no_of_types);
 
 	ExitBePDF();
 }
@@ -335,22 +335,22 @@ BepdfApplication::~BepdfApplication()
 void BepdfApplication::ReadyToRun()
 {
 #if 1
-	mStdoutTracer = new OutputTracer(1, "stdout", GetSettings());
-	mStderrTracer = new OutputTracer(2, "stderr", GetSettings());
+	fStdoutTracer = new OutputTracer(1, "stdout", GetSettings());
+	fStderrTracer = new OutputTracer(2, "stderr", GetSettings());
 #else
-	mStdoutTracer = mStderrTracer = NULL;
+	fStdoutTracer = fStderrTracer = NULL;
 #endif
 
 	Initialize();
-	if (!mGotSomething) {
+	if (!fGotSomething) {
 		// open start document
 		entry_ref defaultDocument;
 		BMessage msg(B_REFS_RECEIVED);
-		get_ref_for_path(mDefaultPDF.Path(), &defaultDocument);
+		get_ref_for_path(fDefaultPDF.Path(), &defaultDocument);
 		msg.AddRef("refs", &defaultDocument);
 		RefsReceived(&msg);
 
-		if (!mGotSomething) {
+		if (!fGotSomething) {
 			// on error open file open dialog
 			OpenFilePanel();
 		}
@@ -408,13 +408,13 @@ void BepdfApplication::AboutRequested()
 */
 void BepdfApplication::OpenFilePanel()
 {
-	if (mOpenFilePanel == NULL) {
-		mOpenFilePanel = new BFilePanel(B_OPEN_PANEL, NULL, NULL, B_FILE_NODE, true, NULL, NULL);
-		mOpenFilePanel->SetRefFilter(&pdfFilter);
+	if (fOpenFilePanel == NULL) {
+		fOpenFilePanel = new BFilePanel(B_OPEN_PANEL, NULL, NULL, B_FILE_NODE, true, NULL, NULL);
+		fOpenFilePanel->SetRefFilter(&pdfFilter);
 	}
-	mOpenFilePanel->SetPanelDirectory(mSettings->GetPanelDirectory());
-	mReadyToQuit = true;
-	mOpenFilePanel->Show();
+	fOpenFilePanel->SetPanelDirectory(fSettings->GetPanelDirectory());
+	fReadyToQuit = true;
+	fOpenFilePanel->Show();
 }
 
 /*
@@ -429,33 +429,33 @@ void BepdfApplication::OpenSaveFilePanel(BHandler* handler, bool fileMode, BRefF
 	// lazy construct file panel
 	if (fileMode) {
 		// file panel for selection of file
-		if (mSaveFilePanel == NULL) {
-			mSaveFilePanel = new BFilePanel(B_SAVE_PANEL, NULL, NULL, B_FILE_NODE, false, NULL, NULL, true);
+		if (fSaveFilePanel == NULL) {
+			fSaveFilePanel = new BFilePanel(B_SAVE_PANEL, NULL, NULL, B_FILE_NODE, false, NULL, NULL, true);
 		}
 
 		// hide other file panel
-		if (mSaveToDirectoryFilePanel != NULL && mSaveToDirectoryFilePanel->IsShowing()) {
-			mSaveToDirectoryFilePanel->Hide();
+		if (fSaveToDirectoryFilePanel != NULL && fSaveToDirectoryFilePanel->IsShowing()) {
+			fSaveToDirectoryFilePanel->Hide();
 		}
 
-		panel = mSaveFilePanel;
+		panel = fSaveFilePanel;
 	} else {
 		// file panel for selection of directory
-		if (mSaveToDirectoryFilePanel == NULL) {
-			mSaveToDirectoryFilePanel = new BFilePanel(B_OPEN_PANEL, NULL, NULL, B_DIRECTORY_NODE, false, NULL, NULL, true);
+		if (fSaveToDirectoryFilePanel == NULL) {
+			fSaveToDirectoryFilePanel = new BFilePanel(B_OPEN_PANEL, NULL, NULL, B_DIRECTORY_NODE, false, NULL, NULL, true);
 		}
 
 		// hide other file panel
-		if (mSaveFilePanel != NULL && mSaveFilePanel->IsShowing()) {
-			mSaveFilePanel->Hide();
+		if (fSaveFilePanel != NULL && fSaveFilePanel->IsShowing()) {
+			fSaveFilePanel->Hide();
 		}
 
-		panel = mSaveToDirectoryFilePanel;
+		panel = fSaveToDirectoryFilePanel;
 	}
 
 	// (re)-set to directory of currently opened PDF file
 	// TODO decide if directory should be independent from PDF file
-	panel->SetPanelDirectory(mSettings->GetPanelDirectory());
+	panel->SetPanelDirectory(fSettings->GetPanelDirectory());
 
 	if (name != NULL) {
 		panel->SetSaveText(name);
@@ -506,7 +506,7 @@ void BepdfApplication::Notify(uint32 cmd)
 	// notify all but this team
 	for (int i = n; i >= 0; i--) {
 		team_id who = (team_id)(addr_t)list.ItemAt(i);
-		if (who == mTeamID)
+		if (who == fTeamID)
 			continue; // skip own team
 		status_t status;
 		BMessenger app(BEPDF_APP_SIG, who, &status);
@@ -520,10 +520,10 @@ void BepdfApplication::Notify(uint32 cmd)
 
 bool BepdfApplication::QuitRequested()
 {
-	delete mStdoutTracer;
-	mStdoutTracer = NULL;
-	delete mStderrTracer;
-	mStderrTracer = NULL;
+	delete fStdoutTracer;
+	fStdoutTracer = NULL;
+	delete fStderrTracer;
+	fStderrTracer = NULL;
 
 	bool shortcut;
 	if (B_OK == CurrentMessage()->FindBool("shortcut", &shortcut) && shortcut) {
@@ -540,7 +540,7 @@ void BepdfApplication::RefsReceived(BMessage* msg)
 {
 	uint32 type;
 	int32 count;
-	mReadyToQuit = false;
+	fReadyToQuit = false;
 	status_t result;
 
 	msg->GetInfo("refs", &type, &count);
@@ -593,17 +593,17 @@ void BepdfApplication::RefsReceived(BMessage* msg)
 				WARNING: The application thread is used to open a file!
 			*/
 			PDFWindow* win;
-			BRect rect(mSettings->GetWindowRect());
+			BRect rect(fSettings->GetWindowRect());
 			bool ok;
 			bool encrypted = false;
 
-			if (mWindow == NULL) {
+			if (fWindow == NULL) {
 				win = new PDFWindow(&ref, rect, owner, user, &encrypted);
 				ok = win->IsOk();
 			} else {
-				win = mWindow;
+				win = fWindow;
 				win->Lock();
-				ok = mWindow->LoadFile(&ref, owner, user, &encrypted);
+				ok = fWindow->LoadFile(&ref, owner, user, &encrypted);
 				win->Unlock();
 			}
 
@@ -618,27 +618,27 @@ void BepdfApplication::RefsReceived(BMessage* msg)
 					    B_STOP_ALERT);
 					error->Go();
 
-					if (mWindow == NULL) { // fixme: always true even if a PDF window is already open!
+					if (fWindow == NULL) { // fixme: always true even if a PDF window is already open!
 						OpenFilePanel();
 					}
 				} else {
 					new PasswordWindow(&ref, rect, this);
 				}
-				if (mWindow == NULL)
+				if (fWindow == NULL)
 					delete win;
 
-			} else if (mWindow == NULL) {
-				mWindow = win;
+			} else if (fWindow == NULL) {
+				fWindow = win;
 				win->Show();
 			}
 			// jump to page if provided
 			if (pageNum != 0) {
 				BMessage goToPageMsg(PDFWindow::GOTO_PAGE_CMD);
 				goToPageMsg.AddInt32("page", pageNum);
-				mWindow->MessageReceived(&goToPageMsg);
+				fWindow->MessageReceived(&goToPageMsg);
 			}
 			// stop after first document
-			mGotSomething = true;
+			fGotSomething = true;
 			break;
 		}
 	}
@@ -655,22 +655,22 @@ void BepdfApplication::MessageReceived(BMessage* msg)
 
 	switch (msg->what) {
 	case NOTIFY_QUIT_MSG:
-		if (mWindow) {
-			BWindow* w = mWindow;
+		if (fWindow) {
+			BWindow* w = fWindow;
 			w->Lock();
 			w->PostMessage(B_QUIT_REQUESTED);
 			w->Unlock();
 		}
 		break;
 	case NOTIFY_CLOSE_MSG:
-		if (mWindow) {
-			mWindow->Lock();
-			mWindow->UpdateWindowsMenu();
-			mWindow->Unlock();
+		if (fWindow) {
+			fWindow->Lock();
+			fWindow->UpdateWindowsMenu();
+			fWindow->Unlock();
 		}
 		break;
 	case B_CANCEL:
-		if (!mWindow && mReadyToQuit) {
+		if (!fWindow && fReadyToQuit) {
 			PostMessage(B_QUIT_REQUESTED);
 		}
 		break;
@@ -719,7 +719,7 @@ void BepdfApplication::ArgvReceived(int32 argc, char** argv)
 	get_ref_for_path(argvCopy[1], &fileToOpen);
 	msg.AddRef("refs", &fileToOpen);
 	PostMessage(&msg);
-	mGotSomething = true;
+	fGotSomething = true;
 	delete argvCopy;
 }
 
@@ -729,7 +729,7 @@ void BepdfApplication::LoadSettings()
 {
 	BPath path;
 	if (find_directory(B_USER_SETTINGS_DIRECTORY, &path) == B_OK && path.Append(settingsFilename) == B_OK) {
-		mSettings->Load(path.Path());
+		fSettings->Load(path.Path());
 	}
 }
 
@@ -738,7 +738,7 @@ void BepdfApplication::SaveSettings()
 {
 	BPath path;
 	if (find_directory(B_USER_SETTINGS_DIRECTORY, &path) == B_OK && path.Append(settingsFilename) == B_OK) {
-		mSettings->Save(path.Path());
+		fSettings->Save(path.Path());
 	}
 }
 

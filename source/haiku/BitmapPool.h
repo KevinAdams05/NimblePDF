@@ -42,14 +42,14 @@ class BitmapPool {
 		struct item* next; // list of free items
 	} Item;
 
-	int64 mSize; // free
-	BList mPool;
-	static BitmapPool* mInstance;
-	Item* mFree; // list of free items
+	int64 fSize; // free
+	BList fPool;
+	static BitmapPool* fInstance;
+	Item* fFree; // list of free items
 
 	static int64 freeMemorySize();
 	static int64 size(int width, int height, color_space cs);
-	Item* itemAt(int id) const { return (Item*)mPool.ItemAt(id); }
+	Item* itemAt(int id) const { return (Item*)fPool.ItemAt(id); }
 	BitmapPool();
 
 public:

@@ -41,28 +41,28 @@
 
 TraceWindow::TraceWindow(GlobalSettings* settings)
     : BWindow(BRect(0, 0, 100, 100), B_TRANSLATE("Error messages"), B_TITLED_WINDOW_LOOK, B_NORMAL_WINDOW_FEEL, B_AUTO_UPDATE_SIZE_LIMITS),
-      mSettings(settings),
-      mAutoOpen(settings->GetTraceAutoOpen()),
-      mShowStdout(settings->GetTraceShowStdout()),
-      mShowStderr(settings->GetTraceShowStderr())
+      fSettings(settings),
+      fAutoOpen(settings->GetTraceAutoOpen()),
+      fShowStdout(settings->GetTraceShowStdout()),
+      fShowStderr(settings->GetTraceShowStderr())
 {
 	AddCommonFilter(new EscapeMessageFilter(this, HIDE_MSG));
 
-	mOutput = new BTextView("mOutput");
-	mOutput->SetViewUIColor(B_PANEL_BACKGROUND_COLOR);
-	BScrollView* outScroll = new BScrollView("outScroll", mOutput, 0, false, true);
+	fOutput = new BTextView("fOutput");
+	fOutput->SetViewUIColor(B_PANEL_BACKGROUND_COLOR);
+	BScrollView* outScroll = new BScrollView("outScroll", fOutput, 0, false, true);
 
 	BCheckBox* autoOpen = new BCheckBox("autoOpen", B_TRANSLATE("Auto open"), new BMessage(AUTO_OPEN_MSG));
-	autoOpen->SetValue(mAutoOpen);
+	autoOpen->SetValue(fAutoOpen);
 
 	BCheckBox* floating = new BCheckBox("floating", B_TRANSLATE("Floating"), new BMessage(FLOATING_MSG));
-	floating->SetValue(mSettings->GetTraceFloating());
+	floating->SetValue(fSettings->GetTraceFloating());
 
-	mStdoutCB = new BCheckBox("mStdoutCB", "stdout", new BMessage(SHOW_STDOUT_MSG));
-	mStdoutCB->SetValue(mShowStdout);
+	fStdoutCB = new BCheckBox("fStdoutCB", "stdout", new BMessage(SHOW_STDOUT_MSG));
+	fStdoutCB->SetValue(fShowStdout);
 
-	mStderrCB = new BCheckBox("mStderrCB", "stderr", new BMessage(SHOW_STDERR_MSG));
-	mStderrCB->SetValue(mShowStderr);
+	fStderrCB = new BCheckBox("fStderrCB", "stderr", new BMessage(SHOW_STDERR_MSG));
+	fStderrCB->SetValue(fShowStderr);
 
 	BButton* clear = new BButton("clear", B_TRANSLATE("Clear"), new BMessage(CLEAR_MSG));
 
@@ -72,15 +72,15 @@ TraceWindow::TraceWindow(GlobalSettings* settings)
 	    .AddGroup(B_HORIZONTAL)
 	    .Add(autoOpen)
 	    .Add(floating)
-	    .Add(mStdoutCB)
-	    .Add(mStderrCB)
+	    .Add(fStdoutCB)
+	    .Add(fStderrCB)
 	    .AddGlue()
 	    .Add(clear);
 
-	mOutput->MakeEditable(false);
-	mOutput->SetStylable(true);
-	mStdoutCB->SetHighColor(0, 0, 255);
-	mStderrCB->SetHighColor(255, 0, 0);
+	fOutput->MakeEditable(false);
+	fOutput->SetStylable(true);
+	fStdoutCB->SetHighColor(0, 0, 255);
+	fStderrCB->SetHighColor(255, 0, 0);
 	EnableCheckboxes();
 
 	MoveTo(settings->GetTraceWindowPosition());
@@ -98,13 +98,13 @@ TraceWindow::TraceWindow(GlobalSettings* settings)
 
 void TraceWindow::EnableCheckboxes()
 {
-	mStdoutCB->SetEnabled((mShowStdout && mShowStderr) || !mShowStdout);
-	mStderrCB->SetEnabled((mShowStdout && mShowStderr) || !mShowStderr);
+	fStdoutCB->SetEnabled((fShowStdout && fShowStderr) || !fShowStdout);
+	fStderrCB->SetEnabled((fShowStdout && fShowStderr) || !fShowStderr);
 }
 
 void TraceWindow::UpdateWindowLookAndFeel()
 {
-	if (mSettings->GetTraceFloating()) {
+	if (fSettings->GetTraceFloating()) {
 		SetLook(B_FLOATING_WINDOW_LOOK);
 		SetFeel(B_FLOATING_APP_WINDOW_FEEL);
 	} else {
@@ -115,14 +115,14 @@ void TraceWindow::UpdateWindowLookAndFeel()
 
 void TraceWindow::FrameMoved(BPoint point)
 {
-	mWindowPos = point;
-	mSettings->SetTraceWindowPosition(point);
+	fWindowPos = point;
+	fSettings->SetTraceWindowPosition(point);
 	BWindow::FrameMoved(point);
 }
 
 void TraceWindow::FrameResized(float w, float h)
 {
-	mSettings->SetTraceWindowSize(w, h);
+	fSettings->SetTraceWindowSize(w, h);
 	BWindow::FrameResized(w, h);
 }
 
@@ -141,48 +141,48 @@ void TraceWindow::WriteData(const char* name, int fd, const char* data, int len)
 	if (len == 0)
 		return;
 
-	if (!((fd == 1 && mShowStdout) || (fd == 2 && mShowStderr)))
+	if (!((fd == 1 && fShowStdout) || (fd == 2 && fShowStderr)))
 		return;
 
-	if (mAutoOpen && IsHidden()) {
+	if (fAutoOpen && IsHidden()) {
 		Show();
 	}
 
 	//	char buffer[256];
 	//	sprintf(buffer, "%s %d\n", name, fd);
-	//	mOutput->Insert(mOutput->TextLength(), buffer, strlen(buffer));
+	//	fOutput->Insert(fOutput->TextLength(), buffer, strlen(buffer));
 
-	int32 cur = mOutput->TextLength() - 1;
-	mOutput->Insert(cur + 1, data, len);
-	int32 end = mOutput->TextLength();
-	mOutput->SetFontAndColor(cur, end, NULL, 0, (fd == 1) ? &stdout_color : &stderr_color);
-	mOutput->ScrollToOffset(end);
-	mOutput->Invalidate();
+	int32 cur = fOutput->TextLength() - 1;
+	fOutput->Insert(cur + 1, data, len);
+	int32 end = fOutput->TextLength();
+	fOutput->SetFontAndColor(cur, end, NULL, 0, (fd == 1) ? &stdout_color : &stderr_color);
+	fOutput->ScrollToOffset(end);
+	fOutput->Invalidate();
 }
 
 void TraceWindow::MessageReceived(BMessage* msg)
 {
 	switch (msg->what) {
 	case AUTO_OPEN_MSG:
-		mAutoOpen = IsOn(msg);
-		mSettings->SetTraceAutoOpen(mAutoOpen);
+		fAutoOpen = IsOn(msg);
+		fSettings->SetTraceAutoOpen(fAutoOpen);
 		break;
 	case SHOW_STDOUT_MSG:
-		mShowStdout = IsOn(msg);
-		mSettings->SetTraceShowStdout(mShowStdout);
+		fShowStdout = IsOn(msg);
+		fSettings->SetTraceShowStdout(fShowStdout);
 		EnableCheckboxes();
 		break;
 	case SHOW_STDERR_MSG:
-		mShowStderr = IsOn(msg);
-		mSettings->SetTraceShowStderr(mShowStderr);
+		fShowStderr = IsOn(msg);
+		fSettings->SetTraceShowStderr(fShowStderr);
 		EnableCheckboxes();
 		break;
 	case CLEAR_MSG:
-		mOutput->SelectAll();
-		mOutput->Clear();
+		fOutput->SelectAll();
+		fOutput->Clear();
 		break;
 	case FLOATING_MSG:
-		mSettings->SetTraceFloating(IsOn(msg));
+		fSettings->SetTraceFloating(IsOn(msg));
 		UpdateWindowLookAndFeel();
 		break;
 	case HIDE_MSG:
@@ -196,56 +196,56 @@ void TraceWindow::MessageReceived(BMessage* msg)
 
 
 // Implementation of OutputTracer
-TraceWindow* OutputTracer::mWindow = NULL;
-BLocker OutputTracer::mLock;
-int OutputTracer::mTracerCount = 0;
+TraceWindow* OutputTracer::fWindow = NULL;
+BLocker OutputTracer::fLock;
+int OutputTracer::fTracerCount = 0;
 
 OutputTracer::OutputTracer(int fd, const char* name, GlobalSettings* settings)
-    : mDupFd(-1),
-      mOutFd(fd),
-      mInFd(-1),
-      mName(name),
-      mSettings(settings),
-      mPipeThread(-1)
+    : fDupFd(-1),
+      fOutFd(fd),
+      fInFd(-1),
+      fName(name),
+      fSettings(settings),
+      fPipeThread(-1)
 {
-	mName = name;
-	mTracerCount++;
+	fName = name;
+	fTracerCount++;
 	int fildes[2];
 #ifdef DEBUG
-	mInFd = -1;
+	fInFd = -1;
 	return;
 #endif
 	if (0 != pipe(fildes)) {
-		mInFd = -1;
+		fInFd = -1;
 	} else {
 		int readFd = fildes[0];
 		int writeFd = fildes[1];
 
-		mDupFd = dup(mOutFd);
-		mInFd = readFd;
-		dup2(writeFd, mOutFd);
+		fDupFd = dup(fOutFd);
+		fInFd = readFd;
+		dup2(writeFd, fOutFd);
 		close(writeFd);
 
-		mPipeThread = spawn_thread(start_thread, name, suggest_thread_priority(B_USER_INPUT_HANDLING), this);
-		resume_thread(mPipeThread);
+		fPipeThread = spawn_thread(start_thread, name, suggest_thread_priority(B_USER_INPUT_HANDLING), this);
+		resume_thread(fPipeThread);
 	}
 }
 
 OutputTracer::~OutputTracer()
 {
 	status_t status;
-	close(mInFd);
-	dup2(mDupFd, mOutFd);
-	close(mDupFd);
-	wait_for_thread(mPipeThread, &status);
-	mLock.Lock();
-	mTracerCount--;
-	if (mTracerCount == 0 && mWindow) {
-		mWindow->Lock();
-		mWindow->Quit();
-		mWindow = NULL;
+	close(fInFd);
+	dup2(fDupFd, fOutFd);
+	close(fDupFd);
+	wait_for_thread(fPipeThread, &status);
+	fLock.Lock();
+	fTracerCount--;
+	if (fTracerCount == 0 && fWindow) {
+		fWindow->Lock();
+		fWindow->Quit();
+		fWindow = NULL;
 	}
-	mLock.Unlock();
+	fLock.Unlock();
 }
 
 int32 OutputTracer::start_thread(void* data)
@@ -256,25 +256,25 @@ int32 OutputTracer::start_thread(void* data)
 
 TraceWindow* OutputTracer::CreateWindow(GlobalSettings* s)
 {
-	if (mWindow == NULL) {
-		mLock.Lock();
-		if (mWindow == NULL) {
-			mWindow = new TraceWindow(s);
+	if (fWindow == NULL) {
+		fLock.Lock();
+		if (fWindow == NULL) {
+			fWindow = new TraceWindow(s);
 		}
-		mLock.Unlock();
+		fLock.Unlock();
 	}
-	return mWindow;
+	return fWindow;
 }
 
 void OutputTracer::WriteData(const char* data, int len)
 {
-	mLock.Lock();
-	mWindow = CreateWindow(mSettings);
-	if (mWindow->Lock()) {
-		mWindow->WriteData(mName.String(), mOutFd, data, len);
-		mWindow->Unlock();
+	fLock.Lock();
+	fWindow = CreateWindow(fSettings);
+	if (fWindow->Lock()) {
+		fWindow->WriteData(fName.String(), fOutFd, data, len);
+		fWindow->Unlock();
 	}
-	mLock.Unlock();
+	fLock.Unlock();
 }
 
 void OutputTracer::Run()
@@ -283,7 +283,7 @@ void OutputTracer::Run()
 	char buffer[max];
 	int len;
 
-	while (0 < (len = read(mInFd, buffer, max))) {
+	while (0 < (len = read(fInFd, buffer, max))) {
 		WriteData(buffer, len);
 	}
 }

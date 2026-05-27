@@ -35,11 +35,11 @@ StatusWindow::StatusWindow(const char* text, BRect aRect)
     : BWindow(aRect, B_TRANSLATE("BePDF status"), B_MODAL_WINDOW, B_NOT_RESIZABLE | B_NOT_ZOOMABLE | B_NOT_CLOSABLE)
 {
 	BStringView* stringView = new BStringView("stringView", text);
-	mStatus = new BStatusBar("mStatus");
-	mStatus->SetMaxValue(1);
-	mTotal = -1;
+	fStatus = new BStatusBar("fStatus");
+	fStatus->SetMaxValue(1);
+	fTotal = -1;
 
-	mText = new BStringView("mText", "");
+	fText = new BStringView("fText", "");
 
 	BLayoutBuilder::Group<>(this, B_VERTICAL, 0)
 	    .SetInsets(0)
@@ -51,10 +51,10 @@ StatusWindow::StatusWindow(const char* text, BRect aRect)
 	    .End()
 	    .AddGlue()
 	    .AddGroup(B_HORIZONTAL)
-	    .Add(mText)
+	    .Add(fText)
 	    .AddGlue()
 	    .End()
-	    .Add(mStatus);
+	    .Add(fStatus);
 
 	ResizeTo(500, 100);
 
@@ -69,17 +69,17 @@ void StatusWindow::MessageReceived(BMessage* msg)
 	switch (msg->what) {
 	case TOTAL_NOTIFY:
 		if (B_OK == msg->FindInt32("total", &p)) {
-			mTotal = p;
+			fTotal = p;
 		}
 		break;
 	case CURRENT_NOTIFY:
 		if (B_OK == msg->FindInt32("current", &p)) {
-			mStatus->SetTo(p / (float)mTotal);
+			fStatus->SetTo(p / (float)fTotal);
 		}
 		break;
 	case TEXT_NOTIFY:
 		if (B_OK == msg->FindString("text", &s)) {
-			mText->SetText(s.String());
+			fText->SetText(s.String());
 		}
 		break;
 	default:
@@ -114,12 +114,12 @@ void StatusWindow::SetText(BMessenger* msgr, const char* text)
 ShowStatusWindow::ShowStatusWindow(const char* name)
 {
 	BWindow* window = new StatusWindow(name, gApp->GetSettings()->GetWindowRect());
-	mMessenger = BMessenger(window);
+	fMessenger = BMessenger(window);
 }
 
 ShowStatusWindow::~ShowStatusWindow()
 {
-	mMessenger.SendMessage(B_QUIT_REQUESTED);
+	fMessenger.SendMessage(B_QUIT_REQUESTED);
 }
 
 // Implementation of ShowLoadProgressStatusWindow

@@ -46,38 +46,38 @@ public:
 	int32 Run();
 
 private:
-	bool CanContinue() { return !(*mStopThread); }
-	BWindow* Window() { return mMainView->Window(); }
-	CachedPage* GetPage() { return mMainView->GetPage(); }
-	PDFDoc* GetPDFDoc() { return mMainView->GetPDFDoc(); }
-	int CurrentPage() { return mMainView->Page(); }
+	bool CanContinue() { return !(*fStopThread); }
+	BWindow* Window() { return fMainView->Window(); }
+	CachedPage* GetPage() { return fMainView->GetPage(); }
+	PDFDoc* GetPDFDoc() { return fMainView->GetPDFDoc(); }
+	int CurrentPage() { return fMainView->Page(); }
 
 	void SendPageMsg(int32 page);
 
-	PDFView* mMainView;
-	FindTextWindow* mFindWindow;
-	BString mFindText;
-	bool mCaseSensitive;
-	bool mBackward;
-	bool* mStopThread;
+	PDFView* fMainView;
+	FindTextWindow* fFindWindow;
+	BString fFindText;
+	bool fCaseSensitive;
+	bool fBackward;
+	bool* fStopThread;
 };
 
 FindThread::FindThread(const char* s, bool ignoreCase, bool backward, PDFView* mainView, FindTextWindow* find, bool* stopThread)
     : Thread("find_thread", B_LOW_PRIORITY)
 {
-	mFindText = s;
-	mCaseSensitive = !ignoreCase;
-	mBackward = backward;
-	mMainView = mainView;
-	mFindWindow = find;
-	mStopThread = stopThread;
+	fFindText = s;
+	fCaseSensitive = !ignoreCase;
+	fBackward = backward;
+	fMainView = mainView;
+	fFindWindow = find;
+	fStopThread = stopThread;
 }
 
 void FindThread::SendPageMsg(int32 page)
 {
 	BMessage msg(FindTextWindow::FIND_SET_PAGE_MSG);
 	msg.AddInt32("page", page);
-	mFindWindow->PostMessage(&msg);
+	fFindWindow->PostMessage(&msg);
 }
 
 int32 FindThread::Run()
@@ -88,18 +88,18 @@ int32 FindThread::Run()
 	GBool startAtTop, startAtLast, stopAtLast;
 
 	bool next = true;
-	GBool backward = mBackward;
-	GBool caseSensitive = mCaseSensitive;
+	GBool backward = fBackward;
+	GBool caseSensitive = fCaseSensitive;
 	int selectULX, selectLRX, selectULY, selectLRY;
 	PDFDoc* doc = GetPDFDoc();
 	bool found = false;
 	bool onePageOnly = false;
 	int topPage = CurrentPage();
 
-	mMainView->GetSelection(selectULX, selectLRX, selectULY, selectLRY);
+	fMainView->GetSelection(selectULX, selectLRX, selectULY, selectLRY);
 
 	int32 len;
-	Unicode* u = Utf8ToUnicode(mFindText.String(), &len);
+	Unicode* u = Utf8ToUnicode(fFindText.String(), &len);
 	if (u == NULL) {
 		goto done;
 	}
@@ -222,21 +222,21 @@ notFound: {
 	// found on a different page
 foundPage:
 	if (Window()->Lock()) {
-		mMainView->SetPage(pg);
-		mMainView->WaitForPage();
+		fMainView->SetPage(pg);
+		fMainView->WaitForPage();
 		Window()->Unlock();
 	}
-	if (!GetPage()->FindText(u, len, gTrue, gTrue, gFalse, gFalse, mCaseSensitive, mBackward, &xMin, &yMin, &xMax, &yMax))
+	if (!GetPage()->FindText(u, len, gTrue, gTrue, gFalse, gFalse, fCaseSensitive, fBackward, &xMin, &yMin, &xMax, &yMax))
 		// this can happen if coalescing is bad
 		goto notFound;
 
 	// found: change the selection
 found:
 	found = true;
-	mMainView->SetSelection((int)floor(xMin), (int)floor(yMin), (int)ceil(xMax), (int)ceil(yMax), true);
+	fMainView->SetSelection((int)floor(xMin), (int)floor(yMin), (int)ceil(xMax), (int)ceil(yMax), true);
 #ifndef NO_TEXT_SELECT
 	if (GetPDFDoc()->okToCopy()) {
-		mMainView->CopySelection();
+		fMainView->CopySelection();
 	}
 #endif
 
@@ -249,12 +249,12 @@ done:
 ///////////////////////////////////////////////////////////
 void PDFView::Find(const char* s, bool ignoreCase, bool backward, FindTextWindow* findWindow)
 {
-	mStopFindThread = false;
-	FindThread* thread = new FindThread(s, ignoreCase, backward, this, findWindow, &mStopFindThread);
+	fStopFindThread = false;
+	FindThread* thread = new FindThread(s, ignoreCase, backward, this, findWindow, &fStopFindThread);
 	thread->Resume();
 }
 
 void PDFView::StopFind()
 {
-	mStopFindThread = true;
+	fStopFindThread = true;
 }

@@ -33,9 +33,9 @@ class BStringView;
 class BStatusBar;
 
 class StatusWindow : public BWindow {
-	BStringView* mText;
-	BStatusBar* mStatus;
-	int mTotal;
+	BStringView* fText;
+	BStatusBar* fStatus;
+	int fTotal;
 
 public:
 	enum {                       // BMessage attributes:
@@ -58,10 +58,10 @@ public:
 	ShowStatusWindow(const char* name);
 	virtual ~ShowStatusWindow();
 
-	BMessenger* GetMessenger() { return &mMessenger; }
+	BMessenger* GetMessenger() { return &fMessenger; }
 
 private:
-	BMessenger mMessenger;
+	BMessenger fMessenger;
 };
 
 class ShowLoadProgressStatusWindow : public ShowStatusWindow {

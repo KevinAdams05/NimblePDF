@@ -33,8 +33,8 @@ class SaveThread : public Thread {
 public:
 	SaveThread(const char* statusText, XRef* xref)
 	    : Thread("save", B_LOW_PRIORITY),
-	      mXRef(xref),
-	      mShowStatusWindow(statusText)
+	      fXRef(xref),
+	      fShowStatusWindow(statusText)
 	{
 		SetPriority(suggest_thread_priority(B_OFFLINE_PROCESSING));
 	}
@@ -46,8 +46,8 @@ public:
 	void SetText(const char* text);
 
 private:
-	XRef* mXRef;
-	ShowStatusWindow mShowStatusWindow;
+	XRef* fXRef;
+	ShowStatusWindow fShowStatusWindow;
 };
 
 

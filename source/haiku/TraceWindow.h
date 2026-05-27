@@ -57,27 +57,27 @@ protected:
 		HIDE_MSG = 'Hide'
 	};
 
-	GlobalSettings* mSettings;
-	BPoint mWindowPos;
-	BTextView* mOutput;
-	BCheckBox *mStdoutCB, *mStderrCB;
+	GlobalSettings* fSettings;
+	BPoint fWindowPos;
+	BTextView* fOutput;
+	BCheckBox *fStdoutCB, *fStderrCB;
 
-	bool mAutoOpen;
-	bool mShowStdout, mShowStderr;
+	bool fAutoOpen;
+	bool fShowStdout, fShowStderr;
 };
 
 class OutputTracer {
 private:
-	static TraceWindow* mWindow;
-	static BLocker mLock;
-	static int mTracerCount;
+	static TraceWindow* fWindow;
+	static BLocker fLock;
+	static int fTracerCount;
 
-	int mDupFd;
-	int mOutFd;
-	int mInFd;
-	BString mName;
-	GlobalSettings* mSettings;
-	thread_id mPipeThread;
+	int fDupFd;
+	int fOutFd;
+	int fInFd;
+	BString fName;
+	GlobalSettings* fSettings;
+	thread_id fPipeThread;
 
 	void WriteData(const char* data, int len);
 	void Run();

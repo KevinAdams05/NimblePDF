@@ -33,22 +33,22 @@
 
 // Render Annotation
 class AnnotationRenderer : public AnnotVisitor {
-	BView* mView;
-	int mZoom;
-	double mCtm[6];
-	bool mEdit;
+	BView* fView;
+	int fZoom;
+	double fCtm[6];
+	bool fEdit;
 
-	drawing_mode mDrawingMode;
-	source_alpha mSourceAlpha;
-	alpha_function mAlphaFunction;
+	drawing_mode fDrawingMode;
+	source_alpha fSourceAlpha;
+	alpha_function fAlphaFunction;
 
 	class ClipToRect {
-		AnnotationRenderer* mRenderer;
-		Annotation* mAnnot;
-		BRect mRect;
-		BRegion mOldClippingRegion;
+		AnnotationRenderer* fRenderer;
+		Annotation* fAnnot;
+		BRect fRect;
+		BRegion fOldClippingRegion;
 
-		BView* View() { return mRenderer->mView; }
+		BView* View() { return fRenderer->fView; }
 
 	public:
 		ClipToRect(AnnotationRenderer* r, Annotation* a);

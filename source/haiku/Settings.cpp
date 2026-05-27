@@ -29,23 +29,23 @@
 
 
 GlobalSettings::GlobalSettings()
-    : mChanged(false)
+    : fChanged(false)
 {
 	SETTINGS(DEFINE_VARIABLE)
 	STRING_SETTINGS(DEFINE_STRING_VARIABLE)
 
 	BPath path;
 	if (B_OK == find_directory(B_DESKTOP_DIRECTORY, &path)) {
-		mDefaultPanelDirectory = path.Path();
+		fDefaultPanelDirectory = path.Path();
 	} else {
-		mDefaultPanelDirectory = "/boot/home/Desktop";
+		fDefaultPanelDirectory = "/boot/home/Desktop";
 	}
-	mPanelDirectory = mDefaultPanelDirectory;
+	fPanelDirectory = fDefaultPanelDirectory;
 }
 
 bool GlobalSettings::HasChanged() const
 {
-	return mChanged;
+	return fChanged;
 }
 
 SETTINGS(DEFINE_SETTER)
@@ -55,25 +55,25 @@ STRING_SETTINGS(DEFINE_STRING_GETTER)
 
 void GlobalSettings::SetPanelDirectory(const char* dir)
 {
-	mChanged = mChanged || (mPanelDirectory != dir);
-	mPanelDirectory = dir;
+	fChanged = fChanged || (fPanelDirectory != dir);
+	fPanelDirectory = dir;
 }
 
 
 const char* GlobalSettings::GetPanelDirectory() const
 {
-	return mPanelDirectory.String();
+	return fPanelDirectory.String();
 }
 
 void GlobalSettings::SetDisplayCIDFonts(const BMessage& fonts)
 {
-	mChanged = true;
-	mDisplayCIDFonts = fonts;
+	fChanged = true;
+	fDisplayCIDFonts = fonts;
 }
 
 void GlobalSettings::GetDisplayCIDFonts(BMessage& fonts) const
 {
-	fonts = mDisplayCIDFonts;
+	fonts = fDisplayCIDFonts;
 }
 
 BRect GlobalSettings::GetWindowRect() const
@@ -90,15 +90,15 @@ BRect GlobalSettings::GetWindowRect() const
 // BArchivable:
 GlobalSettings::GlobalSettings(BMessage* archive)
 {
-	mChanged = false;
+	fChanged = false;
 
 	SETTINGS(LOAD_SETTINGS)
 	STRING_SETTINGS(LOAD_STRING_SETTINGS)
 
-	if (B_OK != archive->FindString("panelDirectory", &mPanelDirectory))
-		mPanelDirectory = mDefaultPanelDirectory;
+	if (B_OK != archive->FindString("panelDirectory", &fPanelDirectory))
+		fPanelDirectory = fDefaultPanelDirectory;
 
-	archive->FindMessage("displayCIDFonts", &mDisplayCIDFonts);
+	archive->FindMessage("displayCIDFonts", &fDisplayCIDFonts);
 }
 
 status_t GlobalSettings::Archive(BMessage* archive, bool deep) const
@@ -108,8 +108,8 @@ status_t GlobalSettings::Archive(BMessage* archive, bool deep) const
 	SETTINGS(STORE_SETTINGS)
 	STRING_SETTINGS(STORE_STRING_SETTINGS)
 
-	archive->AddString("panelDirectory", mPanelDirectory.String());
-	archive->AddMessage("displayCIDFonts", &mDisplayCIDFonts);
+	archive->AddString("panelDirectory", fPanelDirectory.String());
+	archive->AddMessage("displayCIDFonts", &fDisplayCIDFonts);
 	return B_OK;
 }
 

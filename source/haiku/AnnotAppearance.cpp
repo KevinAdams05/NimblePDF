@@ -34,13 +34,13 @@
 // Implementation of A85Encoder
 
 A85Encoder::A85Encoder(GString* stream)
-    : mStream(stream),
-      mLength(0)
+    : fStream(stream),
+      fLength(0)
 {}
 
 void A85Encoder::Encode(unsigned char* output, bool* isNull)
 {
-	unsigned long code = mInput[0] * 256 * 256 * 256 + mInput[1] * 256 * 256 + mInput[2] * 256 + mInput[3];
+	unsigned long code = fInput[0] * 256 * 256 * 256 + fInput[1] * 256 * 256 + fInput[2] * 256 + fInput[3];
 
 	*isNull = true;
 
@@ -55,40 +55,40 @@ void A85Encoder::Encode(unsigned char* output, bool* isNull)
 
 void A85Encoder::Append(unsigned char byte)
 {
-	mInput[mLength] = byte;
-	mLength++;
-	if (mLength == 4) {
+	fInput[fLength] = byte;
+	fLength++;
+	if (fLength == 4) {
 		unsigned char output[5];
 		bool isNull;
 
 		Encode(output, &isNull);
 
 		if (isNull) {
-			mStream->append('z');
+			fStream->append('z');
 		} else {
 			for (int i = 0; i <= 4; i++) {
-				mStream->append(output[i]);
+				fStream->append(output[i]);
 			}
 		}
-		mLength = 0;
+		fLength = 0;
 	}
 }
 
 void A85Encoder::Flush()
 {
-	if (mLength != 0) {
-		int n = mLength;
+	if (fLength != 0) {
+		int n = fLength;
 		unsigned char output[5];
 		bool isNull;
-		for (; mLength < 4; mLength++) {
-			mInput[mLength] = 0;
+		for (; fLength < 4; fLength++) {
+			fInput[fLength] = 0;
 		}
 		Encode(output, &isNull);
 		for (int i = 0; i <= n; i++) {
-			mStream->append(output[i]);
+			fStream->append(output[i]);
 		}
 	}
-	mStream->append("~>\n");
+	fStream->append("~>\n");
 }
 
 
@@ -96,12 +96,12 @@ void A85Encoder::Flush()
 
 void GraphicsStream::Append(const char* s)
 {
-	mStream.append(s);
+	fStream.append(s);
 }
 
 void GraphicsStream::Append(GString* s)
 {
-	mStream.append(s);
+	fStream.append(s);
 }
 
 void GraphicsStream::Append(double f)
@@ -223,35 +223,35 @@ void GraphicsStream::Fill()
 
 void AnnotAppearance::Init(Annotation* annot)
 {
-	mBBox = *annot->GetRect();
+	fBBox = *annot->GetRect();
 	double swap;
 	// normalize rectangle
-	if (mBBox.x1 > mBBox.x2) {
-		swap = mBBox.x1;
-		mBBox.x1 = mBBox.x2;
-		mBBox.x2 = swap;
+	if (fBBox.x1 > fBBox.x2) {
+		swap = fBBox.x1;
+		fBBox.x1 = fBBox.x2;
+		fBBox.x2 = swap;
 	}
-	if (mBBox.y1 > mBBox.y2) {
-		swap = mBBox.y1;
-		mBBox.y1 = mBBox.y2;
-		mBBox.y2 = swap;
+	if (fBBox.y1 > fBBox.y2) {
+		swap = fBBox.y1;
+		fBBox.y1 = fBBox.y2;
+		fBBox.y2 = swap;
 	}
 	// user to form coordinate translation
-	mDelta.x = mBBox.x1;
-	mDelta.y = mBBox.y1;
+	fDelta.x = fBBox.x1;
+	fDelta.y = fBBox.y1;
 	// (0/0) is origin of appearance stream
-	mBBox.x2 -= mBBox.x1;
-	mBBox.x1 = 0.0;
-	mBBox.y2 -= mBBox.y1;
-	mBBox.y1 = 0.0;
+	fBBox.x2 -= fBBox.x1;
+	fBBox.x1 = 0.0;
+	fBBox.y2 -= fBBox.y1;
+	fBBox.y1 = 0.0;
 	// setup graphics state
-	mAS.SetColor(GraphicsStream::stroke, annot->GetColor());
+	fAS.SetColor(GraphicsStream::stroke, annot->GetColor());
 }
 
 // Coordinate transformation from user to form
 PDFPoint AnnotAppearance::UserToForm(PDFPoint p)
 {
-	return p - mDelta;
+	return p - fDelta;
 }
 
 PDFPoint AnnotAppearance::PointBetween(PDFPoint p1, PDFPoint p2, float f)
@@ -268,7 +268,7 @@ void AnnotAppearance::DoStyledAnnot(StyledAnnot* a)
 {
 	float w = a->GetBorderStyle()->GetWidth();
 	if (w != 1.0) {
-		mAS.SetLineWidth(w);
+		fAS.SetLineWidth(w);
 	}
 }
 
@@ -276,9 +276,9 @@ void AnnotAppearance::Stroke(PDFQuadPoints& qp, float f)
 {
 	PDFPoint p1 = PointBetween(qp[0], qp[2], f);
 	PDFPoint p2 = PointBetween(qp[1], qp[3], f);
-	mAS.MoveTo(UserToForm(p1));
-	mAS.LineTo(UserToForm(p2));
-	mAS.Stroke();
+	fAS.MoveTo(UserToForm(p1));
+	fAS.LineTo(UserToForm(p2));
+	fAS.Stroke();
 }
 
 void AnnotAppearance::DoMarkupAnnot(MarkupAnnot* a, float f)
@@ -291,16 +291,16 @@ void AnnotAppearance::DoMarkupAnnot(MarkupAnnot* a, float f)
 
 void AnnotAppearance::Stroke(PDFQuadPoints& qp)
 {
-	mAS.MoveTo(UserToForm(qp[0]));
-	mAS.LineTo(UserToForm(qp[1]));
-	mAS.LineTo(UserToForm(qp[3]));
-	mAS.LineTo(UserToForm(qp[2]));
-	mAS.Close();
-	mAS.Stroke();
+	fAS.MoveTo(UserToForm(qp[0]));
+	fAS.LineTo(UserToForm(qp[1]));
+	fAS.LineTo(UserToForm(qp[3]));
+	fAS.LineTo(UserToForm(qp[2]));
+	fAS.Close();
+	fAS.Stroke();
 }
 
 AnnotAppearance::AnnotAppearance()
-    : mEncoder(mAS.GetString())
+    : fEncoder(fAS.GetString())
 {}
 
 AnnotAppearance::~AnnotAppearance()
@@ -319,46 +319,46 @@ void AnnotAppearance::DoText(TextAnnot* a)
 		BRect b = image->Bounds();
 		int h = b.IntegerHeight() + 1;
 		int w = b.IntegerWidth() + 1;
-		mAS.AddCr("q");
-		mAS.Transform(w, h, 0, mBBox.y2 - mBBox.y1 - h);
+		fAS.AddCr("q");
+		fAS.Transform(w, h, 0, fBBox.y2 - fBBox.y1 - h);
 		// begin image
-		mAS.AddCr("BI");
+		fAS.AddCr("BI");
 		// 8 bits per channel
-		mAS.AddCr("/BPC 8");
-		mAS.AddCr("/CS/DeviceRGB");
-		mAS.Add("/H");
-		mAS.AddCr(h);
-		mAS.Add("/W");
-		mAS.AddCr(w);
-		mAS.AddCr("/F[/A85]");
+		fAS.AddCr("/BPC 8");
+		fAS.AddCr("/CS/DeviceRGB");
+		fAS.Add("/H");
+		fAS.AddCr(h);
+		fAS.Add("/W");
+		fAS.AddCr(w);
+		fAS.AddCr("/F[/A85]");
 		// Default is identity matrix:
-		// mAS.AddCr("/Decode [0 1 0 1 0 1]");
+		// fAS.AddCr("/Decode [0 1 0 1 0 1]");
 		// TODO what is default?
-		mAS.AddCr("/I false");
+		fAS.AddCr("/I false");
 		// image data
-		mAS.AddCr("ID");
+		fAS.AddCr("ID");
 		// Use ASCII 85 Encoder for bitmap
 		for (int y = 0; y < h; y++) {
 			for (int x = 0; x < w; x++) {
 				unsigned char* p = ((unsigned char*)image->Bits()) + x * 4 + y * image->BytesPerRow();
 				if (p[3] != 0) {
 					// write RGB values
-					mEncoder.Append(p[2]);
-					mEncoder.Append(p[1]);
-					mEncoder.Append(p[0]);
+					fEncoder.Append(p[2]);
+					fEncoder.Append(p[1]);
+					fEncoder.Append(p[0]);
 				} else {
 					// convert 100% transparent pixel to white pixel
-					mEncoder.Append(255);
-					mEncoder.Append(255);
-					mEncoder.Append(255);
+					fEncoder.Append(255);
+					fEncoder.Append(255);
+					fEncoder.Append(255);
 				}
 			}
 		}
-		mEncoder.Flush();
+		fEncoder.Flush();
 		// end image
-		mAS.AddCr("EI");
+		fAS.AddCr("EI");
 
-		mAS.AddCr("Q");
+		fAS.AddCr("Q");
 	} else {
 		fprintf(stderr, "Wrong color space\n");
 	}
@@ -375,15 +375,15 @@ void AnnotAppearance::DoFreeText(FreeTextAnnot* a)
 {
 	/* Acrobat 5 does not require it
 	Init(a);
-	mAS.Add("BT");
-		mAS.AddCr(a->GetAppearance()->getCString());
-		mAS.AddCr("0 0 Td");
+	fAS.Add("BT");
+		fAS.AddCr(a->GetAppearance()->getCString());
+		fAS.AddCr("0 0 Td");
 		GString* s = AnnotUtils::EscapeString(a->GetContents());
-		mAS.Append("(");
-		mAS.Append(s);
-		mAS.AddCr(") Tj");
+		fAS.Append("(");
+		fAS.Append(s);
+		fAS.AddCr(") Tj");
 		delete s;
-	mAS.AddCr("ET");
+	fAS.AddCr("ET");
 */
 }
 
@@ -392,8 +392,8 @@ void AnnotAppearance::DoLine(LineAnnot* a)
 {
 	Init(a);
 	DoStyledAnnot(a);
-	mAS.MoveTo(UserToForm(a->GetLine()[0]));
-	mAS.LineTo(UserToForm(a->GetLine()[1]));
+	fAS.MoveTo(UserToForm(a->GetLine()[0]));
+	fAS.LineTo(UserToForm(a->GetLine()[1]));
 }
 
 
@@ -402,15 +402,15 @@ void AnnotAppearance::DoSquare(SquareAnnot* a)
 	Init(a);
 	DoStyledAnnot(a);
 	float w = a->GetBorderStyle()->GetWidth() / 2.0;
-	PDFPoint p1(mBBox.x1 + w, mBBox.y1 + w), p3(mBBox.x2 - w, mBBox.y2 - w);
+	PDFPoint p1(fBBox.x1 + w, fBBox.y1 + w), p3(fBBox.x2 - w, fBBox.y2 - w);
 	PDFPoint p2(p3.x, p1.y), p4(p1.x, p3.y);
 
-	mAS.MoveTo(p1);
-	mAS.LineTo(p2);
-	mAS.LineTo(p3);
-	mAS.LineTo(p4);
-	mAS.Close();
-	mAS.Stroke();
+	fAS.MoveTo(p1);
+	fAS.LineTo(p2);
+	fAS.LineTo(p3);
+	fAS.LineTo(p4);
+	fAS.Close();
+	fAS.Stroke();
 }
 
 
@@ -420,26 +420,26 @@ void AnnotAppearance::DoCircle(CircleAnnot* a)
 	DoStyledAnnot(a);
 	// approximate ellipse with four bezier curves
 	float w = a->GetBorderStyle()->GetWidth();
-	const double rx = (mBBox.x2 - w) / 2.0;
-	const double ry = (mBBox.y2 - w) / 2.0;
-	const double x = mBBox.x2 / 2.0;
-	const double y = mBBox.y2 / 2.0;
+	const double rx = (fBBox.x2 - w) / 2.0;
+	const double ry = (fBBox.y2 - w) / 2.0;
+	const double x = fBBox.x2 / 2.0;
+	const double y = fBBox.y2 / 2.0;
 	const double k = 0.552284749;
 	const double sx = rx * k;
 	const double sy = ry * k;
-	mAS.MoveTo(PDFPoint(x + rx, y));
-	mAS.BezierTo(PDFPoint(x + rx, y + sy), PDFPoint(x + sx, y + ry), PDFPoint(x, y + ry));
-	mAS.BezierTo(PDFPoint(x - sx, y + ry), PDFPoint(x - rx, y + sy), PDFPoint(x - rx, y));
-	mAS.BezierTo(PDFPoint(x - rx, y - sy), PDFPoint(x - sx, y - ry), PDFPoint(x, y - ry));
-	mAS.BezierTo(PDFPoint(x + sx, y - ry), PDFPoint(x + rx, y - sy), PDFPoint(x + rx, y));
-	mAS.Stroke();
+	fAS.MoveTo(PDFPoint(x + rx, y));
+	fAS.BezierTo(PDFPoint(x + rx, y + sy), PDFPoint(x + sx, y + ry), PDFPoint(x, y + ry));
+	fAS.BezierTo(PDFPoint(x - sx, y + ry), PDFPoint(x - rx, y + sy), PDFPoint(x - rx, y));
+	fAS.BezierTo(PDFPoint(x - rx, y - sy), PDFPoint(x - sx, y - ry), PDFPoint(x, y - ry));
+	fAS.BezierTo(PDFPoint(x + sx, y - ry), PDFPoint(x + rx, y - sy), PDFPoint(x + rx, y));
+	fAS.Stroke();
 }
 
 
 void AnnotAppearance::DoHighlight(HighlightAnnot* a)
 {
 	Init(a);
-	mAS.SetLineWidth(3.0);
+	fAS.SetLineWidth(3.0);
 	for (int i = 0; i < a->QuadPointsLength(); i++) {
 		Stroke(*(a->QuadPointsAt(i)));
 	}
@@ -463,7 +463,7 @@ void AnnotAppearance::StrokeSquiggly(PDFPoint p1, PDFPoint p2, float height)
 	float len = sqrt(d.x * d.x + d.y * d.y);
 	if (len <= 0.001)
 		return;
-	mAS.MoveTo(p1);
+	fAS.MoveTo(p1);
 	d.x = width * d.x / len;
 	d.y = width * d.y / len;
 	PDFPoint h1(d.y, d.x), h2(-d.y, -d.x);
@@ -479,9 +479,9 @@ void AnnotAppearance::StrokeSquiggly(PDFPoint p1, PDFPoint p2, float height)
 		bezier[1] = (i % 2 == 1) ? p1 + h1 : p1 + h2;
 		p1 += d;
 		bezier[2] = p1;
-		mAS.BezierTo(bezier[0], bezier[1], bezier[2]);
+		fAS.BezierTo(bezier[0], bezier[1], bezier[2]);
 	}
-	mAS.Stroke();
+	fAS.Stroke();
 }
 
 void AnnotAppearance::DoSquiggly(SquigglyAnnot* a)

@@ -127,36 +127,36 @@ bool RecentDocumentsMenu::AddDynamicItem(add_state s)
 PDFWindow::PDFWindow(entry_ref* ref, BRect frame, const char* ownerPassword, const char* userPassword, bool* encrypted)
     : BWindow(frame, "PDF", B_DOCUMENT_WINDOW, 0)
 {
-	mMainView = NULL;
-	mPagesView = NULL;
-	mAttachmentView = NULL;
-	mPageNumberItem = NULL;
-	mPrintSettings = NULL;
-	mTotalPageNumberItem = NULL;
-	mFindWindow = NULL;
-	mPreferencesItem = NULL;
-	mFileInfoItem = NULL;
-	mFindInProgress = false;
+	fMainView = NULL;
+	fPagesView = NULL;
+	fAttachmentView = NULL;
+	fPageNumberItem = NULL;
+	fPrintSettings = NULL;
+	fTotalPageNumberItem = NULL;
+	fFindWindow = NULL;
+	fPreferencesItem = NULL;
+	fFileInfoItem = NULL;
+	fFindInProgress = false;
 
-	mZoomMenu = mRotationMenu = NULL;
-	mLayerView = NULL;
+	fZoomMenu = fRotationMenu = NULL;
+	fLayerView = NULL;
 
-	mOWMessenger = NULL;
-	mFIWMessenger = NULL;
-	mPSWMessenger = NULL;
-	mAWMessenger = NULL;
+	fOWMessenger = NULL;
+	fFIWMessenger = NULL;
+	fPSWMessenger = NULL;
+	fAWMessenger = NULL;
 
-	mPrintSettingsWindowOpen = false;
+	fPrintSettingsWindowOpen = false;
 
-	mShowLeftPanel = true;
-	mFullScreen = false;
+	fShowLeftPanel = true;
+	fFullScreen = false;
 
-	mPendingMask = 0;
+	fPendingMask = 0;
 
-	mPressedAnnotationButton = NULL;
+	fPressedAnnotationButton = NULL;
 
-	AddHandler(&mEntryChangedMonitor);
-	mEntryChangedMonitor.SetEntryChangedListener(this);
+	AddHandler(&fEntryChangedMonitor);
+	fEntryChangedMonitor.SetEntryChangedListener(this);
 
 	InitAnnotTemplates();
 
@@ -167,10 +167,10 @@ PDFWindow::PDFWindow(entry_ref* ref, BRect frame, const char* ownerPassword, con
 	if (settings->GetOpenInWorkspace() && ws >= 1 && ws <= count_workspaces()) {
 		SetWorkspaces(1 << (ws - 1));
 	}
-	mCurrentWorkspace = Workspaces();
+	fCurrentWorkspace = Workspaces();
 
-	if (mMainView != NULL) {
-		mMainView->Redraw();
+	if (fMainView != NULL) {
+		fMainView->Redraw();
 		InitAfterOpen();
 	}
 
@@ -181,11 +181,11 @@ PDFWindow::PDFWindow(entry_ref* ref, BRect frame, const char* ownerPassword, con
 ///////////////////////////////////////////////////////////
 PDFWindow::~PDFWindow()
 {
-	RemoveHandler(&mEntryChangedMonitor);
+	RemoveHandler(&fEntryChangedMonitor);
 
 	DeleteAnnotTemplates();
-	if (mPagesView) {
-		MakeEmpty(mPagesView);
+	if (fPagesView) {
+		MakeEmpty(fPagesView);
 	}
 }
 
@@ -195,7 +195,7 @@ void PDFWindow::SetTotalPageNumber(int pages)
 	int len = strlen(fmt) + 30;
 	char* label = new char[len];
 	snprintf(label, len, fmt, pages);
-	mTotalPageNumberItem->SetText(label);
+	fTotalPageNumberItem->SetText(label);
 	delete label;
 }
 
@@ -204,13 +204,13 @@ void PDFWindow::InitAfterOpen()
 	GlobalSettings* s = gApp->GetSettings();
 	if (Lock()) {
 		// set page number text
-		SetTotalPageNumber(mMainView->GetNumPages());
+		SetTotalPageNumber(fMainView->GetNumPages());
 
 		// set window frame
 		if (s->GetRestoreWindowFrame()) {
 			float left, top;
-			mFileAttributes.GetLeftTop(left, top);
-			mMainView->ScrollTo(left, top);
+			fFileAttributes.GetLeftTop(left, top);
+			fMainView->ScrollTo(left, top);
 		}
 
 		// set page number list
@@ -222,8 +222,8 @@ void PDFWindow::InitAfterOpen()
 			SetPending(UPDATE_PAGE_LIST_PENDING);
 		}
 		// select page number
-		mPagesView->Select(mFileAttributes.GetPage() - 1);
-		mPagesView->ScrollToSelection();
+		fPagesView->Select(fFileAttributes.GetPage() - 1);
+		fPagesView->ScrollToSelection();
 		if (s->GetRestorePageNumber()) {
 			SetZoom(s->GetZoom());
 			SetRotation(s->GetRotation());
@@ -236,33 +236,33 @@ void PDFWindow::InitAfterOpen()
 void PDFWindow::FillPageList()
 {
 	BList list;
-	for (int32 i = 0; i < mMainView->GetNumPages(); i++) {
+	for (int32 i = 0; i < fMainView->GetNumPages(); i++) {
 		char pageNo[20];
 		sprintf(pageNo, "%5.0d", (int)(i + 1));
 		list.AddItem(new BStringItem(pageNo));
 	}
 
-	MakeEmpty(mPagesView);
-	mPagesView->AddList(&list);
+	MakeEmpty(fPagesView);
+	fPagesView->AddList(&list);
 	// clear attachments
-	mAttachmentView->Empty();
+	fAttachmentView->Empty();
 }
 
 
 void PDFWindow::UpdatePageList()
 {
 	gPdfLock->Lock();
-	PageLabels labels(mMainView->GetNumPages() - 1);
+	PageLabels labels(fMainView->GetNumPages() - 1);
 	Object catDict;
-	mMainView->GetPDFDoc()->getXRef()->getCatalog(&catDict);
+	fMainView->GetPDFDoc()->getXRef()->getCatalog(&catDict);
 	Object* pageLabels = new Object;
 	catDict.dictLookup("PageLabels", pageLabels);
 	if (labels.Parse(pageLabels)) {
-		labels.Replace(mPagesView);
+		labels.Replace(fPagesView);
 	}
 
 	// update attachments as well
-	mAttachmentView->Fill(mMainView->GetPDFDoc()->getXRef(), mMainView->GetPDFDoc());
+	fAttachmentView->Fill(fMainView->GetPDFDoc()->getXRef(), fMainView->GetPDFDoc());
 
 	gPdfLock->Unlock();
 }
@@ -306,14 +306,14 @@ void PDFWindow::HandlePendingActions(bool ok)
 void PDFWindow::StoreFileAttributes()
 {
 	// store file settings
-	if (mMainView && Lock()) {
+	if (fMainView && Lock()) {
 		entry_ref cur_ref;
-		if (mCurrentFile.InitCheck() == B_OK) {
-			mCurrentFile.GetRef(&cur_ref);
+		if (fCurrentFile.InitCheck() == B_OK) {
+			fCurrentFile.GetRef(&cur_ref);
 			BMessage bm;
-			if (mOutlinesView->GetBookmarks(&bm))
-				mFileAttributes.SetBookmarks(&bm);
-			mFileAttributes.Write(&cur_ref, gApp->GetSettings());
+			if (fOutlinesView->GetBookmarks(&bm))
+				fFileAttributes.SetBookmarks(&bm);
+			fFileAttributes.Write(&cur_ref, gApp->GetSettings());
 		}
 		Unlock();
 	}
@@ -323,7 +323,7 @@ void PDFWindow::StoreFileAttributes()
 bool PDFWindow::QuitRequested()
 {
 	gApp->WindowClosed();
-	mMainView->WaitForPage(true);
+	fMainView->WaitForPage(true);
 	StoreFileAttributes();
 	be_app->PostMessage(B_QUIT_REQUESTED);
 	return true;
@@ -340,21 +340,21 @@ void PDFWindow::CleanUpBeforeLoad()
 bool PDFWindow::IsCurrentFile(entry_ref* ref) const
 {
 	entry_ref r;
-	mCurrentFile.GetRef(&r);
+	fCurrentFile.GetRef(&r);
 	return r == *ref;
 }
 
 ///////////////////////////////////////////////////////////
 bool PDFWindow::LoadFile(entry_ref* ref, const char* ownerPassword, const char* userPassword, bool* encrypted)
 {
-	if (mMainView != NULL) {
+	if (fMainView != NULL) {
 		StoreFileAttributes();
 		CleanUpBeforeLoad();
 		// load new file
-		if (mMainView->LoadFile(ref, &mFileAttributes, ownerPassword, userPassword, false, encrypted)) {
-			mEntryChangedMonitor.StartWatching(ref);
+		if (fMainView->LoadFile(ref, &fFileAttributes, ownerPassword, userPassword, false, encrypted)) {
+			fEntryChangedMonitor.StartWatching(ref);
 			be_roster->AddToRecentDocuments(ref, BEPDF_APP_SIG);
-			mCurrentFile.SetTo(ref);
+			fCurrentFile.SetTo(ref);
 			InitAfterOpen();
 			return true;
 		}
@@ -367,7 +367,7 @@ void PDFWindow::Reload(void)
 {
 	BMessage m(B_REFS_RECEIVED);
 	entry_ref ref;
-	mCurrentFile.GetRef(&ref);
+	fCurrentFile.GetRef(&ref);
 	m.AddRef("refs", &ref);
 	be_app->PostMessage(&m);
 }
@@ -385,7 +385,7 @@ bool PDFWindow::CancelCommand(BMessage* msg)
 	// This commands aren't allowed in fullscreen mode, otherwise
 	// the windows opened by this commands would be behind the
 	// main window and would not block the main window.
-	if (mFullScreen) {
+	if (fFullScreen) {
 		switch (msg->what) {
 		case OPEN_FILE_CMD:
 		case RELOAD_FILE_CMD:
@@ -426,9 +426,9 @@ bool PDFWindow::CanClose()
 ///////////////////////////////////////////////////////////
 AnnotationWindow* PDFWindow::GetAnnotationWindow()
 {
-	if (mAWMessenger && mAWMessenger->LockTarget()) {
+	if (fAWMessenger && fAWMessenger->LockTarget()) {
 		BLooper* looper;
-		mAWMessenger->Target(&looper);
+		fAWMessenger->Target(&looper);
 		return (AnnotationWindow*)looper;
 	} else {
 		return NULL;
@@ -440,9 +440,9 @@ AnnotationWindow* PDFWindow::ShowAnnotationWindow()
 {
 	AnnotationWindow* w = GetAnnotationWindow();
 	if (!w) {
-		delete mAWMessenger;
+		delete fAWMessenger;
 		w = new AnnotationWindow(gApp->GetSettings(), this);
-		mAWMessenger = new BMessenger(w);
+		fAWMessenger = new BMessenger(w);
 		w->Lock();
 	}
 	return w;
@@ -451,54 +451,54 @@ AnnotationWindow* PDFWindow::ShowAnnotationWindow()
 
 void PDFWindow::UpdateInputEnabler()
 {
-	if (mMainView) {
-		PDFDoc* doc = mMainView->GetPDFDoc();
-		int num_pages = mMainView->GetNumPages();
-		int page = mMainView->Page();
+	if (fMainView) {
+		PDFDoc* doc = fMainView->GetPDFDoc();
+		int num_pages = fMainView->GetNumPages();
+		int page = fMainView->Page();
 		bool b = num_pages > 1 && page != 1;
 
 		fMenuBar->FindItem(FIRST_PAGE_CMD)->SetEnabled(b);
-		mToolBar->SetActionEnabled(FIRST_PAGE_CMD, b);
+		fToolBar->SetActionEnabled(FIRST_PAGE_CMD, b);
 		fMenuBar->FindItem(PREVIOUS_PAGE_CMD)->SetEnabled(b);
-		mToolBar->SetActionEnabled(PREVIOUS_N_PAGE_CMD, b);
+		fToolBar->SetActionEnabled(PREVIOUS_N_PAGE_CMD, b);
 
 		b = num_pages > 1 && page != num_pages;
 		fMenuBar->FindItem(LAST_PAGE_CMD)->SetEnabled(b);
-		mToolBar->SetActionEnabled(LAST_PAGE_CMD, b);
+		fToolBar->SetActionEnabled(LAST_PAGE_CMD, b);
 		fMenuBar->FindItem(NEXT_PAGE_CMD)->SetEnabled(b);
-		mToolBar->SetActionEnabled(NEXT_PAGE_CMD, b);
-		mToolBar->SetActionEnabled(NEXT_N_PAGE_CMD, b);
+		fToolBar->SetActionEnabled(NEXT_PAGE_CMD, b);
+		fToolBar->SetActionEnabled(NEXT_N_PAGE_CMD, b);
 
-		mPageNumberItem->SetEnabled(num_pages > 1);
+		fPageNumberItem->SetEnabled(num_pages > 1);
 
-		mToolBar->SetActionEnabled(HISTORY_FORWARD_CMD, mMainView->CanGoForward());
-		mToolBar->SetActionEnabled(HISTORY_BACK_CMD, mMainView->CanGoBack());
+		fToolBar->SetActionEnabled(HISTORY_FORWARD_CMD, fMainView->CanGoForward());
+		fToolBar->SetActionEnabled(HISTORY_BACK_CMD, fMainView->CanGoBack());
 
-		int32 dpi = mMainView->GetZoomDPI();
-		mToolBar->SetActionEnabled(ZOOM_IN_CMD, dpi != ZOOM_DPI_MAX);
-		mToolBar->SetActionEnabled(ZOOM_OUT_CMD, dpi != ZOOM_DPI_MIN);
+		int32 dpi = fMainView->GetZoomDPI();
+		fToolBar->SetActionEnabled(ZOOM_IN_CMD, dpi != ZOOM_DPI_MAX);
+		fToolBar->SetActionEnabled(ZOOM_OUT_CMD, dpi != ZOOM_DPI_MIN);
 
-		mToolBar->SetActionEnabled(FIND_NEXT_CMD, mFindText.Length() > 0);
+		fToolBar->SetActionEnabled(FIND_NEXT_CMD, fFindText.Length() > 0);
 
-		int active = mLayerView->CardLayout()->VisibleIndex();
-		mToolBar->SetActionPressed(SHOW_PAGE_LIST_CMD, mShowLeftPanel && active == PAGE_LIST_PANEL);
-		mToolBar->SetActionPressed(SHOW_BOOKMARKS_CMD, mShowLeftPanel && active == BOOKMARKS_PANEL);
-		mToolBar->SetActionPressed(SHOW_ANNOT_TOOLBAR_CMD, mShowLeftPanel && active == ANNOTATIONS_PANEL);
-		mToolBar->SetActionPressed(SHOW_ATTACHMENTS_CMD, mShowLeftPanel && active == ATTACHMENTS_PANEL);
-		mToolBar->SetActionPressed(FULL_SCREEN_CMD, mFullScreen);
+		int active = fLayerView->CardLayout()->VisibleIndex();
+		fToolBar->SetActionPressed(SHOW_PAGE_LIST_CMD, fShowLeftPanel && active == PAGE_LIST_PANEL);
+		fToolBar->SetActionPressed(SHOW_BOOKMARKS_CMD, fShowLeftPanel && active == BOOKMARKS_PANEL);
+		fToolBar->SetActionPressed(SHOW_ANNOT_TOOLBAR_CMD, fShowLeftPanel && active == ANNOTATIONS_PANEL);
+		fToolBar->SetActionPressed(SHOW_ATTACHMENTS_CMD, fShowLeftPanel && active == ATTACHMENTS_PANEL);
+		fToolBar->SetActionPressed(FULL_SCREEN_CMD, fFullScreen);
 
-		fMenuBar->FindItem(SHOW_PAGE_LIST_CMD)->SetMarked(mShowLeftPanel && active == PAGE_LIST_PANEL);
-		fMenuBar->FindItem(SHOW_BOOKMARKS_CMD)->SetMarked(mShowLeftPanel && active == BOOKMARKS_PANEL);
-		fMenuBar->FindItem(SHOW_ANNOT_TOOLBAR_CMD)->SetMarked(mShowLeftPanel && active == ANNOTATIONS_PANEL);
-		fMenuBar->FindItem(SHOW_ATTACHMENTS_CMD)->SetMarked(mShowLeftPanel && active == ATTACHMENTS_PANEL);
-		fMenuBar->FindItem(HIDE_LEFT_PANEL_CMD)->SetEnabled(mShowLeftPanel);
+		fMenuBar->FindItem(SHOW_PAGE_LIST_CMD)->SetMarked(fShowLeftPanel && active == PAGE_LIST_PANEL);
+		fMenuBar->FindItem(SHOW_BOOKMARKS_CMD)->SetMarked(fShowLeftPanel && active == BOOKMARKS_PANEL);
+		fMenuBar->FindItem(SHOW_ANNOT_TOOLBAR_CMD)->SetMarked(fShowLeftPanel && active == ANNOTATIONS_PANEL);
+		fMenuBar->FindItem(SHOW_ATTACHMENTS_CMD)->SetMarked(fShowLeftPanel && active == ATTACHMENTS_PANEL);
+		fMenuBar->FindItem(HIDE_LEFT_PANEL_CMD)->SetEnabled(fShowLeftPanel);
 
-		fMenuBar->FindItem(OPEN_FILE_CMD)->SetEnabled(!mFullScreen);
-		mToolBar->SetActionEnabled(OPEN_FILE_CMD, !mFullScreen);
-		fMenuBar->FindItem(RELOAD_FILE_CMD)->SetEnabled(!mFullScreen);
-		mToolBar->SetActionEnabled(RELOAD_FILE_CMD, !mFullScreen);
-		fMenuBar->FindItem(PRINT_SETTINGS_CMD)->SetEnabled(!mFullScreen && !mPrintSettingsWindowOpen && doc->okToPrint());
-		mToolBar->SetActionEnabled(PRINT_SETTINGS_CMD, !mFullScreen && !mPrintSettingsWindowOpen && doc->okToPrint());
+		fMenuBar->FindItem(OPEN_FILE_CMD)->SetEnabled(!fFullScreen);
+		fToolBar->SetActionEnabled(OPEN_FILE_CMD, !fFullScreen);
+		fMenuBar->FindItem(RELOAD_FILE_CMD)->SetEnabled(!fFullScreen);
+		fToolBar->SetActionEnabled(RELOAD_FILE_CMD, !fFullScreen);
+		fMenuBar->FindItem(PRINT_SETTINGS_CMD)->SetEnabled(!fFullScreen && !fPrintSettingsWindowOpen && doc->okToPrint());
+		fToolBar->SetActionEnabled(PRINT_SETTINGS_CMD, !fFullScreen && !fPrintSettingsWindowOpen && doc->okToPrint());
 
 		// PDF security settings
 		bool okToCopy = doc->okToCopy();
@@ -506,15 +506,15 @@ void PDFWindow::UpdateInputEnabler()
 		fMenuBar->FindItem(SELECT_ALL_CMD)->SetEnabled(okToCopy);
 		fMenuBar->FindItem(SELECT_NONE_CMD)->SetEnabled(okToCopy);
 
-		bool hasBookmark = mOutlinesView->HasUserBookmark(page);
-		bool selected = hasBookmark && mOutlinesView->IsUserBMSelected();
+		bool hasBookmark = fOutlinesView->HasUserBookmark(page);
+		bool selected = hasBookmark && fOutlinesView->IsUserBMSelected();
 		fMenuBar->FindItem(ADD_BOOKMARK_CMD)->SetEnabled(!hasBookmark);
 		fMenuBar->FindItem(EDIT_BOOKMARK_CMD)->SetEnabled(selected);
 		fMenuBar->FindItem(DELETE_BOOKMARK_CMD)->SetEnabled(selected);
 
 		// Annotation
-		bool editAnnot = mMainView->EditingAnnot();
-		mToolBar->SetActionEnabled(DONE_EDIT_ANNOT_CMD, editAnnot);
+		bool editAnnot = fMainView->EditingAnnot();
+		fToolBar->SetActionEnabled(DONE_EDIT_ANNOT_CMD, editAnnot);
 	}
 }
 
@@ -531,7 +531,7 @@ void PDFWindow::UpdateWindowsMenu()
 {
 	/*
 	BMenuItem *item;
-	while ((item = mWindowsMenu->RemoveItem((int32)0)) != NULL) delete item;
+	while ((item = fWindowsMenu->RemoveItem((int32)0)) != NULL) delete item;
 	BList list;
 	be_roster->GetAppList(BEPDF_APP_SIG, &list);
 	entry_ref ref;
@@ -541,7 +541,7 @@ void PDFWindow::UpdateWindowsMenu()
 		team_id who = (team_id)list.ItemAt(i);
 		char s[256];
 		sprintf(s, "BePDF %d", who);
-		mWindowsMenu->AddItem(new BMenuItem(s, NULL));
+		fWindowsMenu->AddItem(new BMenuItem(s, NULL));
 	}
 */
 }
@@ -557,11 +557,11 @@ BMenuBar* PDFWindow::BuildMenu()
 	BMenuBar* menuBar = new BMenuBar("mainBar");
 	BLayoutBuilder::Menu<>(menuBar)
 	    .AddMenu(B_TRANSLATE("File"))
-	    .AddItem(mOpenMenu = new RecentDocumentsMenu(B_TRANSLATE("Open" B_UTF8_ELLIPSIS), B_REFS_RECEIVED))
-	    .AddItem(mNewMenu = new RecentDocumentsMenu(B_TRANSLATE("Open in new window" B_UTF8_ELLIPSIS), OPEN_IN_NEW_WINDOW_CMD))
+	    .AddItem(fOpenMenu = new RecentDocumentsMenu(B_TRANSLATE("Open" B_UTF8_ELLIPSIS), B_REFS_RECEIVED))
+	    .AddItem(fNewMenu = new RecentDocumentsMenu(B_TRANSLATE("Open in new window" B_UTF8_ELLIPSIS), OPEN_IN_NEW_WINDOW_CMD))
 	    .AddItem(B_TRANSLATE("Reload"), RELOAD_FILE_CMD, 'R')
 	    .AddItem(B_TRANSLATE("Save as" B_UTF8_ELLIPSIS), SAVE_FILE_AS_CMD, 'S', B_SHIFT_KEY)
-	    .AddItem(mFileInfoItem = new BMenuItem(B_TRANSLATE("File info" B_UTF8_ELLIPSIS), new BMessage(FILE_INFO_CMD), 'I'))
+	    .AddItem(fFileInfoItem = new BMenuItem(B_TRANSLATE("File info" B_UTF8_ELLIPSIS), new BMessage(FILE_INFO_CMD), 'I'))
 	    .AddSeparator()
 	    .AddItem(B_TRANSLATE("Page setup" B_UTF8_ELLIPSIS), PAGESETUP_FILE_CMD, 'S')
 	    .AddItem(B_TRANSLATE("Print" B_UTF8_ELLIPSIS), PRINT_SETTINGS_CMD, 'P')
@@ -576,7 +576,7 @@ BMenuBar* PDFWindow::BuildMenu()
 	    .AddItem(B_TRANSLATE("Select all"), SELECT_ALL_CMD, 'A')
 	    .AddItem(B_TRANSLATE("Select none"), SELECT_NONE_CMD, 'A', B_SHIFT_KEY)
 	    .AddSeparator()
-	    .AddItem(mPreferencesItem = new BMenuItem(B_TRANSLATE("Preferences" B_UTF8_ELLIPSIS), new BMessage(PREFERENCES_FILE_CMD), ','))
+	    .AddItem(fPreferencesItem = new BMenuItem(B_TRANSLATE("Preferences" B_UTF8_ELLIPSIS), new BMessage(PREFERENCES_FILE_CMD), ','))
 	    .End()
 
 	    .AddMenu(B_TRANSLATE("View"))
@@ -586,7 +586,7 @@ BMenuBar* PDFWindow::BuildMenu()
 	    .AddItem(B_TRANSLATE("Show attachments"), SHOW_ATTACHMENTS_CMD)
 	    .AddItem(B_TRANSLATE("Hide side bar"), HIDE_LEFT_PANEL_CMD, 'H')
 	    .AddSeparator()
-	    .AddItem(mFullScreenItem = new BMenuItem(B_TRANSLATE("Fullscreen"), new BMessage(FULL_SCREEN_CMD), B_RETURN))
+	    .AddItem(fFullScreenItem = new BMenuItem(B_TRANSLATE("Fullscreen"), new BMessage(FULL_SCREEN_CMD), B_RETURN))
 	    .AddSeparator()
 	    .AddItem(B_TRANSLATE("Fit to page width"), (FIT_TO_PAGE_WIDTH_CMD), '/')
 	    .AddItem(B_TRANSLATE("Fit to page"), (FIT_TO_PAGE_CMD), '*')
@@ -595,7 +595,7 @@ BMenuBar* PDFWindow::BuildMenu()
 	    .AddItem(B_TRANSLATE("Zoom out"), (ZOOM_OUT_CMD), '-')
 	    .AddSeparator()
 
-	    .AddMenu(mZoomMenu = new BMenu(B_TRANSLATE("Zoom")))
+	    .AddMenu(fZoomMenu = new BMenu(B_TRANSLATE("Zoom")))
 	    .AddItem("25%", SET_ZOOM_VALUE_CMD, MIN_ZOOM == zoom)
 	    .AddItem("33%", SET_ZOOM_VALUE_CMD, MIN_ZOOM + 1 == zoom)
 	    .AddItem("50%", SET_ZOOM_VALUE_CMD, MIN_ZOOM + 2 == zoom)
@@ -611,7 +611,7 @@ BMenuBar* PDFWindow::BuildMenu()
 
 	    .AddSeparator()
 
-	    .AddMenu(mRotationMenu = new BMenu(B_TRANSLATE("Rotation")))
+	    .AddMenu(fRotationMenu = new BMenu(B_TRANSLATE("Rotation")))
 	    .AddItem("0°", SET_ROTATE_VALUE_CMD, rotation == 0)
 	    .AddItem("90°", SET_ROTATE_VALUE_CMD, rotation == 90)
 	    .AddItem("180°", SET_ROTATE_VALUE_CMD, rotation == 180)
@@ -654,22 +654,22 @@ BMenuBar* PDFWindow::BuildMenu()
 	    .AddItem(B_TRANSLATE("About BePDF" B_UTF8_ELLIPSIS), ABOUT_APP_CMD)
 	    .End();
 
-	mZoomMenu->SetRadioMode(true);
+	fZoomMenu->SetRadioMode(true);
 	if (zoom < MIN_ZOOM)
 		SetZoom(zoom);
 
-	mRotationMenu->SetRadioMode(true);
+	fRotationMenu->SetRadioMode(true);
 
-	//		menuBar->AddItem ( mWindowsMenu = new BMenu(B_TRANSLATE("Window")) );
+	//		menuBar->AddItem ( fWindowsMenu = new BMenu(B_TRANSLATE("Window")) );
 	UpdateWindowsMenu();
 
-	mOpenMenu->Superitem()->SetTrigger('O');
-	mOpenMenu->Superitem()->SetMessage(new BMessage(OPEN_FILE_CMD));
-	mOpenMenu->Superitem()->SetShortcut('O', 0);
+	fOpenMenu->Superitem()->SetTrigger('O');
+	fOpenMenu->Superitem()->SetMessage(new BMessage(OPEN_FILE_CMD));
+	fOpenMenu->Superitem()->SetShortcut('O', 0);
 
-	mNewMenu->Superitem()->SetTrigger('N');
-	mNewMenu->Superitem()->SetMessage(new BMessage(NEW_WINDOW_CMD));
-	mNewMenu->Superitem()->SetShortcut('N', 0);
+	fNewMenu->Superitem()->SetTrigger('N');
+	fNewMenu->Superitem()->SetMessage(new BMessage(NEW_WINDOW_CMD));
+	fNewMenu->Superitem()->SetShortcut('N', 0);
 
 	return menuBar;
 }
@@ -677,83 +677,83 @@ BMenuBar* PDFWindow::BuildMenu()
 
 BToolBar* PDFWindow::BuildToolBar()
 {
-	mToolBar = new BToolBar;
-	mToolBar->SetName("toolbar");
-	mToolBar->SetResizingMode(B_FOLLOW_TOP | B_FOLLOW_LEFT_RIGHT);
-	mToolBar->SetFlags(B_WILL_DRAW | B_FRAME_EVENTS);
+	fToolBar = new BToolBar;
+	fToolBar->SetName("toolbar");
+	fToolBar->SetResizingMode(B_FOLLOW_TOP | B_FOLLOW_LEFT_RIGHT);
+	fToolBar->SetFlags(B_WILL_DRAW | B_FRAME_EVENTS);
 
-	mToolBar->AddAction(OPEN_FILE_CMD, this, LoadVectorIcon("OPEN_FILE"), B_TRANSLATE("Open file"));
-	mToolBar->AddAction(RELOAD_FILE_CMD, this, LoadVectorIcon("RELOAD_FILE"), B_TRANSLATE("Reload file"));
-	mToolBar->AddAction(PRINT_SETTINGS_CMD, this, LoadVectorIcon("PRINT"), B_TRANSLATE("Print"));
+	fToolBar->AddAction(OPEN_FILE_CMD, this, LoadVectorIcon("OPEN_FILE"), B_TRANSLATE("Open file"));
+	fToolBar->AddAction(RELOAD_FILE_CMD, this, LoadVectorIcon("RELOAD_FILE"), B_TRANSLATE("Reload file"));
+	fToolBar->AddAction(PRINT_SETTINGS_CMD, this, LoadVectorIcon("PRINT"), B_TRANSLATE("Print"));
 
-	mToolBar->AddSeparator();
+	fToolBar->AddSeparator();
 
-	mToolBar->AddAction(SHOW_BOOKMARKS_CMD, this, LoadVectorIcon("BOOKMARKS"), B_TRANSLATE("Show bookmarks"), NULL, true);
-	mToolBar->AddAction(SHOW_PAGE_LIST_CMD, this, LoadVectorIcon("SHOW_PAGE_LIST"), B_TRANSLATE("Show page list"), NULL, true);
-	mToolBar->AddAction(SHOW_ANNOT_TOOLBAR_CMD, this, LoadVectorIcon("SHOW_ANNOT"), B_TRANSLATE("Show annotation toolbar"), NULL, true);
-	mToolBar->AddAction(SHOW_ATTACHMENTS_CMD, this, LoadVectorIcon("SHOW_ATTACHMENTS"), B_TRANSLATE("Show attachments"), NULL, true);
-	// mToolBar->AddAction(HIDE_LEFT_PANEL_CMD, this,
+	fToolBar->AddAction(SHOW_BOOKMARKS_CMD, this, LoadVectorIcon("BOOKMARKS"), B_TRANSLATE("Show bookmarks"), NULL, true);
+	fToolBar->AddAction(SHOW_PAGE_LIST_CMD, this, LoadVectorIcon("SHOW_PAGE_LIST"), B_TRANSLATE("Show page list"), NULL, true);
+	fToolBar->AddAction(SHOW_ANNOT_TOOLBAR_CMD, this, LoadVectorIcon("SHOW_ANNOT"), B_TRANSLATE("Show annotation toolbar"), NULL, true);
+	fToolBar->AddAction(SHOW_ATTACHMENTS_CMD, this, LoadVectorIcon("SHOW_ATTACHMENTS"), B_TRANSLATE("Show attachments"), NULL, true);
+	// fToolBar->AddAction(HIDE_LEFT_PANEL_CMD, this,
 	//	LoadVectorIcon("HIDE_PAGE_LIST"), B_TRANSLATE("Hide page list"),
 	//	NULL, true);
 
-	mToolBar->AddSeparator();
+	fToolBar->AddSeparator();
 
-	mToolBar->AddAction(FULL_SCREEN_CMD, this, LoadVectorIcon("FULL_SCREEN"), B_TRANSLATE("Fullscreen mode"), NULL, true);
+	fToolBar->AddAction(FULL_SCREEN_CMD, this, LoadVectorIcon("FULL_SCREEN"), B_TRANSLATE("Fullscreen mode"), NULL, true);
 
-	mToolBar->AddSeparator();
+	fToolBar->AddSeparator();
 
-	mToolBar->AddAction(FIRST_PAGE_CMD, this, LoadVectorIcon("FIRST"), B_TRANSLATE("Go to start of document"));
-	mToolBar->AddAction(PREVIOUS_N_PAGE_CMD, this, LoadVectorIcon("PREVIOUS_N"), B_TRANSLATE("Go back 10 pages"));
-	mToolBar->AddAction(PREVIOUS_PAGE_CMD, this, LoadVectorIcon("PREVIOUS"), B_TRANSLATE("Go to previous page"));
-	mToolBar->AddAction(NEXT_PAGE_CMD, this, LoadVectorIcon("NEXT"), B_TRANSLATE("Go to next page"));
-	mToolBar->AddAction(NEXT_N_PAGE_CMD, this, LoadVectorIcon("NEXT_N"), B_TRANSLATE("Go forward 10 pages"));
-	mToolBar->AddAction(LAST_PAGE_CMD, this, LoadVectorIcon("LAST"), B_TRANSLATE("Go to end of document"));
+	fToolBar->AddAction(FIRST_PAGE_CMD, this, LoadVectorIcon("FIRST"), B_TRANSLATE("Go to start of document"));
+	fToolBar->AddAction(PREVIOUS_N_PAGE_CMD, this, LoadVectorIcon("PREVIOUS_N"), B_TRANSLATE("Go back 10 pages"));
+	fToolBar->AddAction(PREVIOUS_PAGE_CMD, this, LoadVectorIcon("PREVIOUS"), B_TRANSLATE("Go to previous page"));
+	fToolBar->AddAction(NEXT_PAGE_CMD, this, LoadVectorIcon("NEXT"), B_TRANSLATE("Go to next page"));
+	fToolBar->AddAction(NEXT_N_PAGE_CMD, this, LoadVectorIcon("NEXT_N"), B_TRANSLATE("Go forward 10 pages"));
+	fToolBar->AddAction(LAST_PAGE_CMD, this, LoadVectorIcon("LAST"), B_TRANSLATE("Go to end of document"));
 
-	mToolBar->AddSeparator();
+	fToolBar->AddSeparator();
 
-	mToolBar->AddAction(HISTORY_BACK_CMD, this, LoadVectorIcon("BACK"), B_TRANSLATE("Back in page history list"));
-	mToolBar->AddAction(HISTORY_FORWARD_CMD, this, LoadVectorIcon("FORWARD"), B_TRANSLATE("Forward in page history list"));
+	fToolBar->AddAction(HISTORY_BACK_CMD, this, LoadVectorIcon("BACK"), B_TRANSLATE("Back in page history list"));
+	fToolBar->AddAction(HISTORY_FORWARD_CMD, this, LoadVectorIcon("FORWARD"), B_TRANSLATE("Forward in page history list"));
 
-	mToolBar->AddSeparator();
+	fToolBar->AddSeparator();
 
 	// Add "go to page number" TextControl
-	mPageNumberItem = new BTextControl("goto_page", "", "", new BMessage(GOTO_PAGE_CMD));
-	mPageNumberItem->SetExplicitMaxSize(BSize(50, 25));
-	mPageNumberItem->SetAlignment(B_ALIGN_CENTER, B_ALIGN_CENTER);
-	mPageNumberItem->SetTarget(this);
-	mPageNumberItem->TextView()->DisallowChar(B_ESCAPE);
+	fPageNumberItem = new BTextControl("goto_page", "", "", new BMessage(GOTO_PAGE_CMD));
+	fPageNumberItem->SetExplicitMaxSize(BSize(50, 25));
+	fPageNumberItem->SetAlignment(B_ALIGN_CENTER, B_ALIGN_CENTER);
+	fPageNumberItem->SetTarget(this);
+	fPageNumberItem->TextView()->DisallowChar(B_ESCAPE);
 
-	BTextView* t = mPageNumberItem->TextView();
+	BTextView* t = fPageNumberItem->TextView();
 	BFont font(be_plain_font);
 	t->GetFontAndColor(0, &font);
 	font.SetSize(10);
 	t->SetFontAndColor(0, 1000, &font, B_FONT_SIZE);
-	mToolBar->AddView(mPageNumberItem);
+	fToolBar->AddView(fPageNumberItem);
 
 	// display total number of pages
-	mTotalPageNumberItem = new BStringView("total_num_of_pages", "");
-	mTotalPageNumberItem->SetAlignment(B_ALIGN_CENTER);
-	mTotalPageNumberItem->SetFontSize(10);
-	mToolBar->AddView(mTotalPageNumberItem);
+	fTotalPageNumberItem = new BStringView("total_num_of_pages", "");
+	fTotalPageNumberItem->SetAlignment(B_ALIGN_CENTER);
+	fTotalPageNumberItem->SetFontSize(10);
+	fToolBar->AddView(fTotalPageNumberItem);
 
-	mToolBar->AddSeparator();
+	fToolBar->AddSeparator();
 
-	mToolBar->AddAction(FIT_TO_PAGE_WIDTH_CMD, this, LoadVectorIcon("FIT_TO_PAGE_WIDTH"), B_TRANSLATE("Fit to page width"));
-	mToolBar->AddAction(FIT_TO_PAGE_CMD, this, LoadVectorIcon("FIT_TO_PAGE"), B_TRANSLATE("Fit to page"));
+	fToolBar->AddAction(FIT_TO_PAGE_WIDTH_CMD, this, LoadVectorIcon("FIT_TO_PAGE_WIDTH"), B_TRANSLATE("Fit to page width"));
+	fToolBar->AddAction(FIT_TO_PAGE_CMD, this, LoadVectorIcon("FIT_TO_PAGE"), B_TRANSLATE("Fit to page"));
 
-	mToolBar->AddSeparator();
+	fToolBar->AddSeparator();
 
-	mToolBar->AddAction(ROTATE_CLOCKWISE_CMD, this, LoadVectorIcon("ROTATE_CLOCKWISE"), B_TRANSLATE("Rotate clockwise"));
-	mToolBar->AddAction(ROTATE_ANTI_CLOCKWISE_CMD, this, LoadVectorIcon("ROTATE_ANTI_CLOCKWISE"), B_TRANSLATE("Rotate counter-clockwise"));
-	mToolBar->AddAction(ZOOM_IN_CMD, this, LoadVectorIcon("ZOOM_IN"), B_TRANSLATE("Zoom in"));
-	mToolBar->AddAction(ZOOM_OUT_CMD, this, LoadVectorIcon("ZOOM_OUT"), B_TRANSLATE("Zoom out"));
+	fToolBar->AddAction(ROTATE_CLOCKWISE_CMD, this, LoadVectorIcon("ROTATE_CLOCKWISE"), B_TRANSLATE("Rotate clockwise"));
+	fToolBar->AddAction(ROTATE_ANTI_CLOCKWISE_CMD, this, LoadVectorIcon("ROTATE_ANTI_CLOCKWISE"), B_TRANSLATE("Rotate counter-clockwise"));
+	fToolBar->AddAction(ZOOM_IN_CMD, this, LoadVectorIcon("ZOOM_IN"), B_TRANSLATE("Zoom in"));
+	fToolBar->AddAction(ZOOM_OUT_CMD, this, LoadVectorIcon("ZOOM_OUT"), B_TRANSLATE("Zoom out"));
 
-	mToolBar->AddSeparator();
+	fToolBar->AddSeparator();
 
-	mToolBar->AddAction(FIND_CMD, this, LoadVectorIcon("FIND"), B_TRANSLATE("Find"));
-	mToolBar->AddAction(FIND_NEXT_CMD, this, LoadVectorIcon("FIND_NEXT"), B_TRANSLATE("Find next"));
-	mToolBar->AddGlue();
-	return mToolBar;
+	fToolBar->AddAction(FIND_CMD, this, LoadVectorIcon("FIND"), B_TRANSLATE("Find"));
+	fToolBar->AddAction(FIND_NEXT_CMD, this, LoadVectorIcon("FIND_NEXT"), B_TRANSLATE("Find next"));
+	fToolBar->AddGlue();
+	return fToolBar;
 }
 
 
@@ -762,21 +762,21 @@ BCardView* PDFWindow::BuildLeftPanel()
 	BCardView* layerView = new BCardView("layers");
 
 	// PageList
-	mOutlinesView =
-	    new OutlinesView(mMainView->GetPDFDoc()->getCatalog(), mFileAttributes.GetBookmarks(), gApp->GetSettings(), this, B_FRAME_EVENTS);
+	fOutlinesView =
+	    new OutlinesView(fMainView->GetPDFDoc()->getCatalog(), fFileAttributes.GetBookmarks(), gApp->GetSettings(), this, B_FRAME_EVENTS);
 
-	mAttachmentView = new AttachmentView(gApp->GetSettings(), this, 0);
+	fAttachmentView = new AttachmentView(gApp->GetSettings(), this, 0);
 
 	// LayerView contains the page numbers
-	mPagesView = new BListView("pagesList", B_SINGLE_SELECTION_LIST, B_WILL_DRAW | B_NAVIGABLE | B_FRAME_EVENTS);
-	mPagesView->SetSelectionMessage(new BMessage(PAGE_SELECTED_CMD));
+	fPagesView = new BListView("pagesList", B_SINGLE_SELECTION_LIST, B_WILL_DRAW | B_NAVIGABLE | B_FRAME_EVENTS);
+	fPagesView->SetSelectionMessage(new BMessage(PAGE_SELECTED_CMD));
 
-	BView* pageView = new BScrollView("pageScrollView", mPagesView, B_FRAME_EVENTS, true, true, B_FANCY_BORDER);
+	BView* pageView = new BScrollView("pageScrollView", fPagesView, B_FRAME_EVENTS, true, true, B_FANCY_BORDER);
 
-	layerView->CardLayout()->AddView(mOutlinesView);
+	layerView->CardLayout()->AddView(fOutlinesView);
 	layerView->CardLayout()->AddView(pageView);
 	layerView->CardLayout()->AddView(BuildAnnotToolBar("annotationToolBar", NULL));
-	layerView->CardLayout()->AddView(mAttachmentView);
+	layerView->CardLayout()->AddView(fAttachmentView);
 
 	return layerView;
 }
@@ -787,19 +787,19 @@ void PDFWindow::SetUpViews(entry_ref* ref, const char* ownerPassword, const char
 	fMenuBar = BuildMenu();
 	BuildToolBar();
 
-	mMainView =
-	    new PDFView(ref, &mFileAttributes, "mainView", B_WILL_DRAW | B_NAVIGABLE | B_FRAME_EVENTS, ownerPassword, userPassword, encrypted);
+	fMainView =
+	    new PDFView(ref, &fFileAttributes, "mainView", B_WILL_DRAW | B_NAVIGABLE | B_FRAME_EVENTS, ownerPassword, userPassword, encrypted);
 
-	mCurrentFile.SetTo(ref);
-	if (!mMainView->IsOk()) {
-		delete mMainView;
-		mMainView = NULL;
+	fCurrentFile.SetTo(ref);
+	if (!fMainView->IsOk()) {
+		delete fMainView;
+		fMainView = NULL;
 		return; // ERROR!
 	}
-	mEntryChangedMonitor.StartWatching(ref);
+	fEntryChangedMonitor.StartWatching(ref);
 
 	fMainContainer = new BView("ScrollContainer", 0);
-	BScrollView* mainScrollView = new BScrollView("scrollView", mMainView, 0, true, true, B_FANCY_BORDER);
+	BScrollView* mainScrollView = new BScrollView("scrollView", fMainView, 0, true, true, B_FANCY_BORDER);
 	mainScrollView->SetViewUIColor(B_PANEL_BACKGROUND_COLOR);
 	mainScrollView->SetExplicitMinSize(BSize(0, 0));
 
@@ -807,18 +807,18 @@ void PDFWindow::SetUpViews(entry_ref* ref, const char* ownerPassword, const char
 	fMainContainer->SetExplicitMinSize(BSize(0, 0));
 
 	// left view of SplitView is a LayerView
-	mLayerView = BuildLeftPanel();
+	fLayerView = BuildLeftPanel();
 
 	// SplitView
-	mSplitView = new BSplitView(B_HORIZONTAL);
-	mSplitView->AddChild(mLayerView, 1);
-	mSplitView->AddChild(fMainContainer, 9);
-	mSplitView->SetInsets(0);
-	mSplitView->SetSpacing(4);
+	fSplitView = new BSplitView(B_HORIZONTAL);
+	fSplitView->AddChild(fLayerView, 1);
+	fSplitView->AddChild(fMainContainer, 9);
+	fSplitView->SetInsets(0);
+	fSplitView->SetSpacing(4);
 
-	BLayoutBuilder::Group<>(this, B_VERTICAL, 0).SetInsets(0, 0, -1, -1).Add(fMenuBar).Add(mToolBar).Add(mSplitView).End();
+	BLayoutBuilder::Group<>(this, B_VERTICAL, 0).SetInsets(0, 0, -1, -1).Add(fMenuBar).Add(fToolBar).Add(fSplitView).End();
 
-	SetTotalPageNumber(mMainView->GetNumPages());
+	SetTotalPageNumber(fMainView->GetNumPages());
 
 	GlobalSettings* s = gApp->GetSettings();
 
@@ -830,7 +830,7 @@ void PDFWindow::SetUpViews(entry_ref* ref, const char* ownerPassword, const char
 	}
 
 	// set focus to PDFView, so it receives mouse and keyboard events
-	mMainView->MakeFocus();
+	fMainView->MakeFocus();
 }
 
 
@@ -839,13 +839,13 @@ void PDFWindow::SetZoom(int16 zoom)
 	BMenuItem* item;
 	gApp->GetSettings()->SetZoom(zoom);
 	if (zoom >= MIN_ZOOM) {
-		item = mZoomMenu->ItemAt(zoom - MIN_ZOOM);
+		item = fZoomMenu->ItemAt(zoom - MIN_ZOOM);
 		if (item != NULL)
 			item->SetMarked(true);
 	} else {
-		item = mZoomMenu->FindItem(CUSTOM_ZOOM_FACTOR_MSG);
+		item = fZoomMenu->FindItem(CUSTOM_ZOOM_FACTOR_MSG);
 		if (item != NULL) {
-			mZoomMenu->RemoveItem(item);
+			fZoomMenu->RemoveItem(item);
 			delete item;
 		}
 		char label[256];
@@ -853,7 +853,7 @@ void PDFWindow::SetZoom(int16 zoom)
 		BMessage* msg = new BMessage(CUSTOM_ZOOM_FACTOR_MSG);
 		msg->AddInt16("zoom", zoom);
 		item = new BMenuItem(label, msg, 0);
-		mZoomMenu->AddItem(item);
+		fZoomMenu->AddItem(item);
 		item->SetMarked(true);
 	}
 }
@@ -871,7 +871,7 @@ void PDFWindow::SetRotation(float rotation)
 		i = 3;
 	else
 		i = 0;
-	BMenuItem* item = mRotationMenu->ItemAt(i);
+	BMenuItem* item = fRotationMenu->ItemAt(i);
 	item->SetMarked(true);
 }
 
@@ -879,24 +879,24 @@ void PDFWindow::NewDoc(PDFDoc* doc)
 {
 	Catalog* catalog = doc->getCatalog();
 
-	mOutlinesView->SetCatalog(catalog, mFileAttributes.GetBookmarks());
+	fOutlinesView->SetCatalog(catalog, fFileAttributes.GetBookmarks());
 	ActivateOutlines();
 
-	if (mFIWMessenger && mFIWMessenger->LockTarget()) {
+	if (fFIWMessenger && fFIWMessenger->LockTarget()) {
 		BLooper* looper;
-		FileInfoWindow* w = (FileInfoWindow*)mFIWMessenger->Target(&looper);
-		w->Refresh(&mCurrentFile, doc, mFileAttributes.GetPage());
+		FileInfoWindow* w = (FileInfoWindow*)fFIWMessenger->Target(&looper);
+		w->Refresh(&fCurrentFile, doc, fFileAttributes.GetPage());
 		looper->Unlock();
 	}
-	if (mPSWMessenger && mPSWMessenger->LockTarget()) {
+	if (fPSWMessenger && fPSWMessenger->LockTarget()) {
 		BLooper* looper;
-		PrintSettingsWindow* w = (PrintSettingsWindow*)mPSWMessenger->Target(&looper);
+		PrintSettingsWindow* w = (PrintSettingsWindow*)fPSWMessenger->Target(&looper);
 		w->Refresh(doc);
 		looper->Unlock();
 	}
-	if (mAWMessenger && mAWMessenger->LockTarget()) {
+	if (fAWMessenger && fAWMessenger->LockTarget()) {
 		BLooper* looper;
-		AnnotationWindow* w = (AnnotationWindow*)mAWMessenger->Target(&looper);
+		AnnotationWindow* w = (AnnotationWindow*)fAWMessenger->Target(&looper);
 		w->Quit();
 	}
 }
@@ -904,24 +904,24 @@ void PDFWindow::NewDoc(PDFDoc* doc)
 void PDFWindow::NewPage(int page)
 {
 	UpdateInputEnabler();
-	if (mFIWMessenger && mFIWMessenger->LockTarget()) {
+	if (fFIWMessenger && fFIWMessenger->LockTarget()) {
 		BLooper* looper;
-		FileInfoWindow* w = (FileInfoWindow*)mFIWMessenger->Target(&looper);
-		w->RefreshFontList(&mCurrentFile, mMainView->GetPDFDoc(), page);
+		FileInfoWindow* w = (FileInfoWindow*)fFIWMessenger->Target(&looper);
+		w->RefreshFontList(&fCurrentFile, fMainView->GetPDFDoc(), page);
 		looper->Unlock();
 	}
 }
 ///////////////////////////////////////////////////////////
 void PDFWindow::FrameMoved(BPoint p)
 {
-	if (!mFullScreen) {
+	if (!fFullScreen) {
 		gApp->GetSettings()->SetWindowPosition(p);
 	}
 }
 ///////////////////////////////////////////////////////////
 void PDFWindow::FrameResized(float width, float height)
 {
-	if (!mFullScreen) {
+	if (!fFullScreen) {
 		gApp->GetSettings()->SetWindowSize(width, height);
 	}
 }
@@ -939,13 +939,13 @@ void PDFWindow::SetPage(int32 page)
 	char pageStr[64];
 	if (page <= 0)
 		page = 1;
-	if (page > mPagesView->CountItems()) {
-		page = mPagesView->CountItems();
+	if (page > fPagesView->CountItems()) {
+		page = fPagesView->CountItems();
 	}
 	snprintf(pageStr, sizeof(pageStr), "%" B_PRId32, page);
-	mPageNumberItem->SetText(pageStr);
-	mPagesView->Select(page - 1);
-	mPagesView->ScrollToSelection();
+	fPageNumberItem->SetText(pageStr);
+	fPagesView->Select(page - 1);
+	fPagesView->ScrollToSelection();
 }
 
 
@@ -959,7 +959,7 @@ void PDFWindow::MessageReceived(BMessage* message)
 
 	switch (message->what) {
 	case OPEN_FILE_CMD:
-		mMainView->WaitForPage();
+		fMainView->WaitForPage();
 		EditAnnotation(false);
 		gApp->OpenFilePanel();
 		break;
@@ -983,54 +983,54 @@ void PDFWindow::MessageReceived(BMessage* message)
 		gApp->OpenSaveFilePanel(this, GetPdfFilter());
 		break;
 	case CLOSE_FILE_CMD:
-		mMainView->WaitForPage(true);
+		fMainView->WaitForPage(true);
 		PostMessage(B_QUIT_REQUESTED);
 		break;
 	case QUIT_APP_CMD:
 		gApp->Notify(BepdfApplication::NOTIFY_QUIT_MSG);
 		break;
 	case PAGESETUP_FILE_CMD:
-		mMainView->PageSetup();
+		fMainView->PageSetup();
 		break;
 	case ABOUT_APP_CMD:
 		be_app->PostMessage(B_ABOUT_REQUESTED);
 		break;
 	case COPY_SELECTION_CMD:
-		mMainView->CopySelection();
+		fMainView->CopySelection();
 		break;
 	case SELECT_ALL_CMD:
-		mMainView->SelectAll();
+		fMainView->SelectAll();
 		break;
 	case SELECT_NONE_CMD:
-		mMainView->SelectNone();
+		fMainView->SelectNone();
 		break;
 	case FIRST_PAGE_CMD:
-		mMainView->MoveToPage(1);
+		fMainView->MoveToPage(1);
 		break;
 	case PREVIOUS_N_PAGE_CMD:
-		mMainView->MoveToPage(mMainView->Page() - 10);
+		fMainView->MoveToPage(fMainView->Page() - 10);
 		break;
 	case NEXT_N_PAGE_CMD:
-		mMainView->MoveToPage(mMainView->Page() + 10);
+		fMainView->MoveToPage(fMainView->Page() + 10);
 		break;
 	case PREVIOUS_PAGE_CMD:
 		if (B_SHIFT_KEY & modifiers()) {
-			mMainView->ScrollVertical(false, 0.95);
+			fMainView->ScrollVertical(false, 0.95);
 		} else {
-			page = mMainView->Page();
-			mMainView->MoveToPage(page - 1);
+			page = fMainView->Page();
+			fMainView->MoveToPage(page - 1);
 		}
 		break;
 	case NEXT_PAGE_CMD:
 		if (B_SHIFT_KEY & modifiers()) {
-			mMainView->ScrollVertical(true, 0.95);
+			fMainView->ScrollVertical(true, 0.95);
 		} else {
-			page = mMainView->Page();
-			mMainView->MoveToPage(page + 1);
+			page = fMainView->Page();
+			fMainView->MoveToPage(page + 1);
 		}
 		break;
 	case LAST_PAGE_CMD:
-		mMainView->MoveToPage(mMainView->GetNumPages());
+		fMainView->MoveToPage(fMainView->GetNumPages());
 		break;
 	case GOTO_PAGE_CMD: {
 		status_t result;
@@ -1047,23 +1047,23 @@ void PDFWindow::MessageReceived(BMessage* message)
 		} else { // may come from external source over page parameter
 			result = message->FindInt32("page", &page);
 			if (result == B_OK)
-				mMainView->WaitForPage();
+				fMainView->WaitForPage();
 		}
 
 		if (result == B_OK) {
 			LockLooper();
-			mMainView->MoveToPage(page);
+			fMainView->MoveToPage(page);
 			UnlockLooper();
-			mMainView->MakeFocus();
+			fMainView->MakeFocus();
 		}
 		break;
 	}
 	case PAGE_SELECTED_CMD:
-		page = mPagesView->CurrentSelection(0) + 1;
-		mMainView->MoveToPage(page);
+		page = fPagesView->CurrentSelection(0) + 1;
+		fMainView->MoveToPage(page);
 		break;
 	case GOTO_PAGE_MENU_CMD:
-		mPageNumberItem->MakeFocus();
+		fPageNumberItem->MakeFocus();
 		break;
 	case SET_ZOOM_VALUE_CMD: {
 		status_t err;
@@ -1084,19 +1084,19 @@ void PDFWindow::MessageReceived(BMessage* message)
 					idx = MAX_ZOOM;
 				}
 				SetZoom(idx);
-				mMainView->SetZoom(idx);
+				fMainView->SetZoom(idx);
 			}
 		}
 	} break;
 	case ZOOM_IN_CMD:
 	case ZOOM_OUT_CMD:
-		mMainView->Zoom(message->what == ZOOM_IN_CMD);
+		fMainView->Zoom(message->what == ZOOM_IN_CMD);
 		break;
 	case FIT_TO_PAGE_WIDTH_CMD:
-		mMainView->FitToPageWidth();
+		fMainView->FitToPageWidth();
 		break;
 	case FIT_TO_PAGE_CMD:
-		mMainView->FitToPage();
+		fMainView->FitToPage();
 		break;
 	case SET_ROTATE_VALUE_CMD: {
 		status_t err;
@@ -1113,36 +1113,36 @@ void PDFWindow::MessageReceived(BMessage* message)
 				// ERROR
 			} else {
 				idx = menu->IndexOf(item);
-				mMainView->SetRotation(idx * 90);
+				fMainView->SetRotation(idx * 90);
 			}
 		}
 	} break;
 	case ROTATE_CLOCKWISE_CMD:
-		mMainView->RotateClockwise();
+		fMainView->RotateClockwise();
 		break;
 	case ROTATE_ANTI_CLOCKWISE_CMD:
-		mMainView->RotateAntiClockwise();
+		fMainView->RotateAntiClockwise();
 		break;
 	case HISTORY_BACK_CMD:
-		mMainView->Back();
+		fMainView->Back();
 		break;
 	case HISTORY_FORWARD_CMD:
-		mMainView->Forward();
+		fMainView->Forward();
 		break;
 
 	case FIND_CMD:
-		mMainView->WaitForPage();
+		fMainView->WaitForPage();
 		if (Lock()) {
-			mFindWindow = new FindTextWindow(gApp->GetSettings(), mFindText.String(), this);
+			fFindWindow = new FindTextWindow(gApp->GetSettings(), fFindText.String(), this);
 			Unlock();
 		}
 		break;
 	case FIND_NEXT_CMD:
-		mMainView->WaitForPage();
+		fMainView->WaitForPage();
 		if (Lock()) {
-			mFindWindow = new FindTextWindow(gApp->GetSettings(), mFindText.String(), this);
+			fFindWindow = new FindTextWindow(gApp->GetSettings(), fFindText.String(), this);
 			Unlock();
-			mFindWindow->PostMessage('Find');
+			fFindWindow->PostMessage('Find');
 		}
 		break;
 		/*	case KEYBOARD_SHORTCUTS_CMD: {
@@ -1173,48 +1173,48 @@ void PDFWindow::MessageReceived(BMessage* message)
 		LaunchHTMLBrowser("http://github.com/HaikuArchives/BePDF/issues/");
 		break;
 	case PREFERENCES_FILE_CMD:
-		mPreferencesItem->SetEnabled(false);
+		fPreferencesItem->SetEnabled(false);
 		new PreferencesWindow(gApp->GetSettings(), this);
 		break;
 	case FILE_INFO_CMD:
 		if (SetPendingIfLocked(FILE_INFO_PENDING))
 			return;
-		if (!ActivateWindow(mFIWMessenger)) {
+		if (!ActivateWindow(fFIWMessenger)) {
 			FileInfoWindow* w;
-			mMainView->WaitForPage();
-			w = new FileInfoWindow(gApp->GetSettings(), &mCurrentFile, mMainView->GetPDFDoc(), this, mFileAttributes.GetPage());
-			mFIWMessenger = new BMessenger(w);
+			fMainView->WaitForPage();
+			w = new FileInfoWindow(gApp->GetSettings(), &fCurrentFile, fMainView->GetPDFDoc(), this, fFileAttributes.GetPage());
+			fFIWMessenger = new BMessenger(w);
 		}
 		break;
 	case PRINT_SETTINGS_CMD: {
 		if (SetPendingIfLocked(PRINT_SETTINGS_PENDING))
 			return;
 		PrintSettingsWindow* w;
-		mPrintSettingsWindowOpen = true;
+		fPrintSettingsWindowOpen = true;
 		UpdateInputEnabler();
-		w = new PrintSettingsWindow(mMainView->GetPDFDoc(), gApp->GetSettings(), this);
-		mPSWMessenger = new BMessenger(w);
+		w = new PrintSettingsWindow(fMainView->GetPDFDoc(), gApp->GetSettings(), this);
+		fPSWMessenger = new BMessenger(w);
 	} break;
 	case SHOW_BOOKMARKS_CMD:
-		if (mShowLeftPanel && mLayerView->CardLayout()->VisibleIndex() == BOOKMARKS_PANEL)
+		if (fShowLeftPanel && fLayerView->CardLayout()->VisibleIndex() == BOOKMARKS_PANEL)
 			HideLeftPanel();
 		else
 			ShowLeftPanel(BOOKMARKS_PANEL);
 		break;
 	case SHOW_PAGE_LIST_CMD:
-		if (mShowLeftPanel && mLayerView->CardLayout()->VisibleIndex() == PAGE_LIST_PANEL)
+		if (fShowLeftPanel && fLayerView->CardLayout()->VisibleIndex() == PAGE_LIST_PANEL)
 			HideLeftPanel();
 		else
 			ShowLeftPanel(PAGE_LIST_PANEL);
 		break;
 	case SHOW_ANNOT_TOOLBAR_CMD:
-		if (mShowLeftPanel && mLayerView->CardLayout()->VisibleIndex() == ANNOTATIONS_PANEL)
+		if (fShowLeftPanel && fLayerView->CardLayout()->VisibleIndex() == ANNOTATIONS_PANEL)
 			HideLeftPanel();
 		else
 			ShowLeftPanel(ANNOTATIONS_PANEL);
 		break;
 	case SHOW_ATTACHMENTS_CMD:
-		if (mShowLeftPanel && mLayerView->CardLayout()->VisibleIndex() == ATTACHMENTS_PANEL)
+		if (fShowLeftPanel && fLayerView->CardLayout()->VisibleIndex() == ATTACHMENTS_PANEL)
 			HideLeftPanel();
 		else
 			ShowLeftPanel(ATTACHMENTS_PANEL);
@@ -1250,7 +1250,7 @@ void PDFWindow::MessageReceived(BMessage* message)
 		int16 zoom;
 		if (message->FindInt16("zoom", &zoom) == B_OK) {
 			SetZoom(zoom);
-			mMainView->SetZoom(zoom);
+			fMainView->SetZoom(zoom);
 		}
 	} break;
 
@@ -1258,34 +1258,34 @@ void PDFWindow::MessageReceived(BMessage* message)
 	case FindTextWindow::FIND_START_NOTIFY_MSG: {
 		bool ignoreCase;
 		bool backward;
-		mFindInProgress = true;
-		mFindState = (uint32)FindTextWindow::FIND_STOP_NOTIFY_MSG;
+		fFindInProgress = true;
+		fFindState = (uint32)FindTextWindow::FIND_STOP_NOTIFY_MSG;
 		message->FindString("text", &text);
 		message->FindBool("ignoreCase", &ignoreCase);
 		message->FindBool("backward", &backward);
-		mFindText.SetTo(text);
-		mMainView->Find(text, ignoreCase, backward, mFindWindow);
+		fFindText.SetTo(text);
+		fMainView->Find(text, ignoreCase, backward, fFindWindow);
 		break;
 	}
 	case FindTextWindow::FIND_STOP_NOTIFY_MSG:
 	case FindTextWindow::FIND_ABORT_NOTIFY_MSG:
-		if (mFindInProgress) {
-			mFindState = message->what;
-			mMainView->StopFind();
+		if (fFindInProgress) {
+			fFindState = message->what;
+			fMainView->StopFind();
 		} else {
-			mFindWindow->PostMessage(message->what);
+			fFindWindow->PostMessage(message->what);
 			if (message->what == (uint32)FindTextWindow::FIND_ABORT_NOTIFY_MSG) {
-				mFindWindow->PostMessage(FindTextWindow::FIND_QUIT_REQUESTED_MSG);
+				fFindWindow->PostMessage(FindTextWindow::FIND_QUIT_REQUESTED_MSG);
 			}
 		}
 		UpdateInputEnabler();
 		break;
 	case FindTextWindow::TEXT_FOUND_NOTIFY_MSG:
 	case FindTextWindow::TEXT_NOT_FOUND_NOTIFY_MSG:
-		mFindInProgress = false;
-		mFindWindow->PostMessage(mFindState);
-		if (mFindState == (uint32)FindTextWindow::FIND_ABORT_NOTIFY_MSG) {
-			mFindWindow->PostMessage(FindTextWindow::FIND_QUIT_REQUESTED_MSG);
+		fFindInProgress = false;
+		fFindWindow->PostMessage(fFindState);
+		if (fFindState == (uint32)FindTextWindow::FIND_ABORT_NOTIFY_MSG) {
+			fFindWindow->PostMessage(FindTextWindow::FIND_QUIT_REQUESTED_MSG);
 		}
 		break;
 
@@ -1295,21 +1295,21 @@ void PDFWindow::MessageReceived(BMessage* message)
 		thread_id id;
 		BBitmap* bitmap;
 		PageRenderer::GetParameter(message, &id, &bitmap);
-		mMainView->PostRedraw(id, bitmap);
+		fMainView->PostRedraw(id, bitmap);
 		HandlePendingActions(message->what == PageRenderer::FINISH_MSG);
 	} break;
 	case PageRenderer::ABORT_MSG: {
 		thread_id id;
 		BBitmap* bitmap;
 		PageRenderer::GetParameter(message, &id, &bitmap);
-		mMainView->RedrawAborted(id, bitmap);
+		fMainView->RedrawAborted(id, bitmap);
 		HandlePendingActions(false);
 	} break;
 
 	// Preferences Window
 	case PreferencesWindow::RESTART_DOC_NOTIFY:
-		mMainView->WaitForPage(true);
-		mMainView->RestartDoc();
+		fMainView->WaitForPage(true);
+		fMainView->RestartDoc();
 		break;
 	case PreferencesWindow::CHANGE_NOTIFY: {
 		int16 kind, which, index;
@@ -1318,77 +1318,77 @@ void PDFWindow::MessageReceived(BMessage* message)
 			case PreferencesWindow::DISPLAY:
 				switch (which) {
 				case PreferencesWindow::DISPLAY_FILLED_SELECTION:
-					mMainView->SetFilledSelection(index == 0);
+					fMainView->SetFilledSelection(index == 0);
 					break;
 				}
 			}
 		}
 	} break;
 	case PreferencesWindow::QUIT_NOTIFY:
-		mPreferencesItem->SetEnabled(true);
+		fPreferencesItem->SetEnabled(true);
 		break;
 	case PreferencesWindow::UPDATE_NOTIFY:
-		mMainView->UpdateSettings(gApp->GetSettings());
+		fMainView->UpdateSettings(gApp->GetSettings());
 		break;
 
 	// File Info Window
 	case FileInfoWindow::QUIT_NOTIFY:
-		mFileInfoItem->SetEnabled(true);
-		delete mFIWMessenger;
-		mFIWMessenger = NULL;
+		fFileInfoItem->SetEnabled(true);
+		delete fFIWMessenger;
+		fFIWMessenger = NULL;
 		break;
 	case FileInfoWindow::START_QUERY_ALL_FONTS_MSG:
-		mMainView->WaitForPage(); // need exculsive access to PDFDoc
-		if (mFIWMessenger && mFIWMessenger->LockTarget()) {
+		fMainView->WaitForPage(); // need exculsive access to PDFDoc
+		if (fFIWMessenger && fFIWMessenger->LockTarget()) {
 			BLooper* looper;
-			FileInfoWindow* w = (FileInfoWindow*)mFIWMessenger->Target(&looper);
+			FileInfoWindow* w = (FileInfoWindow*)fFIWMessenger->Target(&looper);
 			looper->Unlock();
-			w->QueryAllFonts(mMainView->GetPDFDoc());
+			w->QueryAllFonts(fMainView->GetPDFDoc());
 		}
 		break;
 	// Print Settings Window
 	case PrintSettingsWindow::QUIT_NOTIFY:
-		// mPrintSettingsItem->SetEnabled(true);
-		mPrintSettingsWindowOpen = false;
+		// fPrintSettingsItem->SetEnabled(true);
+		fPrintSettingsWindowOpen = false;
 		UpdateInputEnabler();
-		delete mPSWMessenger;
-		mPSWMessenger = NULL;
+		delete fPSWMessenger;
+		fPSWMessenger = NULL;
 		break;
 	case PrintSettingsWindow::PRINT_NOTIFY:
-		mMainView->WaitForPage();
-		mMainView->Print();
+		fMainView->WaitForPage();
+		fMainView->Print();
 		break;
 
 	// Outlines View (TODO simplify, BMessenger not needed any more)
 	case OutlinesView::PAGE_NOTIFY: {
 		int32 page;
 		if (message->FindInt32("page", &page) == B_OK) {
-			mMainView->MoveToPage(page);
+			fMainView->MoveToPage(page);
 			UpdateInputEnabler();
 		}
 	} break;
 	case OutlinesView::REF_NOTIFY: {
 		int32 num, gen;
 		if (message->FindInt32("num", &num) == B_OK && message->FindInt32("gen", &gen) == B_OK) {
-			mMainView->MoveToPage(num, gen, true);
+			fMainView->MoveToPage(num, gen, true);
 		}
 	} break;
 	case OutlinesView::STRING_NOTIFY: {
 		BString s;
 		if (message->FindString("string", &s) == B_OK) {
-			mMainView->MoveToPage(s.String());
+			fMainView->MoveToPage(s.String());
 		}
 	} break;
 	case OutlinesView::DEST_NOTIFY: {
 		void* link;
 		if (message->FindPointer("dest", &link) == B_OK) {
 			LinkDest* dest = static_cast<LinkDest*>(link);
-			mMainView->GotoDest(dest);
+			fMainView->GotoDest(dest);
 		}
 	} break;
 	case OutlinesView::QUIT_NOTIFY:
-		delete mOWMessenger;
-		mOWMessenger = NULL;
+		delete fOWMessenger;
+		fOWMessenger = NULL;
 		break;
 	case OutlinesView::STATE_CHANGE_NOTIFY:
 		UpdateInputEnabler();
@@ -1397,18 +1397,18 @@ void PDFWindow::MessageReceived(BMessage* message)
 		BString label;
 		int32 pageNum;
 		if (message->FindString("label", &label) == B_OK && message->FindInt32("pageNum", &pageNum) == B_OK) {
-			mOutlinesView->AddUserBookmark(pageNum, label.String());
+			fOutlinesView->AddUserBookmark(pageNum, label.String());
 			UpdateInputEnabler();
 		}
 	}
 	case AnnotationWindow::QUIT_NOTIFY:
-		delete mAWMessenger;
-		mAWMessenger = NULL;
+		delete fAWMessenger;
+		fAWMessenger = NULL;
 		break;
 	case AnnotationWindow::CHANGE_NOTIFY: {
 		void* p;
 		if (message->FindPointer("annotation", &p) == B_OK) {
-			mMainView->UpdateAnnotation((Annotation*)p, message);
+			fMainView->UpdateAnnotation((Annotation*)p, message);
 		}
 	} break;
 
@@ -1538,22 +1538,22 @@ void PDFWindow::OpenInWindow(const char* file)
 
 void PDFWindow::ActivateOutlines()
 {
-	// mMainView->WaitForPage();
-	if (mLayerView->CardLayout()->VisibleIndex() == BOOKMARKS_PANEL && mShowLeftPanel) {
-		mMainView->WaitForPage();
-		mOutlinesView->Activate();
+	// fMainView->WaitForPage();
+	if (fLayerView->CardLayout()->VisibleIndex() == BOOKMARKS_PANEL && fShowLeftPanel) {
+		fMainView->WaitForPage();
+		fOutlinesView->Activate();
 	}
 }
 
 
 void PDFWindow::ShowLeftPanel(int panel)
 {
-	if (!mShowLeftPanel) {
+	if (!fShowLeftPanel) {
 		ToggleLeftPanel();
 	}
-	if (mLayerView->CardLayout()->VisibleIndex() != panel) {
+	if (fLayerView->CardLayout()->VisibleIndex() != panel) {
 		gApp->GetSettings()->SetLeftPanel(panel);
-		mLayerView->CardLayout()->SetVisibleItem(panel);
+		fLayerView->CardLayout()->SetVisibleItem(panel);
 		if (panel == BOOKMARKS_PANEL) {
 			ActivateOutlines();
 		}
@@ -1564,7 +1564,7 @@ void PDFWindow::ShowLeftPanel(int panel)
 
 void PDFWindow::HideLeftPanel()
 {
-	if (mShowLeftPanel) {
+	if (fShowLeftPanel) {
 		ToggleLeftPanel();
 	}
 }
@@ -1572,39 +1572,39 @@ void PDFWindow::HideLeftPanel()
 
 void PDFWindow::ToggleLeftPanel()
 {
-	mShowLeftPanel = !mShowLeftPanel;
-	mSplitView->SetItemCollapsed(0, !mShowLeftPanel);
-	gApp->GetSettings()->SetShowLeftPanel(mShowLeftPanel);
-	if (mShowLeftPanel) {
+	fShowLeftPanel = !fShowLeftPanel;
+	fSplitView->SetItemCollapsed(0, !fShowLeftPanel);
+	gApp->GetSettings()->SetShowLeftPanel(fShowLeftPanel);
+	if (fShowLeftPanel) {
 		ActivateOutlines();
-		mSplitView->SetFlags(B_NAVIGABLE | mSplitView->Flags());
+		fSplitView->SetFlags(B_NAVIGABLE | fSplitView->Flags());
 	} else {
-		mSplitView->SetFlags((~B_NAVIGABLE) & mSplitView->Flags());
+		fSplitView->SetFlags((~B_NAVIGABLE) & fSplitView->Flags());
 	}
 	UpdateInputEnabler();
-	mMainView->Resize();
+	fMainView->Resize();
 }
 
 
 void PDFWindow::OnFullScreen()
 {
 	bool quasiFullScreenMode = gApp->GetSettings()->GetQuasiFullscreenMode();
-	mFullScreen = !mFullScreen;
+	fFullScreen = !fFullScreen;
 	BRect frame;
-	if (mFullScreen) {
-		mWindowFrame = Frame();
+	if (fFullScreen) {
+		fWindowFrame = Frame();
 		frame = gScreen->Frame();
 		if (quasiFullScreenMode) {
 			frame.OffsetBy(0, -fMenuBar->Bounds().Height());
 			frame.bottom += fMenuBar->Bounds().Height();
 		} else {
 			HideLeftPanel();
-			BRect bounds = mMainView->Parent()->ConvertToScreen(mMainView->Frame());
-			frame.bottom += mWindowFrame.IntegerHeight() - bounds.IntegerHeight();
-			frame.right += mWindowFrame.IntegerWidth() - bounds.IntegerWidth();
-			frame.OffsetBy(-bounds.left + mWindowFrame.left, -bounds.top + mWindowFrame.top);
+			BRect bounds = fMainView->Parent()->ConvertToScreen(fMainView->Frame());
+			frame.bottom += fWindowFrame.IntegerHeight() - bounds.IntegerHeight();
+			frame.right += fWindowFrame.IntegerWidth() - bounds.IntegerWidth();
+			frame.OffsetBy(-bounds.left + fWindowFrame.left, -bounds.top + fWindowFrame.top);
 		}
-		mFullScreenItem->SetMarked(true);
+		fFullScreenItem->SetMarked(true);
 		SetFeel(B_FLOATING_ALL_WINDOW_FEEL);
 		SetFlags(Flags() | B_NOT_RESIZABLE | B_NOT_MOVABLE);
 		Activate(true);
@@ -1612,8 +1612,8 @@ void PDFWindow::OnFullScreen()
 		SetFeel(B_NORMAL_WINDOW_FEEL);
 		SetWorkspaces(B_CURRENT_WORKSPACE);
 		SetFlags(Flags() & ~(B_NOT_RESIZABLE | B_NOT_MOVABLE));
-		frame = mWindowFrame;
-		mFullScreenItem->SetMarked(false);
+		frame = fWindowFrame;
+		fFullScreenItem->SetMarked(false);
 	}
 	MoveTo(frame.left, frame.top);
 	ResizeTo(frame.Width(), frame.Height());
@@ -1627,21 +1627,21 @@ void PDFWindow::WorkspaceActivated(int32 workspace, bool active)
 #ifdef MORE_DEBUG
 	fprintf(stderr,
 	    "%s %d %s %d %d\n",
-	    mFullScreen ? "fullscreen" : "window",
+	    fFullScreen ? "fullscreen" : "window",
 	    workspace,
 	    active ? "active" : "not active",
-	    mCurrentWorkspace,
+	    fCurrentWorkspace,
 	    Workspaces());
 #endif
-	if (mFullScreen) {
-		if (mCurrentWorkspace == 1 << workspace) {
+	if (fFullScreen) {
+		if (fCurrentWorkspace == 1 << workspace) {
 			SetFeel(B_FLOATING_ALL_WINDOW_FEEL);
 		} else {
 			SetFeel(B_NORMAL_WINDOW_FEEL);
-			SetWorkspaces(mCurrentWorkspace);
+			SetWorkspaces(fCurrentWorkspace);
 		}
 	} else if (active) {
-		mCurrentWorkspace = 1 << workspace;
+		fCurrentWorkspace = 1 << workspace;
 	}
 }
 
@@ -1650,21 +1650,21 @@ void PDFWindow::WorkspaceActivated(int32 workspace, bool active)
 void PDFWindow::AddBookmark()
 {
 	char buffer[256];
-	sprintf(buffer, B_TRANSLATE("Page %d"), mMainView->Page());
-	new BookmarkWindow(mMainView->Page(), buffer, BRect(30, 30, 300, 200), this);
+	sprintf(buffer, B_TRANSLATE("Page %d"), fMainView->Page());
+	new BookmarkWindow(fMainView->Page(), buffer, BRect(30, 30, 300, 200), this);
 }
 
 void PDFWindow::DeleteBookmark()
 {
-	mOutlinesView->RemoveUserBookmark(mMainView->Page());
+	fOutlinesView->RemoveUserBookmark(fMainView->Page());
 	UpdateInputEnabler();
 }
 
 void PDFWindow::EditBookmark()
 {
-	const char* label = mOutlinesView->GetUserBMLabel(mMainView->Page());
+	const char* label = fOutlinesView->GetUserBMLabel(fMainView->Page());
 	if (label) {
-		new BookmarkWindow(mMainView->Page(), label, BRect(30, 30, 300, 200), this);
+		new BookmarkWindow(fMainView->Page(), label, BRect(30, 30, 300, 200), this);
 	} else {
 		// should not reach here
 	}
@@ -1705,30 +1705,30 @@ static AnnotDesc annotDescs[] = {{PDFWindow::ADD_COMMENT_TEXT_ANNOT_CMD, B_TRANS
 
 BView* PDFWindow::BuildAnnotToolBar(const char* name, AnnotDesc* desc)
 {
-	mAnnotationBar = new BToolBar(B_VERTICAL);
-	mAnnotationBar->SetName(name);
+	fAnnotationBar = new BToolBar(B_VERTICAL);
+	fAnnotationBar->SetName(name);
 
-	mAnnotationBar->AddAction(DONE_EDIT_ANNOT_CMD, this, LoadVectorIcon("DONE_ANNOT"), B_TRANSLATE("Leave annotation editing mode"));
-	mAnnotationBar->AddAction(SAVE_FILE_AS_CMD, this, LoadVectorIcon("SAVE_FILE_AS"), B_TRANSLATE("Save file as"));
+	fAnnotationBar->AddAction(DONE_EDIT_ANNOT_CMD, this, LoadVectorIcon("DONE_ANNOT"), B_TRANSLATE("Leave annotation editing mode"));
+	fAnnotationBar->AddAction(SAVE_FILE_AS_CMD, this, LoadVectorIcon("SAVE_FILE_AS"), B_TRANSLATE("Save file as"));
 
-	mAnnotationBar->AddSeparator();
+	fAnnotationBar->AddSeparator();
 
 	// add buttons for supported annotations
-	for (desc = annotDescs; desc->mCmd != kAnnotDescEOL; desc++) {
-		if (desc->mCmd == kAnnotDescSeparator) {
-			mAnnotationBar->AddSeparator();
+	for (desc = annotDescs; desc->fCmd != kAnnotDescEOL; desc++) {
+		if (desc->fCmd == kAnnotDescSeparator) {
+			fAnnotationBar->AddSeparator();
 			continue;
 		}
 
-		Annotation* annot = GetAnnotTemplate(desc->mCmd);
+		Annotation* annot = GetAnnotTemplate(desc->fCmd);
 		if (annot == NULL)
 			continue;
 
-		mAnnotationBar->AddAction(desc->mCmd, this, LoadVectorIcon(desc->mButtonPrefix), desc->mToolTip, NULL, true);
+		fAnnotationBar->AddAction(desc->fCmd, this, LoadVectorIcon(desc->fButtonPrefix), desc->fToolTip, NULL, true);
 	}
-	mAnnotationBar->AddGlue();
+	fAnnotationBar->AddGlue();
 
-	/*BScrollView* sc = new BScrollView("AnnotToolbarScroll", mAnnotationBar,
+	/*BScrollView* sc = new BScrollView("AnnotToolbarScroll", fAnnotationBar,
 		0, false, true, B_PLAIN_BORDER);
 	sc->SetExplicitMinSize(BSize(0, 0));
 	BScrollBar* sb = sc->ScrollBar(B_VERTICAL);
@@ -1738,13 +1738,13 @@ BView* PDFWindow::BuildAnnotToolBar(const char* name, AnnotDesc* desc)
 	sb->SetSteps(5, 15);
 	sb->SetProportion(0.5);*/
 	BView* CV = new BView("CV", 0);
-	BLayoutBuilder::Group<>(CV, B_HORIZONTAL).AddGlue(0).Add(mAnnotationBar).AddGlue(0).End();
+	BLayoutBuilder::Group<>(CV, B_HORIZONTAL).AddGlue(0).Add(fAnnotationBar).AddGlue(0).End();
 	return CV;
 }
 
 bool PDFWindow::TryEditAnnot()
 {
-	if (mMainView->GetPDFDoc()->isEncrypted()) {
+	if (fMainView->GetPDFDoc()->isEncrypted()) {
 		BAlert* alert = new BAlert(
 		    B_TRANSLATE("Warning"), B_TRANSLATE("Editing of annotations in an encrypted PDF file isn't supported yet!"), B_TRANSLATE("OK"));
 		alert->Go();
@@ -1757,23 +1757,23 @@ bool PDFWindow::TryEditAnnot()
 
 void PDFWindow::EditAnnotation(bool edit)
 {
-	if (edit == mMainView->EditingAnnot()) {
+	if (edit == fMainView->EditingAnnot()) {
 		return;
 	}
 	if (edit) {
-		mMainView->BeginEditAnnot();
+		fMainView->BeginEditAnnot();
 	} else {
 		ReleaseAnnotationButton();
-		mMainView->EndEditAnnot();
+		fMainView->EndEditAnnot();
 	}
-	mMainView->Invalidate();
+	fMainView->Invalidate();
 	UpdateInputEnabler();
 }
 
 void PDFWindow::InitAnnotTemplates()
 {
 	for (int i = 0; i < NUM_ANNOTS; i++)
-		mAnnotTemplates[i] = NULL;
+		fAnnotTemplates[i] = NULL;
 
 	PDFRectangle rect;
 	// rect.x1 == -1 means that when the annotation is added to the the page
@@ -1815,17 +1815,17 @@ void PDFWindow::InitAnnotTemplates()
 void PDFWindow::DeleteAnnotTemplates()
 {
 	for (int i = 0; i < NUM_ANNOTS; i++) {
-		delete mAnnotTemplates[i];
-		mAnnotTemplates[i] = NULL;
+		delete fAnnotTemplates[i];
+		fAnnotTemplates[i] = NULL;
 	}
 }
 
 void PDFWindow::SetAnnotTemplate(int cmd, Annotation* a)
 {
 	ASSERT(FIRST_ANNOT_CMD <= cmd && cmd <= LAST_ANNOT_CMD);
-	ASSERT(mAnnotTemplates[cmd - FIRST_ANNOT_CMD] == NULL);
+	ASSERT(fAnnotTemplates[cmd - FIRST_ANNOT_CMD] == NULL);
 	if (CanWrite(a)) {
-		mAnnotTemplates[cmd - FIRST_ANNOT_CMD] = a;
+		fAnnotTemplates[cmd - FIRST_ANNOT_CMD] = a;
 		// add popup annotation to annotation if it's not a FreeTextAnnot
 		if (dynamic_cast<FreeTextAnnot*>(a) == NULL) {
 			PDFRectangle rect;
@@ -1844,21 +1844,21 @@ void PDFWindow::SetAnnotTemplate(int cmd, Annotation* a)
 Annotation* PDFWindow::GetAnnotTemplate(int cmd)
 {
 	ASSERT(FIRST_ANNOT_CMD <= cmd && cmd <= LAST_ANNOT_CMD);
-	return mAnnotTemplates[cmd - FIRST_ANNOT_CMD];
+	return fAnnotTemplates[cmd - FIRST_ANNOT_CMD];
 }
 
 void PDFWindow::InsertAnnotation(int cmd)
 {
 	ReleaseAnnotationButton();
 
-	if (!mMainView->EditingAnnot() && !TryEditAnnot()) {
+	if (!fMainView->EditingAnnot() && !TryEditAnnot()) {
 		return;
 	}
 
 	PressAnnotationButton();
 	Annotation* templateAnnotation = GetAnnotTemplate(cmd);
 	if (templateAnnotation != NULL) {
-		mMainView->InsertAnnotation(templateAnnotation);
+		fMainView->InsertAnnotation(templateAnnotation);
 	} else {
 		ReleaseAnnotationButton();
 	}
@@ -1868,16 +1868,16 @@ class SaveFileThread : public SaveThread {
 public:
 	SaveFileThread(const char* title, XRef* xref, const char* path, PDFView* view)
 	    : SaveThread(title, xref),
-	      mPath(path),
-	      mMainView(view)
+	      fPath(path),
+	      fMainView(view)
 	{}
 
 	int32 Run()
 	{
 		BAlert* alert = NULL;
 
-		AnnotWriter writer(GetXRef(), mMainView->GetPDFDoc(), mMainView->GetPageRenderer()->GetAnnotsList(), mMainView->GetBePDFAcroForm());
-		if (writer.WriteTo(mPath.String())) {
+		AnnotWriter writer(GetXRef(), fMainView->GetPDFDoc(), fMainView->GetPageRenderer()->GetAnnotsList(), fMainView->GetBePDFAcroForm());
+		if (writer.WriteTo(fPath.String())) {
 			alert = new BAlert(
 			    "Information", B_TRANSLATE("PDF file successfully written!"), B_TRANSLATE("OK"), 0, 0, B_WIDTH_AS_USUAL, B_STOP_ALERT);
 		} else {
@@ -1890,8 +1890,8 @@ public:
 	}
 
 private:
-	BString mPath;
-	PDFView* mMainView;
+	BString fPath;
+	PDFView* fMainView;
 };
 
 void PDFWindow::SaveFile(BMessage* msg)
@@ -1903,13 +1903,13 @@ void PDFWindow::SaveFile(BMessage* msg)
 		BPath path(&entry);
 		path.Append(name.String());
 		BEntry newFile(path.Path());
-		if (newFile != mCurrentFile) {
+		if (newFile != fCurrentFile) {
 			gPdfLock->Lock();
-			mMainView->SyncAnnotation(false);
+			fMainView->SyncAnnotation(false);
 			gPdfLock->Unlock();
 
 			SaveFileThread* thread =
-			    new SaveFileThread(B_TRANSLATE("Saving copy of PDF file:"), mMainView->GetPDFDoc()->getXRef(), path.Path(), mMainView);
+			    new SaveFileThread(B_TRANSLATE("Saving copy of PDF file:"), fMainView->GetPDFDoc()->getXRef(), path.Path(), fMainView);
 
 			thread->Resume();
 		} else {
@@ -1928,14 +1928,14 @@ void PDFWindow::PressAnnotationButton()
 	BControl* control;
 	if (msg && msg->FindPointer("source", (void**)&control) == B_OK) {
 		control->SetValue(B_CONTROL_ON);
-		mPressedAnnotationButton = control;
+		fPressedAnnotationButton = control;
 	}
 }
 
 void PDFWindow::ReleaseAnnotationButton()
 {
-	if (mPressedAnnotationButton) {
-		mPressedAnnotationButton->SetValue(B_CONTROL_OFF);
-		mPressedAnnotationButton = NULL;
+	if (fPressedAnnotationButton) {
+		fPressedAnnotationButton->SetValue(B_CONTROL_OFF);
+		fPressedAnnotationButton = NULL;
 	}
 }

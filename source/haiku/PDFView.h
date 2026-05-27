@@ -55,33 +55,33 @@ inline float RealSize(float x, float zoomDPI)
 
 class PDFView : public BView {
 private:
-	bool mLoading;
-	PDFDoc* mDoc;
-	BePDFAcroForm* mBePDFAcroForm;
-	bool mOk;
-	int mZoom;
-	BBitmap* mBitmap;
-	CachedPage* mPage;
-	int mCurrentPage;
-	float mRotation;
-	PageRenderer mPageRenderer;
-	BString* mOwnerPassword;
-	BString* mUserPassword;
+	bool fLoading;
+	PDFDoc* fDoc;
+	BePDFAcroForm* fBePDFAcroForm;
+	bool fOk;
+	int fZoom;
+	BBitmap* fBitmap;
+	CachedPage* fPage;
+	int fCurrentPage;
+	float fRotation;
+	PageRenderer fPageRenderer;
+	BString* fOwnerPassword;
+	BString* fUserPassword;
 
-	color_space mColorSpace;
+	color_space fColorSpace;
 
-	bool mInvertVerticalScrolling;
+	bool fInvertVerticalScrolling;
 
-	BString* mTitle;
-	float mLeft, mTop;     // position of page inside the view
-	float mWidth, mHeight; //document width and height
-	LinkAction* mLinkAction;
-	Annotation* mAnnotation;
-	Annotation* mAnnotInEditor;
-	History mHistory;
-	enum { kNotInHistory, kInHistory } mNavigationState;
+	BString* fTitle;
+	float fLeft, fTop;     // position of page inside the view
+	float fWidth, fHeight; //document width and height
+	LinkAction* fLinkAction;
+	Annotation* fAnnotation;
+	Annotation* fAnnotInEditor;
+	History fHistory;
+	enum { kNotInHistory, kInHistory } fNavigationState;
 
-	BCursor* mViewCursor;
+	BCursor* fViewCursor;
 	enum mouse_action {
 		NO_ACTION,
 		MOVE_ACTION,
@@ -90,30 +90,30 @@ private:
 		ZOOM_ACTION,
 		RESIZE_ANNOT_ACTION,
 		MOVE_ANNOT_ACTION
-	} mMouseAction;
-	BPoint mMousePosition;
-	bool mDragStarted;
-	bool mEditAnnot;
-	bool mResizeVertOnly;
-	PDFRectangle mAnnotStartRect;
-	Annotation* mInsertAnnot;
+	} fMouseAction;
+	BPoint fMousePosition;
+	bool fDragStarted;
+	bool fEditAnnot;
+	bool fResizeVertOnly;
+	PDFRectangle fAnnotStartRect;
+	Annotation* fInsertAnnot;
 
-	float mMouseWheelDY;
+	float fMouseWheelDY;
 	enum { MOUSE_WHEEL_THRESHHOLD = 2 };
 
-	thread_id mRendererID;
-	bool mRendering;
+	thread_id fRendererID;
+	bool fRendering;
 
-	enum { NOT_SELECTED = 0, DO_SELECTION = 1, SELECTED = 2 } mSelected;
-	bool mFilledSelection;
+	enum { NOT_SELECTED = 0, DO_SELECTION = 1, SELECTED = 2 } fSelected;
+	bool fFilledSelection;
 
-	BPoint mSelectionStart;
-	BRect mSelection;
+	BPoint fSelectionStart;
+	BRect fSelection;
 
-	BMessage* mPrintSettings;
+	BMessage* fPrintSettings;
 
 	// find
-	bool mStopFindThread;
+	bool fStopFindThread;
 
 	BPoint CorrectMousePos(const BPoint point);
 	PDFPoint CvtDevToUser(BPoint dev);
@@ -194,14 +194,14 @@ public:
 	void ShowAnnotPopUpMenu(BPoint point);
 	void ShowPopUpMenu(BPoint point, LinkAction* action);
 	void CopyText(BString* str);
-	bool IsOk() { return mOk; }
+	bool IsOk() { return fOk; }
 
 	void SetPage(int page);
 
 	void MoveToPage(int page, bool top = true);
 	void MoveToPage(int num, int gen, bool top = true);
 	void MoveToPage(const char* string, bool top = true);
-	int Page() { return mCurrentPage; };
+	int Page() { return fCurrentPage; };
 
 	// history
 	void BeginHistoryNavigation();
@@ -211,8 +211,8 @@ public:
 	void RestoreHistory();
 	void Back();
 	void Forward();
-	bool CanGoBack() { return mHistory.CanGoBack(); }
-	bool CanGoForward() { return mHistory.CanGoForward(); }
+	bool CanGoBack() { return fHistory.CanGoBack(); }
+	bool CanGoForward() { return fHistory.CanGoForward(); }
 
 	void SetZoom(int zoom);
 	void Zoom(bool zoomIn);
@@ -235,9 +235,9 @@ public:
 	void CenterPage();
 	void FixScrollbars();
 
-	int GetNumPages() { return mDoc->getNumPages(); };
-	int GetPageWidth(int page) { return (int)mDoc->getPageCropWidth(page); };
-	int GetPageHeight(int page) { return (int)mDoc->getPageCropHeight(page); };
+	int GetNumPages() { return fDoc->getNumPages(); };
+	int GetPageWidth(int page) { return (int)fDoc->getPageCropWidth(page); };
+	int GetPageHeight(int page) { return (int)fDoc->getPageCropHeight(page); };
 
 	status_t PageSetup();
 	void Print();
@@ -272,17 +272,17 @@ public:
 
 	void SetColorSpace(color_space colorSpace);
 
-	void SetInvertVerticalScrolling(bool reverse) { mInvertVerticalScrolling = reverse; }
+	void SetInvertVerticalScrolling(bool reverse) { fInvertVerticalScrolling = reverse; }
 
-	PDFDoc* GetPDFDoc() { return mDoc; }
-	CachedPage* GetPage() { return mPage; }
-	PageRenderer* GetPageRenderer() { return &mPageRenderer; }
-	bool HasSelection() { return mSelected != NOT_SELECTED; }
+	PDFDoc* GetPDFDoc() { return fDoc; }
+	CachedPage* GetPage() { return fPage; }
+	PageRenderer* GetPageRenderer() { return &fPageRenderer; }
+	bool HasSelection() { return fSelected != NOT_SELECTED; }
 
 	void UpdateSettings(GlobalSettings* settings);
 
 	// Annotation
-	BePDFAcroForm* GetBePDFAcroForm() { return mBePDFAcroForm; }
+	BePDFAcroForm* GetBePDFAcroForm() { return fBePDFAcroForm; }
 	void BeginEditAnnot();
 	void InsertAnnotation(Annotation* a);
 	void ClearAnnotationWindow();
@@ -290,7 +290,7 @@ public:
 	void UpdateAnnotation(Annotation* a, const char* contents, const char* font, float size, const char* align);
 	void UpdateAnnotation(Annotation* a, BMessage* data);
 	void EndEditAnnot();
-	bool EditingAnnot() const { return mEditAnnot; }
+	bool EditingAnnot() const { return fEditAnnot; }
 	void ShowAnnotWindow(bool editable, bool updateOnly = false);
 };
 

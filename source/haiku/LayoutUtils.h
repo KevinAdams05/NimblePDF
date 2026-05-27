@@ -33,22 +33,22 @@ void MakeEmpty(BOutlineListView* list);
 
 class EscapeMessageFilter : public BMessageFilter {
 private:
-	BWindow* mWindow;
-	int32 mWhat;
+	BWindow* fWindow;
+	int32 fWhat;
 
 public:
 	EscapeMessageFilter(BWindow* window, int32 what)
 	    : BMessageFilter(B_ANY_DELIVERY, B_ANY_SOURCE, '_KYD'),
-	      mWindow(window),
-	      mWhat(what)
+	      fWindow(window),
+	      fWhat(what)
 	{}
 	filter_result Filter(BMessage* msg, BHandler** target);
 };
 
 class Bitset {
-	int32* mBitset;
-	int32 mBitsetElems;
-	int32 mLength;
+	int32* fBitset;
+	int32 fBitsetElems;
+	int32 fLength;
 
 	void Resize(int32 length);
 

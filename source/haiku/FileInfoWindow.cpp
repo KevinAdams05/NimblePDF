@@ -291,7 +291,7 @@ void FileInfoWindow::QueryFonts(PDFDoc* doc, int page)
 
 	// remove items from font list
 	Lock();
-	mFontList->Clear();
+	fFontList->Clear();
 	Unlock();
 
 	BList fontList;
@@ -304,7 +304,7 @@ void FileInfoWindow::QueryFonts(PDFDoc* doc, int page)
 	}
 
 	for (int pg = first; pg <= last; pg++) {
-		if ((mState == STOP) || (mState == QUIT))
+		if ((fState == STOP) || (fState == QUIT))
 			break;
 
 		Page* page = catalog->getPage(pg);
@@ -322,7 +322,7 @@ void FileInfoWindow::QueryFonts(PDFDoc* doc, int page)
 						GfxFont* font = gfxFontDict->getFont(i);
 						if (font != NULL && AddFont(&fontList, font)) {
 							Lock();
-							mFontList->AddRow(FileInfoWindow::FontItem(font));
+							fFontList->AddRow(FileInfoWindow::FontItem(font));
 							Unlock();
 						}
 					}
@@ -345,7 +345,7 @@ void FileInfoWindow::Refresh(BEntry* file, PDFDoc* doc, int page)
 {
 	PDFLock lock;
 
-	mState = NORMAL;
+	fState = NORMAL;
 
 	BTabView* tabs = new BTabView("tabs", B_WIDTH_FROM_LABEL);
 
@@ -418,30 +418,30 @@ void FileInfoWindow::Refresh(BEntry* file, PDFDoc* doc, int page)
 	tabs->AddTab(secView);
 
 	// Fonts
-	mFontList =
+	fFontList =
 	    new BColumnListView(BRect(0, 0, 100, 100), NULL, B_FOLLOW_ALL_SIDES, B_WILL_DRAW | B_FRAME_EVENTS | B_NAVIGABLE, B_NO_BORDER, true);
-	mFontList->AddColumn(new BStringColumn(B_TRANSLATE("Name"), 150.0, 150.0, 150.0, true), 0);
-	mFontList->AddColumn(new BStringColumn(B_TRANSLATE("Embedded name"), 150.0, 150.0, 150.0, true), 1);
-	mFontList->AddColumn(new BStringColumn(B_TRANSLATE("Type"), 80.0, 80.0, 80.0, true), 2);
+	fFontList->AddColumn(new BStringColumn(B_TRANSLATE("Name"), 150.0, 150.0, 150.0, true), 0);
+	fFontList->AddColumn(new BStringColumn(B_TRANSLATE("Embedded name"), 150.0, 150.0, 150.0, true), 1);
+	fFontList->AddColumn(new BStringColumn(B_TRANSLATE("Type"), 80.0, 80.0, 80.0, true), 2);
 
-	mShowAllFonts = new BButton("showAllFonts", B_TRANSLATE("Show all fonts"), new BMessage(SHOW_ALL_FONTS_MSG));
-	mStop = new BButton("stop", B_TRANSLATE("Abort"), new BMessage(STOP_MSG));
+	fShowAllFonts = new BButton("showAllFonts", B_TRANSLATE("Show all fonts"), new BMessage(SHOW_ALL_FONTS_MSG));
+	fStop = new BButton("stop", B_TRANSLATE("Abort"), new BMessage(STOP_MSG));
 
 	BView* fonts = new BView(B_TRANSLATE("Fonts of this page"), 0);
 
 	BLayoutBuilder::Group<>(fonts, B_VERTICAL)
 	    .SetInsets(B_USE_WINDOW_INSETS)
-	    .Add(mFontList)
+	    .Add(fFontList)
 	    .AddGroup(B_HORIZONTAL)
 	    .AddGlue()
-	    .Add(mShowAllFonts)
-	    .Add(mStop)
+	    .Add(fShowAllFonts)
+	    .Add(fStop)
 	    .End();
 
 	tabs->AddTab(fonts);
 	tabs->SetBorder(B_NO_BORDER);
 
-	mStop->SetEnabled(false);
+	fStop->SetEnabled(false);
 	QueryFonts(doc, page);
 
 	BLayoutBuilder::Group<>(this).SetInsets(0, B_USE_WINDOW_INSETS, 0, 0).Add(tabs);
@@ -451,7 +451,7 @@ void FileInfoWindow::Refresh(BEntry* file, PDFDoc* doc, int page)
 
 void FileInfoWindow::RefreshFontList(BEntry* file, PDFDoc* doc, int page)
 {
-	if (mState == NORMAL) {
+	if (fState == NORMAL) {
 		QueryFonts(doc, page);
 	}
 }
@@ -464,9 +464,9 @@ void FileInfoWindow::QueryAllFonts(PDFDoc* doc)
 
 FileInfoWindow::FileInfoWindow(GlobalSettings* settings, BEntry* file, PDFDoc* doc, BLooper* looper, int page)
     : BWindow(BRect(0, 0, 100, 100), B_TRANSLATE("File info"), B_TITLED_WINDOW_LOOK, B_NORMAL_WINDOW_FEEL, B_AUTO_UPDATE_SIZE_LIMITS),
-      mLooper(looper),
-      mSettings(settings),
-      mState(NORMAL)
+      fLooper(looper),
+      fSettings(settings),
+      fState(NORMAL)
 {
 	AddCommonFilter(new EscapeMessageFilter(this, B_QUIT_REQUESTED));
 
@@ -474,23 +474,23 @@ FileInfoWindow::FileInfoWindow(GlobalSettings* settings, BEntry* file, PDFDoc* d
 	float w, h;
 	settings->GetFileInfoWindowSize(w, h);
 	ResizeTo(w, h);
-	mView = NULL;
+	fView = NULL;
 
 	Refresh(file, doc, page);
 }
 
 bool FileInfoWindow::QuitRequested()
 {
-	if ((mState == NORMAL) || (mState == ALL_FONTS)) {
-		if (mLooper) {
+	if ((fState == NORMAL) || (fState == ALL_FONTS)) {
+		if (fLooper) {
 			BMessage msg(QUIT_NOTIFY);
-			mLooper->PostMessage(&msg);
+			fLooper->PostMessage(&msg);
 		}
 		return true;
 	} else {
-		if (mState == QUERY_ALL_FONTS) {
-			mStop->SetEnabled(false);
-			mState = QUIT;
+		if (fState == QUERY_ALL_FONTS) {
+			fStop->SetEnabled(false);
+			fState = QUIT;
 		}
 		return false;
 	}
@@ -498,13 +498,13 @@ bool FileInfoWindow::QuitRequested()
 
 void FileInfoWindow::FrameMoved(BPoint p)
 {
-	mSettings->SetFileInfoWindowPosition(p);
+	fSettings->SetFileInfoWindowPosition(p);
 	BWindow::FrameMoved(p);
 }
 
 void FileInfoWindow::FrameResized(float w, float h)
 {
-	mSettings->SetFileInfoWindowSize(w, h);
+	fSettings->SetFileInfoWindowSize(w, h);
 	BWindow::FrameResized(w, h);
 }
 
@@ -512,32 +512,32 @@ void FileInfoWindow::MessageReceived(BMessage* msg)
 {
 	switch (msg->what) {
 	case SHOW_ALL_FONTS_MSG:
-		mState = QUERY_ALL_FONTS;
-		mShowAllFonts->SetEnabled(false);
-		mStop->SetEnabled(true);
-		if (mLooper) {
+		fState = QUERY_ALL_FONTS;
+		fShowAllFonts->SetEnabled(false);
+		fStop->SetEnabled(true);
+		if (fLooper) {
 			// do searching in another thread (= thread of window)
-			mLooper->PostMessage(START_QUERY_ALL_FONTS_MSG);
+			fLooper->PostMessage(START_QUERY_ALL_FONTS_MSG);
 		}
 		break;
 	case STOP_MSG:
-		if (mState == QUERY_ALL_FONTS) {
-			mStop->SetEnabled(false);
-			mState = STOP;
+		if (fState == QUERY_ALL_FONTS) {
+			fStop->SetEnabled(false);
+			fState = STOP;
 		}
 		break;
 	case FONT_QUERY_STOPPED_NOTIFY:
-		switch (mState) {
+		switch (fState) {
 		case STOP:
-			mState = NORMAL;
-			mShowAllFonts->SetEnabled(true);
+			fState = NORMAL;
+			fShowAllFonts->SetEnabled(true);
 			break;
 		case QUERY_ALL_FONTS:
-			mState = ALL_FONTS;
-			mStop->SetEnabled(false);
+			fState = ALL_FONTS;
+			fStop->SetEnabled(false);
 			break;
 		case QUIT:
-			mState = NORMAL;
+			fState = NORMAL;
 			PostMessage(B_QUIT_REQUESTED);
 			break;
 		default:

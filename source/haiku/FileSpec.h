@@ -41,9 +41,9 @@ public:
 	};
 
 private:
-	GString mDescription;
-	GString mFileName;
-	Ref mRef;
+	GString fDescription;
+	GString fFileName;
+	Ref fRef;
 
 	bool ReadFileName(Dict* fileSpec);
 	bool ReadEmbeddedFileRef(Dict* fileSpec);

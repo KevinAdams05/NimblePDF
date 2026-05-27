@@ -48,7 +48,7 @@ private:
 	DisplayCIDFont* Get(int32 index) const;
 	DisplayCIDFont* Find(const char* name) const;
 
-	BList mFonts;
+	BList fFonts;
 };
 
 #endif

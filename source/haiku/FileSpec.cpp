@@ -27,13 +27,13 @@
 static char* gFileAttachmentFileNameKeys[] = {"Unix", "F", "DOS", "Mac", NULL};
 
 FileSpec::FileSpec()
-    : mRef(empty_ref)
+    : fRef(empty_ref)
 {}
 
 FileSpec::FileSpec(FileSpec* copy)
-    : mDescription(copy->mDescription),
-      mFileName(copy->mFileName),
-      mRef(copy->mRef)
+    : fDescription(copy->fDescription),
+      fFileName(copy->fFileName),
+      fRef(copy->fRef)
 {}
 
 FileSpec::FileSpec(Dict* fileSpec)
@@ -46,9 +46,9 @@ FileSpec::~FileSpec()
 
 bool FileSpec::SetTo(Dict* fileSpec)
 {
-	mDescription.clear();
-	mFileName.clear();
-	mRef = empty_ref;
+	fDescription.clear();
+	fFileName.clear();
+	fRef = empty_ref;
 
 	if (!fileSpec->is("Filespec")) {
 		return false;
@@ -57,21 +57,21 @@ bool FileSpec::SetTo(Dict* fileSpec)
 	// optional PDF 1.6 description for files in EmbeddedFiles name tree
 	Object obj;
 	if (fileSpec->lookup("Desc", &obj) != NULL && obj.isString()) {
-		mDescription.append(obj.getString());
+		fDescription.append(obj.getString());
 	}
 	obj.free();
 
 	// mandatory file name
 	if (!ReadFileName(fileSpec)) {
-		mDescription.clear();
+		fDescription.clear();
 		return false;
 	}
 
 
 	// mandatory ref to embedded file
 	if (!ReadEmbeddedFileRef(fileSpec)) {
-		mDescription.clear();
-		mFileName.clear();
+		fDescription.clear();
+		fFileName.clear();
 		return false;
 	}
 
@@ -84,7 +84,7 @@ bool FileSpec::ReadFileName(Dict* fileSpec)
 		Object obj;
 		char* key = gFileAttachmentFileNameKeys[i];
 		if (fileSpec->lookup(key, &obj) != NULL && obj.isString()) {
-			mFileName.append(obj.getString()->getCString());
+			fFileName.append(obj.getString()->getCString());
 			return true;
 		}
 		obj.free();
@@ -103,7 +103,7 @@ bool FileSpec::ReadEmbeddedFileRef(Dict* fileSpec)
 			// Is there a reference to a stream?
 			// We do not test here if the stream really exists!
 			if (obj.dictLookupNF(key, &stream) != NULL && stream.isRef()) {
-				mRef = stream.getRef();
+				fRef = stream.getRef();
 				found = true; // leave for loop
 			}
 			stream.free();
@@ -115,27 +115,27 @@ bool FileSpec::ReadEmbeddedFileRef(Dict* fileSpec)
 
 bool FileSpec::IsValid()
 {
-	return mFileName.getLength() > 0 && !is_empty_ref(mRef);
+	return fFileName.getLength() > 0 && !is_empty_ref(fRef);
 }
 
 GString* FileSpec::GetDescription()
 {
-	return &mDescription;
+	return &fDescription;
 }
 
 GString* FileSpec::GetFileName()
 {
-	return &mFileName;
+	return &fFileName;
 }
 
 FileSpec::SaveReturnCode FileSpec::Save(XRef* xref, const char* file)
 {
-	if (is_empty_ref(mRef)) {
+	if (is_empty_ref(fRef)) {
 		return kMissingEmbeddedStreamError;
 	}
 
 	Object ref;
-	ref.initRef(mRef.num, mRef.gen);
+	ref.initRef(fRef.num, fRef.gen);
 	Object obj;
 	if (ref.fetch(xref, &obj) != NULL && obj.isStream()) {
 		Stream* stream = obj.getStream();

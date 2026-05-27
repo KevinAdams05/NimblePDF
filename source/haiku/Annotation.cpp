@@ -93,37 +93,37 @@ bool is_empty_ref(Ref ref)
 
 // Implementation of PDFFont
 PDFFont::PDFFont()
-    : mRef(empty_ref)
+    : fRef(empty_ref)
 {}
 
 Ref PDFFont::GetRef() const
 {
-	return mRef;
+	return fRef;
 }
 
 const char* PDFFont::GetName()
 {
-	return mName.getCString();
+	return fName.getCString();
 }
 
 const char* PDFFont::GetShortName()
 {
-	return mShortName.getCString();
+	return fShortName.getCString();
 }
 
 void PDFFont::SetRef(Ref ref)
 {
-	mRef = ref;
+	fRef = ref;
 }
 
 void PDFFont::SetName(const char* name)
 {
-	mName.clear()->append(name);
+	fName.clear()->append(name);
 }
 
 void PDFFont::SetShortName(const char* name)
 {
-	mShortName.clear()->append(name);
+	fShortName.clear()->append(name);
 }
 
 void PDFFont::Print()
@@ -133,7 +133,7 @@ void PDFFont::Print()
 }
 
 // Implementation of PDFStandardFonts
-const char* PDFStandardFonts::mNames[] = {
+const char* PDFStandardFonts::fNames[] = {
     "Times-Roman",
     "Times-Bold",
     "Times-Italic",
@@ -152,10 +152,10 @@ const char* PDFStandardFonts::mNames[] = {
 
 PDFStandardFonts::PDFStandardFonts()
 {
-	ASSERT(sizeof(mNames) / sizeof(const char*) == num_of_standard_fonts);
+	ASSERT(sizeof(fNames) / sizeof(const char*) == num_of_standard_fonts);
 	int i;
 	for (i = 0; i < num_of_standard_fonts; i++) {
-		mFonts[i].SetName(mNames[i]);
+		fFonts[i].SetName(fNames[i]);
 	}
 }
 
@@ -177,14 +177,14 @@ int PDFStandardFonts::CountFonts() const
 PDFFont* PDFStandardFonts::FontAt(int i)
 {
 	ASSERT(i >= 0 && i < num_of_standard_fonts);
-	return &mFonts[i];
+	return &fFonts[i];
 }
 
 PDFFont* PDFStandardFonts::FindByName(const char* name)
 {
 	for (int i = 0; i < num_of_standard_fonts; i++) {
-		if (strcmp(mFonts[i].GetName(), name) == 0) {
-			return &mFonts[i];
+		if (strcmp(fFonts[i].GetName(), name) == 0) {
+			return &fFonts[i];
 		}
 	}
 	return NULL;
@@ -193,8 +193,8 @@ PDFFont* PDFStandardFonts::FindByName(const char* name)
 PDFFont* PDFStandardFonts::FindByShortName(const char* name)
 {
 	for (int i = 0; i < num_of_standard_fonts; i++) {
-		if (strcmp(mFonts[i].GetShortName(), name) == 0) {
-			return &mFonts[i];
+		if (strcmp(fFonts[i].GetShortName(), name) == 0) {
+			return &fFonts[i];
 		}
 	}
 	return NULL;
@@ -235,8 +235,8 @@ PDFPoint& PDFPoint::operator-=(const PDFPoint& p)
 
 // Implementation of PDFPoints
 PDFPoints::PDFPoints(PDFPoints* copy)
-    : mLength(copy->mLength),
-      mPoints(NULL)
+    : fLength(copy->fLength),
+      fPoints(NULL)
 {
 	*this = *copy;
 }
@@ -244,14 +244,14 @@ PDFPoints::PDFPoints(PDFPoints* copy)
 PDFPoints& PDFPoints::operator=(PDFPoints& p)
 {
 	if (this != &p) {
-		delete[] mPoints;
-		mLength = p.mLength;
-		if (mLength > 0) {
-			mPoints = new PDFPoint[mLength];
-			for (int i = 0; i < mLength; i++)
-				mPoints[i] = p.mPoints[i];
+		delete[] fPoints;
+		fLength = p.fLength;
+		if (fLength > 0) {
+			fPoints = new PDFPoint[fLength];
+			for (int i = 0; i < fLength; i++)
+				fPoints[i] = p.fPoints[i];
 		} else {
-			mPoints = NULL;
+			fPoints = NULL;
 		}
 	}
 	return *this;
@@ -259,8 +259,8 @@ PDFPoints& PDFPoints::operator=(PDFPoints& p)
 
 // Implementation of BorderStyle
 BorderStyle::BorderStyle()
-    : mWidth(1),
-      mStyle(solid_style)
+    : fWidth(1),
+      fStyle(solid_style)
 {
 	// intentionally empty
 }
@@ -270,8 +270,8 @@ void BorderStyle::Set(Dict* d, bool check_type)
 	Object obj;
 
 	// set default values
-	mWidth = 1;
-	mStyle = solid_style;
+	fWidth = 1;
+	fStyle = solid_style;
 
 	// sanity check
 	if (check_type && d->lookup("Type", &obj) && !obj.isNull()) {
@@ -285,7 +285,7 @@ void BorderStyle::Set(Dict* d, bool check_type)
 
 	// border width in points
 	if (d->lookup("W", &obj) && obj.isNum()) {
-		mWidth = (int)obj.getNum();
+		fWidth = (int)obj.getNum();
 	} else {
 	}
 	obj.free();
@@ -295,19 +295,19 @@ void BorderStyle::Set(Dict* d, bool check_type)
 		const char* n = obj.getName();
 		switch (n[0]) {
 		case 'S':
-			mStyle = solid_style;
+			fStyle = solid_style;
 			break;
 		case 'D':
-			mStyle = dashed_style;
+			fStyle = dashed_style;
 			break;
 		case 'B':
-			mStyle = beveled_style;
+			fStyle = beveled_style;
 			break;
 		case 'I':
-			mStyle = inset_style;
+			fStyle = inset_style;
 			break;
 		case 'U':
-			mStyle = underline_style;
+			fStyle = underline_style;
 			break;
 		}
 	}
@@ -338,76 +338,76 @@ AnnotVisitor::~AnnotVisitor()
 
 // Implementation of Annotation
 Annotation::Annotation(PDFRectangle r)
-    : mRef(empty_ref),
-      mContents(""),
-      mRect(r),
-      mDate(NULL),
-      mHasAppearanceStream(false),
-      mHasColor(true),
-      mOpacity(1),
-      mTitle(NULL),
-      mPopup(NULL),
-      mValid(true),
-      mDeleted(false),
-      mChanged(true),
-      mSelected(false)
+    : fRef(empty_ref),
+      fContents(""),
+      fRect(r),
+      fDate(NULL),
+      fHasAppearanceStream(false),
+      fHasColor(true),
+      fOpacity(1),
+      fTitle(NULL),
+      fPopup(NULL),
+      fValid(true),
+      fDeleted(false),
+      fChanged(true),
+      fSelected(false)
 {
-	mColor.r = mColor.g = mColor.b = 0;
-	mFlags.Set(print_flag);
+	fColor.r = fColor.g = fColor.b = 0;
+	fFlags.Set(print_flag);
 }
 
 Annotation::Annotation(Annotation* copy)
-    : mRef(copy->mRef),
-      mContents(copy->mContents),
-      mRect(copy->mRect),
-      mDate(Copy(copy->mDate)),
-      mFlags(copy->mFlags),
-      mHasAppearanceStream(copy->mHasAppearanceStream),
-      mColor(copy->mColor),
-      mHasColor(copy->mHasColor),
-      mOpacity(copy->mOpacity),
-      mTitle(Copy(copy->mTitle)),
-      mPopup(Copy(copy->mPopup)),
-      mValid(copy->mValid),
-      mDeleted(copy->mDeleted),
-      mChanged(copy->mChanged),
-      mSelected(copy->mSelected)
+    : fRef(copy->fRef),
+      fContents(copy->fContents),
+      fRect(copy->fRect),
+      fDate(Copy(copy->fDate)),
+      fFlags(copy->fFlags),
+      fHasAppearanceStream(copy->fHasAppearanceStream),
+      fColor(copy->fColor),
+      fHasColor(copy->fHasColor),
+      fOpacity(copy->fOpacity),
+      fTitle(Copy(copy->fTitle)),
+      fPopup(Copy(copy->fPopup)),
+      fValid(copy->fValid),
+      fDeleted(copy->fDeleted),
+      fChanged(copy->fChanged),
+      fSelected(copy->fSelected)
 {}
 
 Annotation::Annotation(Dict* d)
-    : mRef(empty_ref),
-      mDate(NULL),
-      mHasAppearanceStream(false),
-      mHasColor(true),
-      mOpacity(1),
-      mTitle(NULL)
+    : fRef(empty_ref),
+      fDate(NULL),
+      fHasAppearanceStream(false),
+      fHasColor(true),
+      fOpacity(1),
+      fTitle(NULL)
 
       ,
-      mPopup(NULL),
-      mValid(false),
-      mDeleted(false),
-      mChanged(false),
-      mSelected(false)
+      fPopup(NULL),
+      fValid(false),
+      fDeleted(false),
+      fChanged(false),
+      fSelected(false)
 {
-	mRect.x1 = mRect.x2 = mRect.y1 = mRect.y2 = 0;
-	mOpacity = 1;
-	mColor.r = mColor.g = mColor.b = 0;
+	fRect.x1 = fRect.x2 = fRect.y1 = fRect.y2 = 0;
+	fOpacity = 1;
+	fColor.r = fColor.g = fColor.b = 0;
 
 	Object obj;
 	if (d->lookup("Contents", &obj) && obj.isString()) {
-		mContents.append(obj.getString());
+		fContents.append(obj.getString());
 	}
 	obj.free();
 
 	if (d->lookup("M", &obj) && obj.isString()) {
-		mDate = new GString(obj.getString()->getCString());
+		fDate = new GString(obj.getString()->getCString());
 	}
 	obj.free();
 
 	if (d->lookup("Rect", &obj) && obj.isArray() && obj.arrayGetLength() == 4) {
 		Array* a = obj.getArray();
 
-		if (ReadNum(a, 0, mRect.x1) && ReadNum(a, 1, mRect.y1) && ReadNum(a, 2, mRect.x2) && ReadNum(a, 3, mRect.y2)) {
+		if (ReadNum(a, 0, fRect.x1) && ReadNum(a, 1, fRect.y1) && ReadNum(a, 2, fRect.x2) && ReadNum(a, 3, fRect.y2)) {
 		} else
 			goto error;
 	} else
@@ -415,20 +415,20 @@ Annotation::Annotation(Dict* d)
 	obj.free();
 
 	if (d->lookup("F", &obj) && obj.isInt()) {
-		mFlags.Set(obj.getInt());
+		fFlags.Set(obj.getInt());
 	}
 	obj.free();
 
-	mHasAppearanceStream = d->lookup("AP", &obj) && !obj.isNull();
+	fHasAppearanceStream = d->lookup("AP", &obj) && !obj.isNull();
 	obj.free();
 
 	if (d->lookup("C", &obj) && obj.isArray() && obj.arrayGetLength() == 3) {
 		Array* a = obj.getArray();
 		double r, g, b;
 		if (ReadNum(a, 0, r) && ReadNum(a, 1, g) && ReadNum(a, 2, b)) {
-			mColor.r = dblToCol(r);
-			mColor.g = dblToCol(g);
-			mColor.b = dblToCol(b);
+			fColor.r = dblToCol(r);
+			fColor.g = dblToCol(g);
+			fColor.b = dblToCol(b);
 		} else {
 			goto error;
 		}
@@ -436,12 +436,12 @@ Annotation::Annotation(Dict* d)
 	obj.free();
 
 	if (d->lookup("CA", &obj) && obj.isNum()) {
-		mOpacity = obj.getNum();
+		fOpacity = obj.getNum();
 	}
 	obj.free();
 
 	if (d->lookup("T", &obj) && obj.isString()) {
-		mTitle = new GString(obj.getString());
+		fTitle = new GString(obj.getString());
 	}
 	obj.free();
 
@@ -452,7 +452,7 @@ Annotation::Annotation(Dict* d)
 		else
 			LOG("Popup is invalid\n");
 		if (popup->IsValid()) {
-			mPopup = popup;
+			fPopup = popup;
 			Object ref;
 			if (d->lookupNF("Popup", &ref) && obj.isRef()) {
 				Ref r = ref.getRef();
@@ -473,9 +473,9 @@ error:
 
 Annotation::~Annotation()
 {
-	delete mDate;
-	delete mTitle;
-	delete mPopup;
+	delete fDate;
+	delete fTitle;
+	delete fPopup;
 }
 
 bool Annotation::ReadNum(Array* a, int i, double& d)
@@ -496,10 +496,10 @@ bool Annotation::ReadPoint(Array* a, int i, PDFPoint* p)
 
 void Annotation::Print()
 {
-	if (is_empty_ref(mRef))
+	if (is_empty_ref(fRef))
 		fprintf(stderr, "Empty Ref\n");
 	else
-		fprintf(stderr, "Ref num %d gen %d\n", mRef.num, mRef.gen);
+		fprintf(stderr, "Ref num %d gen %d\n", fRef.num, fRef.gen);
 	fprintf(stderr, "Contents:\n%s\n", GetContents()->getCString());
 	fprintf(stderr, "Date: %s\n", GetDate());
 	fprintf(stderr, "Rect: %f %f %f %f\n", GetRect()->x1, GetRect()->y1, GetRect()->x2, GetRect()->y2);
@@ -525,20 +525,20 @@ void Annotation::Print()
 	fprintf(stderr, "Opacity: %d\n", int(GetOpacity() * 255));
 	fprintf(stderr, "\n");
 	fprintf(stderr, "Title: %s\n", GetTitle() ? GetTitle()->getCString() : "NULL");
-	if (mPopup) {
+	if (fPopup) {
 		fprintf(stderr, "---Popup:\n");
-		mPopup->Print();
+		fPopup->Print();
 	}
 }
 
 void Annotation::SetRef(const Ref ref)
 {
-	mRef = ref;
+	fRef = ref;
 }
 
 void Annotation::SetContents(GString* c)
 {
-	mContents.clear()->append(c);
+	fContents.clear()->append(c);
 }
 
 void Annotation::SetString(GString*& s, const char* t)
@@ -557,39 +557,39 @@ void Annotation::SetString(GString*& s, const char* t)
 
 void Annotation::SetDate(const char* date)
 {
-	SetString(mDate, date);
+	SetString(fDate, date);
 }
 
 void Annotation::SetTitle(GString* title)
 {
-	if (mTitle) {
-		mTitle->clear()->append(title);
+	if (fTitle) {
+		fTitle->clear()->append(title);
 	} else {
-		mTitle = new GString(title);
+		fTitle = new GString(title);
 	}
 }
 
 void Annotation::MoveTo(PDFPoint p)
 {
-	mRect.x2 = p.x + mRect.x2 - mRect.x1;
-	mRect.x1 = p.x;
-	mRect.y1 = p.y - mRect.y2 + mRect.y1;
-	mRect.y2 = p.y;
+	fRect.x2 = p.x + fRect.x2 - fRect.x1;
+	fRect.x1 = p.x;
+	fRect.y1 = p.y - fRect.y2 + fRect.y1;
+	fRect.y2 = p.y;
 }
 
 void Annotation::ResizeTo(double w, double h)
 {
-	mRect.x2 = mRect.x1 + w;
-	mRect.y1 = mRect.y2 - h;
+	fRect.x2 = fRect.x1 + w;
+	fRect.y1 = fRect.y2 - h;
 }
 
 
 // Implementation of TextAnnot
 TextAnnot::TextAnnot(PDFRectangle rect, text_annot_type type)
     : Annotation(rect),
-      mOpen(true),
-      mName(mTypeNames[type]),
-      mType(type)
+      fOpen(true),
+      fName(fTypeNames[type]),
+      fType(type)
 {
 	GfxRGB* c = GetColor();
 	c->r = dblToCol(1.0);
@@ -600,31 +600,31 @@ TextAnnot::TextAnnot(PDFRectangle rect, text_annot_type type)
 
 TextAnnot::TextAnnot(TextAnnot* copy)
     : Annotation(copy),
-      mOpen(copy->mOpen),
-      mName(copy->mName),
-      mType(copy->mType)
+      fOpen(copy->fOpen),
+      fName(copy->fName),
+      fType(copy->fType)
 {}
 
-const char* TextAnnot::mTypeNames[TextAnnot::no_of_types - 1] = {"Comment", "Help", "Insert", "Key", "NewParagraph", "Note", "Paragraph"};
+const char* TextAnnot::fTypeNames[TextAnnot::no_of_types - 1] = {"Comment", "Help", "Insert", "Key", "NewParagraph", "Note", "Paragraph"};
 
 TextAnnot::TextAnnot(Dict* d)
     : Annotation(d),
-      mOpen(false),
-      mName("Note"),
-      mType(note_type)
+      fOpen(false),
+      fName("Note"),
+      fType(note_type)
 {
 	Object obj;
 	if (d->lookup("Open", &obj) && obj.isBool()) {
-		mOpen = obj.getBool();
+		fOpen = obj.getBool();
 	}
 	obj.free();
 
 	if (d->lookup("Name", &obj) && obj.isName()) {
-		mName.clear()->append(obj.getName());
-		mType = unknown_type;
+		fName.clear()->append(obj.getName());
+		fType = unknown_type;
 		for (int i = 0; i < no_of_types - 1; i++) {
-			if (strcmp(obj.getName(), mTypeNames[i]) == 0) {
-				mType = (enum text_annot_type)i;
+			if (strcmp(obj.getName(), fTypeNames[i]) == 0) {
+				fType = (enum text_annot_type)i;
 				break;
 			}
 		}
@@ -642,22 +642,22 @@ void TextAnnot::Print()
 
 LinkAnnot::LinkAnnot(LinkAnnot* copy)
     : Annotation(copy),
-      mLinkAction(NULL)
+      fLinkAction(NULL)
 {}
 
 
 LinkAnnot::LinkAnnot(Dict* d)
     : Annotation(d),
-      mLinkAction(NULL)
+      fLinkAction(NULL)
 {
 	Object obj;
 
 	// look for destination
 	if (d->lookup("Dest", &obj) && !obj.isNull()) {
-		mLinkAction = LinkAction::parseDest(&obj);
+		fLinkAction = LinkAction::parseDest(&obj);
 		// look for action
 	} else if (d->lookup("A", &obj) && obj.isDict()) {
-		mLinkAction = LinkAction::parseAction(&obj /*, baseURI*/);
+		fLinkAction = LinkAction::parseAction(&obj /*, baseURI*/);
 	}
 	obj.free();
 }
@@ -702,16 +702,16 @@ void FreeTextAnnot::Init()
 	c->r = dblToCol(1.0);
 	c->g = dblToCol(1.0);
 	c->b = dblToCol(1.0);
-	mFontColor.r = dblToCol(0.0);
-	mFontColor.g = dblToCol(0.0);
-	mFontColor.b = dblToCol(0.0);
+	fFontColor.r = dblToCol(0.0);
+	fFontColor.g = dblToCol(0.0);
+	fFontColor.b = dblToCol(0.0);
 }
 
 FreeTextAnnot::FreeTextAnnot(PDFRectangle rect, PDFFont* font)
     : StyledAnnot(rect, 1.0, 1.0, 1.0),
-      mJustification(left_justify),
-      mFont(font),
-      mFontSize(12)
+      fJustification(left_justify),
+      fFont(font),
+      fFontSize(12)
 {
 	Init();
 	GetBorderStyle()->SetWidth(0.0);
@@ -719,40 +719,40 @@ FreeTextAnnot::FreeTextAnnot(PDFRectangle rect, PDFFont* font)
 
 FreeTextAnnot::FreeTextAnnot(FreeTextAnnot* copy)
     : StyledAnnot(copy),
-      mAppearance(copy->mAppearance),
-      mJustification(copy->mJustification),
-      mFont(copy->mFont),
-      mFontColor(copy->mFontColor),
-      mFontSize(copy->mFontSize)
+      fAppearance(copy->fAppearance),
+      fJustification(copy->fJustification),
+      fFont(copy->fFont),
+      fFontColor(copy->fFontColor),
+      fFontSize(copy->fFontSize)
 {}
 
 FreeTextAnnot::FreeTextAnnot(Dict* d, BePDFAcroForm* acroForm)
     : StyledAnnot(d),
-      mAppearance(""),
-      mJustification(left_justify),
-      mFont(NULL),
-      mFontSize(12)
+      fAppearance(""),
+      fJustification(left_justify),
+      fFont(NULL),
+      fFontSize(12)
 {
 	Init();
 
 	Object obj;
 	if (d->lookup("DA", &obj) && obj.isString()) {
-		mAppearance.append(obj.getString());
+		fAppearance.append(obj.getString());
 	}
 	obj.free();
 
-	mJustification = acroForm->GetJustification(); // inherit property from BePDFAcroForm
+	fJustification = acroForm->GetJustification(); // inherit property from BePDFAcroForm
 	if (d->lookup("Q", &obj) && obj.isInt()) {
 		int j = obj.getInt();
 		if (j >= left_justify && j <= right_justify)
-			mJustification = (free_text_justification)j;
+			fJustification = (free_text_justification)j;
 	}
 	obj.free();
 
 	// use appearance string to extract font short name and size
 	const char* appearance;
-	if (mAppearance.cmp("") != 0) {
-		appearance = mAppearance.getCString();
+	if (fAppearance.cmp("") != 0) {
+		appearance = fAppearance.getCString();
 	} else {
 		// inherit it from BePDFAcroForm if it is not defined in annotation
 		appearance = acroForm->GetAppearance();
@@ -760,22 +760,22 @@ FreeTextAnnot::FreeTextAnnot(Dict* d, BePDFAcroForm* acroForm)
 
 	AppearanceStringParser asp(appearance);
 	if (asp.IsOK()) {
-		mFontSize = asp.GetFontSize();
-		mFontColor = *asp.GetColor();
-		mFont = acroForm->GetStandardFonts()->FindByShortName(asp.GetFontName());
-		if (mFont == NULL) {
+		fFontSize = asp.GetFontSize();
+		fFontColor = *asp.GetColor();
+		fFont = acroForm->GetStandardFonts()->FindByShortName(asp.GetFontName());
+		if (fFont == NULL) {
 			// try to find a matching font
 			PDFFont* font = acroForm->FindFontByShortName(asp.GetFontName());
 			if (font) {
-				mFont = acroForm->GetStandardFonts()->FindByName(font->GetName());
+				fFont = acroForm->GetStandardFonts()->FindByName(font->GetName());
 			}
 		}
 	}
 
 	// assign default font
-	if (mFont == NULL) {
-		mFont = acroForm->GetStandardFonts()->FindByName("Helvetica");
-		ASSERT(mFont != NULL);
+	if (fFont == NULL) {
+		fFont = acroForm->GetStandardFonts()->FindByName("Helvetica");
+		ASSERT(fFont != NULL);
 	}
 }
 
@@ -784,11 +784,11 @@ void FreeTextAnnot::Print()
 	fprintf(stderr, "FreeText\n");
 	Annotation::Print();
 	fprintf(stderr, "Appearance: %s\n", GetAppearance()->getCString());
-	fprintf(stderr, "Justification: %s", ToString(mJustification));
+	fprintf(stderr, "Justification: %s", ToString(fJustification));
 	fprintf(stderr, "Font: ");
-	if (mFont) {
+	if (fFont) {
 		fprintf(stderr, "\n");
-		mFont->Print();
+		fFont->Print();
 	} else {
 		fprintf(stderr, "<null>\n");
 	}
@@ -796,17 +796,17 @@ void FreeTextAnnot::Print()
 
 void FreeTextAnnot::SetAppearance(GString* ap)
 {
-	mAppearance.clear()->append(ap);
+	fAppearance.clear()->append(ap);
 }
 
 void FreeTextAnnot::SetJustification(free_text_justification j)
 {
-	mJustification = j;
+	fJustification = j;
 }
 
 void FreeTextAnnot::SetFont(PDFFont* font)
 {
-	mFont = font;
+	fFont = font;
 }
 
 // Implementation of StyledAnnot
@@ -821,7 +821,7 @@ StyledAnnot::StyledAnnot(PDFRectangle rect, float r, float g, float b)
 
 StyledAnnot::StyledAnnot(StyledAnnot* copy)
     : Annotation(copy),
-      mStyle(copy->mStyle)
+      fStyle(copy->fStyle)
 {}
 
 StyledAnnot::StyledAnnot(Dict* d)
@@ -829,7 +829,7 @@ StyledAnnot::StyledAnnot(Dict* d)
 {
 	Object obj;
 	if (d->lookup("BS", &obj) && obj.isDict()) {
-		mStyle.Set(obj.getDict());
+		fStyle.Set(obj.getDict());
 	}
 	obj.free();
 }
@@ -867,15 +867,15 @@ void StyledAnnot::Print()
 LineAnnot::LineAnnot(PDFRectangle rect, PDFPoint* line)
     : StyledAnnot(rect, 0, 0, 0)
 {
-	mLine[0] = line[0];
-	mLine[1] = line[1];
+	fLine[0] = line[0];
+	fLine[1] = line[1];
 }
 
 LineAnnot::LineAnnot(LineAnnot* copy)
     : StyledAnnot(copy)
 {
-	mLine[0] = copy->mLine[0];
-	mLine[1] = copy->mLine[1];
+	fLine[0] = copy->fLine[0];
+	fLine[1] = copy->fLine[1];
 }
 
 LineAnnot::LineAnnot(Dict* d)
@@ -887,7 +887,7 @@ LineAnnot::LineAnnot(Dict* d)
 	Object obj;
 	if (d->lookup("L", &obj) && obj.isArray() && obj.arrayGetLength() == 4) {
 		Array* a = obj.getArray();
-		if (ReadPoint(a, 0, &mLine[0]) && ReadPoint(a, 2, &mLine[1])) {
+		if (ReadPoint(a, 0, &fLine[0]) && ReadPoint(a, 2, &fLine[1])) {
 		} else
 			goto error;
 	} else {
@@ -922,19 +922,19 @@ void CircleAnnot::Print()
 // Implementation of MarkupAnnot
 MarkupAnnot::MarkupAnnot(PDFRectangle rect, float r, float g, float b, PDFQuadPoints* p, int l)
     : StyledAnnot(rect, r, g, b),
-      mLength(l),
-      mQuadPoints(p)
+      fLength(l),
+      fQuadPoints(p)
 {}
 
 MarkupAnnot::MarkupAnnot(MarkupAnnot* copy)
     : StyledAnnot(copy),
-      mLength(copy->mLength),
-      mQuadPoints(NULL)
+      fLength(copy->fLength),
+      fQuadPoints(NULL)
 {
-	if (mLength > 0) {
-		mQuadPoints = new PDFQuadPoints[mLength];
-		for (int i = 0; i < mLength; i++) {
-			mQuadPoints[i] = copy->mQuadPoints[i];
+	if (fLength > 0) {
+		fQuadPoints = new PDFQuadPoints[fLength];
+		for (int i = 0; i < fLength; i++) {
+			fQuadPoints[i] = copy->fQuadPoints[i];
 		}
 	}
 }
@@ -942,22 +942,22 @@ MarkupAnnot::MarkupAnnot(MarkupAnnot* copy)
 
 MarkupAnnot::MarkupAnnot(Dict* d)
     : StyledAnnot(d),
-      mLength(0),
-      mQuadPoints(NULL)
+      fLength(0),
+      fQuadPoints(NULL)
 {
 	if (CheckInvalid())
 		return;
 
 	Object qp;
 	if (d->lookup("QuadPoints", &qp) && qp.isArray() && qp.arrayGetLength() % 8 == 0) {
-		mLength = qp.arrayGetLength() / 8;
-		if (mLength == 0)
+		fLength = qp.arrayGetLength() / 8;
+		if (fLength == 0)
 			goto error;
 
-		mQuadPoints = new PDFQuadPoints[mLength];
+		fQuadPoints = new PDFQuadPoints[fLength];
 		int index = 0;
-		for (int j = 0; j < mLength; j++) {
-			PDFQuadPoints* quad = &mQuadPoints[j];
+		for (int j = 0; j < fLength; j++) {
+			PDFQuadPoints* quad = &fQuadPoints[j];
 			for (int i = 0; i < 4; i++) {
 				if (!ReadPoint(qp.getArray(), index, &quad->q[i]))
 					goto error;
@@ -974,12 +974,12 @@ MarkupAnnot::MarkupAnnot(Dict* d)
 
 error:
 	qp.free();
-	delete[] mQuadPoints;
+	delete[] fQuadPoints;
 }
 
 MarkupAnnot::~MarkupAnnot()
 {
-	delete[] mQuadPoints;
+	delete[] fQuadPoints;
 }
 
 void MarkupAnnot::Print()
@@ -991,8 +991,8 @@ void MarkupAnnot::Print()
 void MarkupAnnot::MoveTo(PDFPoint p)
 {
 	PDFPoint d(p.x - GetRect()->x1, p.y - GetRect()->y2);
-	for (int i = 0; i < mLength; i++) {
-		PDFQuadPoints& p = mQuadPoints[i];
+	for (int i = 0; i < fLength; i++) {
+		PDFQuadPoints& p = fQuadPoints[i];
 		p.q[0] += d;
 		p.q[1] += d;
 		p.q[2] += d;
@@ -1006,8 +1006,8 @@ void MarkupAnnot::ResizeTo(double w, double h)
 	double oldW = GetRect()->x2 - GetRect()->x1;
 	double oldH = GetRect()->y2 - GetRect()->y1;
 	PDFPoint origin(GetRect()->x1, GetRect()->y2);
-	for (int i = 0; i < mLength; i++) {
-		PDFQuadPoints& q = mQuadPoints[i];
+	for (int i = 0; i < fLength; i++) {
+		PDFQuadPoints& q = fQuadPoints[i];
 		for (int j = 0; j < 4; j++) {
 			PDFPoint& p = q[j];
 			p -= origin;
@@ -1061,16 +1061,16 @@ StrikeOutAnnot::StrikeOutAnnot(PDFRectangle rect)
 // Implementation of StampAnnot
 StampAnnot::StampAnnot(StampAnnot* copy)
     : Annotation(copy),
-      mName(copy->mName)
+      fName(copy->fName)
 {}
 
 StampAnnot::StampAnnot(Dict* d)
     : Annotation(d),
-      mName("Draft")
+      fName("Draft")
 {
 	Object obj;
 	if (d->lookup("Name", &obj) && obj.isName()) {
-		mName.clear()->append(obj.getName());
+		fName.clear()->append(obj.getName());
 	}
 	obj.free();
 }
@@ -1085,29 +1085,29 @@ void StampAnnot::Print()
 // Implementation of InkAnnot
 InkAnnot::InkAnnot(InkAnnot* copy)
     : StyledAnnot(copy),
-      mLength(copy->mLength),
-      mInkList(NULL)
+      fLength(copy->fLength),
+      fInkList(NULL)
 {
-	if (mLength > 0) {
-		mInkList = new PDFPoints[mLength];
-		for (int i = 0; i < mLength; i++)
-			mInkList[i] = copy->mInkList[i];
+	if (fLength > 0) {
+		fInkList = new PDFPoints[fLength];
+		for (int i = 0; i < fLength; i++)
+			fInkList[i] = copy->fInkList[i];
 	}
 }
 
 InkAnnot::InkAnnot(Dict* d)
     : StyledAnnot(d),
-      mLength(0),
-      mInkList(NULL)
+      fLength(0),
+      fInkList(NULL)
 {
 	if (CheckInvalid())
 		return;
 	Object obj;
 	if (d->lookup("InkList", &obj) && obj.isArray()) {
 		Array* a = obj.getArray();
-		mLength = a->getLength();
-		mInkList = new PDFPoints[mLength];
-		for (int i = 0; i < mLength; i++) {
+		fLength = a->getLength();
+		fInkList = new PDFPoints[fLength];
+		for (int i = 0; i < fLength; i++) {
 			PDFPoints* p = PathAt(i);
 			Object obj2;
 			if (a->get(i, &obj2) && obj2.isArray() && obj2.arrayGetLength() % 2 == 0) {
@@ -1137,8 +1137,8 @@ error:
 
 InkAnnot::~InkAnnot()
 {
-	if (mInkList) {
-		delete[] mInkList;
+	if (fInkList) {
+		delete[] fInkList;
 	}
 }
 
@@ -1151,19 +1151,19 @@ void InkAnnot::Print()
 // Implementation of PopupAnnot
 PopupAnnot::PopupAnnot(PDFRectangle rect)
     : Annotation(rect),
-      mParentRef(empty_ref)
+      fParentRef(empty_ref)
 {
 	GetFlags()->Set(print_flag | no_zoom_flag | no_rotate_flag);
 }
 
 PopupAnnot::PopupAnnot(PopupAnnot* copy)
     : Annotation(copy),
-      mParentRef(empty_ref)
+      fParentRef(empty_ref)
 {}
 
 PopupAnnot::PopupAnnot(Dict* annot)
     : Annotation(annot),
-      mParentRef(empty_ref)
+      fParentRef(empty_ref)
 {
 	if (CheckInvalid())
 		return;
@@ -1178,30 +1178,30 @@ void PopupAnnot::Print()
 }
 
 // Implementation of FileAttachmentAnnot
-const char* FileAttachmentAnnot::mTypeNames[FileAttachmentAnnot::no_of_types - 1] = {"Graphic", "PaperClip", "PushPin", "Tag"};
+const char* FileAttachmentAnnot::fTypeNames[FileAttachmentAnnot::no_of_types - 1] = {"Graphic", "PaperClip", "PushPin", "Tag"};
 
 FileAttachmentAnnot::FileAttachmentAnnot(FileAttachmentAnnot* copy)
     : Annotation(copy),
-      mName(copy->mName),
-      mFileName(copy->mFileName),
-      mType(copy->mType)
+      fName(copy->fName),
+      fFileName(copy->fFileName),
+      fType(copy->fType)
 {}
 
 FileAttachmentAnnot::FileAttachmentAnnot(Dict* annot)
     : Annotation(annot),
-      mName("PushPin"),
-      mType(push_pin_type)
+      fName("PushPin"),
+      fType(push_pin_type)
 {
 	if (CheckInvalid())
 		return;
 
 	Object obj;
 	if (annot->lookup("Name", &obj) && obj.isName()) {
-		mName.clear()->append(obj.getName());
-		mType = unknown_type;
+		fName.clear()->append(obj.getName());
+		fType = unknown_type;
 		for (int i = 0; i < no_of_types - 1; i++) {
-			if (strcmp(obj.getName(), mTypeNames[i]) == 0) {
-				mType = (enum attachment_type)i;
+			if (strcmp(obj.getName(), fTypeNames[i]) == 0) {
+				fType = (enum attachment_type)i;
 				break;
 			}
 		}
@@ -1210,7 +1210,7 @@ FileAttachmentAnnot::FileAttachmentAnnot(Dict* annot)
 
 	// File specification
 	if (annot->lookup("FS", &obj) && obj.isDict() && obj.dictIs("Filespec")) {
-		mFileSpec.SetTo(obj.getDict());
+		fFileSpec.SetTo(obj.getDict());
 	}
 	obj.free();
 
@@ -1219,7 +1219,7 @@ FileAttachmentAnnot::FileAttachmentAnnot(Dict* annot)
 
 bool FileAttachmentAnnot::Save(XRef* xref, const char* file)
 {
-	return mFileSpec.Save(xref, file);
+	return fFileSpec.Save(xref, file);
 }
 
 void FileAttachmentAnnot::Print()
@@ -1250,20 +1250,20 @@ AnnotName::~AnnotName()
 
 // Implementation of BePDFAcroForm
 
-PDFStandardFonts* BePDFAcroForm::mStandardFonts = NULL;
+PDFStandardFonts* BePDFAcroForm::fStandardFonts = NULL;
 
 PDFStandardFonts* BePDFAcroForm::GetStandardFonts()
 {
-	if (mStandardFonts == NULL) {
-		mStandardFonts = new PDFStandardFonts();
+	if (fStandardFonts == NULL) {
+		fStandardFonts = new PDFStandardFonts();
 	}
-	return mStandardFonts;
+	return fStandardFonts;
 }
 
 
 BePDFAcroForm::BePDFAcroForm(XRef* xref, Object* acroFormRef)
-    : mRef(empty_ref),
-      mJustification(left_justify)
+    : fRef(empty_ref),
+      fJustification(left_justify)
 {
 	GetStandardFonts()->Reset();
 	if (!acroFormRef->isRef())
@@ -1279,14 +1279,14 @@ BePDFAcroForm::BePDFAcroForm(XRef* xref, Object* acroFormRef)
 		return;
 	}
 
-	mRef = acroFormRef->getRef();
+	fRef = acroFormRef->getRef();
 
 	Object obj;
 	Dict* d = acroForm.getDict();
 
 	// default appearance string
 	if (d->lookup("DA", &obj) && obj.isString()) {
-		mAppearance.append(obj.getString());
+		fAppearance.append(obj.getString());
 	}
 	obj.free();
 
@@ -1294,7 +1294,7 @@ BePDFAcroForm::BePDFAcroForm(XRef* xref, Object* acroFormRef)
 	if (d->lookup("Q", &obj) && obj.isInt()) {
 		int j = obj.getInt();
 		if (j >= left_justify && j <= right_justify)
-			mJustification = (free_text_justification)j;
+			fJustification = (free_text_justification)j;
 	}
 	obj.free();
 
@@ -1320,7 +1320,7 @@ BePDFAcroForm::BePDFAcroForm(XRef* xref, Object* acroFormRef)
 BePDFAcroForm::~BePDFAcroForm()
 {
 	std::list<PDFFont*>::iterator it;
-	for (it = mFonts.begin(); it != mFonts.end(); it++) {
+	for (it = fFonts.begin(); it != fFonts.end(); it++) {
 		PDFFont* font = *it;
 		delete font;
 	}
@@ -1375,7 +1375,7 @@ void BePDFAcroForm::ParseFont(const char* shortName, Ref ref, Dict* dict)
 	font->SetRef(ref);
 	font->SetName(baseFont.getCString());
 	font->SetShortName(shortName);
-	mFonts.push_back(font);
+	fFonts.push_back(font);
 
 	// If it is a standard font set reference to it and its short name
 	// Note: AnnotWriter must not write a referenced standard font.
@@ -1398,7 +1398,7 @@ error:
 PDFFont* BePDFAcroForm::FindFontByShortName(const char* name)
 {
 	std::list<PDFFont*>::iterator it;
-	for (it = mFonts.begin(); it != mFonts.end(); it++) {
+	for (it = fFonts.begin(); it != fFonts.end(); it++) {
 		PDFFont* font = *it;
 		if (strcmp(font->GetShortName(), name) == 0) {
 			return font;
@@ -1409,31 +1409,31 @@ PDFFont* BePDFAcroForm::FindFontByShortName(const char* name)
 
 // Implementation of Annotations
 Annotations::Annotations(Annotations* copy)
-    : mMax(copy->mLength),
-      mLength(mMax),
-      mAnnots(NULL)
+    : fMax(copy->fLength),
+      fLength(fMax),
+      fAnnots(NULL)
 {
-	if (mLength > 0) {
-		mAnnots = new AnnotationPtr[mMax];
-		for (int i = 0; i < mLength; i++) {
-			mAnnots[i] = copy->At(i)->Clone();
+	if (fLength > 0) {
+		fAnnots = new AnnotationPtr[fMax];
+		for (int i = 0; i < fLength; i++) {
+			fAnnots[i] = copy->At(i)->Clone();
 		}
 	}
 }
 
 Annotations::Annotations(Object* annots, BePDFAcroForm* acroForm)
-    : mMax(0),
-      mLength(0),
-      mAnnots(NULL)
+    : fMax(0),
+      fLength(0),
+      fAnnots(NULL)
 {
 	if (!annots->isArray() || annots->arrayGetLength() <= 0)
 		return;
 
-	mMax = annots->arrayGetLength();
-	mAnnots = new AnnotationPtr[mMax];
+	fMax = annots->arrayGetLength();
+	fAnnots = new AnnotationPtr[fMax];
 
-	for (int i = 0; i < mMax; i++)
-		mAnnots[i] = NULL;
+	for (int i = 0; i < fMax; i++)
+		fAnnots[i] = NULL;
 
 	for (int i = 0; i < annots->arrayGetLength(); i++) {
 		Ref ref = empty_ref;
@@ -1479,7 +1479,7 @@ Annotations::Annotations(Object* annots, BePDFAcroForm* acroForm)
 
 					if (a && a->IsValid()) {
 						a->SetRef(ref);
-						mAnnots[mLength++] = a;
+						fAnnots[fLength++] = a;
 					} else {
 #ifdef DEBUG
 						fprintf(stderr, "Warning: Could not parse Annotation %s\n", s);
@@ -1499,19 +1499,19 @@ Annotations::Annotations(Object* annots, BePDFAcroForm* acroForm)
 
 Annotations::~Annotations()
 {
-	if (mAnnots) {
-		for (int i = 0; i < mLength; i++) {
-			delete mAnnots[i];
+	if (fAnnots) {
+		for (int i = 0; i < fLength; i++) {
+			delete fAnnots[i];
 		}
-		delete[] mAnnots;
-		mAnnots = NULL;
+		delete[] fAnnots;
+		fAnnots = NULL;
 	}
 }
 
 Annotation* Annotations::OverAnnotation(double x, double y, bool edit)
 {
-	for (int i = 0; i < mLength; i++) {
-		Annotation* a = mAnnots[i];
+	for (int i = 0; i < fLength; i++) {
+		Annotation* a = fAnnots[i];
 		if (a->IsDeleted())
 			continue;
 		PDFRectangle* r = a->GetRect();
@@ -1526,8 +1526,8 @@ Annotation* Annotations::OverAnnotation(double x, double y, bool edit)
 
 void Annotations::Iterate(AnnotVisitor* v)
 {
-	for (int i = 0; i < mLength; i++) {
-		mAnnots[i]->Visit(v);
+	for (int i = 0; i < fLength; i++) {
+		fAnnots[i]->Visit(v);
 	}
 }
 
@@ -1550,43 +1550,43 @@ int cmp_func(const void* x, const void* y)
 void Annotations::Sort(AnnotSorter* s)
 {
 	sorter = s;
-	qsort(mAnnots, mLength, sizeof(AnnotationPtr), cmp_func);
+	qsort(fAnnots, fLength, sizeof(AnnotationPtr), cmp_func);
 }
 
 void Annotations::Resize(int m)
 {
-	if (mMax < m) {
-		if (mMax + 10 > m)
-			m = mMax + 10;
-		mMax = m;
-		AnnotationPtr* a = new AnnotationPtr[mMax];
+	if (fMax < m) {
+		if (fMax + 10 > m)
+			m = fMax + 10;
+		fMax = m;
+		AnnotationPtr* a = new AnnotationPtr[fMax];
 		int i = 0;
-		for (; i < mLength; i++)
-			a[i] = mAnnots[i];
-		for (; i < mMax; i++)
+		for (; i < fLength; i++)
+			a[i] = fAnnots[i];
+		for (; i < fMax; i++)
 			a[i] = NULL;
-		delete[] mAnnots;
-		mAnnots = a;
+		delete[] fAnnots;
+		fAnnots = a;
 	}
 }
 
 void Annotations::Append(Annotation* a)
 {
-	Resize(mLength + 1);
-	mAnnots[mLength] = a;
-	mLength++;
+	Resize(fLength + 1);
+	fAnnots[fLength] = a;
+	fLength++;
 }
 
 Annotation* Annotations::Remove(int i)
 {
 	Annotation* a = NULL;
-	if (i >= 0 && i < mLength) {
+	if (i >= 0 && i < fLength) {
 		a = At(i);
-		const int n = mLength - 2;
+		const int n = fLength - 2;
 		for (; i < n; i++)
-			mAnnots[i] = mAnnots[i + 1];
-		mAnnots[i] = NULL;
-		mLength--;
+			fAnnots[i] = fAnnots[i + 1];
+		fAnnots[i] = NULL;
+		fLength--;
 	}
 	return a;
 }
@@ -1603,20 +1603,20 @@ bool Annotations::HasChanged() const
 
 // Implementation of AnnotsList
 AnnotsList::AnnotsList(AnnotsList* copy)
-    : mAnnots(NULL),
-      mLength(copy->mLength)
+    : fAnnots(NULL),
+      fLength(copy->fLength)
 {
-	if (mLength > 0) {
-		mAnnots = new AnnotationsPtr[mLength];
-		for (int i = 0; i < mLength; i++) {
+	if (fLength > 0) {
+		fAnnots = new AnnotationsPtr[fLength];
+		for (int i = 0; i < fLength; i++) {
 			Annotations* a = copy->Get(i);
-			mAnnots[i] = a ? new Annotations(a) : NULL;
+			fAnnots[i] = a ? new Annotations(a) : NULL;
 		}
 	}
 }
 AnnotsList::AnnotsList()
-    : mAnnots(NULL),
-      mLength(0)
+    : fAnnots(NULL),
+      fLength(0)
 {}
 
 AnnotsList::~AnnotsList()
@@ -1626,12 +1626,12 @@ AnnotsList::~AnnotsList()
 
 void AnnotsList::MakeEmpty()
 {
-	if (mAnnots) {
-		for (int i = 0; i < mLength; i++)
-			delete mAnnots[i];
-		delete[] mAnnots;
-		mAnnots = NULL;
-		mLength = 0;
+	if (fAnnots) {
+		for (int i = 0; i < fLength; i++)
+			delete fAnnots[i];
+		delete[] fAnnots;
+		fAnnots = NULL;
+		fLength = 0;
 	}
 }
 
@@ -1639,29 +1639,29 @@ void AnnotsList::SetSize(int size)
 {
 	MakeEmpty();
 	ASSERT(size >= 1);
-	mLength = size;
-	mAnnots = new AnnotationsPtr[size];
-	for (int i = 0; i < mLength; i++)
-		mAnnots[i] = NULL;
+	fLength = size;
+	fAnnots = new AnnotationsPtr[size];
+	for (int i = 0; i < fLength; i++)
+		fAnnots[i] = NULL;
 }
 
 Annotations* AnnotsList::Get(int i) const
 {
-	ASSERT(0 <= i && i < mLength);
-	ASSERT(mAnnots);
-	return mAnnots[i];
+	ASSERT(0 <= i && i < fLength);
+	ASSERT(fAnnots);
+	return fAnnots[i];
 }
 
 void AnnotsList::Set(int i, Annotations* a)
 {
-	ASSERT(0 <= i && i < mLength);
-	ASSERT(mAnnots);
-	mAnnots[i] = a;
+	ASSERT(0 <= i && i < fLength);
+	ASSERT(fAnnots);
+	fAnnots[i] = a;
 }
 
 bool AnnotsList::HasChanged() const
 {
-	for (int i = 0; i < mLength; i++) {
+	for (int i = 0; i < fLength; i++) {
 		Annotations* a = Get(i);
 		if (a && a->HasChanged())
 			return true;
@@ -1677,9 +1677,9 @@ AppearanceStringParser::AppearanceStringParser(const char* as)
 	int32 length;
 	char* s;
 	char* end;
-	mColor.r = mColor.g = mColor.b = dblToCol(0.0);
+	fColor.r = fColor.g = fColor.b = dblToCol(0.0);
 
-	mOK = false;
+	fOK = false;
 	length = strlen(text);
 	s = text;
 	end = s + length;
@@ -1690,17 +1690,17 @@ AppearanceStringParser::AppearanceStringParser(const char* as)
 			operands.push(s + 1);
 		} else {
 			if (strcmp(s, "Tf") == 0 && operands.size() >= 2) {
-				mFontSize = atof(operands.top());
+				fFontSize = atof(operands.top());
 				operands.pop();
-				mFontName.clear()->append(operands.top());
+				fFontName.clear()->append(operands.top());
 				operands.pop();
-				mOK = true;
+				fOK = true;
 			} else if (strcmp(s, "rg") == 0 && operands.size() >= 3) {
-				mColor.b = dblToCol(atof(operands.top()));
+				fColor.b = dblToCol(atof(operands.top()));
 				operands.pop();
-				mColor.g = dblToCol(atof(operands.top()));
+				fColor.g = dblToCol(atof(operands.top()));
 				operands.pop();
-				mColor.r = dblToCol(atof(operands.top()));
+				fColor.r = dblToCol(atof(operands.top()));
 				operands.pop();
 			} else {
 #if DEBUG
