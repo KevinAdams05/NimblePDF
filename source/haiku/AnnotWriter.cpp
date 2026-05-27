@@ -20,6 +20,7 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
+#include "Logging.h"
 #include "AnnotWriter.h"
 
 #include <Debug.h>
@@ -329,7 +330,7 @@ void AnnotWriter::WriteObject(Object* obj)
 		break;
 	case objStream:
 		fflush(fFile);
-		fprintf(stderr, "Error: <!!!stream!!!>\n");
+		Trace(LOG_ERR, "Cannot serialize stream object");
 		ASSERT(false);
 		break;
 	case objRef:
@@ -338,9 +339,9 @@ void AnnotWriter::WriteObject(Object* obj)
 		break;
 	default:
 		fflush(fFile);
-		fprintf(stderr, "Error: WriteObj unknown type %d\n", obj->getType());
+		Trace(LOG_ERR, "WriteObj: unknown object type %d", obj->getType());
 		obj->print(stderr);
-		fprintf(stderr, "\n");
+		Trace(LOG_DEBUG, "\n");
 		ASSERT(false);
 	}
 	delete s;
@@ -568,17 +569,17 @@ bool AnnotWriter::UpdatePage(int pageNo, Annotations* annots, Ref& annotArray)
 		annotArray = fXRefTable.GetNewRef(xrefEntryUncompressed);
 		if (HasEmbeddedContent(&page)) {
 			if (!CopyContentStream(&page)) {
-				fprintf(stderr, "Error: Could not copy content stream!");
+				Trace(LOG_ERR, "Could not copy content stream");
 				goto error;
 			}
 		}
 		if (!CopyPage(&page, *pageRef, annotArray)) {
-			fprintf(stderr, "Error: Could not copy page!");
+			Trace(LOG_ERR, "Could not copy page");
 		} else {
 			ok = true;
 		}
 	} else {
-		fprintf(stderr, "Error: Could not get page dict for page %d\n", pageNo + 1);
+		Trace(LOG_ERR, "Could not get page dict for page %d", pageNo + 1);
 	}
 error:
 	page.free();

@@ -21,6 +21,7 @@
  */
 
 #if defined(__BEOS__) || defined(__HAIKU__)
+#include "Logging.h"
 #include "BepdfApplication.h"
 #include "AnnotationRenderer.h"
 #include <Bitmap.h>
@@ -360,7 +361,7 @@ void AnnotAppearance::DoText(TextAnnot* a)
 
 		fAS.AddCr("Q");
 	} else {
-		fprintf(stderr, "Wrong color space\n");
+		Trace(LOG_DEBUG, "Wrong color space\n");
 	}
 	delete image;
 #endif

@@ -36,6 +36,7 @@
 #include <gtypes.h>
 #include <GHash.h>
 #include <parseargs.h>
+#include "Logging.h"
 #include "config.h"
 #include "Error.h"
 
@@ -130,7 +131,7 @@ void BepdfApplication::LoadImages(BBitmap* images[], const char* names[], int nu
 	for (int i = 0; i < num; i++) {
 		images[i] = LoadBitmap(names[i], 'BBMP');
 		if (!images[i])
-			fprintf(stderr, "Could not load bitmap %s\n", names[i]);
+			Trace(LOG_WARNING, "Could not load bitmap %s", names[i]);
 	}
 }
 
@@ -649,7 +650,7 @@ void BepdfApplication::RefsReceived(BMessage* msg)
 void BepdfApplication::MessageReceived(BMessage* msg)
 {
 	if (msg == NULL) {
-		fprintf(stderr, "xpdf: message NULL received\n");
+		Trace(LOG_DEBUG, "xpdf: message NULL received\n");
 		return;
 	}
 

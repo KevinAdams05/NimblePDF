@@ -76,7 +76,6 @@ PageLabel::PageLabel(int page, Dict* leaf)
 		start = 1;
 	}
 	obj.free();
-	//	fprintf(stderr, "%d /P %s /St %d\n", page, prefix.String(), start);
 }
 
 BString& PageLabel::ToAlpha(BString& str, int num)

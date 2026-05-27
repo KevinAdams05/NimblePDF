@@ -34,6 +34,7 @@
 #include <Path.h>
 #include <Debug.h>
 
+#include "Logging.h"
 #include "BepdfApplication.h" // for images only
 #include "PageRenderer.h"
 #include "CachedPage.h"
@@ -370,7 +371,7 @@ void PageRenderer::Notify(uint32 what)
 	msg.AddPointer("bepdf:bitmap", fBitmap);
 #ifdef DEBUG
 	if (B_OK != fLooper->PostMessage(&msg))
-		fprintf(stderr, "Error Sending Message %4.4s!\n", (char*)&msg.what);
+		Trace(LOG_ERR, "Error sending message %4.4s", (char*)&msg.what);
 #else
 	fLooper->PostMessage(&msg);
 #endif

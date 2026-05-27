@@ -267,7 +267,6 @@ bool AnnotationRenderer::DrawAnnotation(Annotation* a)
 
 void AnnotationRenderer::DoText(TextAnnot* a)
 {
-	//	fprintf(stderr, "Text\n");
 	if (!DrawAnnotation(a))
 		return;
 	ClipToRect clip(this, a);
@@ -283,7 +282,6 @@ void AnnotationRenderer::DoText(TextAnnot* a)
 
 void AnnotationRenderer::DoLink(LinkAnnot* a)
 {
-	//	fprintf(stderr, "\n");
 	//	if (!DrawAnnotation(a)) return;
 	//	ClipToRect clip(this, a);
 }
@@ -505,7 +503,6 @@ void AnnotationRenderer::DoFreeText(FreeTextAnnot* a)
 
 void AnnotationRenderer::DoLine(LineAnnot* a)
 {
-	//	fprintf(stderr, "Line\n");
 	if (!DrawAnnotation(a))
 		return;
 	ClipToRect clip(this, a);
@@ -519,7 +516,6 @@ void AnnotationRenderer::DoLine(LineAnnot* a)
 
 void AnnotationRenderer::DoSquare(SquareAnnot* a)
 {
-	//	fprintf(stderr, "Square\n");
 	if (!DrawAnnotation(a))
 		return;
 	ClipToRect clip(this, a);
@@ -533,7 +529,6 @@ void AnnotationRenderer::DoSquare(SquareAnnot* a)
 
 void AnnotationRenderer::DoCircle(CircleAnnot* a)
 {
-	//	fprintf(stderr, "Circle\n");
 	if (!DrawAnnotation(a))
 		return;
 	ClipToRect clip(this, a);
@@ -547,7 +542,6 @@ void AnnotationRenderer::DoCircle(CircleAnnot* a)
 
 void AnnotationRenderer::DoHighlight(HighlightAnnot* a)
 {
-	//	fprintf(stderr, "Highlight\n");
 	if (!DrawAnnotation(a))
 		return;
 	ClipToRect clip(this, a);
@@ -600,7 +594,6 @@ void AnnotationRenderer::StrokeSquiggly(BPoint p1, BPoint p2, float height)
 
 void AnnotationRenderer::DoUnderline(UnderlineAnnot* a)
 {
-	//	fprintf(stderr, "Underline\n");
 	if (!DrawAnnotation(a))
 		return;
 	ClipToRect clip(this, a);
@@ -620,7 +613,6 @@ void AnnotationRenderer::DoUnderline(UnderlineAnnot* a)
 
 void AnnotationRenderer::DoSquiggly(SquigglyAnnot* a)
 {
-	//	fprintf(stderr, "Squiggly\n");
 	if (!DrawAnnotation(a))
 		return;
 	ClipToRect clip(this, a);
@@ -642,7 +634,6 @@ void AnnotationRenderer::DoSquiggly(SquigglyAnnot* a)
 
 void AnnotationRenderer::DoStrikeOut(StrikeOutAnnot* a)
 {
-	//	fprintf(stderr, "StrikeOut\n");
 	if (!DrawAnnotation(a))
 		return;
 	ClipToRect clip(this, a);
@@ -662,7 +653,6 @@ void AnnotationRenderer::DoStrikeOut(StrikeOutAnnot* a)
 
 void AnnotationRenderer::DoStamp(StampAnnot* a)
 {
-	//	fprintf(stderr, "Stamp\n");
 	if (!DrawAnnotation(a))
 		return;
 	ClipToRect clip(this, a);
@@ -670,7 +660,6 @@ void AnnotationRenderer::DoStamp(StampAnnot* a)
 
 void AnnotationRenderer::DoInk(InkAnnot* a)
 {
-	//	fprintf(stderr, "Ink\n");
 	if (!DrawAnnotation(a))
 		return;
 	ClipToRect clip(this, a);
@@ -695,7 +684,6 @@ void AnnotationRenderer::DoInk(InkAnnot* a)
 
 void AnnotationRenderer::DoPopup(PopupAnnot* a)
 {
-	//	fprintf(stderr, "Popup\n");
 	if (!DrawAnnotation(a))
 		return;
 	ClipToRect clip(this, a);
@@ -703,7 +691,6 @@ void AnnotationRenderer::DoPopup(PopupAnnot* a)
 
 void AnnotationRenderer::DoFileAttachment(FileAttachmentAnnot* a)
 {
-	//	fprintf(stderr, "FileAttachment\n");
 	if (!DrawAnnotation(a))
 		return;
 	ClipToRect clip(this, a);
@@ -718,35 +705,30 @@ void AnnotationRenderer::DoFileAttachment(FileAttachmentAnnot* a)
 
 void AnnotationRenderer::DoSound(SoundAnnot* a)
 {
-	//	fprintf(stderr, "Sound\n");
 	//	if (!DrawAnnotation(a)) return;
 	//	ClipToRect clip(this, a);
 }
 
 void AnnotationRenderer::DoMovie(MovieAnnot* a)
 {
-	//	fprintf(stderr, "Movie\n");
 	//	if (!DrawAnnotation(a)) return;
 	//	ClipToRect clip(this, a);
 }
 
 void AnnotationRenderer::DoWidget(WidgetAnnot* a)
 {
-	//	fprintf(stderr, "Widget\n");
 	//	if (!DrawAnnotation(a)) return;
 	//	ClipToRect clip(this, a);
 }
 
 void AnnotationRenderer::DoPrinterMark(PrinterMarkAnnot* a)
 {
-	//	fprintf(stderr, "\n");
 	//	if (!DrawAnnotation(a)) return;
 	//	ClipToRect clip(this, a);
 }
 
 void AnnotationRenderer::DoTrapNet(TrapNetAnnot* a)
 {
-	//	fprintf(stderr, "\n");
 	//	if (!DrawAnnotation(a)) return;
 	//	ClipToRect clip(this, a);
 }

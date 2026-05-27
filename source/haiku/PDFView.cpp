@@ -54,6 +54,7 @@
 #include <Gfx.h>
 #include <gfile.h>
 // BePDF
+#include "Logging.h"
 #include "AnnotationWindow.h"
 #include "AnnotWriter.h"
 #include "BePDF.h"
@@ -490,7 +491,7 @@ void PDFView::DrawPage(BRect updateRect)
 {
 	if (fBitmap == NULL) {
 #ifdef DEBUG
-		fprintf(stderr, "WARNING: PDFView::Draw() NULL bitmap\n");
+		Trace(LOG_WARNING, "PDFView::Draw() called with NULL bitmap");
 #endif
 	} else {
 		DrawBitmap(fBitmap, BRect(0, 0, fWidth, fHeight), BRect(fLeft, fTop, fLeft + fWidth, fTop + fHeight));

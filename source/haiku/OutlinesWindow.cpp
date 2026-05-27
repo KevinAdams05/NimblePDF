@@ -35,6 +35,7 @@
 #include <Link.h>
 #include <Object.h>
 // BePDF
+#include "Logging.h"
 #include "BePDF.h"
 #include "LayoutUtils.h"
 #include "TextConversion.h"
@@ -284,13 +285,13 @@ void OutlinesView::ReadOutlines(Object* o, uint32 level)
 			/*
 			Object aa;
 			if (current->dictLookup("AA", &aa) && !aa.isNull()) {
-				fprintf(stderr, " <AA>\n");
+				Trace(LOG_DEBUG, " <AA>\n");
 			}
 			aa.free();
 
 			Object se;
 			if (current->dictLookup("SE", &se) && !se.isNull()) {
-				fprintf(stderr, " <SE>\n");
+				Trace(LOG_DEBUG, " <SE>\n");
 			}
 			se.free();
 */

@@ -53,6 +53,7 @@
 #include <LayoutBuilder.h>
 
 // BePDF
+#include "Logging.h"
 #include "AnnotationWindow.h"
 #include "AnnotWriter.h"
 #include "AttachmentView.h"
@@ -1639,7 +1640,7 @@ void PDFWindow::OnFullScreen()
 void PDFWindow::WorkspaceActivated(int32 workspace, bool active)
 {
 #ifdef MORE_DEBUG
-	fprintf(stderr,
+	Trace(LOG_DEBUG,
 	    "%s %d %s %d %d\n",
 	    fFullScreen ? "fullscreen" : "window",
 	    workspace,

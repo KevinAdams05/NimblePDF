@@ -27,9 +27,12 @@
 #include <Debug.h>
 #include <stack>
 
+#include "Logging.h"
 #include "Annotation.h"
 
-#define LOG(text)
+// Local convenience macro for the legacy LOG("string") call sites in this
+// file. Routes to the project-wide syslog logger.
+#define LOG(text) Trace(LOG_DEBUG, "%s", text)
 
 
 #define COPYN(N)                   \
@@ -124,8 +127,8 @@ void PDFFont::SetShortName(const char* name)
 
 void PDFFont::Print()
 {
-	fprintf(stderr, "Name: %s\n", GetName());
-	fprintf(stderr, "Short name: %s\n", GetShortName());
+	Trace(LOG_DEBUG, "Name: %s\n", GetName());
+	Trace(LOG_DEBUG, "Short name: %s\n", GetShortName());
 }
 
 // Implementation of PDFStandardFonts
@@ -493,36 +496,36 @@ bool Annotation::ReadPoint(Array* a, int i, PDFPoint* p)
 void Annotation::Print()
 {
 	if (is_empty_ref(fRef))
-		fprintf(stderr, "Empty Ref\n");
+		Trace(LOG_DEBUG, "Empty Ref\n");
 	else
-		fprintf(stderr, "Ref num %d gen %d\n", fRef.num, fRef.gen);
-	fprintf(stderr, "Contents:\n%s\n", GetContents()->getCString());
-	fprintf(stderr, "Date: %s\n", GetDate());
-	fprintf(stderr, "Rect: %f %f %f %f\n", GetRect()->x1, GetRect()->y1, GetRect()->x2, GetRect()->y2);
-	fprintf(stderr, "Flags: ");
+		Trace(LOG_DEBUG, "Ref num %d gen %d\n", fRef.num, fRef.gen);
+	Trace(LOG_DEBUG, "Contents:\n%s\n", GetContents()->getCString());
+	Trace(LOG_DEBUG, "Date: %s\n", GetDate());
+	Trace(LOG_DEBUG, "Rect: %f %f %f %f\n", GetRect()->x1, GetRect()->y1, GetRect()->x2, GetRect()->y2);
+	Trace(LOG_DEBUG, "Flags: ");
 	if (GetFlags()->Invisible())
-		fprintf(stderr, "Invisible, ");
+		Trace(LOG_DEBUG, "Invisible, ");
 	if (GetFlags()->Hidden())
-		fprintf(stderr, "Hidden, ");
+		Trace(LOG_DEBUG, "Hidden, ");
 	if (GetFlags()->Print())
-		fprintf(stderr, "Print, ");
+		Trace(LOG_DEBUG, "Print, ");
 	if (GetFlags()->NoZoom())
-		fprintf(stderr, "NoZoom, ");
+		Trace(LOG_DEBUG, "NoZoom, ");
 	if (GetFlags()->NoRotate())
-		fprintf(stderr, "NoRotate, ");
+		Trace(LOG_DEBUG, "NoRotate, ");
 	if (GetFlags()->NoView())
-		fprintf(stderr, "NoView, ");
+		Trace(LOG_DEBUG, "NoView, ");
 	if (GetFlags()->ReadOnly())
-		fprintf(stderr, "ReadOnly, ");
-	fprintf(stderr, "\n");
-	fprintf(stderr, "HasAppearanceStream: %s\n", HasAppearanceStream() ? "true" : "false");
-	fprintf(stderr, "Color: %d %d %d\n", int(GetColor()->r * 255), int(GetColor()->g * 255), int(GetColor()->b * 255));
-	fprintf(stderr, "Color: %f %f %f\n", float(GetColor()->r), float(GetColor()->g), float(GetColor()->b));
-	fprintf(stderr, "Opacity: %d\n", int(GetOpacity() * 255));
-	fprintf(stderr, "\n");
-	fprintf(stderr, "Title: %s\n", GetTitle() ? GetTitle()->getCString() : "NULL");
+		Trace(LOG_DEBUG, "ReadOnly, ");
+	Trace(LOG_DEBUG, "\n");
+	Trace(LOG_DEBUG, "HasAppearanceStream: %s\n", HasAppearanceStream() ? "true" : "false");
+	Trace(LOG_DEBUG, "Color: %d %d %d\n", int(GetColor()->r * 255), int(GetColor()->g * 255), int(GetColor()->b * 255));
+	Trace(LOG_DEBUG, "Color: %f %f %f\n", float(GetColor()->r), float(GetColor()->g), float(GetColor()->b));
+	Trace(LOG_DEBUG, "Opacity: %d\n", int(GetOpacity() * 255));
+	Trace(LOG_DEBUG, "\n");
+	Trace(LOG_DEBUG, "Title: %s\n", GetTitle() ? GetTitle()->getCString() : "NULL");
 	if (fPopup) {
-		fprintf(stderr, "---Popup:\n");
+		Trace(LOG_DEBUG, "---Popup:\n");
 		fPopup->Print();
 	}
 }
@@ -630,10 +633,10 @@ TextAnnot::TextAnnot(Dict* d)
 
 void TextAnnot::Print()
 {
-	fprintf(stderr, "Text\n");
+	Trace(LOG_DEBUG, "Text\n");
 	Annotation::Print();
-	fprintf(stderr, "Name: %s\n", GetName());
-	fprintf(stderr, "Open: %s\n", IsOpen() ? "true" : "false");
+	Trace(LOG_DEBUG, "Name: %s\n", GetName());
+	Trace(LOG_DEBUG, "Open: %s\n", IsOpen() ? "true" : "false");
 }
 
 LinkAnnot::LinkAnnot(LinkAnnot* copy)
@@ -660,7 +663,7 @@ LinkAnnot::LinkAnnot(Dict* d)
 
 void LinkAnnot::Print()
 {
-	fprintf(stderr, "Link\n");
+	Trace(LOG_DEBUG, "Link\n");
 	Annotation::Print();
 }
 
@@ -777,16 +780,16 @@ FreeTextAnnot::FreeTextAnnot(Dict* d, BePDFAcroForm* acroForm)
 
 void FreeTextAnnot::Print()
 {
-	fprintf(stderr, "FreeText\n");
+	Trace(LOG_DEBUG, "FreeText\n");
 	Annotation::Print();
-	fprintf(stderr, "Appearance: %s\n", GetAppearance()->getCString());
-	fprintf(stderr, "Justification: %s", ToString(fJustification));
-	fprintf(stderr, "Font: ");
+	Trace(LOG_DEBUG, "Appearance: %s\n", GetAppearance()->getCString());
+	Trace(LOG_DEBUG, "Justification: %s", ToString(fJustification));
+	Trace(LOG_DEBUG, "Font: ");
 	if (fFont) {
-		fprintf(stderr, "\n");
+		Trace(LOG_DEBUG, "\n");
 		fFont->Print();
 	} else {
-		fprintf(stderr, "<null>\n");
+		Trace(LOG_DEBUG, "<null>\n");
 	}
 }
 
@@ -833,30 +836,30 @@ StyledAnnot::StyledAnnot(Dict* d)
 void StyledAnnot::Print()
 {
 	Annotation::Print();
-	fprintf(stderr, "BorderStyle:\n");
-	fprintf(stderr, "  Width: %d\n", GetBorderStyle()->GetWidth());
-	fprintf(stderr, "  Style: ");
+	Trace(LOG_DEBUG, "BorderStyle:\n");
+	Trace(LOG_DEBUG, "  Width: %d\n", GetBorderStyle()->GetWidth());
+	Trace(LOG_DEBUG, "  Style: ");
 	switch (GetBorderStyle()->GetStyle()) {
 	case BorderStyle::solid_style:
-		fprintf(stderr, "solid");
+		Trace(LOG_DEBUG, "solid");
 		break;
 	case BorderStyle::dashed_style:
-		fprintf(stderr, "dashed");
+		Trace(LOG_DEBUG, "dashed");
 		break;
 	case BorderStyle::beveled_style:
-		fprintf(stderr, "beveled");
+		Trace(LOG_DEBUG, "beveled");
 		break;
 	case BorderStyle::inset_style:
-		fprintf(stderr, "inset");
+		Trace(LOG_DEBUG, "inset");
 		break;
 	case BorderStyle::underline_style:
-		fprintf(stderr, "underline");
+		Trace(LOG_DEBUG, "underline");
 		break;
 	default:
-		fprintf(stderr, "unknown");
+		Trace(LOG_DEBUG, "unknown");
 		break;
 	};
-	fprintf(stderr, "\n");
+	Trace(LOG_DEBUG, "\n");
 }
 
 // Implementation of LineAnnot
@@ -898,20 +901,20 @@ error:
 
 void LineAnnot::Print()
 {
-	fprintf(stderr, "Line\n");
+	Trace(LOG_DEBUG, "Line\n");
 	StyledAnnot::Print();
 }
 
 
 void SquareAnnot::Print()
 {
-	fprintf(stderr, "Square\n");
+	Trace(LOG_DEBUG, "Square\n");
 	StyledAnnot::Print();
 }
 
 void CircleAnnot::Print()
 {
-	fprintf(stderr, "Circle\n");
+	Trace(LOG_DEBUG, "Circle\n");
 	StyledAnnot::Print();
 }
 
@@ -980,7 +983,7 @@ MarkupAnnot::~MarkupAnnot()
 
 void MarkupAnnot::Print()
 {
-	fprintf(stderr, "Markup\n");
+	Trace(LOG_DEBUG, "Markup\n");
 	StyledAnnot::Print();
 }
 
@@ -1073,9 +1076,9 @@ StampAnnot::StampAnnot(Dict* d)
 
 void StampAnnot::Print()
 {
-	fprintf(stderr, "StampAnnot\n");
+	Trace(LOG_DEBUG, "StampAnnot\n");
 	Annotation::Print();
-	fprintf(stderr, "Name: %s\n", GetName());
+	Trace(LOG_DEBUG, "Name: %s\n", GetName());
 }
 
 // Implementation of InkAnnot
@@ -1140,7 +1143,7 @@ InkAnnot::~InkAnnot()
 
 void InkAnnot::Print()
 {
-	fprintf(stderr, "Ink\n");
+	Trace(LOG_DEBUG, "Ink\n");
 	StyledAnnot::Print();
 }
 
@@ -1169,7 +1172,7 @@ PopupAnnot::PopupAnnot(Dict* annot)
 
 void PopupAnnot::Print()
 {
-	fprintf(stderr, "Popup\n");
+	Trace(LOG_DEBUG, "Popup\n");
 	Annotation::Print();
 }
 
@@ -1220,9 +1223,9 @@ bool FileAttachmentAnnot::Save(XRef* xref, const char* file)
 
 void FileAttachmentAnnot::Print()
 {
-	fprintf(stderr, "FileAttachment\n");
+	Trace(LOG_DEBUG, "FileAttachment\n");
 	Annotation::Print();
-	fprintf(stderr, "Name: %s\n", GetName());
+	Trace(LOG_DEBUG, "Name: %s\n", GetName());
 }
 
 
@@ -1478,7 +1481,7 @@ Annotations::Annotations(Object* annots, BePDFAcroForm* acroForm)
 						fAnnots[fLength++] = a;
 					} else {
 #ifdef DEBUG
-						fprintf(stderr, "Warning: Could not parse Annotation %s\n", s);
+						Trace(LOG_WARNING, "Could not parse annotation %s", s);
 #endif
 						delete a;
 					}
@@ -1700,12 +1703,12 @@ AppearanceStringParser::AppearanceStringParser(const char* as)
 				operands.pop();
 			} else {
 #if DEBUG
-				fprintf(stderr, "AppearanceStringParser: Unsupported operand '%s'\n", s);
+				Trace(LOG_DEBUG, "AppearanceStringParser: Unsupported operand '%s'\n", s);
 #endif
 			}
 			if (!operands.empty()) {
 #if DEBUG
-				fprintf(stderr, "AppearanceStringParser: Not all operands consumed in operation '%s'!\n", s);
+				Trace(LOG_DEBUG, "AppearanceStringParser: Not all operands consumed in operation '%s'!\n", s);
 #endif
 			}
 		}

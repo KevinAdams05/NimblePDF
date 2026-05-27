@@ -26,6 +26,7 @@
 #include <Object.h>
 #include <Gfx.h>
 // BePDF
+#include "Logging.h"
 #include "BepdfApplication.h"
 #include "PDFView.h"
 #include "PrintingProgressWindow.h"
@@ -193,9 +194,6 @@ void PrintView::Draw(BRect updateRect)
 				fSliceHeight = fPageHeight - fSliceY;
 			}
 
-			// fprintf(stderr, "sliceY %d sliceHeight %d\n",
-			//	fSliceY, fSliceHeight);
-
 			if (fSliceHeight <= 0) {
 				break;
 			}
@@ -286,7 +284,7 @@ void PrintView::Print()
 				ydpi = 300;
 			}
 #ifdef MORE_DEBUG
-			fprintf(stderr, "print resolution= %d %d\n", xdpi, ydpi);
+			Trace(LOG_DEBUG, "print resolution= %d %d\n", xdpi, ydpi);
 #endif
 			if (xdpi > 0 && ydpi > 0) {
 				if (xdpi > ydpi) {
