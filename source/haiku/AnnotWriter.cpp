@@ -253,7 +253,7 @@ int AnnotWriter::Tell()
 
 // Convert xpdf Object to PDF output
 
-void AnnotWriter::InsertWhiteSpace(Object* obj)
+void AnnotWriter::InsertWhiteSpace(const Object* obj)
 {
 	bool startsWithDelimiter;
 	switch (obj->getType()) {
@@ -270,11 +270,10 @@ void AnnotWriter::InsertWhiteSpace(Object* obj)
 }
 
 
-void AnnotWriter::WriteObject(Object* obj)
+void AnnotWriter::WriteObject(const Object* obj)
 {
 	ASSERT(fFile != NULL);
 	int i;
-	Object o;
 	GooString* s = NULL;
 
 	switch (obj->getType()) {
@@ -311,7 +310,7 @@ void AnnotWriter::WriteObject(Object* obj)
 	case objArray:
 		Write("[");
 		for (i = 0; i < obj->arrayGetLength(); i++) {
-			o = obj->arrayGetNF(i);
+			const Object& o = obj->arrayGetNF(i);
 			if (i > 0)
 				InsertWhiteSpace(&o);
 			WriteObject(&o);
@@ -324,7 +323,7 @@ void AnnotWriter::WriteObject(Object* obj)
 			if (i > 0)
 				WriteCr();
 			fprintf(fFile, "/%s", obj->dictGetKey(i));
-			o = obj->dictGetValNF(i);
+			const Object& o = obj->dictGetValNF(i);
 			InsertWhiteSpace(&o);
 			WriteObject(&o);
 		}
@@ -407,11 +406,9 @@ void AnnotWriter::CopyDict(Object* in, Object* out, const char* excludeKeys[])
 	out->initDict(fXRef);
 	int n = in->dictGetLength();
 	for (int i = 0; i < n; i++) {
-		char* key = in->dictGetKey(i);
+		const char* key = in->dictGetKey(i);
 		if (excludeKeys == NULL || !IsInList(key, excludeKeys)) {
-			Object val;
-			val = in->dictGetValNF(i);
-			out->dictAdd(key, std::move(val));
+			out->dictAdd(key, in->dictGetValNF(i).copy());
 		}
 	}
 }
@@ -422,9 +419,8 @@ Ref AnnotWriter::GetModDateRef(Ref infoDictRef)
 {
 	Ref dateRef = empty_ref;
 	if (!is_empty_ref(infoDictRef)) {
-		Object ref, dict;
-		ref = Object(Ref{infoDictRef.num, infoDictRef.gen});
-		ref.fetch(fXRef, &dict);
+		Object ref = Object(Ref{infoDictRef.num, infoDictRef.gen});
+		Object dict = ref.fetch(fXRef);
 		if (dict.isDict())
 			HasRef(&dict, "ModDate", dateRef);
 	}
@@ -558,9 +554,9 @@ bool AnnotWriter::CopyPage(Object* page, Ref pageRef, Ref arrayRef)
 bool AnnotWriter::UpdatePage(int pageNo, Annotations* annots, Ref& annotArray)
 {
 	bool ok = false;
-	Object page;
 	Ref* pageRef = fDoc->getCatalog()->getPageRef(pageNo + 1);
-	if (!fXRef->fetch(pageRef->num, pageRef->gen, &page)->isNull()) {
+	Object page = fXRef->fetch(pageRef->num, pageRef->gen);
+	if (!page.isNull()) {
 		if (HasAnnotRef(&page, annotArray))
 			return true;
 		annotArray = fXRefTable.GetNewRef(xrefEntryUncompressed);
@@ -926,8 +922,8 @@ void AnnotWriter::DoMarkupAnnot(MarkupAnnot* m)
 		for (int j = 0; j < 4; j++) {
 			PDFPoint p = (*q)[j];
 			Object val;
-			array.arrayAdd(val = Object(static_cast<double>(p.x)));
-			array.arrayAdd(val = Object(static_cast<double>(p.y)));
+			array.arrayAdd(Object(static_cast<double>(p.x)));
+			array.arrayAdd(Object(static_cast<double>(p.y)));
 		}
 	}
 	fAnnot.dictAdd("QuadPoints", std::move(array));
@@ -987,10 +983,10 @@ void AnnotWriter::DoLine(LineAnnot* a)
 	array = Object(new Array(fXRef));
 	Object val;
 	PDFPoint* line = a->GetLine();
-	array.arrayAdd(val = Object(static_cast<double>(line[0].x)));
-	array.arrayAdd(val = Object(static_cast<double>(line[0].y)));
-	array.arrayAdd(val = Object(static_cast<double>(line[1].x)));
-	array.arrayAdd(val = Object(static_cast<double>(line[1].y)));
+	array.arrayAdd(Object(static_cast<double>(line[0].x)));
+	array.arrayAdd(Object(static_cast<double>(line[0].y)));
+	array.arrayAdd(Object(static_cast<double>(line[1].x)));
+	array.arrayAdd(Object(static_cast<double>(line[1].y)));
 	fAnnot.dictAdd("L", std::move(array));
 }
 
@@ -1201,7 +1197,7 @@ void AnnotWriter::UpdateBePDFAcroForm()
 		Object ref;
 		Object oldForm;
 		ref = Object(Ref{fBePDFAcroFormRef.num, fBePDFAcroFormRef.gen});
-		ref.fetch(fXRef, &oldForm);
+		oldForm = ref.fetch(fXRef);
 		CopyDict(&oldForm, &acroForm, acroFormExcludeKeys);
 		oldDR = oldForm.dictLookup("DR");
 	}
@@ -1236,7 +1232,7 @@ void AnnotWriter::UpdateCatalog()
 	root.num = fXRef->getRootNum();
 	root.gen = fXRef->getRootGen();
 	oldCatalogRef = Object(Ref{root.num, root.gen});
-	oldCatalogRef.fetch(fXRef, &oldCatalog);
+	oldCatalog = oldCatalogRef.fetch(fXRef);
 	catalog = Object(new Dict(fXRef));
 	CopyDict(&oldCatalog, &catalog);
 	AddRef(&catalog, "BePDFAcroForm", fBePDFAcroFormRef);

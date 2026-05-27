@@ -134,8 +134,8 @@ class AnnotWriter : public AnnotVisitor {
 	void WriteCr();
 	void WriteCrLf();
 	int Tell();
-	void InsertWhiteSpace(Object* o);
-	void WriteObject(Object* o);
+	void InsertWhiteSpace(const Object* o);
+	void WriteObject(const Object* o);
 	void WriteObject(Ref ref, Object* obj, GooString* stream = NULL);
 	bool IsInList(const char* s, const char* list[]);
 	void CopyDict(Object* in, Object* out, const char* excludeKeys[] = NULL);
