@@ -1089,7 +1089,7 @@ InkAnnot::InkAnnot(Dict* d)
 	Object obj;
 	if ((obj = d->lookup("InkList")).isArray()) {
 		Array* a = obj.getArray();
-		fLength = a->size();
+		fLength = a->getLength();
 		fInkList = new PDFPoints[fLength];
 		for (int i = 0; i < fLength; i++) {
 			PDFPoints* p = PathAt(i);
@@ -1278,7 +1278,7 @@ BePDFAcroForm::BePDFAcroForm(XRef* xref, Object* acroFormRef)
 		Object obj2;
 		if ((obj2 = resources->lookup("Font")).isDict()) {
 			Dict* font = obj2.getDict();
-			for (int i = 0; i < font->size(); i++) {
+			for (int i = 0; i < font->getLength(); i++) {
 				Object obj3, obj4;
 				if (font->getVal(i, &obj3) && obj3.isDict() && font->getValNF(i, &obj4) && obj4.isRef()) {
 					ParseFont(font->getKey(i), obj4.getRef(), obj3.getDict());

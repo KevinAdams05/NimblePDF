@@ -365,7 +365,7 @@ void FileInfoWindow::Refresh(BEntry* file, PDFDoc* doc, int page)
 		CreateProperty(document, dict, creationDateKey, B_TRANSLATE("Created:"));
 		CreateProperty(document, dict, modDateKey, B_TRANSLATE("Modified:"));
 
-		for (int i = 0; i < dict->size(); i++) {
+		for (int i = 0; i < dict->getLength(); i++) {
 			if (!IsSystemKey(dict->getKey(i))) {
 				BString title(dict->getKey(i));
 				title << ":";

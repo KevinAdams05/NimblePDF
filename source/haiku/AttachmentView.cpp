@@ -186,11 +186,11 @@ void AttachmentView::Fill(XRef* xref, PDFDoc* doc)
 	fXRef = xref;
 	Catalog* catalog = doc->getCatalog();
 	fDoc = doc;
-	if (catalog->getNumEmbeddedFiles() == 0) {
+	if (catalog->numEmbeddedFiles() == 0) {
 		// add empty item
 		Empty();
 	} else {
-		for (int i = 0; i < catalog->getNumEmbeddedFiles(); i++) {
+		for (int i = 0; i < catalog->numEmbeddedFiles(); i++) {
 			BString str;
 			char buf[4];
 			for (int j = 0; j < catalog->getEmbeddedFileNameLength(i); j++) {

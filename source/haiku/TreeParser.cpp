@@ -27,7 +27,7 @@
 /* TreeParser */
 bool TreeParser::ParseEntries(Array* entries)
 {
-	int len = entries->size();
+	int len = entries->getLength();
 	bool ok = true;
 	for (int i = 0; ok && i < len; i++) {
 		Object key = entries->get(i);
@@ -47,7 +47,7 @@ bool TreeParser::ParseEntries(Array* entries)
 
 bool TreeParser::ParseKids(Array* kids)
 {
-	int len = kids->size();
+	int len = kids->getLength();
 	Object kid;
 	Object sub;
 	bool ok = true;

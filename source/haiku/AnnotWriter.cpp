@@ -36,8 +36,8 @@
 
 XRefTable::XRefTable(XRef* xref)
     : fXRef(xref),
-      fLength(xref->getSize() + INITIAL_INCREMENT),
-      fSize(xref->getSize()),
+      fLength(xref->getNumObjects() + INITIAL_INCREMENT),
+      fSize(xref->getNumObjects()),
       fEntries((XRefEntry*)malloc(sizeof(XRefEntry) * fLength))
 {
 	for (int i = 0; i < fSize; i++) {
@@ -103,7 +103,7 @@ Ref XRefTable::ActivateUnusedEntry(XRefEntryType type)
 		prev->offset = cur->offset;
 		// mark entry as used
 		cur->type = type;
-		cur->offset = (Guint)-1;
+		cur->offset = (unsigned int)-1;
 		return ref;
 	} else {
 		return empty_ref;
@@ -124,7 +124,7 @@ int XRefTable::GetSize()
 bool XRefTable::HasChanged(int num)
 {
 	ASSERT(InRange(num));
-	if (num >= fXRef->getSize())
+	if (num >= fXRef->getNumObjects())
 		return true;
 	if (num == 0)
 		return true;
@@ -151,7 +151,7 @@ Ref XRefTable::AppendNewRef(XRefEntryType type)
 	ref.gen = 0;
 	Resize(fSize + 1);
 	XRefEntry* e = GetXRef(ref.num);
-	e->offset = (Guint)-1;
+	e->offset = (unsigned int)-1;
 	e->gen = ref.gen;
 	e->type = type;
 	return ref;
