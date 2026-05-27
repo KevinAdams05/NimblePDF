@@ -656,11 +656,15 @@ LinkAnnot::LinkAnnot(Dict* d)
 	Object obj;
 
 	// look for destination
+	//
+	// Poppler's parseDest/parseAction return unique_ptr<LinkAction>; we
+	// release ownership to fLinkAction (raw pointer member). BePDF
+	// already owned/freed this pointer manually.
 	if (!(obj = d->lookup("Dest")).isNull()) {
-		fLinkAction = LinkAction::parseDest(&obj);
+		fLinkAction = LinkAction::parseDest(&obj).release();
 		// look for action
 	} else if ((obj = d->lookup("A")).isDict()) {
-		fLinkAction = LinkAction::parseAction(&obj /*, baseURI*/);
+		fLinkAction = LinkAction::parseAction(&obj /*, baseURI*/).release();
 	}
 }
 

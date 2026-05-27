@@ -1336,9 +1336,9 @@ bool PDFView::IsLinkToPDF(LinkAction* action, BString* path)
 		dest = NULL;
 		namedDest = NULL;
 		if ((dest = ((LinkGoToR*)action)->getDest()))
-			dest = dest->copy();
+			dest = dest->copy().release();
 		else if ((namedDest = ((LinkGoToR*)action)->getNamedDest()))
-			namedDest = namedDest->copy();
+			namedDest = namedDest->copy().release();
 		s = ((LinkGoToR*)action)->getFileName()->c_str();
 		if (isAbsolutePath(s))
 			fileName = new GooString(s);
@@ -1352,7 +1352,7 @@ bool PDFView::IsLinkToPDF(LinkAction* action, BString* path)
 		s = fileName->c_str();
 		if (!strcmp(s + fileName->size() - 4, ".pdf") || !strcmp(s + fileName->size() - 4, ".PDF")) {
 			if (isAbsolutePath(s))
-				fileName = fileName->copy();
+				fileName = fileName->copy().release();
 			else
 				fileName = appendToPath(grabPath(fDoc->getFileName()->c_str()), s);
 			*path = fileName->c_str();
@@ -1406,9 +1406,9 @@ bool PDFView::HandleLink(BPoint point)
 				dest = NULL;
 				namedDest = NULL;
 				if ((dest = ((LinkGoTo*)action)->getDest()))
-					dest = dest->copy();
+					dest = dest->copy().release();
 				else if ((namedDest = ((LinkGoTo*)action)->getNamedDest()))
-					namedDest = namedDest->copy();
+					namedDest = namedDest->copy().release();
 			}
 			if (namedDest) {
 				dest = fDoc->findDest(namedDest);
@@ -1427,7 +1427,7 @@ bool PDFView::HandleLink(BPoint point)
 			// Launch action
 		case actionLaunch: {
 			fileName = ((LinkLaunch*)action)->getFileName();
-			fileName = fileName->copy();
+			fileName = fileName->copy().release();
 			if (((LinkLaunch*)action)->getParams()) {
 				fileName->append(' ');
 				fileName->append(((LinkLaunch*)action)->getParams());

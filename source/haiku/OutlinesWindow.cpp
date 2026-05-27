@@ -215,9 +215,12 @@ void OutlinesView::ReadOutlines(Object* o, uint32 level)
 				if (dest.isName()) {
 					item->SetLink(new GooString(dest.getName()));
 				} else if (dest.isArray()) {
-					item->SetLink(new LinkDest(dest.getArray()));
+					// Poppler's LinkDest takes `const Array&`, not Array*.
+					item->SetLink(new LinkDest(*dest.getArray()));
 				} else if (dest.isString()) {
-					item->SetLink(dest.getString()->copy());
+					// GooString::copy() returns unique_ptr<GooString>;
+					// release ownership to the raw pointer SetLink takes.
+					item->SetLink(dest.getString()->copy().release());
 				}
 			}
 
@@ -231,9 +234,9 @@ void OutlinesView::ReadOutlines(Object* o, uint32 level)
 					if (dest.isName()) {
 						item->SetLink(new GooString(dest.getName()));
 					} else if (dest.isArray()) {
-						item->SetLink(new LinkDest(dest.getArray()));
+						item->SetLink(new LinkDest(*dest.getArray()));
 					} else if (dest.isString()) {
-						item->SetLink(dest.getString()->copy());
+						item->SetLink(dest.getString()->copy().release());
 					}
 				}
 			}
