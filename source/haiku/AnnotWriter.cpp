@@ -235,7 +235,7 @@ void AnnotWriter::Write(const char* s)
 
 void AnnotWriter::Write(GooString* s)
 {
-	fwrite(s->c_str(), s->getLength(), 1, fFile);
+	fwrite(s->c_str(), s->size(), 1, fFile);
 }
 
 void AnnotWriter::Write(Ref r)

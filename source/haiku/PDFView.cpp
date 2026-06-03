@@ -263,11 +263,11 @@ bool PDFView::OpenFile(entry_ref* ref, const char* ownerPassword, const char* us
 	if (ownerStr != NULL) {
 		// GooString's copy ctor is deleted in poppler 23.12, so construct
 		// the optional's value in place from the C-string contents.
-		owner.emplace(ownerStr->c_str(), ownerStr->getLength());
+		owner.emplace(ownerStr->c_str(), ownerStr->size());
 		delete ownerStr;
 	}
 	if (userStr != NULL) {
-		user.emplace(userStr->c_str(), userStr->getLength());
+		user.emplace(userStr->c_str(), userStr->size());
 		delete userStr;
 	}
 
@@ -1380,7 +1380,7 @@ bool PDFView::IsLinkToPDF(LinkAction* action, BString* path)
 	} else if (action->getKind() == actionLaunch) {
 		const GooString* launchName = ((LinkLaunch*)action)->getFileName();
 		s = launchName->c_str();
-		int len = launchName->getLength();
+		int len = launchName->size();
 		if (len >= 4 && (!strcmp(s + len - 4, ".pdf") || !strcmp(s + len - 4, ".PDF"))) {
 			if (isAbsolutePath(s))
 				fileName = launchName->copy();  // returns owned GooString*
@@ -2587,12 +2587,12 @@ void PDFView::ShowAnnotWindow(bool editable, bool updateOnly)
 	char buffer[80];
 	const char* d = to_date(annotation->GetDate(), buffer);
 	if (annotation->GetTitle()) {
-		label = TextToUtf8(annotation->GetTitle()->c_str(), annotation->GetTitle()->getLength());
+		label = TextToUtf8(annotation->GetTitle()->c_str(), annotation->GetTitle()->size());
 	} else {
 		label = new BString();
 	}
 	date = TextToUtf8(d, strlen(d));
-	contents = TextToUtf8(annotation->GetContents()->c_str(), annotation->GetContents()->getLength());
+	contents = TextToUtf8(annotation->GetContents()->c_str(), annotation->GetContents()->size());
 	AnnotationWindow* w = NULL;
 	PDFWindow* win = GetPDFWindow();
 	if (win) {
