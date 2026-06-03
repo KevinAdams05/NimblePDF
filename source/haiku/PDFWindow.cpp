@@ -254,10 +254,8 @@ void PDFWindow::UpdatePageList()
 {
 	gPdfLock->Lock();
 	PageLabels labels(fMainView->GetNumPages() - 1);
-	Object catDict;
-	fMainView->GetPDFDoc()->getXRef()->getCatalog(&catDict);
-	Object* pageLabels = new Object;
-	catDict.dictLookup("PageLabels", pageLabels);
+	Object catDict = fMainView->GetPDFDoc()->getXRef()->getCatalog();
+	Object* pageLabels = new Object(catDict.dictLookup("PageLabels"));
 	if (labels.Parse(pageLabels)) {
 		labels.Replace(fPagesView);
 	}

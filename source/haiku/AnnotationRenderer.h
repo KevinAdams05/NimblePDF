@@ -70,7 +70,7 @@ class AnnotationRenderer : public AnnotVisitor {
 	float LayoutText(BString* text, BFont font, free_text_justification justification, BRect bounds, bool draw);
 
 public:
-	AnnotationRenderer(BView* v, double* ctm, int zoom, bool edit);
+	AnnotationRenderer(BView* v, const double* ctm, int zoom, bool edit);
 	~AnnotationRenderer();
 
 	static rgb_color GetColor(GfxRGB* c, double opacity = 1);

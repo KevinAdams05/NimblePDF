@@ -115,7 +115,7 @@ void PageRenderer::SetDoc(PDFDoc* doc, BePDFAcroForm* acroForm)
 	fDoc = doc;
 	fBePDFAcroForm = acroForm;
 	fAnnotations.SetSize(doc->getNumPages());
-	fOutputDev->startDoc(doc->getXRef());
+	fOutputDev->startDoc(doc);
 }
 
 void PageRenderer::SetPassword(BString* owner, BString* user)
@@ -132,7 +132,7 @@ void PageRenderer::StartDoc(color_space colorSpace)
 	fColorSpace = colorSpace;
 	if (fDoc != NULL) {
 		// flush font engine / cache
-		fOutputDev->startDoc(fDoc->getXRef());
+		fOutputDev->startDoc(fDoc);
 	}
 }
 
@@ -281,8 +281,7 @@ Annotations* PageRenderer::GetAnnotationsForPage(int pageNo)
 {
 	int i = pageNo - 1;
 	if (fAnnotations.Get(i) == NULL) {
-		Object annotsDict;
-		fDoc->getCatalog()->getPage(pageNo)->getAnnots(&annotsDict);
+		Object annotsDict = fDoc->getCatalog()->getPage(pageNo)->getAnnotsObject();
 		fAnnotations.Set(i, new Annotations(&annotsDict, fBePDFAcroForm));
 	}
 	return fAnnotations.Get(i);
@@ -320,8 +319,8 @@ void PageRenderer::DrawAnnotations()
 Links* PageRenderer::CreateLinks(int pageNo)
 {
 	Page* page = fDoc->getCatalog()->getPage(pageNo);
-	Object obj;
-	Links* links = new Links(page->getAnnots(&obj), fDoc->getCatalog()->getBaseURI());
+	// poppler 25.12: Links(Annots*); baseURI handling moved into AnnotLink.
+	Links* links = new Links(page->getAnnots());
 	return links;
 }
 

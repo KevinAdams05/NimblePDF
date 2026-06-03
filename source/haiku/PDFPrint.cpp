@@ -130,8 +130,8 @@ PrintView::PrintView(PDFView* view, PDFDoc* doc, PageRenderer* pageRenderer, BMe
 
 	fOutputDev = new BeSplashOutputDev(false, backgroundColor, false, RedrawCallback, this, colorMode);
 
-	fOutputDev->startDoc(NULL);
-	fOutputDev->startDoc(doc->getXRef());
+	fOutputDev->startDoc(nullptr);
+	fOutputDev->startDoc(doc);
 }
 
 

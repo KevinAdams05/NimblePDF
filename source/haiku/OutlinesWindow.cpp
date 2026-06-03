@@ -176,8 +176,7 @@ void OutlineListItem::SetPageNum(int pageNum)
 // Implementation of OutlinesView
 void OutlinesView::ReadOutlines(Object* o, uint32 level)
 {
-	Object* current = new Object();
-	o->copy(current);
+	Object* current = new Object(o->copy());
 	Object title;
 	Object child;
 	bool loop;

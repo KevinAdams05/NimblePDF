@@ -145,7 +145,7 @@ void AnnotationRenderer::SetPenSize(int w)
 	fView->SetPenSize(CvtUserToDev(w));
 }
 
-AnnotationRenderer::AnnotationRenderer(BView* v, double* ctm, int zoom, bool edit)
+AnnotationRenderer::AnnotationRenderer(BView* v, const double* ctm, int zoom, bool edit)
     : fView(v),
       fZoom(zoom),
       fEdit(edit)

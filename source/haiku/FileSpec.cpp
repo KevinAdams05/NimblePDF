@@ -96,11 +96,11 @@ bool FileSpec::ReadEmbeddedFileRef(Dict* fileSpec)
 	Object obj;
 	if (!(obj = fileSpec->lookup("EF")).isNull() && obj.isDict()) {
 		for (int i = 0; (!found) && gFileAttachmentFileNameKeys[i] != NULL; i++) {
-			Object stream;
-			char* key = gFileAttachmentFileNameKeys[i];
+			const char* key = gFileAttachmentFileNameKeys[i];
 			// Is there a reference to a stream?
 			// We do not test here if the stream really exists!
-			if (obj.dictLookupNF(key, &stream) != NULL && stream.isRef()) {
+			const Object& stream = obj.dictLookupNF(key);
+			if (stream.isRef()) {
 				fRef = stream.getRef();
 				found = true; // leave for loop
 			}
