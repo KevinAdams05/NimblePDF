@@ -34,7 +34,9 @@ CachedPage::CachedPage()
 CachedPage::~CachedPage()
 {
 	delete fBitmap;
-	delete fText;
+	// poppler TextPage has a private dtor and is reference-counted.
+	if (fText)
+		fText->decRefCnt();
 	delete fLinks;
 }
 
@@ -125,7 +127,11 @@ bool CachedPage::FindText(Unicode* s,
 GooString* CachedPage::GetText(int xMin, int yMin, int xMax, int yMax)
 {
 	if (fText) {
-		return fText->getText((double)xMin, (double)yMin, (double)xMax, (double)yMax);
+		// poppler 25.12: TextPage::getText returns GooString by value and
+		// takes an EndOfLineKind. Wrap a heap copy to keep the GooString*
+		// contract callers expect.
+		return new GooString(fText->getText((double)xMin, (double)yMin,
+			(double)xMax, (double)yMax, eolUnix));
 	} else {
 		return NULL;
 	}
@@ -143,7 +149,8 @@ void CachedPage::MakeEmpty()
 {
 	delete fLinks;
 	fLinks = NULL;
-	delete fText;
+	if (fText)
+		fText->decRefCnt();
 	fText = NULL;
 	// don't delete fBitmap
 }

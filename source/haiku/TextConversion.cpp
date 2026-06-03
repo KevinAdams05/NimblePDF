@@ -136,7 +136,7 @@ Unicode* Utf8ToUnicode(const char* string, int32* length)
 		uchar low;
 		uchar high;
 	};
-	Char* ucs2Ptr = reinterpret_cast<Char*>(ucs2->c_str());
+	const Char* ucs2Ptr = reinterpret_cast<const Char*>(ucs2->c_str());
 	for (int i = 0; i < *length; i++) {
 		unicode[i] = 256 * ucs2Ptr[i].low + ucs2Ptr[i].high;
 	}

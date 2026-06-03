@@ -130,9 +130,9 @@ int32 FindThread::Run()
 
 	if (!onePageOnly) {
 		// search following/previous pages
-		TextOutputControl control;
-		control.mode = textOutPhysLayout;
-		textOut = new TextOutputDev(NULL, &control, false);
+		// poppler 25.12: no TextOutputControl; headless text-extraction ctor
+		// (fileName=nullptr, physLayout, fixedPitch=0, rawOrder=false, append=false).
+		textOut = new TextOutputDev(nullptr, true, 0, false, false);
 		if (!textOut->isOk()) {
 			delete textOut;
 			goto notFound;
