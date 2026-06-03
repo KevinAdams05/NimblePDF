@@ -1697,7 +1697,7 @@ AppearanceStringParser::AppearanceStringParser(const char* as)
 
 bool AnnotUtils::InUCS2(const GooString* s)
 {
-	if (s->size() < 2) {
+	if (s->getLength() < 2) {
 		return false;
 	}
 	const unsigned char* t = (const unsigned char*)s->c_str();
@@ -1707,7 +1707,7 @@ bool AnnotUtils::InUCS2(const GooString* s)
 GooString* AnnotUtils::EscapeString(const GooString* text)
 {
 	const char* t = text->c_str();
-	int len = text->size();
+	int len = text->getLength();
 	GooString* s = new GooString();
 	while (len > 0) {
 		len--;

@@ -82,7 +82,7 @@ bool TextToUtf8(GooString* string, BString* result)
 		return false;
 	}
 
-	BString* utf8 = TextToUtf8(string->c_str(), string->size());
+	BString* utf8 = TextToUtf8(string->c_str(), string->getLength());
 	if (utf8 == NULL) {
 		return false;
 	}
@@ -126,7 +126,7 @@ Unicode* Utf8ToUnicode(const char* string, int32* length)
 		return NULL;
 	}
 
-	*length = ucs2->size() / 2;
+	*length = ucs2->getLength() / 2;
 	Unicode* unicode = new Unicode[*length];
 	if (unicode == NULL) {
 		return NULL;

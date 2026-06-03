@@ -111,7 +111,7 @@ bool FileSpec::ReadEmbeddedFileRef(Dict* fileSpec)
 
 bool FileSpec::IsValid()
 {
-	return fFileName.size() > 0 && !is_empty_ref(fRef);
+	return fFileName.getLength() > 0 && !is_empty_ref(fRef);
 }
 
 GooString* FileSpec::GetDescription()
