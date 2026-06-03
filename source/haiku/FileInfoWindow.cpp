@@ -203,7 +203,7 @@ bool FileInfoWindow::AddFont(BList* list, GfxFont* font)
 	return true;
 }
 
-static void GetGString(BString& s, GooString* g)
+static void GetGString(BString& s, const std::optional<std::string>& g)
 {
 	if (g) {
 		BString* utf8 = TextToUtf8(g->c_str(), g->size());
@@ -314,12 +314,12 @@ void FileInfoWindow::QueryFonts(PDFDoc* doc, int page)
 				Object obj2 = obj1.fetch(doc->getXRef());
 				if (obj2.isDict()) {
 					Ref r = obj1.getRef();
-					GfxFontDict* gfxFontDict = new GfxFontDict(doc->getXRef(), &r, obj2.getDict());
+					GfxFontDict* gfxFontDict = new GfxFontDict(doc->getXRef(), r, obj2.getDict());
 					for (int i = 0; i < gfxFontDict->getNumFonts(); i++) {
-						GfxFont* font = gfxFontDict->getFont(i);
-						if (font != NULL && AddFont(&fontList, font)) {
+						const std::shared_ptr<GfxFont>& font = gfxFontDict->getFont(i);
+						if (font && AddFont(&fontList, font.get())) {
 							Lock();
-							fFontList->AddRow(FileInfoWindow::FontItem(font));
+							fFontList->AddRow(FileInfoWindow::FontItem(font.get()));
 							Unlock();
 						}
 					}
@@ -352,8 +352,8 @@ void FileInfoWindow::Refresh(BEntry* file, PDFDoc* doc, int page)
 		AddPair(document, new BStringView("", B_TRANSLATE("Path:")), new BStringView("", path.Path()));
 	}
 
-	Object obj;
-	if (doc->getDocInfo(&obj) && obj.isDict()) {
+	Object obj = doc->getDocInfo();
+	if (obj.isDict()) {
 		Dict* dict = obj.getDict();
 
 		CreateProperty(document, dict, titleKey, B_TRANSLATE("Title:"));
@@ -375,7 +375,7 @@ void FileInfoWindow::Refresh(BEntry* file, PDFDoc* doc, int page)
 	}
 
 	char ver[80];
-	sprintf(ver, "%.1f", doc->getPDFVersion());
+	sprintf(ver, "%d.%d", doc->getPDFMajorVersion(), doc->getPDFMinorVersion());
 	AddPair(document, new BStringView("", B_TRANSLATE("Version:")), new BStringView("", ver));
 
 	AddPair(document, new BStringView("", B_TRANSLATE("Linearized:")), new BStringView("", YesNo(doc->isLinearized())));

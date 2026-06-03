@@ -68,7 +68,7 @@ class FileInfoWindow : public BWindow {
 	struct Font {
 		Ref ref;
 		BString name;
-		Font(Ref r, GooString* s)
+		Font(Ref r, const std::optional<std::string>& s)
 		{
 			ref = r;
 			if (s) {

@@ -807,11 +807,11 @@ void BepdfApplication::UpdateFileAttributes(PDFDoc* doc, entry_ref* ref)
 	UpdateAttr(node, "META:pages", B_INT32_TYPE, 0, &pages, sizeof(int32));
 	bool b = doc->isLinearized();
 	UpdateAttr(node, "PDF:linearized", B_BOOL_TYPE, 0, &b, sizeof(b));
-	double d = doc->getPDFVersion();
+	double d = doc->getPDFMajorVersion() + doc->getPDFMinorVersion() / 10.0;
 	UpdateAttr(node, "PDF:version", B_DOUBLE_TYPE, 0, &d, sizeof(d));
 
-	Object obj;
-	if (doc->getDocInfo(&obj) && obj.isDict()) {
+	Object obj = doc->getDocInfo();
+	if (obj.isDict()) {
 		Dict* dict = obj.getDict();
 		for (int i = 0; gAttrInfo[i].name; i++) {
 			time_t time;
