@@ -198,20 +198,19 @@ BepdfApplication::BepdfApplication()
 
 #include <GlobalParams.h>
 #include <goo/GooString.h>
+#include <poppler-config.h>
 #include "DisplayCIDFonts.h"
 
 static void setGlobalParameter(const char* type, const char* arg1, const char* arg2 = NULL)
 {
-	GooString line;
-	line.append(type);
-	line.append(" ");
-	line.append(arg1);
-	if (arg2 != NULL) {
-		line.append(" ");
-		line.append(arg2);
-	}
-	GooString name("BepdfApplication");
-	globalParams->parseLine(line.c_str(), &name, 0);
+	// poppler 25.12: GlobalParams has no parseLine(), and no fontDir /
+	// displayCIDFont* config — it discovers fonts via fontconfig. The xpdf
+	// config-line mechanism is gone, so this is a no-op for now.
+	// TODO(poppler-migration, phase G): register bundled fonts via
+	// GlobalParams::addFontFile and route CID fonts through fontconfig.
+	(void)type;
+	(void)arg1;
+	(void)arg2;
 }
 
 /*
@@ -279,7 +278,7 @@ void BepdfApplication::Initialize()
 
 		// record new names
 		bool foundNewName = false;
-		std::vector<GooString*>* list = getCIDToUnicodeNames(globalParams);
+		std::vector<GooString*>* list = getCIDToUnicodeNames(globalParams.get());
 		for (size_t i = 0; i < list->size(); i++) {
 			GooString* name = list->at(i);
 			if (displayNames.Contains(name->c_str())) {
@@ -299,7 +298,7 @@ void BepdfApplication::Initialize()
 
 		// set CID fonts
 		for (int i = 0; i < list->size(); i++) {
-			GooString* name = (GooString*)list->get(i);
+			GooString* name = list->at(i);
 			BString file;
 			DisplayCIDFonts::Type type;
 
@@ -315,7 +314,9 @@ void BepdfApplication::Initialize()
 			}
 		}
 
-		deleteGList(list, GooString);
+		for (GooString* s : *list)
+			delete s;
+		delete list;
 	}
 }
 
@@ -389,7 +390,7 @@ void BepdfApplication::AboutRequested()
 	str += "\n";
 
 	str +=
-	    BString().SetToFormat(B_TRANSLATE_COMMENT("BePDF is based on XPDF %s, %s.", "XPDF version, copyright"), xpdfVersion, xpdfCopyright);
+	    BString().SetToFormat(B_TRANSLATE_COMMENT("BePDF is based on poppler %s.", "poppler version"), POPPLER_VERSION);
 
 	str += GPLCopyright;
 
