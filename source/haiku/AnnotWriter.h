@@ -183,17 +183,17 @@ class AnnotWriter : public AnnotVisitor {
 	void AddToAnnots(Object* array, Annotation* a);
 	bool UpdateAnnotArray(int pageNo, Annotations* annots, Ref annotsArray);
 
-	void AddRef(Object* dict, char* key, Ref r);
-	void AddBool(Object* dict, char* key, bool b);
-	void AddName(Object* dict, char* key, char* name);
-	void AddString(Object* dict, char* key, GooString* string);
-	void AddString(Object* dict, char* key, char* string);
-	void AddInteger(Object* dict, char* key, int i);
-	void AddReal(Object* dict, char* key, double r);
+	void AddRef(Object* dict, const char* key, Ref r);
+	void AddBool(Object* dict, const char* key, bool b);
+	void AddName(Object* dict, const char* key, const char* name);
+	void AddString(Object* dict, const char* key, GooString* string);
+	void AddString(Object* dict, const char* key, const char* string);
+	void AddInteger(Object* dict, const char* key, int i);
+	void AddReal(Object* dict, const char* key, double r);
 	void AddReal(Object* array, double r);
-	void AddRect(Object* dict, char* key, PDFRectangle* rect);
-	void AddColor(Object* dict, char* key, GfxRGB* color);
-	void AddDict(Object* dict, char* key, Object* d); // does NOT copy d!!!
+	void AddRect(Object* dict, const char* key, PDFRectangle* rect);
+	void AddColor(Object* dict, const char* key, GfxRGB* color);
+	void AddDict(Object* dict, const char* key, Object* d); // does NOT copy d!!!
 	void AddAnnotSubtype(char* type);
 	void AddAnnotContents(Annotation* a);
 	bool HasAppearanceStream(Annotation* a);

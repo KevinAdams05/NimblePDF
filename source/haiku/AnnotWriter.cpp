@@ -41,7 +41,14 @@ XRefTable::XRefTable(XRef* xref)
       fEntries((XRefEntry*)malloc(sizeof(XRefEntry) * fLength))
 {
 	for (int i = 0; i < fSize; i++) {
-		fEntries[i] = *xref->getEntry(i);
+		// XRefEntry contains a non-copyable Object member, so we can't
+		// copy-assign the whole struct. XRefTable only tracks file-offset
+		// metadata; the obj field stays default-constructed (objNone).
+		XRefEntry* src = xref->getEntry(i);
+		fEntries[i].offset = src->offset;
+		fEntries[i].gen    = src->gen;
+		fEntries[i].type   = src->type;
+		fEntries[i].flags  = src->flags;
 	}
 }
 
@@ -228,7 +235,7 @@ void AnnotWriter::Write(const char* s)
 
 void AnnotWriter::Write(GooString* s)
 {
-	fwrite(s->c_str(), s->size(), 1, fFile);
+	fwrite(s->c_str(), s->getLength(), 1, fFile);
 }
 
 void AnnotWriter::Write(Ref r)
@@ -403,7 +410,7 @@ bool AnnotWriter::IsInList(const char* s, const char* list[])
 void AnnotWriter::CopyDict(Object* in, Object* out, const char* excludeKeys[])
 {
 	ASSERT(in->isDict());
-	out->initDict(fXRef);
+	*out = Object(new Dict(fXRef));
 	int n = in->dictGetLength();
 	for (int i = 0; i < n; i++) {
 		const char* key = in->dictGetKey(i);
@@ -449,7 +456,7 @@ void AnnotWriter::WriteModDate(Ref ref)
 	std::unique_ptr<GooString> date = std::make_unique<GooString>();
 	AnnotUtils::CurrentDate(date.get());
 
-	Object obj(std::move(date));
+	Object obj(date.release());
 	WriteObject(ref, &obj);
 }
 
@@ -483,8 +490,10 @@ bool AnnotWriter::WriteFileTrailer()
 	CopyDict(fXRef->getTrailerDict(), &trailer, fileTrailerExcludeKeys);
 	val = Object(fXRefTable.GetSize());
 	trailer.dictAdd("Size", std::move(val));
-	val = Object(fXRef->getLastXRefPos());
-	trailer.dictAdd("Prev", std::move(val));
+	// TODO: write /Prev entry pointing at the previous xref position.
+	// poppler 23.12 makes PDFDoc::getStartXRef() private and XRef::getLastXRefPos()
+	// is gone. Either parse `startxref` from the source PDF directly, or switch
+	// AnnotWriter to do full rewrites instead of incremental updates.
 	val = Object(Ref{fXRef->getRootNum(), fXRef->getRootGen()});
 	trailer.dictAdd("Root", std::move(val));
 	val = Object(Ref{fInfoRef.num, fInfoRef.gen});
@@ -499,15 +508,15 @@ bool AnnotWriter::WriteFileTrailer()
 bool AnnotWriter::CopyFile(const char* name)
 {
 	GooString n(name);
-	return fDoc->saveAs(&n);
+	return fDoc->saveAs(n);
 }
 
 bool AnnotWriter::HasRef(Object* dict, const char* key, Ref& ref)
 {
-	Object obj;
 	bool ok = true;
 	ASSERT(dict && dict->isDict());
-	if (dict->dictLookupNF((char*)key, &obj) && obj.isRef()) {
+	const Object& obj = dict->dictLookupNF(key);
+	if (obj.isRef()) {
 		ref = obj.getRef();
 	} else {
 		ref = empty_ref;
@@ -524,8 +533,8 @@ bool AnnotWriter::HasAnnotRef(Object* page, Ref& annotRef)
 bool AnnotWriter::HasEmbeddedContent(Object* page)
 {
 	ASSERT(page && page->isDict());
-	Object obj;
-	bool embedded = !(page->dictLookupNF("Contents", &obj) && (obj.isArray() || obj.isRef() || obj.isNull()));
+	const Object& obj = page->dictLookupNF("Contents");
+	bool embedded = !(obj.isArray() || obj.isRef() || obj.isNull());
 	return embedded;
 }
 
@@ -731,7 +740,7 @@ bool AnnotWriter::WriteTo(const char* name)
 }
 
 
-void AnnotWriter::AddRef(Object* dict, char* key, Ref ref)
+void AnnotWriter::AddRef(Object* dict, const char* key, Ref ref)
 {
 	ASSERT(dict->isDict());
 	Object n;
@@ -740,7 +749,7 @@ void AnnotWriter::AddRef(Object* dict, char* key, Ref ref)
 }
 
 
-void AnnotWriter::AddBool(Object* dict, char* key, bool b)
+void AnnotWriter::AddBool(Object* dict, const char* key, bool b)
 {
 	ASSERT(dict->isDict());
 	Object n;
@@ -749,7 +758,7 @@ void AnnotWriter::AddBool(Object* dict, char* key, bool b)
 }
 
 
-void AnnotWriter::AddName(Object* dict, char* key, char* name)
+void AnnotWriter::AddName(Object* dict, const char* key, const char* name)
 {
 	ASSERT(dict->isDict());
 	Object n;
@@ -758,7 +767,7 @@ void AnnotWriter::AddName(Object* dict, char* key, char* name)
 }
 
 
-void AnnotWriter::AddString(Object* dict, char* key, GooString* string)
+void AnnotWriter::AddString(Object* dict, const char* key, GooString* string)
 {
 	ASSERT(dict->isDict());
 	Object n(std::make_unique<GooString>(string->toStr()));
@@ -766,7 +775,7 @@ void AnnotWriter::AddString(Object* dict, char* key, GooString* string)
 }
 
 
-void AnnotWriter::AddString(Object* dict, char* key, char* string)
+void AnnotWriter::AddString(Object* dict, const char* key, const char* string)
 {
 	ASSERT(dict->isDict());
 	Object n(std::make_unique<GooString>(string));
@@ -774,7 +783,7 @@ void AnnotWriter::AddString(Object* dict, char* key, char* string)
 }
 
 
-void AnnotWriter::AddInteger(Object* dict, char* key, int i)
+void AnnotWriter::AddInteger(Object* dict, const char* key, int i)
 {
 	ASSERT(dict->isDict());
 	Object n;
@@ -783,7 +792,7 @@ void AnnotWriter::AddInteger(Object* dict, char* key, int i)
 }
 
 
-void AnnotWriter::AddReal(Object* dict, char* key, double r)
+void AnnotWriter::AddReal(Object* dict, const char* key, double r)
 {
 	ASSERT(dict->isDict());
 	Object n;
@@ -801,7 +810,7 @@ void AnnotWriter::AddReal(Object* array, double r)
 }
 
 
-void AnnotWriter::AddRect(Object* dict, char* key, PDFRectangle* rect)
+void AnnotWriter::AddRect(Object* dict, const char* key, PDFRectangle* rect)
 {
 	ASSERT(dict->isDict());
 	Object a;
@@ -814,7 +823,7 @@ void AnnotWriter::AddRect(Object* dict, char* key, PDFRectangle* rect)
 }
 
 
-void AnnotWriter::AddColor(Object* dict, char* key, GfxRGB* c)
+void AnnotWriter::AddColor(Object* dict, const char* key, GfxRGB* c)
 {
 	Object a;
 	a = Object(new Array(fXRef));
@@ -825,7 +834,7 @@ void AnnotWriter::AddColor(Object* dict, char* key, GfxRGB* c)
 }
 
 
-void AnnotWriter::AddDict(Object* dict, char* key, Object* d)
+void AnnotWriter::AddDict(Object* dict, const char* key, Object* d)
 {
 	ASSERT(dict->isDict());
 	dict->dictAdd(copyString(key), d);

@@ -22,6 +22,8 @@
 
 #include <stdio.h>
 #include <math.h>
+#include <memory>
+#include <optional>
 // BeOS
 #include <locale/Catalog.h>
 
@@ -82,6 +84,25 @@ static const int kZoomDPI[MAX_ZOOM - MIN_ZOOM + 1] = {18, 24, 36, 48, 54, 72, 90
 #define PROPERTIES_ANNOT_MSG 'prp'
 #define EDIT_ANNOT_MSG 'edit'
 #define SAVE_FILE_ATTACHMENT_ANNOT_MSG 'save'
+
+
+// Poppler 23.12 dropped these path helpers from goo/gfile.h.
+// Lightweight POSIX-only replacements local to this file.
+static bool isAbsolutePath(const char* path)
+{
+	return path != NULL && path[0] == '/';
+}
+
+static GooString* grabPath(const char* path)
+{
+	if (path == NULL)
+		return new GooString("");
+	const char* lastSlash = strrchr(path, '/');
+	if (lastSlash == NULL)
+		return new GooString("");
+	return new GooString(path, lastSlash - path);
+}
+
 
 ///////////////////////////////////////////////////////////////////////////
 PDFView::PDFView(entry_ref* ref,
@@ -211,8 +232,8 @@ void PDFView::MakeTitleString(BPath* path)
 	delete fTitle;
 	fTitle = new BString("BePDF: ");
 
-	Object obj;
-	if (fDoc->getDocInfo(&obj) && obj.isDict()) {
+	Object obj = fDoc->getDocInfo();
+	if (obj.isDict()) {
 		Dict* dict = obj.getDict();
 		BString* s = FileInfoWindow::GetProperty(dict, FileInfoWindow::titleKey);
 		if (s) {
@@ -234,13 +255,23 @@ bool PDFView::OpenFile(entry_ref* ref, const char* ownerPassword, const char* us
 	BPath path;
 	entry.GetPath(&path);
 
-	GooString* fileName = new GooString((char*)path.Path());
-	GooString* owner = ConvertPassword(ownerPassword);
-	GooString* user = ConvertPassword(userPassword);
+	auto fileName = std::make_unique<GooString>(path.Path());
+	GooString* ownerStr = ConvertPassword(ownerPassword);
+	GooString* userStr = ConvertPassword(userPassword);
+	std::optional<GooString> owner;
+	std::optional<GooString> user;
+	if (ownerStr != NULL) {
+		// GooString's copy ctor is deleted in poppler 23.12, so construct
+		// the optional's value in place from the C-string contents.
+		owner.emplace(ownerStr->c_str(), ownerStr->getLength());
+		delete ownerStr;
+	}
+	if (userStr != NULL) {
+		user.emplace(userStr->c_str(), userStr->getLength());
+		delete userStr;
+	}
 
-	PDFDoc* newDoc = new PDFDoc(fileName, owner, user, NULL);
-	delete owner;
-	delete user;
+	PDFDoc* newDoc = new PDFDoc(std::move(fileName), owner, user, nullptr);
 
 	UpdatePanelDirectory(&path);
 
@@ -1327,18 +1358,17 @@ LinkAction* PDFView::OnLink(BPoint point)
 
 bool PDFView::IsLinkToPDF(LinkAction* action, BString* path)
 {
-	LinkDest* dest = NULL;
-	GooString* namedDest = NULL;
+	const char* s;
 	GooString* fileName;
-	char* s;
 
 	if (action->getKind() == actionGoToR) {
-		dest = NULL;
-		namedDest = NULL;
-		if ((dest = ((LinkGoToR*)action)->getDest()))
-			dest = dest->copy().release();
-		else if ((namedDest = ((LinkGoToR*)action)->getNamedDest()))
-			namedDest = namedDest->copy().release();
+		// Borrowed const pointers from the action; truthy-check only.
+		// getDest()/getNamedDest()/getFileName() now all return const ptrs.
+		const LinkDest* dest = ((LinkGoToR*)action)->getDest();
+		const GooString* namedDest = (dest == NULL)
+			? ((LinkGoToR*)action)->getNamedDest() : NULL;
+		(void)dest;
+		(void)namedDest;
 		s = ((LinkGoToR*)action)->getFileName()->c_str();
 		if (isAbsolutePath(s))
 			fileName = new GooString(s);
@@ -1348,11 +1378,12 @@ bool PDFView::IsLinkToPDF(LinkAction* action, BString* path)
 		delete fileName;
 		return true;
 	} else if (action->getKind() == actionLaunch) {
-		fileName = ((LinkLaunch*)action)->getFileName();
-		s = fileName->c_str();
-		if (!strcmp(s + fileName->size() - 4, ".pdf") || !strcmp(s + fileName->size() - 4, ".PDF")) {
+		const GooString* launchName = ((LinkLaunch*)action)->getFileName();
+		s = launchName->c_str();
+		int len = launchName->getLength();
+		if (len >= 4 && (!strcmp(s + len - 4, ".pdf") || !strcmp(s + len - 4, ".PDF"))) {
 			if (isAbsolutePath(s))
-				fileName = fileName->copy().release();
+				fileName = launchName->copy();  // returns owned GooString*
 			else
 				fileName = appendToPath(grabPath(fDoc->getFileName()->c_str()), s);
 			*path = fileName->c_str();
@@ -1369,9 +1400,8 @@ bool PDFView::HandleLink(BPoint point)
 	LinkAction* action = NULL;
 	LinkActionKind kind;
 	LinkDest* dest = NULL;
-	GooString* namedDest = NULL;
+	const GooString* namedDest = NULL;
 	GooString* fileName;
-	GooString* actionName;
 	BString pdfFile;
 
 	action = OnLink(point);
@@ -1405,14 +1435,17 @@ bool PDFView::HandleLink(BPoint point)
 			if (kind == actionGoTo) {
 				dest = NULL;
 				namedDest = NULL;
-				if ((dest = ((LinkGoTo*)action)->getDest()))
-					dest = dest->copy().release();
-				else if ((namedDest = ((LinkGoTo*)action)->getNamedDest()))
-					namedDest = namedDest->copy().release();
+				const LinkDest* borrowedDest = ((LinkGoTo*)action)->getDest();
+				if (borrowedDest != NULL) {
+					// Copy-construct via implicit copy ctor; we own this.
+					dest = new LinkDest(*borrowedDest);
+				} else {
+					namedDest = ((LinkGoTo*)action)->getNamedDest();
+				}
 			}
 			if (namedDest) {
-				dest = fDoc->findDest(namedDest);
-				delete namedDest;
+				dest = fDoc->findDest(namedDest).release();
+				// namedDest was a borrowed const ptr; no delete.
 			}
 			if (!dest) {
 				if (kind == actionGoToR)
@@ -1426,11 +1459,12 @@ bool PDFView::HandleLink(BPoint point)
 
 			// Launch action
 		case actionLaunch: {
-			fileName = ((LinkLaunch*)action)->getFileName();
-			fileName = fileName->copy().release();
-			if (((LinkLaunch*)action)->getParams()) {
+			const GooString* origName = ((LinkLaunch*)action)->getFileName();
+			fileName = origName->copy();  // returns owned GooString*
+			const GooString* params = ((LinkLaunch*)action)->getParams();
+			if (params != NULL) {
 				fileName->append(' ');
-				fileName->append(((LinkLaunch*)action)->getParams());
+				fileName->append(params);
 			}
 
 			fileName->append(" &");
@@ -1449,36 +1483,37 @@ bool PDFView::HandleLink(BPoint point)
 		// URI action
 		case actionURI:
 			if (GetPDFWindow()) {
-				GetPDFWindow()->LaunchHTMLBrowser(((LinkURI*)action)->getURI()->c_str());
+				GetPDFWindow()->LaunchHTMLBrowser(((LinkURI*)action)->getURI().c_str());
 			}
 			return true;
 
 		// Named action
-		case actionNamed:
-			actionName = ((LinkNamed*)action)->getName();
-			if (!actionName->cmp("NextPage")) {
+		case actionNamed: {
+			const std::string& actionName = ((LinkNamed*)action)->getName();
+			if (actionName == "NextPage") {
 				MoveToPage(fCurrentPage + 1);
-			} else if (!actionName->cmp("PrevPage")) {
+			} else if (actionName == "PrevPage") {
 				MoveToPage(fCurrentPage - 1);
-			} else if (!actionName->cmp("FirstPage")) {
+			} else if (actionName == "FirstPage") {
 				MoveToPage(1);
-			} else if (!actionName->cmp("LastPage")) {
+			} else if (actionName == "LastPage") {
 				MoveToPage(GetNumPages());
-			} else if (!actionName->cmp("GoBack")) {
+			} else if (actionName == "GoBack") {
 				Back();
-			} else if (!actionName->cmp("GoForward")) {
+			} else if (actionName == "GoForward") {
 				Forward();
-			} else if (!actionName->cmp("Quit")) {
+			} else if (actionName == "Quit") {
 				Window()->PostMessage(B_QUIT_REQUESTED);
 			} else {
-				// error(-1, "Unknown named action: '%s'", actionName->c_str());
+				// error(-1, "Unknown named action: '%s'", actionName.c_str());
 			}
 			break;
+		}
 		// TODO
 		case actionMovie: // fall through
 		// unknown action type
 		case actionUnknown:
-			fprintf(stdout, B_TRANSLATE("Unknown link action type: '%s'"), ((LinkUnknown*)action)->getAction()->c_str());
+			fprintf(stdout, B_TRANSLATE("Unknown link action type: '%s'"), ((LinkUnknown*)action)->getAction().c_str());
 			break;
 		}
 	}
@@ -1495,7 +1530,7 @@ void PDFView::GotoDest(LinkDest* dest)
 
 	if (dest->isPageRef()) {
 		pageRef = dest->getPageRef();
-		pg = fDoc->findPage(pageRef.num, pageRef.gen);
+		pg = fDoc->findPage(pageRef);
 	} else {
 		pg = dest->getPageNum();
 	}
@@ -1616,25 +1651,27 @@ void PDFView::LinkToString(LinkAction* action, BString* string)
 	const char* s = NULL;
 	char* t;
 	BString str;
-	LinkDest* dest;
 	int pg;
 
 	switch (action->getKind()) {
-	case actionGoTo:
+	case actionGoTo: {
 		s = B_TRANSLATE("[internal link]");
-		dest = ((LinkGoTo*)action)->getDest();
-		if (!dest) {
+		const LinkDest* borrowedDest = ((LinkGoTo*)action)->getDest();
+		std::unique_ptr<LinkDest> ownedDest;
+		const LinkDest* useDest = borrowedDest;
+		if (useDest == NULL) {
 			PDFLock lock;
-			dest = fDoc->findDest(((LinkGoTo*)action)->getNamedDest());
-			if (!dest)
+			ownedDest = fDoc->findDest(((LinkGoTo*)action)->getNamedDest());
+			useDest = ownedDest.get();
+			if (useDest == NULL)
 				break;
 		}
-		if (dest->isPageRef()) {
-			Ref ref = dest->getPageRef();
+		if (useDest->isPageRef()) {
+			Ref ref = useDest->getPageRef();
 			PDFLock lock;
-			pg = fDoc->findPage(ref.num, ref.gen);
+			pg = fDoc->findPage(ref);
 		} else {
-			pg = dest->getPageNum();
+			pg = useDest->getPageNum();
 		}
 		s = B_TRANSLATE("Go to page %d");
 		t = str.LockBuffer(strlen(s) + 20);
@@ -1642,6 +1679,7 @@ void PDFView::LinkToString(LinkAction* action, BString* string)
 		str.UnlockBuffer();
 		s = str.String();
 		break;
+	}
 	case actionGoToR:
 		s = ((LinkGoToR*)action)->getFileName()->c_str();
 		break;
@@ -1649,10 +1687,10 @@ void PDFView::LinkToString(LinkAction* action, BString* string)
 		s = ((LinkLaunch*)action)->getFileName()->c_str();
 		break;
 	case actionURI:
-		s = ((LinkURI*)action)->getURI()->c_str();
+		s = ((LinkURI*)action)->getURI().c_str();
 		break;
 	case actionNamed:
-		s = ((LinkNamed*)fLinkAction)->getName()->c_str();
+		s = ((LinkNamed*)fLinkAction)->getName().c_str();
 		break;
 	case actionMovie:
 		// TODO
@@ -1910,16 +1948,15 @@ void PDFView::MoveToPage(int page, bool top)
 //////////////////////////////////////////////////////////////////
 void PDFView::MoveToPage(int num, int gen, bool top)
 {
-	MoveToPage(fDoc->findPage(num, gen), top);
+	MoveToPage(fDoc->findPage(Ref{num, gen}), top);
 }
 
 //////////////////////////////////////////////////////////////////
 void PDFView::MoveToPage(const char* string, bool top)
 {
 	WaitForPage(true);
-	GooString* s = new GooString(string);
-	LinkDest* link = fDoc->getCatalog()->findDest(s);
-	delete s;
+	GooString s(string);
+	std::unique_ptr<LinkDest> link = fDoc->getCatalog()->findDest(&s);
 	if (link) {
 		if (link->isPageRef()) {
 			Ref r = link->getPageRef();
@@ -1927,7 +1964,7 @@ void PDFView::MoveToPage(const char* string, bool top)
 		} else {
 			MoveToPage(link->getPageNum(), top);
 		}
-		delete link;
+		// unique_ptr cleans up
 	}
 }
 
@@ -2550,12 +2587,12 @@ void PDFView::ShowAnnotWindow(bool editable, bool updateOnly)
 	char buffer[80];
 	const char* d = to_date(annotation->GetDate(), buffer);
 	if (annotation->GetTitle()) {
-		label = TextToUtf8(annotation->GetTitle()->c_str(), annotation->GetTitle()->size());
+		label = TextToUtf8(annotation->GetTitle()->c_str(), annotation->GetTitle()->getLength());
 	} else {
 		label = new BString();
 	}
 	date = TextToUtf8(d, strlen(d));
-	contents = TextToUtf8(annotation->GetContents()->c_str(), annotation->GetContents()->size());
+	contents = TextToUtf8(annotation->GetContents()->c_str(), annotation->GetContents()->getLength());
 	AnnotationWindow* w = NULL;
 	PDFWindow* win = GetPDFWindow();
 	if (win) {
