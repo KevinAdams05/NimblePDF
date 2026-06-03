@@ -37,7 +37,7 @@ class GraphicsStream {
 	GooString fStream;
 
 public:
-	int GetLength() { return fStream.getLength(); }
+	int GetLength() { return fStream.size(); }
 	const char* GetStream() { return fStream.c_str(); }
 	GooString* GetString() { return &fStream; }
 

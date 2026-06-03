@@ -167,7 +167,7 @@ BString* FileInfoWindow::GetProperty(Dict* dict, const char* key, time_t* time)
 			if (date != s) {
 				result = TextToUtf8(date, strlen(date));
 			} else {
-				result = TextToUtf8(s, string->getLength());
+				result = TextToUtf8(s, string->size());
 			}
 		}
 	}
@@ -206,7 +206,7 @@ bool FileInfoWindow::AddFont(BList* list, GfxFont* font)
 static void GetGString(BString& s, GooString* g)
 {
 	if (g) {
-		BString* utf8 = TextToUtf8(g->c_str(), g->getLength());
+		BString* utf8 = TextToUtf8(g->c_str(), g->size());
 		s = *utf8;
 		delete utf8;
 	}
@@ -236,7 +236,7 @@ BRow* FileInfoWindow::FontItem(GfxFont* font)
 	BString embName;
 	if (font->getEmbeddedFontName()) {
 		const char* name = font->getEmbeddedFontName()->c_str();
-		BString* utf8 = TextToUtf8(name, font->getEmbeddedFontName()->getLength());
+		BString* utf8 = TextToUtf8(name, font->getEmbeddedFontName()->size());
 		embName = *utf8;
 		delete utf8;
 	}

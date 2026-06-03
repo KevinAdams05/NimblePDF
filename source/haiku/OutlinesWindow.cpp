@@ -191,7 +191,7 @@ void OutlinesView::ReadOutlines(Object* o, uint32 level)
 
 			OutlineListItem* item;
 			if (title.isString()) {
-				BString* s = TextToUtf8(title.getString()->c_str(), title.getString()->getLength());
+				BString* s = TextToUtf8(title.getString()->c_str(), title.getString()->size());
 				if (s && s->Length() > 0) {
 					// end string at first newline character
 					char* str = s->LockBuffer(s->Length());

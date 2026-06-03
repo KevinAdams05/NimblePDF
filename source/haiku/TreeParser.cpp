@@ -91,7 +91,7 @@ bool NameTreeParser::DoEntry(Object* key, Object* value)
 {
 	if (key->isString() && key->getString() != NULL) {
 		const GooString* string = key->getString();
-		BString* utf8 = TextToUtf8(string->c_str(), string->getLength());
+		BString* utf8 = TextToUtf8(string->c_str(), string->size());
 		bool ok = utf8 != NULL;
 		if (ok) {
 			ok = DoName(utf8->String(), value);
