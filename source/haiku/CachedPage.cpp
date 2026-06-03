@@ -68,22 +68,33 @@ void CachedPage::SetLinks(Links* links)
 	fLinks = links;
 }
 
+// poppler 25.12: Links dropped find()/onLink(); it only exposes getLinks().
+// Hit-test the point against each AnnotLink's rect (poppler normalises annot
+// rects in the Annot ctor, so x1<=x2 / y1<=y2 holds).
 LinkAction* CachedPage::FindLink(double x, double y)
 {
-	if (fLinks) {
-		return fLinks->find(x, y);
-	} else {
+	if (fLinks == NULL)
 		return NULL;
+	for (const auto& link : fLinks->getLinks()) {
+		double x1, y1, x2, y2;
+		link->getRect(&x1, &y1, &x2, &y2);
+		if (x >= x1 && x <= x2 && y >= y1 && y <= y2)
+			return link->getAction();
 	}
+	return NULL;
 }
 
 bool CachedPage::OnLink(double x, double y)
 {
-	if (fLinks) {
-		return fLinks->onLink(x, y);
-	} else {
+	if (fLinks == NULL)
 		return false;
+	for (const auto& link : fLinks->getLinks()) {
+		double x1, y1, x2, y2;
+		link->getRect(&x1, &y1, &x2, &y2);
+		if (x >= x1 && x <= x2 && y >= y1 && y <= y2)
+			return true;
 	}
+	return false;
 }
 
 void CachedPage::SetText(TextPage* text)

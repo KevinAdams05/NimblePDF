@@ -1383,7 +1383,7 @@ bool PDFView::IsLinkToPDF(LinkAction* action, BString* path)
 		int len = launchName->size();
 		if (len >= 4 && (!strcmp(s + len - 4, ".pdf") || !strcmp(s + len - 4, ".PDF"))) {
 			if (isAbsolutePath(s))
-				fileName = launchName->copy();  // returns owned GooString*
+				fileName = launchName->copy().release();  // copy() -> unique_ptr
 			else
 				fileName = appendToPath(grabPath(fDoc->getFileName()->c_str()), s);
 			*path = fileName->c_str();
@@ -1460,7 +1460,7 @@ bool PDFView::HandleLink(BPoint point)
 			// Launch action
 		case actionLaunch: {
 			const GooString* origName = ((LinkLaunch*)action)->getFileName();
-			fileName = origName->copy();  // returns owned GooString*
+			fileName = origName->copy().release();  // copy() -> unique_ptr
 			const GooString* params = ((LinkLaunch*)action)->getParams();
 			if (params != NULL) {
 				fileName->append(' ');

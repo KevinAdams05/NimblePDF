@@ -25,6 +25,7 @@
 
 // xpdf
 #include <XRef.h>
+#include <Annot.h>
 #include <Link.h>
 #include <TextOutputDev.h>
 #include <PDFDoc.h>
