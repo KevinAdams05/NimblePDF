@@ -43,7 +43,7 @@
 #include <PDFDoc.h>
 
 // BePDF
-#include "FileSpec.h"
+#include "EmbeddedFileSpec.h"
 #include "Settings.h"
 
 class XRef;

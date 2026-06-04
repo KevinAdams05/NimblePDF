@@ -45,6 +45,8 @@
 #include "TextConversion.h"
 #include "Thread.h"
 
+#include <FileSpec.h>
+
 // xpdf's UTF8.h provides mapUTF8(). The -isystem ../xpdf/xpdf search
 // path makes this resolve to xpdf, not Haiku's <support/UTF8.h>.
 // Removed in the poppler migration.
@@ -191,11 +193,19 @@ void AttachmentView::Fill(XRef* xref, PDFDoc* doc)
 		Empty();
 	} else {
 		for (int i = 0; i < catalog->numEmbeddedFiles(); i++) {
+			// poppler 25.12: getEmbeddedFileName*() replaced by
+			// embeddedFile(i) -> FileSpec, whose getFileName() is the name.
 			BString str;
-			char buf[4];
-			for (int j = 0; j < catalog->getEmbeddedFileNameLength(i); j++) {
-				int32 len = mapUTF8(catalog->getEmbeddedFileName(i)[j], (char*)&buf, 4);
-				str.Append((const char*)&buf, len);
+			// poppler's FileSpec (auto avoids naming it; the type would
+			// otherwise be ambiguous in TUs that also see EmbeddedFileSpec).
+			auto fileSpec = catalog->embeddedFile(i);
+			const GooString* name = fileSpec ? fileSpec->getFileName() : NULL;
+			if (name != NULL) {
+				BString* utf8 = TextToUtf8(name->c_str(), name->size());
+				if (utf8 != NULL) {
+					str = *utf8;
+					delete utf8;
+				}
 			}
 			fList->AddRow(new AttachmentItem(str, i));
 		}
@@ -252,8 +262,11 @@ public:
 
 	void ActuallySave(BString path, int fileIdx)
 	{
-		fDoc->saveEmbeddedFile(fileIdx, path.LockBuffer(path.Length()));
-		path.UnlockBuffer();
+		// poppler 25.12: PDFDoc::saveEmbeddedFile gone; go through the
+		// FileSpec's EmbFile::save(path).
+		auto fileSpec = fDoc->getCatalog()->embeddedFile(fileIdx);
+		if (fileSpec && fileSpec->getEmbeddedFile())
+			fileSpec->getEmbeddedFile()->save(path.String());
 	}
 
 	int32 Run()

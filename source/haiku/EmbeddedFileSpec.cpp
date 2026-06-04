@@ -20,31 +20,31 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#include "FileSpec.h"
+#include "EmbeddedFileSpec.h"
 
 #include "Annotation.h"
 
 static char* gFileAttachmentFileNameKeys[] = {"Unix", "F", "DOS", "Mac", NULL};
 
-FileSpec::FileSpec()
+EmbeddedFileSpec::EmbeddedFileSpec()
     : fRef(empty_ref)
 {}
 
-FileSpec::FileSpec(FileSpec* copy)
+EmbeddedFileSpec::EmbeddedFileSpec(EmbeddedFileSpec* copy)
     : fDescription(copy->fDescription.toStr()),
       fFileName(copy->fFileName.toStr()),
       fRef(copy->fRef)
 {}
 
-FileSpec::FileSpec(Dict* fileSpec)
+EmbeddedFileSpec::EmbeddedFileSpec(Dict* fileSpec)
 {
 	SetTo(fileSpec);
 }
 
-FileSpec::~FileSpec()
+EmbeddedFileSpec::~EmbeddedFileSpec()
 {}
 
-bool FileSpec::SetTo(Dict* fileSpec)
+bool EmbeddedFileSpec::SetTo(Dict* fileSpec)
 {
 	fDescription.clear();
 	fFileName.clear();
@@ -77,7 +77,7 @@ bool FileSpec::SetTo(Dict* fileSpec)
 	return true;
 }
 
-bool FileSpec::ReadFileName(Dict* fileSpec)
+bool EmbeddedFileSpec::ReadFileName(Dict* fileSpec)
 {
 	for (int i = 0; gFileAttachmentFileNameKeys[i] != NULL; i++) {
 		Object obj;
@@ -90,7 +90,7 @@ bool FileSpec::ReadFileName(Dict* fileSpec)
 	return false;
 }
 
-bool FileSpec::ReadEmbeddedFileRef(Dict* fileSpec)
+bool EmbeddedFileSpec::ReadEmbeddedFileRef(Dict* fileSpec)
 {
 	bool found = false;
 	Object obj;
@@ -109,22 +109,22 @@ bool FileSpec::ReadEmbeddedFileRef(Dict* fileSpec)
 	return found;
 }
 
-bool FileSpec::IsValid()
+bool EmbeddedFileSpec::IsValid()
 {
 	return fFileName.size() > 0 && !is_empty_ref(fRef);
 }
 
-GooString* FileSpec::GetDescription()
+GooString* EmbeddedFileSpec::GetDescription()
 {
 	return &fDescription;
 }
 
-GooString* FileSpec::GetFileName()
+GooString* EmbeddedFileSpec::GetFileName()
 {
 	return &fFileName;
 }
 
-FileSpec::SaveReturnCode FileSpec::Save(XRef* xref, const char* file)
+EmbeddedFileSpec::SaveReturnCode EmbeddedFileSpec::Save(XRef* xref, const char* file)
 {
 	if (is_empty_ref(fRef)) {
 		return kMissingEmbeddedStreamError;
@@ -150,7 +150,7 @@ FileSpec::SaveReturnCode FileSpec::Save(XRef* xref, const char* file)
 	return kMissingEmbeddedStreamError;
 }
 
-FileSpec::SaveReturnCode FileSpec::SaveStream(Stream* stream, FILE* file)
+EmbeddedFileSpec::SaveReturnCode EmbeddedFileSpec::SaveStream(Stream* stream, FILE* file)
 {
 	const int kBufferSize = 4096;
 	unsigned char buffer[kBufferSize];

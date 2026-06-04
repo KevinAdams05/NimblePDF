@@ -31,7 +31,7 @@
 #include <list>
 
 // bepdf
-#include "FileSpec.h"
+#include "EmbeddedFileSpec.h"
 
 class TextAnnot;
 class LinkAnnot;
@@ -604,7 +604,7 @@ private:
 	GooString fFileName;
 	enum attachment_type fType;
 	static const char* fTypeNames[no_of_types - 1];
-	FileSpec fFileSpec;
+	EmbeddedFileSpec fFileSpec;
 
 public:
 	FileAttachmentAnnot(FileAttachmentAnnot* copy);

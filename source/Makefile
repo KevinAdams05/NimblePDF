@@ -44,7 +44,7 @@ SRCS = haiku/AnnotAppearance.cpp \
 	haiku/DisplayCIDFonts.cpp \
 	haiku/EntryChangedMonitor.cpp \
 	haiku/FileInfoWindow.cpp \
-	haiku/FileSpec.cpp \
+	haiku/EmbeddedFileSpec.cpp \
 	haiku/FindTextWindow.cpp \
 	haiku/History.cpp \
 	haiku/LayoutUtils.cpp \

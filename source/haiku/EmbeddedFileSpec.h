@@ -20,8 +20,8 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#ifndef FILE_SPEC_H
-#define FILE_SPEC_H
+#ifndef EMBEDDED_FILE_SPEC_H
+#define EMBEDDED_FILE_SPEC_H
 
 // xpdf
 #include <goo/GooString.h>
@@ -31,7 +31,7 @@
 #include <stdio.h> // for FILE
 
 // PDF Filespec
-class FileSpec {
+class EmbeddedFileSpec {
 public:
 	enum SaveReturnCode {
 		kOk,
@@ -51,12 +51,12 @@ private:
 	SaveReturnCode SaveStream(Stream* stream, FILE* file);
 
 public:
-	FileSpec();
-	FileSpec(FileSpec* copy);
-	FileSpec(Dict* fileSpec);
-	~FileSpec();
+	EmbeddedFileSpec();
+	EmbeddedFileSpec(EmbeddedFileSpec* copy);
+	EmbeddedFileSpec(Dict* fileSpec);
+	~EmbeddedFileSpec();
 
-	// Returns true if the FileSpec is valid
+	// Returns true if the EmbeddedFileSpec is valid
 	bool IsValid();
 
 	bool SetTo(Dict* fileSpec);
