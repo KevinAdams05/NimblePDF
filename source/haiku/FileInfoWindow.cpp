@@ -23,6 +23,8 @@
 
 #include <ctype.h>
 
+#include <FontInfo.h>
+
 #include <locale/Catalog.h>
 #include <Box.h>
 #include <Button.h>
@@ -190,19 +192,6 @@ void FileInfoWindow::CreateProperty(BGridView* view, Dict* dict, const char* key
 	delete string;
 }
 
-bool FileInfoWindow::AddFont(BList* list, GfxFont* font)
-{
-	// Font already in list?
-	Font** ids = (Font**)list->Items();
-	for (int i = 0; i < list->CountItems(); i++) {
-		if (((ids[i]->ref.num == font->getID()->num) && (ids[i]->ref.gen == font->getID()->gen)))
-			return false;
-	}
-	// Add font to list
-	list->AddItem(new Font(*font->getID(), font->getName()));
-	return true;
-}
-
 static void GetGString(BString& s, const std::optional<std::string>& g)
 {
 	if (g) {
@@ -228,56 +217,51 @@ FontItem::FontItem(const char* name, const char* embName, const char* type)
 	SetField(new BStringField(type), 2);
 }
 
-BRow* FileInfoWindow::FontItem(GfxFont* font)
+BRow* FileInfoWindow::FontItem(FontInfo* font)
 {
 	BString name;
 	GetGString(name, font->getName());
 
 	BString embName;
-	if (font->getEmbeddedFontName()) {
-		const char* name = font->getEmbeddedFontName()->c_str();
-		BString* utf8 = TextToUtf8(name, font->getEmbeddedFontName()->size());
-		embName = *utf8;
-		delete utf8;
-	}
+	GetGString(embName, font->getFile());
 
 	BString type;
 	switch (font->getType()) {
-	case fontUnknownType:
+	case FontInfo::unknown:
 		type = "Unknown Type";
 		break;
-	case fontType1:
+	case FontInfo::Type1:
 		type = "Type 1";
 		break;
-	case fontType1C:
+	case FontInfo::Type1C:
 		type = "Type 1C";
 		break;
-	case fontType3:
-		type = "Type 3";
-		break;
-	case fontTrueType:
-		type = "TrueType";
-		break;
-	case fontCIDType0:
-		type = "CID Type 0";
-		break;
-	case fontCIDType0C:
-		type = "CID Type 0C";
-		break;
-	case fontCIDType2:
-		type = "CID Type 2";
-		break;
-	case fontType1COT:
+	case FontInfo::Type1COT:
 		type = "Type 1C (OpenType)";
 		break;
-	case fontTrueTypeOT:
-		type = "TrueType 0 (OpenType)";
+	case FontInfo::Type3:
+		type = "Type 3";
 		break;
-	case fontCIDType0COT:
+	case FontInfo::TrueType:
+		type = "TrueType";
+		break;
+	case FontInfo::TrueTypeOT:
+		type = "TrueType (OpenType)";
+		break;
+	case FontInfo::CIDType0:
+		type = "CID Type 0";
+		break;
+	case FontInfo::CIDType0C:
+		type = "CID Type 0C";
+		break;
+	case FontInfo::CIDType0COT:
 		type = "CID Type 0C (OpenType)";
 		break;
-	case fontCIDType2OT:
-		type = "CID Type2 (OpenType)";
+	case FontInfo::CIDTrueType:
+		type = "CID TrueType";
+		break;
+	case FontInfo::CIDTrueTypeOT:
+		type = "CID TrueType (OpenType)";
 		break;
 	}
 	return new ::FontItem(name.String(), embName.String(), type.String());
@@ -286,54 +270,26 @@ BRow* FileInfoWindow::FontItem(GfxFont* font)
 
 void FileInfoWindow::QueryFonts(PDFDoc* doc, int page)
 {
-	Catalog* catalog = doc->getCatalog();
-
 	// remove items from font list
 	Lock();
 	fFontList->Clear();
 	Unlock();
 
-	BList fontList;
-	int first, last;
-	if (page == 0) {
-		first = 1;
-		last = doc->getNumPages();
-	} else {
-		first = last = page;
-	}
-
-	for (int pg = first; pg <= last; pg++) {
-		if ((fState == STOP) || (fState == QUIT))
-			break;
-
-		Page* page = catalog->getPage(pg);
-		Dict* resDict;
-		if ((resDict = page->getResourceDict()) != NULL) {
-			const Object& obj1 = resDict->lookupNF("Font");
-			if (obj1.isRef()) {
-				Object obj2 = obj1.fetch(doc->getXRef());
-				if (obj2.isDict()) {
-					Ref r = obj1.getRef();
-					GfxFontDict* gfxFontDict = new GfxFontDict(doc->getXRef(), r, obj2.getDict());
-					for (int i = 0; i < gfxFontDict->getNumFonts(); i++) {
-						const std::shared_ptr<GfxFont>& font = gfxFontDict->getFont(i);
-						if (font && AddFont(&fontList, font.get())) {
-							Lock();
-							fFontList->AddRow(FileInfoWindow::FontItem(font.get()));
-							Unlock();
-						}
-					}
-					delete gfxFontDict;
-				}
-			}
+	// poppler 25.12: GfxFontDict is not part of the exported ABI. Use the
+	// public FontInfoScanner (as pdffonts does); it dedups fonts across the
+	// scanned page range. firstPage is 0-based.
+	int firstPage = (page == 0) ? 0 : page - 1;
+	int nPages = (page == 0) ? doc->getNumPages() : 1;
+	FontInfoScanner scanner(doc, firstPage);
+	std::vector<FontInfo*> fonts = scanner.scan(nPages);
+	for (FontInfo* font : fonts) {
+		if (fState != STOP && fState != QUIT) {
+			Lock();
+			fFontList->AddRow(FileInfoWindow::FontItem(font));
+			Unlock();
 		}
+		delete font;  // scan() transfers ownership of each FontInfo
 	}
-
-	Font** ids = (Font**)fontList.Items();
-	for (int i = 0; i < fontList.CountItems(); i++) {
-		delete ids[i];
-	}
-	return;
 }
 
 void FileInfoWindow::Refresh(BEntry* file, PDFDoc* doc, int page)

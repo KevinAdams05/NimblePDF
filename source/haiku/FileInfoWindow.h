@@ -46,6 +46,7 @@ class BGridView;
 class BButton;
 
 class PDFDoc;
+class FontInfo;
 
 class FileInfoWindow : public BWindow {
 	BLooper* fLooper;
@@ -76,8 +77,7 @@ class FileInfoWindow : public BWindow {
 			}
 		};
 	};
-	bool AddFont(BList* list, GfxFont* font);
-	BRow* FontItem(GfxFont* font);
+	BRow* FontItem(FontInfo* font);
 	void QueryFonts(PDFDoc* doc, int page);
 	void AddPair(BGridView* dest, BView* lv, BView* rv);
 	void CreateProperty(BGridView* dest, Dict* dict, const char* key, const char* title);
