@@ -456,7 +456,7 @@ void AnnotWriter::WriteModDate(Ref ref)
 	std::unique_ptr<GooString> date = std::make_unique<GooString>();
 	AnnotUtils::CurrentDate(date.get());
 
-	Object obj(date.release());
+	Object obj(std::move(date));  // poppler: Object(std::unique_ptr<GooString>)
 	WriteObject(ref, &obj);
 }
 
@@ -507,8 +507,8 @@ bool AnnotWriter::WriteFileTrailer()
 
 bool AnnotWriter::CopyFile(const char* name)
 {
-	GooString n(name);
-	return fDoc->saveAs(n);
+	// poppler: saveAs takes std::string and returns an error code (errNone=ok).
+	return fDoc->saveAs(std::string(name)) == errNone;
 }
 
 bool AnnotWriter::HasRef(Object* dict, const char* key, Ref& ref)
@@ -837,7 +837,8 @@ void AnnotWriter::AddColor(Object* dict, const char* key, GfxRGB* c)
 void AnnotWriter::AddDict(Object* dict, const char* key, Object* d)
 {
 	ASSERT(dict->isDict());
-	dict->dictAdd(copyString(key), d);
+	// poppler: dictAdd(std::string_view, Object&&) — move d's contents in.
+	dict->dictAdd(key, std::move(*d));
 }
 
 
@@ -1187,7 +1188,7 @@ void AnnotWriter::UpdateBePDFAcroForm()
 	Object oldDR;
 
 	acroForm = Object(new Dict(fXRef));
-	oldDR = Object(objNull);
+	oldDR.setToNull();  // poppler: Object(objNull) ctor is private; use setToNull()
 
 	if (is_empty_ref(fBePDFAcroForm->GetRef())) {
 		Ref fieldsRef = fXRefTable.GetNewRef(xrefEntryUncompressed);

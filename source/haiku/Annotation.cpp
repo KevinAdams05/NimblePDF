@@ -1295,8 +1295,9 @@ BePDFAcroForm::BePDFAcroForm(XRef* xref, Object* acroFormRef)
 		if ((obj2 = resources->lookup("Font")).isDict()) {
 			Dict* font = obj2.getDict();
 			for (int i = 0; i < font->getLength(); i++) {
-				Object obj3, obj4;
-				if (font->getVal(i, &obj3) && obj3.isDict() && font->getValNF(i, &obj4) && obj4.isRef()) {
+				Object obj3 = font->getVal(i);
+				const Object& obj4 = font->getValNF(i);
+				if (obj3.isDict() && obj4.isRef()) {
 					ParseFont(font->getKey(i), obj4.getRef(), obj3.getDict());
 				}
 			}
