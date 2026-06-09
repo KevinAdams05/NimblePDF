@@ -20,7 +20,7 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#include <support/UTF8.h>  // bypass xpdf UTF8.h shadowing; revert after poppler migration
+#include <support/UTF8.h>
 
 #include "TextConversion.h"
 

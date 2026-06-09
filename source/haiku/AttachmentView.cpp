@@ -47,11 +47,6 @@
 
 #include <FileSpec.h>
 
-// xpdf's UTF8.h provides mapUTF8(). The -isystem ../xpdf/xpdf search
-// path makes this resolve to xpdf, not Haiku's <support/UTF8.h>.
-// Removed in the poppler migration.
-#include <UTF8.h>
-
 #undef B_TRANSLATION_CONTEXT
 #define B_TRANSLATION_CONTEXT "AttachmentView"
 

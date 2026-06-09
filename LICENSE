@@ -22,16 +22,15 @@ Copyright notices on existing source files:
 
 --------------------------------------------------------------------------------
 
-Bundled third-party components (not relicensable by this project):
+Third-party dependencies (not relicensable by this project):
 
-  * xpdf  — Glyph & Cog, LLC, GPL v3 (see xpdf/COPYING3). To be removed
-            during the poppler migration.
+  * poppler  — the PDF rendering engine, linked as a system library via
+               pkg-config (GPL v2 for most files, with some GPL v2+ files).
 
-  * poppler (planned)  — GPL v2 (most files) with some GPL v2+ files.
-
-Each component retains its own license. Together with NimblePDF's GPL v2+
-licensing, the combined distribution is GPL v2+ when xpdf is removed, or
-GPL v3 while xpdf is bundled (xpdf is GPL v3, the most restrictive).
+NimblePDF links against poppler at build time rather than bundling its
+source. The vendored xpdf 4.x tree (GPL v3, Glyph & Cog, LLC) was removed
+during the poppler migration, so the combined distribution is now GPL v2 or
+later — consistent with NimblePDF's own license and its BePDF heritage.
 
 --------------------------------------------------------------------------------
 

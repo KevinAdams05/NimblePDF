@@ -11,10 +11,10 @@ A Linux port is a possible future goal once the Haiku version is stable.
 
 ## Status
 
-🚧 **Early development.** NimblePDF has just been forked from BePDF. The
-source tree currently still uses xpdf; the poppler migration is the next
-major piece of work after the style audit. The application is not yet in a
-working state under the NimblePDF name.
+🚧 **Active development.** NimblePDF was forked from BePDF and its xpdf
+rendering backend has been replaced by [poppler](https://poppler.freedesktop.org/).
+The migration compiles and links; runtime verification on Haiku (rendering,
+navigation, search, and annotation save) is in progress.
 
 ## Repository layout
 
@@ -23,7 +23,7 @@ NimblePDF/
 ├── assets/             # Logos, icon source artwork
 ├── dist/               # Resource files shipped with the app
 │   ├── docs/           # User-facing docs (help, license texts)
-│   ├── encodings/      # CMap and encoding tables (from xpdf)
+│   ├── encodings/      # CMap and encoding tables
 │   ├── fonts/          # Bundled fonts
 │   └── license/        # Third-party license texts
 ├── docs/               # Developer documentation
@@ -34,10 +34,9 @@ NimblePDF/
 │   │   └── utils/      # Small helpers
 │   ├── locales/        # Translation catalogs
 │   └── Makefile        # Haiku Generic Makefile
-├── xpdf/               # Vendored xpdf 4.x (to be replaced by poppler)
 ├── scripts/            # Dev/lint helpers
 ├── build.sh            # Top-level build entry point
-├── LICENSE             # MIT (NimblePDF) + notes on third-party licenses
+├── LICENSE             # GPL v2+ (NimblePDF) + third-party license notes
 └── README.md           # This file
 ```
 
@@ -51,12 +50,10 @@ From the repository root:
 ./build.sh
 ```
 
-Build prerequisites (Haiku):
+Build prerequisites (Haiku), installed via `pkgman`:
 
+- `poppler25.12_devel` and `poppler_data` (the PDF rendering engine)
 - `freetype2-devel`
-- xpdf dependencies (autoconf-generated; see `xpdf/INSTALL`)
-- Once the poppler migration begins: `poppler-devel`, `cairo-devel`,
-  `glib2-devel`
 
 Cross-compiling from Linux is documented in
 [docs/CROSS_BUILD.md](docs/CROSS_BUILD.md) (coming soon).
@@ -86,8 +83,8 @@ later** (GPL v2+), as a derivative of BePDF (also GPL v2+).
 Third-party components (each retains its own license):
 - **BePDF** sources — GPL v2+, Benoit Triquet, Hubert Figuiere,
   Michael Pfeiffer, waddlesplash
-- **xpdf** sources — GPL v3, Glyph & Cog, LLC (slated for removal)
-- **poppler** (planned) — GPL v2 / v2+
+- **poppler** — GPL v2 / v2+ (the rendering engine, linked as a system
+  library)
 
 See individual source-file headers for per-file copyright details.
 
@@ -95,5 +92,6 @@ See individual source-file headers for per-file copyright details.
 
 - **BePDF** — the foundation NimblePDF builds on. Thanks to Michael
   Pfeiffer and the BePDF/HaikuArchives contributors.
-- **xpdf** — the original rendering engine (Glyph & Cog).
-- **poppler** — the rendering engine NimblePDF is migrating to.
+- **xpdf** — the original rendering engine (Glyph & Cog), inherited via
+  BePDF and since replaced by poppler.
+- **poppler** — the rendering engine NimblePDF now uses.
