@@ -24,6 +24,7 @@
 #include "AnnotWriter.h"
 
 #include <memory>
+#include <vector>
 
 #include <Debug.h>
 #include <stdlib.h>
@@ -31,169 +32,6 @@
 #include <time.h>
 #include <stdio.h>
 
-
-// Implementation of XRefTable
-
-XRefTable::XRefTable(XRef* xref)
-    : fXRef(xref),
-      fLength(xref->getNumObjects() + INITIAL_INCREMENT),
-      fSize(xref->getNumObjects()),
-      fEntries((XRefEntry*)malloc(sizeof(XRefEntry) * fLength))
-{
-	for (int i = 0; i < fSize; i++) {
-		// XRefEntry contains a non-copyable Object member, so we can't
-		// copy-assign the whole struct. XRefTable only tracks file-offset
-		// metadata; the obj field stays default-constructed (objNone).
-		XRefEntry* src = xref->getEntry(i);
-		fEntries[i].offset = src->offset;
-		fEntries[i].gen    = src->gen;
-		fEntries[i].type   = src->type;
-		fEntries[i].flags  = src->flags;
-	}
-}
-
-XRefTable::~XRefTable()
-{
-	free(fEntries);
-	fEntries = NULL;
-}
-
-// increase fEntries if necessary only
-void XRefTable::Resize(int l)
-{
-	fSize = l;
-	if (fLength < l) {
-		fLength = l + INCREMENT;
-		fEntries = (XRefEntry*)realloc(fEntries, sizeof(XRefEntry) * fLength);
-		ASSERT(fEntries != NULL);
-	}
-}
-
-bool XRefTable::InRange(int num)
-{
-	return num >= 0 && num < fSize;
-}
-
-XRefEntry* XRefTable::GetUnusedHead()
-{
-	XRefEntry* head = GetXRef(0);
-	ASSERT(head->gen == DEAD_GEN && head->type == xrefEntryFree);
-	return head;
-}
-
-// simply insert "e" after the head entry and its successor
-void XRefTable::InsertInUnusedList(int num, XRefEntry* e)
-{
-	XRefEntry* head = GetUnusedHead();
-	e->offset = head->offset;
-	head->offset = num;
-}
-
-// return (available) successor of head entry in unused list
-Ref XRefTable::ActivateUnusedEntry(XRefEntryType type)
-{
-	ASSERT(type != xrefEntryFree);
-	XRefEntry* head = GetUnusedHead();
-	XRefEntry* prev;
-	XRefEntry* cur = head;
-	do {
-		prev = cur;
-		cur = GetXRef(head->offset); // skip "dead" entries
-	} while (cur != head && cur->gen == DEAD_GEN);
-
-	if (cur != head) {
-		// create a Ref for current entry
-		Ref ref;
-		ref.num = prev->offset;
-		ref.gen = cur->gen;
-		// unlink entry from list
-		prev->offset = cur->offset;
-		// mark entry as used
-		cur->type = type;
-		cur->offset = (unsigned int)-1;
-		return ref;
-	} else {
-		return empty_ref;
-	}
-}
-
-XRefEntry* XRefTable::GetXRef(int num)
-{
-	ASSERT(InRange(num));
-	return &fEntries[num];
-}
-
-int XRefTable::GetSize()
-{
-	return fSize;
-}
-
-bool XRefTable::HasChanged(int num)
-{
-	ASSERT(InRange(num));
-	if (num >= fXRef->getNumObjects())
-		return true;
-	if (num == 0)
-		return true;
-	XRefEntry* o = fXRef->getEntry(num);
-	XRefEntry* n = GetXRef(num);
-	return o->offset != n->offset || o->gen != n->gen || o->type != n->type;
-}
-
-
-void XRefTable::DeleteRef(Ref ref)
-{
-	XRefEntry* e = GetXRef(ref.num);
-	ASSERT(e->type != xrefEntryFree && e->gen == ref.gen && e->gen != DEAD_GEN);
-	e->gen++;
-	e->type = xrefEntryFree;
-	InsertInUnusedList(ref.num, e);
-}
-
-Ref XRefTable::AppendNewRef(XRefEntryType type)
-{
-	ASSERT(type != xrefEntryFree);
-	Ref ref;
-	ref.num = fSize;
-	ref.gen = 0;
-	Resize(fSize + 1);
-	XRefEntry* e = GetXRef(ref.num);
-	e->offset = (unsigned int)-1;
-	e->gen = ref.gen;
-	e->type = type;
-	return ref;
-}
-
-Ref XRefTable::GetNewRef(XRefEntryType type)
-{
-	ASSERT(type != xrefEntryFree);
-	Ref ref = ActivateUnusedEntry(type);
-	if (!is_empty_ref(ref))
-		return ref;
-	return AppendNewRef(type);
-}
-
-void XRefTable::SetOffset(Ref ref, int offset)
-{
-	XRefEntry* e = GetXRef(ref.num);
-	e->offset = offset;
-}
-
-bool XRefTable::NextGroup(int first, int* num, int* nof)
-{
-	int n = GetSize();
-	while (first < n && !HasChanged(first))
-		first++;
-	bool found = first < n;
-	if (found) {
-		*num = first;
-		do {
-			first++;
-		} while (first < n && HasChanged(first));
-		*nof = first - *num;
-	}
-	return found;
-}
 
 // Implementation of AnnotTester
 AnnotTester::AnnotTester()
@@ -216,183 +54,23 @@ bool CanWrite(Annotation* annot)
 // Implementation of AnnotWriter
 AnnotWriter::AnnotWriter(XRef* xref, PDFDoc* doc, AnnotsList* list, BePDFAcroForm* acroForm)
     : fDoc(doc),
-      fAnnots(list) // make a copy
-      ,
+      fAnnots(list), // make a copy
       fBePDFAcroForm(acroForm),
       fXRef(xref),
-      fXRefTable(xref),
-      fASRef(empty_ref),
       fInfoRef(empty_ref)
 {}
 
 AnnotWriter::~AnnotWriter()
 {}
 
-void AnnotWriter::Write(const char* s)
+Ref AnnotWriter::ReserveRef()
 {
-	fprintf(fFile, "%s", s);
-}
-
-void AnnotWriter::Write(GooString* s)
-{
-	fwrite(s->c_str(), s->size(), 1, fFile);
-}
-
-void AnnotWriter::Write(Ref r)
-{
-	fprintf(fFile, "%d %d", r.num, r.gen);
-}
-
-void AnnotWriter::WriteCr()
-{
-	Write("\r");
-}
-
-void AnnotWriter::WriteCrLf()
-{
-	Write("\r\n");
-}
-
-int AnnotWriter::Tell()
-{
-	return ftell(fFile);
-}
-
-// Convert xpdf Object to PDF output
-
-void AnnotWriter::InsertWhiteSpace(const Object* obj)
-{
-	bool startsWithDelimiter;
-	switch (obj->getType()) {
-	case objString:
-	case objArray:
-	case objDict:
-		startsWithDelimiter = true;
-		break;
-	default:
-		startsWithDelimiter = false;
-	}
-	if (!startsWithDelimiter)
-		Write(" ");
-}
-
-
-void AnnotWriter::WriteObject(const Object* obj)
-{
-	ASSERT(fFile != NULL);
-	int i;
-	GooString* s = NULL;
-
-	switch (obj->getType()) {
-		// simple objects
-	case objBool:
-		fprintf(fFile, "%s", obj->getBool() ? "true" : "false");
-		break;
-	case objInt:
-		fprintf(fFile, "%d", obj->getInt());
-		break;
-	case objReal:
-		fprintf(fFile, "%g", obj->getReal());
-		break;
-	case objString:
-		if (AnnotUtils::InUCS2(obj->getString())) {
-			s = AnnotUtils::EscapeString(obj->getString());
-			Write("(");
-			Write(s);
-			Write(")");
-		} else {
-			s = AnnotUtils::EscapeString(obj->getString());
-			fprintf(fFile, "(%s)", s->c_str());
-		}
-		break;
-	case objName:
-		s = AnnotUtils::EscapeName(obj->getName());
-		fprintf(fFile, "/%s", s->c_str());
-		break;
-	case objNull:
-		Write("null");
-		break;
-
-	// complex objects
-	case objArray:
-		Write("[");
-		for (i = 0; i < obj->arrayGetLength(); i++) {
-			const Object& o = obj->arrayGetNF(i);
-			if (i > 0)
-				InsertWhiteSpace(&o);
-			WriteObject(&o);
-		}
-		Write("]");
-		break;
-	case objDict:
-		Write("<<");
-		for (i = 0; i < obj->dictGetLength(); i++) {
-			if (i > 0)
-				WriteCr();
-			fprintf(fFile, "/%s", obj->dictGetKey(i));
-			const Object& o = obj->dictGetValNF(i);
-			InsertWhiteSpace(&o);
-			WriteObject(&o);
-		}
-		Write(">>");
-		break;
-	case objStream:
-		fflush(fFile);
-		Trace(LOG_ERR, "Cannot serialize stream object");
-		ASSERT(false);
-		break;
-	case objRef:
-		Write(obj->getRef());
-		Write(" R");
-		break;
-	default:
-		fflush(fFile);
-		Trace(LOG_ERR, "WriteObj: unknown object type %d", obj->getType());
-		obj->print(stderr);
-		Trace(LOG_DEBUG, "\n");
-		ASSERT(false);
-	}
-	delete s;
-}
-
-void AnnotWriter::WriteObject(Ref ref, Object* obj, GooString* stream)
-{
-	fXRefTable.SetOffset(ref, Tell());
-	Write(ref);
-	Write(" obj");
-	WriteCr();
-	WriteObject(obj);
-	WriteCr();
-	if (stream != NULL) {
-		Write("stream");
-		WriteCr();
-		Write(stream);
-		Write("endstream");
-		WriteCr();
-	}
-	Write("endobj");
-	WriteCr();
-}
-
-bool AnnotWriter::WriteXRefTable()
-{
-	WriteCr();
-	fXRefOffset = ftell(fFile);
-	Write("xref\r");
-	int first = 0;
-	int nof;
-	while (fXRefTable.NextGroup(first, &first, &nof)) {
-		// write start num and count
-		fprintf(fFile, "%d %d\r", first, nof);
-		for (int i = 0; i < nof; i++) {
-			XRefEntry* x = fXRefTable.GetXRef(i + first);
-			ASSERT(x->offset >= 0);
-			// write offset, gen and used or unused char
-			fprintf(fFile, "%10.10lld %5.5d %c\r\n", x->offset, x->gen, x->type != xrefEntryFree ? 'n' : 'f');
-		}
-		first += nof;
-	}
-	return true;
+	// Reserve a slot in the in-memory XRef by inserting a placeholder null
+	// object. The caller fills it in later with XRef::setModifiedObject(),
+	// and PDFDoc::saveAs(writeForceRewrite) serializes the whole document.
+	Object placeholder;
+	placeholder.setToNull(); // Object(objNull) ctor is private in poppler 25.12
+	return fXRef->addIndirectObject(placeholder);
 }
 
 
@@ -422,18 +100,6 @@ void AnnotWriter::CopyDict(Object* in, Object* out, const char* excludeKeys[])
 
 // Update modification date
 
-Ref AnnotWriter::GetModDateRef(Ref infoDictRef)
-{
-	Ref dateRef = empty_ref;
-	if (!is_empty_ref(infoDictRef)) {
-		Object ref = Object(Ref{infoDictRef.num, infoDictRef.gen});
-		Object dict = ref.fetch(fXRef);
-		if (dict.isDict())
-			HasRef(&dict, "ModDate", dateRef);
-	}
-	return dateRef;
-}
-
 Ref AnnotWriter::GetInfoDictRef()
 {
 	Ref ref;
@@ -443,72 +109,30 @@ Ref AnnotWriter::GetInfoDictRef()
 
 static const char* infoDictExcludeKeys[] = {"ModDate", NULL};
 
-void AnnotWriter::CopyInfoDict(Object* dict)
-{
-	ASSERT(!is_empty_ref(fInfoRef));
-	Object info;
-	info = fXRef->getTrailerDict()->dictLookup("Info");
-	CopyDict(&info, dict, infoDictExcludeKeys);
-}
-
-void AnnotWriter::WriteModDate(Ref ref)
+// Refresh the document's /Info ModDate. With the full-rewrite save model the
+// whole document is re-serialized, so we store ModDate inline in the Info dict
+// (the old incremental writer stored it as a separate indirect object).
+void AnnotWriter::UpdateInfoDict()
 {
 	std::unique_ptr<GooString> date = std::make_unique<GooString>();
 	AnnotUtils::CurrentDate(date.get());
 
-	Object obj(std::move(date));  // poppler: Object(std::unique_ptr<GooString>)
-	WriteObject(ref, &obj);
-}
-
-void AnnotWriter::UpdateInfoDict()
-{
 	fInfoRef = GetInfoDictRef();
-	Ref modDate = GetModDateRef(fInfoRef);
-	if (is_empty_ref(modDate)) {
-		modDate = fXRefTable.GetNewRef(xrefEntryUncompressed);
-		Object info, val;
-		if (is_empty_ref(fInfoRef)) {
-			fInfoRef = fXRefTable.GetNewRef(xrefEntryUncompressed);
-			info = Object(new Dict(fXRef));
-		} else {
-			CopyInfoDict(&info);
-		}
-		val = Object(Ref{modDate.num, modDate.gen});
-		info.dictAdd("ModDate", std::move(val));
-		WriteObject(fInfoRef, &info);
+	if (is_empty_ref(fInfoRef)) {
+		// No Info dictionary yet: create one and link it from the trailer.
+		Object info(new Dict(fXRef));
+		info.dictAdd("ModDate", Object(std::move(date)));
+		fInfoRef = fXRef->addIndirectObject(info);
+		// VERIFY(VM): Dict::set on the trailer so saveAs emits the /Info entry.
+		fXRef->getTrailerDict()->getDict()->set("Info", Object(fInfoRef));
+	} else {
+		// Copy the existing Info dictionary, replacing ModDate, and write back.
+		Object oldInfo = fXRef->getTrailerDict()->dictLookup("Info");
+		Object info(new Dict(fXRef));
+		CopyDict(&oldInfo, &info, infoDictExcludeKeys);
+		info.dictAdd("ModDate", Object(std::move(date)));
+		fXRef->setModifiedObject(&info, fInfoRef);
 	}
-	WriteModDate(modDate);
-}
-
-static const char* fileTrailerExcludeKeys[] = {"Size", "Prev", "Root", "Info", NULL};
-
-bool AnnotWriter::WriteFileTrailer()
-{
-	Write("trailer\r");
-	Object trailer;
-	Object val;
-	CopyDict(fXRef->getTrailerDict(), &trailer, fileTrailerExcludeKeys);
-	val = Object(fXRefTable.GetSize());
-	trailer.dictAdd("Size", std::move(val));
-	// TODO: write /Prev entry pointing at the previous xref position.
-	// poppler 23.12 makes PDFDoc::getStartXRef() private and XRef::getLastXRefPos()
-	// is gone. Either parse `startxref` from the source PDF directly, or switch
-	// AnnotWriter to do full rewrites instead of incremental updates.
-	val = Object(Ref{fXRef->getRootNum(), fXRef->getRootGen()});
-	trailer.dictAdd("Root", std::move(val));
-	val = Object(Ref{fInfoRef.num, fInfoRef.gen});
-	trailer.dictAdd("Info", std::move(val));
-	WriteObject(&trailer);
-	Write("\rstartxref\r");
-	fprintf(fFile, "%d\r", fXRefOffset);
-	Write("%%EOF\r");
-	return true;
-}
-
-bool AnnotWriter::CopyFile(const char* name)
-{
-	// poppler: saveAs takes std::string and returns an error code (errNone=ok).
-	return fDoc->saveAs(std::string(name)) == errNone;
 }
 
 bool AnnotWriter::HasRef(Object* dict, const char* key, Ref& ref)
@@ -530,20 +154,6 @@ bool AnnotWriter::HasAnnotRef(Object* page, Ref& annotRef)
 	return HasRef(page, "Annots", annotRef);
 }
 
-bool AnnotWriter::HasEmbeddedContent(Object* page)
-{
-	ASSERT(page && page->isDict());
-	const Object& obj = page->dictLookupNF("Contents");
-	bool embedded = !(obj.isArray() || obj.isRef() || obj.isNull());
-	return embedded;
-}
-
-bool AnnotWriter::CopyContentStream(Object* page)
-{
-	// not implemented yet!!!
-	return false;
-}
-
 static const char* pageDictExcludeKeys[] = {"Annots", NULL};
 
 bool AnnotWriter::CopyPage(Object* page, Ref pageRef, Ref arrayRef)
@@ -555,36 +165,31 @@ bool AnnotWriter::CopyPage(Object* page, Ref pageRef, Ref arrayRef)
 	CopyDict(page, &copy, pageDictExcludeKeys);
 	copy.dictAdd("Annots", std::move(ar));
 
-	// write to file
-	WriteObject(pageRef, &copy);
+	// The page dictionary already exists in the file, so update it in place.
+	fXRef->setModifiedObject(&copy, pageRef);
 	return true;
 }
 
 bool AnnotWriter::UpdatePage(int pageNo, Annotations* annots, Ref& annotArray)
 {
-	bool ok = false;
 	Ref* pageRef = fDoc->getCatalog()->getPageRef(pageNo + 1);
 	Object page = fXRef->fetch(pageRef->num, pageRef->gen);
-	if (!page.isNull()) {
-		if (HasAnnotRef(&page, annotArray))
-			return true;
-		annotArray = fXRefTable.GetNewRef(xrefEntryUncompressed);
-		if (HasEmbeddedContent(&page)) {
-			if (!CopyContentStream(&page)) {
-				Trace(LOG_ERR, "Could not copy content stream");
-				goto error;
-			}
-		}
-		if (!CopyPage(&page, *pageRef, annotArray)) {
-			Trace(LOG_ERR, "Could not copy page");
-		} else {
-			ok = true;
-		}
-	} else {
+	if (page.isNull()) {
 		Trace(LOG_ERR, "Could not get page dict for page %d", pageNo + 1);
+		return false;
 	}
-error:
-	return ok;
+	// If the page already references its annotations indirectly, reuse that
+	// ref (UpdateAnnotArray rebuilds the array in place). Otherwise reserve a
+	// new array ref and rewrite the page dict to point at it. The full-rewrite
+	// save model re-serializes content streams for us, so no page copying.
+	if (HasAnnotRef(&page, annotArray))
+		return true;
+	annotArray = ReserveRef();
+	if (!CopyPage(&page, *pageRef, annotArray)) {
+		Trace(LOG_ERR, "Could not copy page");
+		return false;
+	}
+	return true;
 }
 
 
@@ -600,7 +205,7 @@ void AnnotWriter::AddToAnnots(Object* array, Annotation* a)
 	Ref r = a->GetRef();
 	if (is_empty_ref(r)) {
 		if (CanWrite(a)) {
-			a->SetRef(fXRefTable.GetNewRef(xrefEntryUncompressed));
+			a->SetRef(ReserveRef());
 			r = a->GetRef();
 		} else {
 			return;
@@ -624,19 +229,22 @@ bool AnnotWriter::UpdateAnnotArray(int pageNo, Annotations* annots, Ref annotArr
 				AddToAnnots(&array, a->GetPopup());
 		}
 	}
-	// write to file
-	WriteObject(annotArray, &array);
+	// The annotation array already exists (or was reserved) in the XRef.
+	fXRef->setModifiedObject(&array, annotArray);
 	return true;
 }
 
-bool AnnotWriter::WriteAS(Ref& ref, Annotation* a)
+// Build the appearance-stream form XObject and add it to the document.
+// Returns the new object's Ref, or empty_ref if the annotation has none.
+Ref AnnotWriter::WriteAS(Annotation* a)
 {
-	if (is_empty_ref(ref))
-		return true;
+	BePDFAnnotAppearance as;
+	a->Visit(&as);
+	if (as.GetLength() <= 0)
+		return empty_ref;
 
-	Object xobj;
-	xobj = Object(new Dict(fXRef));
-	// setup XObject dictionary
+	// Build the XObject form dictionary using the proven Add* helpers.
+	Object xobj(new Dict(fXRef));
 	AddName(&xobj, "Type", "XObject");
 	AddName(&xobj, "Subtype", "Form");
 	AddInteger(&xobj, "FormType", 1);
@@ -645,27 +253,25 @@ bool AnnotWriter::WriteAS(Ref& ref, Annotation* a)
 	r.y2 -= r.y1;
 	r.x1 = r.y1 = 0;
 	AddRect(&xobj, "BBox", &r);
-	// setup resource dictionary
-	Object resources, array, name;
-	resources = Object(new Dict(fXRef));
-	array = Object(new Array(fXRef));
-	name = Object(objName, "PDF");
-	array.arrayAdd(std::move(name));
-	resources.dictAdd("ProcSet", std::move(array));
+	// resource dictionary
+	Object resources(new Dict(fXRef));
+	Object procSet(new Array(fXRef));
+	Object name(objName, "PDF");
+	procSet.arrayAdd(std::move(name));
+	resources.dictAdd("ProcSet", std::move(procSet));
 	xobj.dictAdd("Resources", std::move(resources));
+	// NOTE: /Length is filled in by poppler when the stream is serialized, so
+	// (unlike the old hand-rolled writer) we do not add it here.
 
-	// create appearance stream
-	BePDFAnnotAppearance as;
-	a->Visit(&as);
-
-	// set length
-	AddInteger(&xobj, "Length", as.GetLength());
-	ASSERT(as.GetLength() > 0);
-
-	// write form XObject
-	WriteObject(ref, &xobj, as.GetStream());
-	ref = empty_ref;
-	return true;
+	// Hand the dictionary and stream bytes to poppler's stream-object factory.
+	// addStreamObject takes ownership of one reference to the Dict, so bump the
+	// refcount to balance xobj's own reference (released at end of scope).
+	// VERIFY(VM): Dict::incRef visibility, addStreamObject ownership + /Length.
+	GooString* stream = as.GetStream();
+	std::vector<char> buffer(stream->c_str(), stream->c_str() + as.GetLength());
+	Dict* dict = xobj.getDict();
+	dict->incRef();
+	return fXRef->addStreamObject(dict, std::move(buffer), StreamCompression::None);
 }
 
 
@@ -674,13 +280,11 @@ bool AnnotWriter::UpdateAnnot(Annotation* annot)
 	if (annot->HasChanged()) {
 		Ref ref = annot->GetRef();
 		ASSERT(!is_empty_ref(ref));
-		fASRef = empty_ref;
 		fAnnot = Object(new Dict(fXRef));
 		AddName(&fAnnot, "Type", "Annot");
 		annot->Visit(this);
 		DoAnnotation(annot);
-		WriteObject(ref, &fAnnot);
-		WriteAS(fASRef, annot);
+		fXRef->setModifiedObject(&fAnnot, ref);
 	}
 	if (annot->GetPopup() != NULL) {
 		return UpdateAnnot(annot->GetPopup());
@@ -688,35 +292,32 @@ bool AnnotWriter::UpdateAnnot(Annotation* annot)
 	return true;
 }
 
-// Create new PDF file and append changed or new annotations
+// Apply all annotation changes to the in-memory PDFDoc, then serialize the
+// whole document to "name" with a full rewrite (PDFDoc::saveAs).
 bool AnnotWriter::WriteTo(const char* name)
 {
-	if (!CopyFile(name))
-		return false;
-	if (!fAnnots.HasChanged())
-		return true;
+	if (!fAnnots.HasChanged()) {
+		// Nothing changed: write the document out unmodified.
+		return fDoc->saveWithoutChangesAs(std::string(name)) == errNone;
+	}
 	AssignShortFontNames();
-	fFile = fopen(name, "a+b");
-	bool ok = fFile != NULL;
+	bool ok = true;
 	int numPages = fDoc->getNumPages();
 	for (int i = 0; ok && i < numPages; i++) {
-		fPageRef = *fDoc->getCatalog()->getPageRef(i + 1);
 		Annotations* a = fAnnots.Get(i);
-		if (a && a->HasChanged()) {
-			Ref annotArray;
-			ok = ok && UpdatePage(i, a, annotArray);
-			ok = ok && UpdateAnnotArray(i, a, annotArray);
-			for (int j = 0; ok && j < a->Length(); j++) {
-				Annotation* an = a->At(j);
-				if (!an->IsDeleted()) {
-					if (CanWrite(an)) {
-						ok = UpdateAnnot(an);
-					}
-				} else {
-					if (!is_empty_ref(an->GetRef())) {
-						fXRefTable.DeleteRef(an->GetRef());
-					}
-				}
+		if (a == NULL || !a->HasChanged())
+			continue;
+		fPageRef = *fDoc->getCatalog()->getPageRef(i + 1);
+		Ref annotArray;
+		ok = ok && UpdatePage(i, a, annotArray);
+		ok = ok && UpdateAnnotArray(i, a, annotArray);
+		for (int j = 0; ok && j < a->Length(); j++) {
+			Annotation* an = a->At(j);
+			if (an->IsDeleted()) {
+				if (!is_empty_ref(an->GetRef()))
+					fXRef->removeIndirectObject(an->GetRef());
+			} else if (CanWrite(an)) {
+				ok = UpdateAnnot(an);
 			}
 		}
 	}
@@ -724,19 +325,12 @@ bool AnnotWriter::WriteTo(const char* name)
 		UpdateInfoDict();
 		UpdateBePDFAcroForm();
 		UpdateCatalog();
-		ok = WriteXRefTable();
-		ok = ok && WriteFileTrailer();
-	}
-	if (fFile) {
-		fclose(fFile);
-		fFile = NULL;
-	}
-	if (!ok) {
-		// delete file on error
-		unlink(name);
 	}
 	UnassignShortFontNames();
-	return ok;
+	if (!ok)
+		return false;
+	fXRef->setModified();
+	return fDoc->saveAs(std::string(name), writeForceRewrite) == errNone;
 }
 
 
@@ -879,16 +473,18 @@ void AnnotWriter::DoAnnotation(Annotation* a)
 	if (popup != NULL) {
 		popup->SetParentRef(a->GetRef());
 		if (is_empty_ref(popup->GetRef())) {
-			popup->SetRef(fXRefTable.GetNewRef(xrefEntryUncompressed));
+			popup->SetRef(ReserveRef());
 		}
 		AddRef(&fAnnot, "Popup", popup->GetRef());
 	}
 	if (HasAppearanceStream(a)) {
-		fASRef = fXRefTable.GetNewRef(xrefEntryUncompressed);
-		Object ap;
-		ap = Object(new Dict(fXRef));
-		AddRef(&ap, "N", fASRef);
-		AddDict(&fAnnot, "AP", &ap);
+		Ref asRef = WriteAS(a);
+		if (!is_empty_ref(asRef)) {
+			Object ap;
+			ap = Object(new Dict(fXRef));
+			AddRef(&ap, "N", asRef);
+			AddDict(&fAnnot, "AP", &ap);
+		}
 	}
 	if (dynamic_cast<PopupAnnot*>(a) == NULL) {
 		AddRef(&fAnnot, "P", fPageRef);
@@ -1154,7 +750,7 @@ void AnnotWriter::WriteFont(PDFFont* font)
 {
 	if (!is_empty_ref(font->GetRef()))
 		return; // already saved
-	font->SetRef(fXRefTable.GetNewRef(xrefEntryUncompressed));
+	font->SetRef(ReserveRef());
 	fWrittenFonts.push_back(font);
 	Object dict;
 	dict = Object(new Dict(fXRef));
@@ -1162,7 +758,7 @@ void AnnotWriter::WriteFont(PDFFont* font)
 	AddName(&dict, "Subtype", "Type1");
 	AddName(&dict, "BaseFont", (char*)font->GetName());
 	AddName(&dict, "Encoding", "WinAnsiEncoding");
-	WriteObject(font->GetRef(), &dict);
+	fXRef->setModifiedObject(&dict, font->GetRef());
 }
 
 void AnnotWriter::AddFonts(Object* dict, std::list<PDFFont*>* fonts)
@@ -1191,14 +787,14 @@ void AnnotWriter::UpdateBePDFAcroForm()
 	oldDR.setToNull();  // poppler: Object(objNull) ctor is private; use setToNull()
 
 	if (is_empty_ref(fBePDFAcroForm->GetRef())) {
-		Ref fieldsRef = fXRefTable.GetNewRef(xrefEntryUncompressed);
+		Ref fieldsRef = ReserveRef();
 		// create empty array for fields
 		Object fields;
 		fields = Object(new Array(fXRef));
-		WriteObject(fieldsRef, &fields);
+		fXRef->setModifiedObject(&fields, fieldsRef);
 
 		// create new BePDFAcroForm
-		fBePDFAcroFormRef = fXRefTable.GetNewRef(xrefEntryUncompressed);
+		fBePDFAcroFormRef = ReserveRef();
 		AddName(&acroForm, "Type", "BePDFAcroForm");
 		AddRef(&acroForm, "Fields", fieldsRef);
 	} else {
@@ -1226,7 +822,7 @@ void AnnotWriter::UpdateBePDFAcroForm()
 	AddFonts(&font, &fWrittenFonts);
 	AddDict(&dr, "Font", &font);
 	AddDict(&acroForm, "DR", &dr);
-	WriteObject(fBePDFAcroFormRef, &acroForm);
+	fXRef->setModifiedObject(&acroForm, fBePDFAcroFormRef);
 }
 
 void AnnotWriter::UpdateCatalog()
@@ -1246,5 +842,6 @@ void AnnotWriter::UpdateCatalog()
 	catalog = Object(new Dict(fXRef));
 	CopyDict(&oldCatalog, &catalog);
 	AddRef(&catalog, "BePDFAcroForm", fBePDFAcroFormRef);
-	WriteObject(root, &catalog);
+	// The catalog already exists in the file; update it in place.
+	fXRef->setModifiedObject(&catalog, root);
 }

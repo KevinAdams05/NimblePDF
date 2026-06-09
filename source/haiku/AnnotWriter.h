@@ -32,46 +32,6 @@
 #include "Annotation.h"
 #include "AnnotAppearance.h"
 
-struct XRefItem {
-	int offset; // the file offset
-	int num;    // the reference number
-	int gen;    // the reference generation
-	bool used;  // is reference used?
-};
-
-class XRefTable {
-	enum { INITIAL_INCREMENT = 30, INCREMENT = 10, DEAD_GEN = 65535 };
-
-	XRef* fXRef;         // points to the files xref table
-	int fLength;         // allocated entries
-	int fSize;           // used entries
-	XRefEntry* fEntries; // the updated xref table
-
-	// resize fEntries to at least length elements
-	void Resize(int length);
-	bool InRange(int num);
-	XRefEntry* GetUnusedHead();
-	void InsertInUnusedList(int num, XRefEntry* e);
-	Ref ActivateUnusedEntry(XRefEntryType type);
-	Ref AppendNewRef(XRefEntryType type);
-
-	XRefTable() {}
-
-public:
-	XRefTable(XRef* xref);
-	~XRefTable();
-
-	XRefEntry* GetXRef(int num);
-	int GetSize();
-	bool HasChanged(int num);
-
-	void DeleteRef(Ref ref);
-	Ref GetNewRef(XRefEntryType type);
-	void SetOffset(Ref ref, int offset);
-
-	bool NextGroup(int start, int* num, int* nof);
-};
-
 // We CAN write Line and Ink, but adding new annotations of this type is
 // not implemented.
 class AnnotTester : public AnnotVisitor {
@@ -112,42 +72,26 @@ class AnnotWriter : public AnnotVisitor {
 	AnnotsList fAnnots;
 	BePDFAcroForm* fBePDFAcroForm;
 	XRef* fXRef;
-	XRefTable fXRefTable;
 	// changed during pdf generation:
 	Ref fPageRef;
-	Ref fASRef;
 	Ref fInfoRef;
 	Ref fBePDFAcroFormRef;
 	std::list<PDFFont*> fTemporaryFonts; // not already stored in old PDF file
 	std::list<PDFFont*> fWrittenFonts;
 
-	FILE* fFile;
-	int fXRefOffset;
 	Object fAnnot; // used by UpdateAnnot & visitor
-	bool fAnnotValid;
 
 	friend void test_annot_writer(PDFDoc* doc, int page, AnnotsList* list);
 
-	void Write(const char* s);
-	void Write(GooString* s);
-	void Write(Ref ref);
-	void WriteCr();
-	void WriteCrLf();
-	int Tell();
-	void InsertWhiteSpace(const Object* o);
-	void WriteObject(const Object* o);
-	void WriteObject(Ref ref, Object* obj, GooString* stream = NULL);
+	// Reserve a new indirect-object slot (a null placeholder) and return its
+	// Ref. The real object is supplied later via XRef::setModifiedObject(); the
+	// whole document is then re-serialized by PDFDoc::saveAs(writeForceRewrite).
+	Ref ReserveRef();
 	bool IsInList(const char* s, const char* list[]);
 	void CopyDict(Object* in, Object* out, const char* excludeKeys[] = NULL);
-	bool WriteXRefTable();
 
-	Ref GetModDateRef(Ref infoDictRef);
 	Ref GetInfoDictRef();
-	void CopyInfoDict(Object* dict);
-	void GetCurrentDate(GooString* date);
-	void WriteModDate(Ref ref);
 	void UpdateInfoDict();
-	bool WriteFileTrailer();
 
 	/* AcroFrom:
 	1. Assign unique short names to fonts
@@ -171,12 +115,8 @@ class AnnotWriter : public AnnotVisitor {
 	void UpdateBePDFAcroForm();
 	void UpdateCatalog();
 
-	bool CopyFile(const char* name);
-
 	bool HasRef(Object* dict, const char* key, Ref& ref);
 	bool HasAnnotRef(Object* page, Ref& annotRef);
-	bool HasEmbeddedContent(Object* page);
-	bool CopyContentStream(Object* page);
 	bool CopyPage(Object* page, Ref pageRef, Ref annotsArray);
 	bool UpdatePage(int pageNo, Annotations* annots, Ref& annotsArray);
 
@@ -200,7 +140,7 @@ class AnnotWriter : public AnnotVisitor {
 	void DoAnnotation(Annotation* a);
 	void DoStyledAnnot(StyledAnnot* s);
 	void DoMarkupAnnot(MarkupAnnot* m);
-	bool WriteAS(Ref& ref, Annotation* annot);
+	Ref WriteAS(Annotation* annot);
 	bool UpdateAnnot(Annotation* annot);
 
 public:
