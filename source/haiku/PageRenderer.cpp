@@ -1,5 +1,5 @@
 /*
- * BePDF: The PDF reader for Haiku.
+ * NimblePDF: The PDF reader for Haiku.
  * 	 Copyright (C) 1997 Benoit Triquet.
  * 	 Copyright (C) 1998-2000 Hubert Figuiere.
  * 	 Copyright (C) 2000-2011 Michael Pfeiffer.
@@ -34,10 +34,10 @@
 #include <Debug.h>
 
 #include "Logging.h"
-#include "BepdfApplication.h" // for images only
+#include "NimblePDFApplication.h" // for images only
 #include "PageRenderer.h"
 #include "CachedPage.h"
-#include "BePDF.h"
+#include "NimblePDF.h"
 #include "Annotation.h"
 #include "AnnotationRenderer.h"
 
@@ -95,7 +95,7 @@ PageRenderer::PageRenderer()
       fRenderingThread(-1),
       fPage(NULL),
       fBitmap(NULL),
-      fBePDFAcroForm(NULL)
+      fNimblePDFAcroForm(NULL)
 {
 	fOutputDev->startDoc(NULL);
 }
@@ -110,10 +110,10 @@ PageRenderer::~PageRenderer()
 }
 
 ///////////////////////////////////////////////////////////////////////////
-void PageRenderer::SetDoc(PDFDoc* doc, BePDFAcroForm* acroForm)
+void PageRenderer::SetDoc(PDFDoc* doc, NimblePDFAcroForm* acroForm)
 {
 	fDoc = doc;
-	fBePDFAcroForm = acroForm;
+	fNimblePDFAcroForm = acroForm;
 	fAnnotations.SetSize(doc->getNumPages());
 	fOutputDev->startDoc(doc);
 }
@@ -282,7 +282,7 @@ Annotations* PageRenderer::GetAnnotationsForPage(int pageNo)
 	int i = pageNo - 1;
 	if (fAnnotations.Get(i) == NULL) {
 		Object annotsDict = fDoc->getCatalog()->getPage(pageNo)->getAnnotsObject();
-		fAnnotations.Set(i, new Annotations(&annotsDict, fBePDFAcroForm));
+		fAnnotations.Set(i, new Annotations(&annotsDict, fNimblePDFAcroForm));
 	}
 	return fAnnotations.Get(i);
 }
@@ -363,8 +363,8 @@ void PageRenderer::Render()
 void PageRenderer::Notify(uint32 what)
 {
 	BMessage msg(what);
-	msg.AddInt32("bepdf:id", fRenderingThread);
-	msg.AddPointer("bepdf:bitmap", fBitmap);
+	msg.AddInt32("nimblepdf:id", fRenderingThread);
+	msg.AddPointer("nimblepdf:bitmap", fBitmap);
 #ifdef DEBUG
 	if (B_OK != fLooper->PostMessage(&msg))
 		Trace(LOG_ERR, "Error sending message %4.4s", (char*)&msg.what);
@@ -375,8 +375,8 @@ void PageRenderer::Notify(uint32 what)
 
 void PageRenderer::GetParameter(BMessage* msg, thread_id* id, BBitmap** bitmap)
 {
-	if (B_OK != msg->FindInt32("bepdf:id", id))
+	if (B_OK != msg->FindInt32("nimblepdf:id", id))
 		*id = -1;
-	if (B_OK != msg->FindPointer("bepdf:bitmap", (void**)bitmap))
+	if (B_OK != msg->FindPointer("nimblepdf:bitmap", (void**)bitmap))
 		*bitmap = NULL;
 }

@@ -12,7 +12,7 @@ resource app_version {
 	long_info = "Full-featured PDF reader"
 };
 
-resource app_signature "application/x-vnd.mp-xpdf";
+resource app_signature "application/x-vnd.Haiku-NimblePDF";
 
 resource file_types message {
 	"types" = "application/pdf"

@@ -1,5 +1,5 @@
 /*
- * BePDF: The PDF reader for Haiku.
+ * NimblePDF: The PDF reader for Haiku.
  * 	 Copyright (C) 1997 Benoit Triquet.
  * 	 Copyright (C) 1998-2000 Hubert Figuiere.
  * 	 Copyright (C) 2000-2011 Michael Pfeiffer.
@@ -454,7 +454,7 @@ Annotation::Annotation(Dict* d)
 			LOG("Popup is invalid\n");
 		if (popup->IsValid()) {
 			fPopup = popup;
-			// Note: the original BePDF code here checked obj.isRef(),
+			// Note: the original NimblePDF code here checked obj.isRef(),
 			// which appears to be a copy-paste bug (obj was the outer
 			// lookup result, not the Popup-specific one). Corrected to
 			// ref.isRef() during the poppler migration.
@@ -658,7 +658,7 @@ LinkAnnot::LinkAnnot(Dict* d)
 	// look for destination
 	//
 	// Poppler's parseDest/parseAction return unique_ptr<LinkAction>; we
-	// release ownership to fLinkAction (raw pointer member). BePDF
+	// release ownership to fLinkAction (raw pointer member). NimblePDF
 	// already owned/freed this pointer manually.
 	if (!(obj = d->lookup("Dest")).isNull()) {
 		fLinkAction = LinkAction::parseDest(&obj).release();
@@ -732,7 +732,7 @@ FreeTextAnnot::FreeTextAnnot(FreeTextAnnot* copy)
       fFontSize(copy->fFontSize)
 {}
 
-FreeTextAnnot::FreeTextAnnot(Dict* d, BePDFAcroForm* acroForm)
+FreeTextAnnot::FreeTextAnnot(Dict* d, NimblePDFAcroForm* acroForm)
     : StyledAnnot(d),
       fAppearance(""),
       fJustification(left_justify),
@@ -746,7 +746,7 @@ FreeTextAnnot::FreeTextAnnot(Dict* d, BePDFAcroForm* acroForm)
 		fAppearance.append(obj.getString());
 	}
 
-	fJustification = acroForm->GetJustification(); // inherit property from BePDFAcroForm
+	fJustification = acroForm->GetJustification(); // inherit property from NimblePDFAcroForm
 	if ((obj = d->lookup("Q")).isInt()) {
 		int j = obj.getInt();
 		if (j >= left_justify && j <= right_justify)
@@ -758,7 +758,7 @@ FreeTextAnnot::FreeTextAnnot(Dict* d, BePDFAcroForm* acroForm)
 	if (fAppearance.cmp("") != 0) {
 		appearance = fAppearance.c_str();
 	} else {
-		// inherit it from BePDFAcroForm if it is not defined in annotation
+		// inherit it from NimblePDFAcroForm if it is not defined in annotation
 		appearance = acroForm->GetAppearance();
 	}
 
@@ -1242,11 +1242,11 @@ AnnotName::~AnnotName()
 {}
 
 
-// Implementation of BePDFAcroForm
+// Implementation of NimblePDFAcroForm
 
-PDFStandardFonts* BePDFAcroForm::fStandardFonts = NULL;
+PDFStandardFonts* NimblePDFAcroForm::fStandardFonts = NULL;
 
-PDFStandardFonts* BePDFAcroForm::GetStandardFonts()
+PDFStandardFonts* NimblePDFAcroForm::GetStandardFonts()
 {
 	if (fStandardFonts == NULL) {
 		fStandardFonts = new PDFStandardFonts();
@@ -1255,7 +1255,7 @@ PDFStandardFonts* BePDFAcroForm::GetStandardFonts()
 }
 
 
-BePDFAcroForm::BePDFAcroForm(XRef* xref, Object* acroFormRef)
+NimblePDFAcroForm::NimblePDFAcroForm(XRef* xref, Object* acroFormRef)
     : fRef(empty_ref),
       fJustification(left_justify)
 {
@@ -1305,7 +1305,7 @@ BePDFAcroForm::BePDFAcroForm(XRef* xref, Object* acroFormRef)
 	}
 }
 
-BePDFAcroForm::~BePDFAcroForm()
+NimblePDFAcroForm::~NimblePDFAcroForm()
 {
 	std::list<PDFFont*>::iterator it;
 	for (it = fFonts.begin(); it != fFonts.end(); it++) {
@@ -1314,7 +1314,7 @@ BePDFAcroForm::~BePDFAcroForm()
 	}
 }
 
-void BePDFAcroForm::ParseFont(const char* shortName, Ref ref, Dict* dict)
+void NimblePDFAcroForm::ParseFont(const char* shortName, Ref ref, Dict* dict)
 {
 	bool isType1;
 	GooString baseFont;
@@ -1376,7 +1376,7 @@ void BePDFAcroForm::ParseFont(const char* shortName, Ref ref, Dict* dict)
 error:
 }
 
-PDFFont* BePDFAcroForm::FindFontByShortName(const char* name)
+PDFFont* NimblePDFAcroForm::FindFontByShortName(const char* name)
 {
 	std::list<PDFFont*>::iterator it;
 	for (it = fFonts.begin(); it != fFonts.end(); it++) {
@@ -1402,7 +1402,7 @@ Annotations::Annotations(Annotations* copy)
 	}
 }
 
-Annotations::Annotations(Object* annots, BePDFAcroForm* acroForm)
+Annotations::Annotations(Object* annots, NimblePDFAcroForm* acroForm)
     : fMax(0),
       fLength(0),
       fAnnots(NULL)

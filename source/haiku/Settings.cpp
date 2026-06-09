@@ -1,5 +1,5 @@
 /*
- * BePDF: The PDF reader for Haiku.
+ * NimblePDF: The PDF reader for Haiku.
  * 	 Copyright (C) 1997 Benoit Triquet.
  * 	 Copyright (C) 1998-2000 Hubert Figuiere.
  * 	 Copyright (C) 2000-2011 Michael Pfeiffer.
@@ -183,33 +183,33 @@ bool FileAttributes::Read(entry_ref* ref, GlobalSettings* s)
 	BNode node(ref);
 	if (node.InitCheck() == B_OK) {
 		int16 zoom;
-		if (sizeof(zoom) != node.ReadAttr("bepdf:zoom", B_INT16_TYPE, 0, &zoom, sizeof(zoom))) {
+		if (sizeof(zoom) != node.ReadAttr("nimblepdf:zoom", B_INT16_TYPE, 0, &zoom, sizeof(zoom))) {
 			zoom = s->GetZoom();
 		}
 		int32 rotation, pos_x, pos_y, width, height;
-		if (sizeof(rotation) != node.ReadAttr("bepdf:rotation", B_INT32_TYPE, 0, &rotation, sizeof(rotation))) {
+		if (sizeof(rotation) != node.ReadAttr("nimblepdf:rotation", B_INT32_TYPE, 0, &rotation, sizeof(rotation))) {
 			rotation = (int32)s->GetRotation();
 		}
-		if ((sizeof(pos_x) != node.ReadAttr("bepdf:pos_x", B_INT32_TYPE, 0, &pos_x, sizeof(pos_x)))
-		    || (sizeof(pos_y) != node.ReadAttr("bepdf:pos_y", B_INT32_TYPE, 0, &pos_y, sizeof(pos_y)))) {
+		if ((sizeof(pos_x) != node.ReadAttr("nimblepdf:pos_x", B_INT32_TYPE, 0, &pos_x, sizeof(pos_x)))
+		    || (sizeof(pos_y) != node.ReadAttr("nimblepdf:pos_y", B_INT32_TYPE, 0, &pos_y, sizeof(pos_y)))) {
 			BPoint pos = s->GetWindowPosition();
 			pos_x = (int32)pos.x;
 			pos_y = (int32)pos.y;
 		}
-		if ((sizeof(width) != node.ReadAttr("bepdf:width", B_INT32_TYPE, 0, &width, sizeof(width)))
-		    || (sizeof(height) != node.ReadAttr("bepdf:height", B_INT32_TYPE, 0, &height, sizeof(height)))) {
+		if ((sizeof(width) != node.ReadAttr("nimblepdf:width", B_INT32_TYPE, 0, &width, sizeof(width)))
+		    || (sizeof(height) != node.ReadAttr("nimblepdf:height", B_INT32_TYPE, 0, &height, sizeof(height)))) {
 			float w, h;
 			s->GetWindowSize(w, h);
 			width = (int32)w;
 			height = (int32)h;
 		}
-		if (sizeof(page) != node.ReadAttr("bepdf:page", B_INT32_TYPE, 0, &page, sizeof(page))) {
+		if (sizeof(page) != node.ReadAttr("nimblepdf:page", B_INT32_TYPE, 0, &page, sizeof(page))) {
 			page = 1;
 		}
-		if (sizeof(left) != node.ReadAttr("bepdf:left", B_FLOAT_TYPE, 0, &left, sizeof(left))) {
+		if (sizeof(left) != node.ReadAttr("nimblepdf:left", B_FLOAT_TYPE, 0, &left, sizeof(left))) {
 			left = 0;
 		}
-		if (sizeof(top) != node.ReadAttr("bepdf:top", B_FLOAT_TYPE, 0, &top, sizeof(top))) {
+		if (sizeof(top) != node.ReadAttr("nimblepdf:top", B_FLOAT_TYPE, 0, &top, sizeof(top))) {
 			top = 0;
 		}
 
@@ -228,7 +228,7 @@ bool FileAttributes::Read(entry_ref* ref, GlobalSettings* s)
 		ssize_t attr_size = 0;
 		char* buffer = (char*)malloc(buf_size);
 		while (buffer) {
-			attr_size = node.ReadAttr("bepdf:bookmarks", B_MESSAGE_TYPE, 0, buffer, buf_size);
+			attr_size = node.ReadAttr("nimblepdf:bookmarks", B_MESSAGE_TYPE, 0, buffer, buf_size);
 			if (attr_size == buf_size) {
 				// resize buffer
 				buf_size += 65536;
@@ -257,39 +257,39 @@ bool FileAttributes::Write(entry_ref* ref, GlobalSettings* s)
 		int32 i;
 		BPoint pos = s->GetWindowPosition();
 		i = (int32)pos.x;
-		if (sizeof(int32) != node.WriteAttr("bepdf:pos_x", B_INT32_TYPE, 0, &i, sizeof(i)))
+		if (sizeof(int32) != node.WriteAttr("nimblepdf:pos_x", B_INT32_TYPE, 0, &i, sizeof(i)))
 			return false;
 		i = (int32)pos.y;
-		if (sizeof(int32) != node.WriteAttr("bepdf:pos_y", B_INT32_TYPE, 0, &i, sizeof(i)))
+		if (sizeof(int32) != node.WriteAttr("nimblepdf:pos_y", B_INT32_TYPE, 0, &i, sizeof(i)))
 			return false;
 		float width, height;
 		s->GetWindowSize(width, height);
 		i = (int32)width;
-		if (sizeof(int32) != node.WriteAttr("bepdf:width", B_INT32_TYPE, 0, &i, sizeof(i)))
+		if (sizeof(int32) != node.WriteAttr("nimblepdf:width", B_INT32_TYPE, 0, &i, sizeof(i)))
 			return false;
 		i = (int32)height;
-		if (sizeof(int32) != node.WriteAttr("bepdf:height", B_INT32_TYPE, 0, &i, sizeof(i)))
+		if (sizeof(int32) != node.WriteAttr("nimblepdf:height", B_INT32_TYPE, 0, &i, sizeof(i)))
 			return false;
 		// current page
 		int16 zoom = s->GetZoom();
-		if (sizeof(zoom) != node.WriteAttr("bepdf:zoom", B_INT16_TYPE, 0, &zoom, sizeof(zoom)))
+		if (sizeof(zoom) != node.WriteAttr("nimblepdf:zoom", B_INT16_TYPE, 0, &zoom, sizeof(zoom)))
 			return false;
 		i = (int32)s->GetRotation();
-		if (sizeof(int32) != node.WriteAttr("bepdf:rotation", B_INT32_TYPE, 0, &i, sizeof(i)))
+		if (sizeof(int32) != node.WriteAttr("nimblepdf:rotation", B_INT32_TYPE, 0, &i, sizeof(i)))
 			return false;
-		if (sizeof(page) != node.WriteAttr("bepdf:page", B_INT32_TYPE, 0, &page, sizeof(page)))
+		if (sizeof(page) != node.WriteAttr("nimblepdf:page", B_INT32_TYPE, 0, &page, sizeof(page)))
 			return false;
-		if (sizeof(left) != node.WriteAttr("bepdf:left", B_FLOAT_TYPE, 0, &left, sizeof(left)))
+		if (sizeof(left) != node.WriteAttr("nimblepdf:left", B_FLOAT_TYPE, 0, &left, sizeof(left)))
 			return false;
-		if (sizeof(top) != node.WriteAttr("bepdf:top", B_FLOAT_TYPE, 0, &top, sizeof(top)))
+		if (sizeof(top) != node.WriteAttr("nimblepdf:top", B_FLOAT_TYPE, 0, &top, sizeof(top)))
 			return false;
 		if (bookmarks.IsEmpty()) {
-			node.RemoveAttr("bepdf:bookmarks");
+			node.RemoveAttr("nimblepdf:bookmarks");
 		} else {
 			ssize_t size = bookmarks.FlattenedSize();
 			char* buffer = new char[size];
 			if (buffer && bookmarks.Flatten(buffer, size) == B_OK) {
-				node.WriteAttr("bepdf:bookmarks", B_MESSAGE_TYPE, 0, buffer, size);
+				node.WriteAttr("nimblepdf:bookmarks", B_MESSAGE_TYPE, 0, buffer, size);
 			}
 			delete[] buffer;
 		}

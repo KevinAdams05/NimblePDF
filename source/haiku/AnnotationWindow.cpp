@@ -1,5 +1,5 @@
 /*
- * BePDF: The PDF reader for Haiku.
+ * NimblePDF: The PDF reader for Haiku.
  * 	 Copyright (C) 1997 Benoit Triquet.
  * 	 Copyright (C) 1998-2000 Hubert Figuiere.
  * 	 Copyright (C) 2000-2011 Michael Pfeiffer.
@@ -96,7 +96,7 @@ AnnotationWindow::AnnotationWindow(GlobalSettings* settings, BLooper* looper)
 void AnnotationWindow::PopulateFontMenu(BMenu* menu)
 {
 	BMenuItem* item;
-	PDFStandardFonts* stdFonts = BePDFAcroForm::GetStandardFonts();
+	PDFStandardFonts* stdFonts = NimblePDFAcroForm::GetStandardFonts();
 	for (int i = 0; i < stdFonts->CountFonts(); i++) {
 		PDFFont* font = stdFonts->FontAt(i);
 		BMessage* msg = new BMessage(FONT_SELECTED);

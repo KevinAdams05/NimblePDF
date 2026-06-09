@@ -1,5 +1,5 @@
 /*  
- * BePDF: The PDF reader for Haiku.
+ * NimblePDF: The PDF reader for Haiku.
  * 	 Copyright (C) 1997 Benoit Triquet.
  * 	 Copyright (C) 1998-2000 Hubert Figuiere.
  * 	 Copyright (C) 2000-2011 Michael Pfeiffer.
@@ -30,7 +30,7 @@
 #include <GfxState.h> // for GfxRGB
 #include <list>
 
-// bepdf
+// nimblepdf
 #include "EmbeddedFileSpec.h"
 
 class TextAnnot;
@@ -55,7 +55,7 @@ class WidgetAnnot;
 class PrinterMarkAnnot;
 class TrapNetAnnot;
 
-class BePDFAcroForm;
+class NimblePDFAcroForm;
 
 extern Ref empty_ref;
 
@@ -409,7 +409,7 @@ private:
 public:
 	FreeTextAnnot(PDFRectangle rect, PDFFont* font);
 	FreeTextAnnot(FreeTextAnnot* copy);
-	FreeTextAnnot(Dict* annot, BePDFAcroForm* acroForm);
+	FreeTextAnnot(Dict* annot, NimblePDFAcroForm* acroForm);
 
 	Annotation* Clone() { return new FreeTextAnnot(this); }
 
@@ -684,7 +684,7 @@ private:
 	const char* fResult;
 };
 
-class BePDFAcroForm {
+class NimblePDFAcroForm {
 private:
 	static PDFStandardFonts* fStandardFonts;
 	Ref fRef;
@@ -695,8 +695,8 @@ private:
 	void ParseFont(const char* shortName, Ref ref, Dict* font);
 
 public:
-	BePDFAcroForm(XRef* xref, Object* acroForm);
-	~BePDFAcroForm();
+	NimblePDFAcroForm(XRef* xref, Object* acroForm);
+	~NimblePDFAcroForm();
 
 	static PDFStandardFonts* GetStandardFonts();
 
@@ -725,7 +725,7 @@ private:
 
 public:
 	Annotations(Annotations* copy);
-	Annotations(Object* annots, BePDFAcroForm* acroForm);
+	Annotations(Object* annots, NimblePDFAcroForm* acroForm);
 	~Annotations();
 
 	int Length() const { return fLength; }

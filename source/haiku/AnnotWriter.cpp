@@ -1,5 +1,5 @@
 /*
- * BePDF: The PDF reader for Haiku.
+ * NimblePDF: The PDF reader for Haiku.
  * 	 Copyright (C) 1997 Benoit Triquet.
  * 	 Copyright (C) 1998-2000 Hubert Figuiere.
  * 	 Copyright (C) 2000-2011 Michael Pfeiffer.
@@ -52,10 +52,10 @@ bool CanWrite(Annotation* annot)
 }
 
 // Implementation of AnnotWriter
-AnnotWriter::AnnotWriter(XRef* xref, PDFDoc* doc, AnnotsList* list, BePDFAcroForm* acroForm)
+AnnotWriter::AnnotWriter(XRef* xref, PDFDoc* doc, AnnotsList* list, NimblePDFAcroForm* acroForm)
     : fDoc(doc),
       fAnnots(list), // make a copy
-      fBePDFAcroForm(acroForm),
+      fNimblePDFAcroForm(acroForm),
       fXRef(xref),
       fInfoRef(empty_ref)
 {}
@@ -238,7 +238,7 @@ bool AnnotWriter::UpdateAnnotArray(int pageNo, Annotations* annots, Ref annotArr
 // Returns the new object's Ref, or empty_ref if the annotation has none.
 Ref AnnotWriter::WriteAS(Annotation* a)
 {
-	BePDFAnnotAppearance as;
+	NimblePDFAnnotAppearance as;
 	a->Visit(&as);
 	if (as.GetLength() <= 0)
 		return empty_ref;
@@ -323,7 +323,7 @@ bool AnnotWriter::WriteTo(const char* name)
 	}
 	if (ok) {
 		UpdateInfoDict();
-		UpdateBePDFAcroForm();
+		UpdateNimblePDFAcroForm();
 		UpdateCatalog();
 	}
 	UnassignShortFontNames();
@@ -448,7 +448,7 @@ void AnnotWriter::AddAnnotContents(Annotation* a)
 
 bool AnnotWriter::HasAppearanceStream(Annotation* a)
 {
-	BePDFAnnotAppearance ap;
+	NimblePDFAnnotAppearance ap;
 	a->Visit(&ap);
 	return ap.GetLength() > 0;
 }
@@ -700,7 +700,7 @@ void AnnotWriter::AssignShortFontNames()
 	// scan all fonts
 	std::list<int> fontIDs;
 	{
-		std::list<PDFFont*>* fonts = fBePDFAcroForm->GetFonts();
+		std::list<PDFFont*>* fonts = fNimblePDFAcroForm->GetFonts();
 		std::list<PDFFont*>::iterator it;
 		for (it = fonts->begin(); it != fonts->end(); it++) {
 			int d;
@@ -712,7 +712,7 @@ void AnnotWriter::AssignShortFontNames()
 	}
 
 	// assign short names to standard fonts
-	PDFStandardFonts* stdFonts = BePDFAcroForm::GetStandardFonts();
+	PDFStandardFonts* stdFonts = NimblePDFAcroForm::GetStandardFonts();
 	int id = 0;
 	std::list<int>::iterator it;
 	fontIDs.sort();
@@ -775,7 +775,7 @@ static const char* acroFormExcludeKeys[] = {"DR", NULL};
 
 static const char* drExcludeKeys[] = {"Font", NULL};
 
-void AnnotWriter::UpdateBePDFAcroForm()
+void AnnotWriter::UpdateNimblePDFAcroForm()
 {
 	if (fWrittenFonts.empty())
 		return;
@@ -786,28 +786,28 @@ void AnnotWriter::UpdateBePDFAcroForm()
 	acroForm = Object(new Dict(fXRef));
 	oldDR.setToNull();  // poppler: Object(objNull) ctor is private; use setToNull()
 
-	if (is_empty_ref(fBePDFAcroForm->GetRef())) {
+	if (is_empty_ref(fNimblePDFAcroForm->GetRef())) {
 		Ref fieldsRef = ReserveRef();
 		// create empty array for fields
 		Object fields;
 		fields = Object(new Array(fXRef));
 		fXRef->setModifiedObject(&fields, fieldsRef);
 
-		// create new BePDFAcroForm
-		fBePDFAcroFormRef = ReserveRef();
-		AddName(&acroForm, "Type", "BePDFAcroForm");
+		// create new NimblePDFAcroForm
+		fNimblePDFAcroFormRef = ReserveRef();
+		AddName(&acroForm, "Type", "NimblePDFAcroForm");
 		AddRef(&acroForm, "Fields", fieldsRef);
 	} else {
-		// copy existing BePDFAcroForm except DR
-		fBePDFAcroFormRef = fBePDFAcroForm->GetRef();
+		// copy existing NimblePDFAcroForm except DR
+		fNimblePDFAcroFormRef = fNimblePDFAcroForm->GetRef();
 		Object ref;
 		Object oldForm;
-		ref = Object(Ref{fBePDFAcroFormRef.num, fBePDFAcroFormRef.gen});
+		ref = Object(Ref{fNimblePDFAcroFormRef.num, fNimblePDFAcroFormRef.gen});
 		oldForm = ref.fetch(fXRef);
 		CopyDict(&oldForm, &acroForm, acroFormExcludeKeys);
 		oldDR = oldForm.dictLookup("DR");
 	}
-	// Add DR to BePDFAcroForm
+	// Add DR to NimblePDFAcroForm
 	Object dr;
 	dr = Object(new Dict(fXRef));
 	if (oldDR.isDict()) {
@@ -817,20 +817,20 @@ void AnnotWriter::UpdateBePDFAcroForm()
 	Object font;
 	font = Object(new Dict(fXRef));
 	// add old fonts
-	AddFonts(&font, fBePDFAcroForm->GetFonts());
+	AddFonts(&font, fNimblePDFAcroForm->GetFonts());
 	// add new fonts
 	AddFonts(&font, &fWrittenFonts);
 	AddDict(&dr, "Font", &font);
 	AddDict(&acroForm, "DR", &dr);
-	fXRef->setModifiedObject(&acroForm, fBePDFAcroFormRef);
+	fXRef->setModifiedObject(&acroForm, fNimblePDFAcroFormRef);
 }
 
 void AnnotWriter::UpdateCatalog()
 {
-	// Return if BePDFAcroForm has not been written or ref exists already in Catalog
-	if (is_empty_ref(fBePDFAcroFormRef) || !is_empty_ref(fBePDFAcroForm->GetRef()))
+	// Return if NimblePDFAcroForm has not been written or ref exists already in Catalog
+	if (is_empty_ref(fNimblePDFAcroFormRef) || !is_empty_ref(fNimblePDFAcroForm->GetRef()))
 		return;
-	// Copy catalog and add ref to new BePDFAcroForm
+	// Copy catalog and add ref to new NimblePDFAcroForm
 	Ref root;
 	Object oldCatalogRef;
 	Object oldCatalog;
@@ -841,7 +841,7 @@ void AnnotWriter::UpdateCatalog()
 	oldCatalog = oldCatalogRef.fetch(fXRef);
 	catalog = Object(new Dict(fXRef));
 	CopyDict(&oldCatalog, &catalog);
-	AddRef(&catalog, "BePDFAcroForm", fBePDFAcroFormRef);
+	AddRef(&catalog, "NimblePDFAcroForm", fNimblePDFAcroFormRef);
 	// The catalog already exists in the file; update it in place.
 	fXRef->setModifiedObject(&catalog, root);
 }

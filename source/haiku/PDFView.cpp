@@ -1,5 +1,5 @@
 /*
- * BePDF: The PDF reader for Haiku.
+ * NimblePDF: The PDF reader for Haiku.
  * 	 Copyright (C) 1997 Benoit Triquet.
  * 	 Copyright (C) 1998-2000 Hubert Figuiere.
  * 	 Copyright (C) 2000-2011 Michael Pfeiffer.
@@ -54,12 +54,12 @@
 // xpdf
 #include <TextOutputDev.h>
 #include <Gfx.h>
-// BePDF
+// NimblePDF
 #include "Logging.h"
 #include "AnnotationWindow.h"
 #include "AnnotWriter.h"
-#include "BePDF.h"
-#include "BepdfApplication.h"
+#include "NimblePDF.h"
+#include "NimblePDFApplication.h"
 #include "CachedPage.h"
 #include "FileInfoWindow.h"
 #include "FindTextWindow.h"
@@ -118,7 +118,7 @@ PDFView::PDFView(entry_ref* ref,
 	SetViewColor(B_TRANSPARENT_COLOR);
 	// init member variables
 	fDoc = NULL;
-	fBePDFAcroForm = NULL;
+	fNimblePDFAcroForm = NULL;
 	fOk = false;
 	fZoom = settings->GetZoom();
 	fBitmap = NULL;
@@ -230,7 +230,7 @@ void PDFView::UpdatePanelDirectory(BPath* path)
 void PDFView::MakeTitleString(BPath* path)
 {
 	delete fTitle;
-	fTitle = new BString("BePDF: ");
+	fTitle = new BString("NimblePDF: ");
 
 	Object obj = fDoc->getDocInfo();
 	if (obj.isDict()) {
@@ -325,7 +325,7 @@ void PDFView::RestoreWindowFrame(BWindow* w)
 bool PDFView::LoadFile(
     entry_ref* ref, FileAttributes* fileAttributes, const char* ownerPassword, const char* userPassword, bool init, bool* encrypted)
 {
-	BString s(B_TRANSLATE("BePDF reading file: "));
+	BString s(B_TRANSLATE("NimblePDF reading file: "));
 	s += ref->name;
 	ShowLoadProgressStatusWindow statusWindow(s.String());
 	EndDoc();
@@ -357,10 +357,10 @@ bool PDFView::LoadFile(
 		}
 		return false;
 	}
-	delete fBePDFAcroForm;
-	fBePDFAcroForm = new BePDFAcroForm(fDoc->getXRef(), fDoc->getCatalog()->getAcroForm());
-	fPageRenderer.SetDoc(fDoc, fBePDFAcroForm);
-	BepdfApplication::UpdateFileAttributes(fDoc, ref);
+	delete fNimblePDFAcroForm;
+	fNimblePDFAcroForm = new NimblePDFAcroForm(fDoc->getXRef(), fDoc->getCatalog()->getAcroForm());
+	fPageRenderer.SetDoc(fDoc, fNimblePDFAcroForm);
+	NimblePDFApplication::UpdateFileAttributes(fDoc, ref);
 
 	float left, top;
 	LoadFileSettings(ref, fileAttributes, left, top);
@@ -1472,7 +1472,7 @@ bool PDFView::HandleLink(BPoint point)
 			BString string(B_TRANSLATE("Execute the command:"));
 			string += fileName->c_str();
 			string += "?";
-			BAlert* dialog = new BAlert(B_TRANSLATE("BePDF: Launch"), string.String(), B_TRANSLATE("OK"), B_TRANSLATE("Cancel"));
+			BAlert* dialog = new BAlert(B_TRANSLATE("NimblePDF: Launch"), string.String(), B_TRANSLATE("OK"), B_TRANSLATE("Cancel"));
 			if (dialog->Go() == 0)
 				system(fileName->c_str());
 			delete dialog;
@@ -2534,7 +2534,7 @@ void PDFView::UpdateAnnotation(Annotation* a, const char* contents, const char* 
 		fAnnotInEditor->SetChanged();
 		FreeTextAnnot* ft = dynamic_cast<FreeTextAnnot*>(fAnnotInEditor);
 		if (ft && font) {
-			ft->SetFont(BePDFAcroForm::GetStandardFonts()->FindByName(font));
+			ft->SetFont(NimblePDFAcroForm::GetStandardFonts()->FindByName(font));
 			ft->SetFontSize(size);
 			ft->SetJustification(ToFreeTextJustification(align));
 		}

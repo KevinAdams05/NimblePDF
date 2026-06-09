@@ -1,4 +1,4 @@
-1	Friulian	application/x-vnd.mp-xpdf	1765081836
+1	Friulian	application/x-vnd.Haiku-NimblePDF	1765081836
  in	PrintSettingsWindow		in
 All pages	PrintSettingsWindow		Dutis lis pagjinis
 Color	PrintSettingsWindow		Colôr
@@ -26,8 +26,8 @@ Zoom must be between 25 and 400!	PrintSettingsWindow		L'ingrandiment al scugne j
 [link type 'movie' not supported]	PDFView		[gjenar di colegament 'movie' no supuartât]
 [unknown link]	PDFView		[colegament no cognossût]
 Annotation	PDFView		Note
-BePDF reading file: 	PDFView		BePDF leture file:
-BePDF: Launch	PDFView		BePDF: Invie
+NimblePDF reading file: 	PDFView		NimblePDF leture file:
+NimblePDF: Launch	PDFView		NimblePDF: Invie
 Cancel	PDFView		Anule
 Copy link	PDFView		Copie colegament
 Delete	PDFView		Elimine
@@ -55,8 +55,8 @@ Save selected attachment to file	AttachmentView		Salve la zonte selezionade sul 
 Save selected attachments into directory	AttachmentView		Salve lis zontis selezionadis inte cartele
 Saving attachment(s):	AttachmentView		Salvament alegât(s):
 Abort	PrintingProgressWindow		Interomp
-BePDF printing	PrintingProgressWindow		Stampe BePDF
-BePDF printing document: 	PrintingProgressWindow		Stampe di document BePDF:
+NimblePDF printing	PrintingProgressWindow		Stampe NimblePDF
+NimblePDF printing document: 	PrintingProgressWindow		Stampe di document NimblePDF:
 Page:	PrintingProgressWindow		Pagjine:
 Page: %d	PrintingProgressWindow		Pagjine: %d
 Stop	PrintingProgressWindow		Ferme
@@ -90,7 +90,7 @@ Title:	FileInfoWindow		Titul:
 Type	FileInfoWindow		Gjenar
 Version:	FileInfoWindow		Version:
 Yes	FileInfoWindow		Sì
-About BePDF…	PDFWindow		Informazions su BePDF…
+About NimblePDF…	PDFWindow		Informazions su NimblePDF…
 Add	PDFWindow		Zonte
 Add circle annotation	PDFWindow		Zonte note circolâr
 Add comment text annotation	PDFWindow		Zonte note di coment testuâl
@@ -120,7 +120,7 @@ Add widget annotation	PDFWindow		Zonte note di widget
 Back	PDFWindow		Indaûr
 Back in page history list	PDFWindow		Indaûr te liste de cronologjie des pagjinis
 Bookmark	PDFWindow		Segnelibri
-Can not overwrite a PDF file that's currently opened in BePDF! Please choose another file name.	PDFWindow		No si pues sorescrivi un file PDF che al è ancjemò viert in BePDF! Par plasê sielç un altri non pal file.
+Can not overwrite a PDF file that's currently opened in NimblePDF! Please choose another file name.	PDFWindow		No si pues sorescrivi un file PDF che al è ancjemò viert in NimblePDF! Par plasê sielç un altri non pal file.
 Close	PDFWindow		Siere
 Copy selection	PDFWindow		Copie selezion
 Could not write PDF file!	PDFWindow		Impussibil scrivi il file PDF!
@@ -220,23 +220,23 @@ System fonts	AnnotationWindow		Caratars di sisteme
 Title:	AnnotationWindow		Titul:
 User fonts	AnnotationWindow		Caratars dal utent
 Will take effect at next program launch.	AnnotationWindow		Si varan i efiets al prossim inviament di program.
-Alpha	BepdfApplication		Alfa
-BePDF is based on XPDF %s, %s.	BepdfApplication	XPDF version, copyright	BePDF al è basât su XPDF %s, %s.
-BePDF: Error opening file!	BepdfApplication		BePDF: Erôr tal vierzi il file!
-Beta	BepdfApplication		Beta
-Close	BepdfApplication		Siere
-Development	BepdfApplication		Disvilup
-Error	BepdfApplication		Erôr
-Final	BepdfApplication		Finâl
-Gamma	BepdfApplication		Gamma
-Golden Master	BepdfApplication		Golden Master
-Unknown	BepdfApplication		No cognossût
-Version	BepdfApplication		Version
+Alpha	NimblePDFApplication		Alfa
+NimblePDF is based on XPDF %s, %s.	NimblePDFApplication	XPDF version, copyright	NimblePDF al è basât su XPDF %s, %s.
+NimblePDF: Error opening file!	NimblePDFApplication		NimblePDF: Erôr tal vierzi il file!
+Beta	NimblePDFApplication		Beta
+Close	NimblePDFApplication		Siere
+Development	NimblePDFApplication		Disvilup
+Error	NimblePDFApplication		Erôr
+Final	NimblePDFApplication		Finâl
+Gamma	NimblePDFApplication		Gamma
+Golden Master	NimblePDFApplication		Golden Master
+Unknown	NimblePDFApplication		No cognossût
+Version	NimblePDFApplication		Version
 Auto open	TraceWindow		Auto-vierç
 Clear	TraceWindow		Nete
 Error messages	TraceWindow		Messaçs di erôr
 Floating	TraceWindow		Flutuant
-BePDF status	StatusWindow		Stât di BePDF
+NimblePDF status	StatusWindow		Stât di NimblePDF
 Enter Password	PasswordWindow		Inserìs Password
 OK	PasswordWindow		Va ben
 Owner password	PasswordWindow		Password proprietari

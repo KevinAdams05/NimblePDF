@@ -1,5 +1,5 @@
 /*
- * BePDF: The PDF reader for Haiku.
+ * NimblePDF: The PDF reader for Haiku.
  * 	 Copyright (C) 1997 Benoit Triquet.
  * 	 Copyright (C) 1998-2000 Hubert Figuiere.
  * 	 Copyright (C) 2000-2011 Michael Pfeiffer.
@@ -27,7 +27,7 @@
 // xpdf
 #include <TextOutputDev.h>
 
-// BePDF
+// NimblePDF
 #include "CachedPage.h"
 #include "PDFView.h"
 #include "TextConversion.h"
@@ -138,12 +138,12 @@ int32 FindThread::Run()
 			goto notFound;
 		}
 		for (pg = backward ? pg - 1 : pg + 1; backward ? pg >= 1 : pg <= doc->getNumPages(); pg += backward ? -1 : 1) {
-			// Begin BePDF
+			// Begin NimblePDF
 			if (!CanContinue()) {
 				delete textOut;
 				goto notFound;
 			}
-			// End BePDF
+			// End NimblePDF
 			SendPageMsg(pg);
 			doc->displayPage(textOut, pg, 72, 72, 0, false, true, false);
 			if (textOut->findText(u,
@@ -166,12 +166,12 @@ int32 FindThread::Run()
 
 		// search previous/following pages
 		for (pg = backward ? doc->getNumPages() : 1; backward ? pg > topPage : pg < topPage; pg += backward ? -1 : 1) {
-			// Begin BePDF
+			// Begin NimblePDF
 			if (!CanContinue()) {
 				delete textOut;
 				goto notFound;
 			}
-			// End BePDF
+			// End NimblePDF
 			SendPageMsg(pg);
 			doc->displayPage(textOut, pg, 72, 72, 0, false, true, false);
 			if (textOut->findText(u,

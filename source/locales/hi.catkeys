@@ -1,4 +1,4 @@
-1	Hindi	application/x-vnd.mp-xpdf	1765081836
+1	Hindi	application/x-vnd.Haiku-NimblePDF	1765081836
  in	PrintSettingsWindow		mein
 All pages	PrintSettingsWindow		Sabhee prshthon
 Color	PrintSettingsWindow		Rang
@@ -26,8 +26,8 @@ Zoom must be between 25 and 400!	PrintSettingsWindow		Zoom 25 aur 400 ke beech h
 [link type 'movie' not supported]	PDFView		[link prakaar philm samarthit nahin]
 [unknown link]	PDFView		[agyaat link]
 Annotation	PDFView		Tipanee
-BePDF reading file: 	PDFView		BePDF pathan file:
-BePDF: Launch	PDFView		BePDF: prakshepan
+NimblePDF reading file: 	PDFView		NimblePDF pathan file:
+NimblePDF: Launch	PDFView		NimblePDF: prakshepan
 Cancel	PDFView		Radh karana
 Copy link	PDFView		pratiroop jodana
 Delete	PDFView		Hataana
@@ -55,8 +55,8 @@ Save selected attachment to file	AttachmentView		file ke lie chayanit anulagnak 
 Save selected attachments into directory	AttachmentView		nirdeshika mein chayanit anulagnakon ko sahejen
 Saving attachment(s):	AttachmentView		anulagnak sahejana:
 Abort	PrintingProgressWindow		nirast karen
-BePDF printing	PrintingProgressWindow		BePDF ki chapae
-BePDF printing document: 	PrintingProgressWindow		BePDF chapne ki dastaveez:
+NimblePDF printing	PrintingProgressWindow		NimblePDF ki chapae
+NimblePDF printing document: 	PrintingProgressWindow		NimblePDF chapne ki dastaveez:
 Page:	PrintingProgressWindow		Prsth:
 Page: %d	PrintingProgressWindow		Prsth: %d
 Stop	PrintingProgressWindow		Ruken
@@ -90,7 +90,7 @@ Title:	FileInfoWindow		sheershak:
 Type	FileInfoWindow		Prakaar
 Version:	FileInfoWindow		sanskaran:
 Yes	FileInfoWindow		Haan
-About BePDF…	PDFWindow		BePDF ke barein mein...
+About NimblePDF…	PDFWindow		NimblePDF ke barein mein...
 Add	PDFWindow		jodana
 Add circle annotation	PDFWindow		vrtt tipanee  jodein
 Add comment text annotation	PDFWindow		paath tipanee jodein
@@ -120,7 +120,7 @@ Add widget annotation	PDFWindow		widget tipanee jodein
 Back	PDFWindow		Vaapas
 Back in page history list	PDFWindow		prshth itihaas soochee mein vaapas
 Bookmark	PDFWindow		Bookmark
-Can not overwrite a PDF file that's currently opened in BePDF! Please choose another file name.	PDFWindow		vartamaan mein BePDF mein kholee gaee pdf fail ko adhilekhit nahin kiya ja sakata hai! krpaya koee aur file naam chunen.
+Can not overwrite a PDF file that's currently opened in NimblePDF! Please choose another file name.	PDFWindow		vartamaan mein NimblePDF mein kholee gaee pdf fail ko adhilekhit nahin kiya ja sakata hai! krpaya koee aur file naam chunen.
 Close	PDFWindow		Band kare
 Copy selection	PDFWindow		Chayan ka pratilipi kare
 Could not write PDF file!	PDFWindow		PDF file nahin likh sakte
@@ -220,23 +220,23 @@ System fonts	AnnotationWindow		machine lipi
 Title:	AnnotationWindow		Sheershak:
 User fonts	AnnotationWindow		Upayogakarta lipi
 Will take effect at next program launch.	AnnotationWindow		agale kaaryakram ke shubhaarambh par prabhaavee hoga.
-Alpha	BepdfApplication		Alpha
-BePDF is based on XPDF %s, %s.	BepdfApplication	XPDF version, copyright	BePDF XPDF %s, %s. par aadhaarit hai
-BePDF: Error opening file!	BepdfApplication		BePDF: file kholane mein truti!
-Beta	BepdfApplication		Beta
-Close	BepdfApplication		band kare
-Development	BepdfApplication		vikaas
-Error	BepdfApplication		Truti
-Final	BepdfApplication		Antim
-Gamma	BepdfApplication		Gamma
-Golden Master	BepdfApplication		Golden Master
-Unknown	BepdfApplication		Anajaan
-Version	BepdfApplication		Sanskaran
+Alpha	NimblePDFApplication		Alpha
+NimblePDF is based on XPDF %s, %s.	NimblePDFApplication	XPDF version, copyright	NimblePDF XPDF %s, %s. par aadhaarit hai
+NimblePDF: Error opening file!	NimblePDFApplication		NimblePDF: file kholane mein truti!
+Beta	NimblePDFApplication		Beta
+Close	NimblePDFApplication		band kare
+Development	NimblePDFApplication		vikaas
+Error	NimblePDFApplication		Truti
+Final	NimblePDFApplication		Antim
+Gamma	NimblePDFApplication		Gamma
+Golden Master	NimblePDFApplication		Golden Master
+Unknown	NimblePDFApplication		Anajaan
+Version	NimblePDFApplication		Sanskaran
 Auto open	TraceWindow		svachaalit kholein
 Clear	TraceWindow		saanf
 Error messages	TraceWindow		truti sandesh
 Floating	TraceWindow		chal
-BePDF status	StatusWindow		BePDF stithi
+NimblePDF status	StatusWindow		NimblePDF stithi
 Enter Password	PasswordWindow		Passowrd darj karen
 OK	PasswordWindow		Theek
 Owner password	PasswordWindow		Maalik ka password

@@ -1,5 +1,5 @@
 /*
- * BePDF: The PDF reader for Haiku.
+ * NimblePDF: The PDF reader for Haiku.
  * 	 Copyright (C) 1997 Benoit Triquet.
  * 	 Copyright (C) 1998-2000 Hubert Figuiere.
  * 	 Copyright (C) 2000-2011 Michael Pfeiffer.
@@ -35,7 +35,7 @@
 
 PrintingProgressWindow::PrintingProgressWindow(const char* text, BRect aRect, int32 pages)
     : BWindow(aRect,
-          B_TRANSLATE("BePDF printing"),
+          B_TRANSLATE("NimblePDF printing"),
           B_TITLED_WINDOW_LOOK,
           B_MODAL_APP_WINDOW_FEEL,
           B_NOT_RESIZABLE | B_NOT_ZOOMABLE | B_NOT_CLOSABLE | B_AUTO_UPDATE_SIZE_LIMITS)
@@ -44,7 +44,7 @@ PrintingProgressWindow::PrintingProgressWindow(const char* text, BRect aRect, in
 	fPrintedPages = 0;
 	fState = OK;
 
-	BString s(B_TRANSLATE("BePDF printing document: "));
+	BString s(B_TRANSLATE("NimblePDF printing document: "));
 	s << text;
 	// center window
 
@@ -119,7 +119,7 @@ void PrintingProgressWindow::MessageReceived(BMessage* msg)
 // PrintingHiddenWindow
 PrintingHiddenWindow::PrintingHiddenWindow(BRect aRect)
     : BWindow(aRect,
-          "BePDF Printing Hidden Window",
+          "NimblePDF Printing Hidden Window",
           B_FLOATING_WINDOW_LOOK,
           B_NORMAL_WINDOW_FEEL,
           B_NOT_RESIZABLE | B_NOT_ZOOMABLE | B_NOT_CLOSABLE)

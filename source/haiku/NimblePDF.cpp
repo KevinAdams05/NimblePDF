@@ -1,5 +1,5 @@
 /*
- * BePDF: The PDF reader for Haiku.
+ * NimblePDF: The PDF reader for Haiku.
  * 	 Copyright (C) 1997 Benoit Triquet.
  * 	 Copyright (C) 1998-2000 Hubert Figuiere.
  * 	 Copyright (C) 2000-2011 Michael Pfeiffer.
@@ -20,18 +20,18 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#include "BePDF.h"
+#include "NimblePDF.h"
 
 BLocker* gPdfLock = NULL;
 BScreen* gScreen = NULL;
 
-void InitBePDF()
+void InitNimblePDF()
 {
 	gScreen = new BScreen();
 	gPdfLock = new BLocker();
 }
 
-void ExitBePDF()
+void ExitNimblePDF()
 {
 	delete gScreen;
 	gScreen = NULL;

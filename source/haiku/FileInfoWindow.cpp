@@ -1,5 +1,5 @@
 /*
- * BePDF: The PDF reader for Haiku.
+ * NimblePDF: The PDF reader for Haiku.
  * 	 Copyright (C) 1997 Benoit Triquet.
  * 	 Copyright (C) 1998-2000 Hubert Figuiere.
  * 	 Copyright (C) 2000-2011 Michael Pfeiffer.
@@ -34,7 +34,7 @@
 #include <StringView.h>
 #include <TabView.h>
 
-#include "BePDF.h"
+#include "NimblePDF.h"
 #include "FileInfoWindow.h"
 #include "LayoutUtils.h"
 #include "TextConversion.h"

@@ -1,5 +1,5 @@
 /*  
- * BePDF: The PDF reader for Haiku.
+ * NimblePDF: The PDF reader for Haiku.
  * 	 Copyright (C) 1997 Benoit Triquet.
  * 	 Copyright (C) 1998-2000 Hubert Figuiere.
  * 	 Copyright (C) 2000-2011 Michael Pfeiffer.
@@ -87,10 +87,10 @@ public:
 };
 
 // Appearance Stream Creator
-class BePDFAnnotAppearance : public AnnotVisitor {
+class NimblePDFAnnotAppearance : public AnnotVisitor {
 public:
-	BePDFAnnotAppearance();
-	~BePDFAnnotAppearance();
+	NimblePDFAnnotAppearance();
+	~NimblePDFAnnotAppearance();
 
 	int GetLength() { return fAS.GetLength(); }
 	GooString* GetStream() { return fAS.GetString(); }

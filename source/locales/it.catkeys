@@ -1,4 +1,4 @@
-1	Italian	application/x-vnd.mp-xpdf	1765081836
+1	Italian	application/x-vnd.Haiku-NimblePDF	1765081836
  in	PrintSettingsWindow		pollici
 All pages	PrintSettingsWindow		Tutte le pagine
 Color	PrintSettingsWindow		Colore
@@ -26,8 +26,8 @@ Zoom must be between 25 and 400!	PrintSettingsWindow		Ingrandimento obbligatorio
 [link type 'movie' not supported]	PDFView		[tipo collegamento 'filmato' non supportato]
 [unknown link]	PDFView		[link sconosciuto]
 Annotation	PDFView		Annotazione
-BePDF reading file: 	PDFView		BePDF - Lettura file: 
-BePDF: Launch	PDFView		BePDF: Avvio
+NimblePDF reading file: 	PDFView		NimblePDF - Lettura file: 
+NimblePDF: Launch	PDFView		NimblePDF: Avvio
 Cancel	PDFView		Annulla
 Copy link	PDFView		Copia collegamento
 Delete	PDFView		Cancella
@@ -55,8 +55,8 @@ Save selected attachment to file	AttachmentView		Salva l'allegato selezionato co
 Save selected attachments into directory	AttachmentView		Salva l'allegato selezionato nella cartella
 Saving attachment(s):	AttachmentView		Salvataggio allegato/i:
 Abort	PrintingProgressWindow		Interrompi
-BePDF printing	PrintingProgressWindow		Stampa BePDF
-BePDF printing document: 	PrintingProgressWindow		Stampa documento BePDF: 
+NimblePDF printing	PrintingProgressWindow		Stampa NimblePDF
+NimblePDF printing document: 	PrintingProgressWindow		Stampa documento NimblePDF: 
 Page:	PrintingProgressWindow		Pagina:
 Page: %d	PrintingProgressWindow		Pagina: %d
 Stop	PrintingProgressWindow		Ferma
@@ -90,7 +90,7 @@ Title:	FileInfoWindow		Titolo:
 Type	FileInfoWindow		Tipo
 Version:	FileInfoWindow		Versione:
 Yes	FileInfoWindow		Si
-About BePDF…	PDFWindow		Informazioni su BePDF…
+About NimblePDF…	PDFWindow		Informazioni su NimblePDF…
 Add	PDFWindow		Aggiungi
 Add circle annotation	PDFWindow		Aggiungi nota : cerchio
 Add comment text annotation	PDFWindow		Aggiungi nota : commento di testo
@@ -120,7 +120,7 @@ Add widget annotation	PDFWindow		Aggiungi nota : widget
 Back	PDFWindow		Indietro
 Back in page history list	PDFWindow		Arretra nella lista storia pagine
 Bookmark	PDFWindow		Segnalibro
-Can not overwrite a PDF file that's currently opened in BePDF! Please choose another file name.	PDFWindow		Non posso sovrascrivere un file PDF attualmente aperto da BePDF! Scegli un altro nome file.
+Can not overwrite a PDF file that's currently opened in NimblePDF! Please choose another file name.	PDFWindow		Non posso sovrascrivere un file PDF attualmente aperto da NimblePDF! Scegli un altro nome file.
 Close	PDFWindow		Chiudi
 Copy selection	PDFWindow		Copia selezione
 Could not write PDF file!	PDFWindow		Impossibile scrivere file PDF!
@@ -220,23 +220,23 @@ System fonts	AnnotationWindow		Font di sistema
 Title:	AnnotationWindow		Titolo:
 User fonts	AnnotationWindow		Font utente
 Will take effect at next program launch.	AnnotationWindow		Avrà effetto al prossimo avvio del programma.
-Alpha	BepdfApplication		Alfa
-BePDF is based on XPDF %s, %s.	BepdfApplication	XPDF version, copyright	BePDF è basato su XPDF %s, %s.
-BePDF: Error opening file!	BepdfApplication		BePDF: Errore apertura file!
-Beta	BepdfApplication		Beta
-Close	BepdfApplication		Chiudi
-Development	BepdfApplication		Sviluppo
-Error	BepdfApplication		Errore
-Final	BepdfApplication		Finale
-Gamma	BepdfApplication		Gamma
-Golden Master	BepdfApplication		Golden Master
-Unknown	BepdfApplication		Sconosciuto
-Version	BepdfApplication		Versione
+Alpha	NimblePDFApplication		Alfa
+NimblePDF is based on XPDF %s, %s.	NimblePDFApplication	XPDF version, copyright	NimblePDF è basato su XPDF %s, %s.
+NimblePDF: Error opening file!	NimblePDFApplication		NimblePDF: Errore apertura file!
+Beta	NimblePDFApplication		Beta
+Close	NimblePDFApplication		Chiudi
+Development	NimblePDFApplication		Sviluppo
+Error	NimblePDFApplication		Errore
+Final	NimblePDFApplication		Finale
+Gamma	NimblePDFApplication		Gamma
+Golden Master	NimblePDFApplication		Golden Master
+Unknown	NimblePDFApplication		Sconosciuto
+Version	NimblePDFApplication		Versione
 Auto open	TraceWindow		Apri automaticamente
 Clear	TraceWindow		Pulisci
 Error messages	TraceWindow		Messaggi errore
 Floating	TraceWindow		Primo piano
-BePDF status	StatusWindow		Stato BePDF
+NimblePDF status	StatusWindow		Stato NimblePDF
 Enter Password	PasswordWindow		Inserisci password
 OK	PasswordWindow		OK
 Owner password	PasswordWindow		Password proprietario

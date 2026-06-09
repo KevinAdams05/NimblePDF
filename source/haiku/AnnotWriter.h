@@ -1,5 +1,5 @@
 /*  
- * BePDF: The PDF reader for Haiku.
+ * NimblePDF: The PDF reader for Haiku.
  * 	 Copyright (C) 1997 Benoit Triquet.
  * 	 Copyright (C) 1998-2000 Hubert Figuiere.
  * 	 Copyright (C) 2000-2011 Michael Pfeiffer.
@@ -70,12 +70,12 @@ bool CanWrite(Annotation* annot);
 class AnnotWriter : public AnnotVisitor {
 	PDFDoc* fDoc;
 	AnnotsList fAnnots;
-	BePDFAcroForm* fBePDFAcroForm;
+	NimblePDFAcroForm* fNimblePDFAcroForm;
 	XRef* fXRef;
 	// changed during pdf generation:
 	Ref fPageRef;
 	Ref fInfoRef;
-	Ref fBePDFAcroFormRef;
+	Ref fNimblePDFAcroFormRef;
 	std::list<PDFFont*> fTemporaryFonts; // not already stored in old PDF file
 	std::list<PDFFont*> fWrittenFonts;
 
@@ -95,7 +95,7 @@ class AnnotWriter : public AnnotVisitor {
 
 	/* AcroFrom:
 	1. Assign unique short names to fonts
-	   1.1. Take names from existing AcroFrom DR assign ref to font (done in BePDFAcroForm constructor)
+	   1.1. Take names from existing AcroFrom DR assign ref to font (done in NimblePDFAcroForm constructor)
 	   1.2. Assign to remainig fonts names in the form /F%d
 	2. Write all new or changed FreeText annotations
 	   2.1. Write annotation and assign ref if necessary 
@@ -112,7 +112,7 @@ class AnnotWriter : public AnnotVisitor {
 	void UnassignShortFontNames();
 	void WriteFont(PDFFont* font);
 	void AddFonts(Object* dict, std::list<PDFFont*>* fonts);
-	void UpdateBePDFAcroForm();
+	void UpdateNimblePDFAcroForm();
 	void UpdateCatalog();
 
 	bool HasRef(Object* dict, const char* key, Ref& ref);
@@ -144,7 +144,7 @@ class AnnotWriter : public AnnotVisitor {
 	bool UpdateAnnot(Annotation* annot);
 
 public:
-	AnnotWriter(XRef* xref, PDFDoc* doc, AnnotsList* list, BePDFAcroForm* acroForm);
+	AnnotWriter(XRef* xref, PDFDoc* doc, AnnotsList* list, NimblePDFAcroForm* acroForm);
 	~AnnotWriter();
 	bool WriteTo(const char* name);
 

@@ -1,5 +1,5 @@
 /*  
- * BePDF: The PDF reader for Haiku.
+ * NimblePDF: The PDF reader for Haiku.
  * 	 Copyright (C) 1997 Benoit Triquet.
  * 	 Copyright (C) 1998-2000 Hubert Figuiere.
  * 	 Copyright (C) 2000-2011 Michael Pfeiffer.
@@ -20,8 +20,8 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#ifndef BEPDF_APPLICATION_H
-#define BEPDF_APPLICATION_H
+#ifndef NIMBLEPDF_APPLICATION_H
+#define NIMBLEPDF_APPLICATION_H
 
 #include <Application.h>
 #include <Cursor.h>
@@ -31,7 +31,7 @@
 #include "Settings.h"
 #include "Annotation.h"
 
-#define BEPDF_APP_SIG "application/x-vnd.mp-xpdf"
+#define NIMBLEPDF_APP_SIG "application/x-vnd.Haiku-NimblePDF"
 
 class PDFWindow;
 class OutputTracer;
@@ -41,10 +41,10 @@ class PDFDoc;
 BRefFilter* GetPdfFilter();
 
 ///////////////////////////////////////////////////////////
-class BepdfApplication : BApplication {
+class NimblePDFApplication : BApplication {
 public:
-	BepdfApplication();
-	~BepdfApplication();
+	NimblePDFApplication();
+	~NimblePDFApplication();
 
 	virtual void ReadyToRun();
 	virtual void RefsReceived(BMessage* msg);
@@ -78,9 +78,9 @@ public:
 	team_id GetTeamID() { return fTeamID; }
 
 	enum {
-		NOTIFY_OPEN_MSG = 'BPop',   // BePDF document opened
-		NOTIFY_CLOSE_MSG = 'BPcl',  // BePDF closed
-		NOTIFY_QUIT_MSG = 'BPqt',   // Close all BePDF applications
+		NOTIFY_OPEN_MSG = 'BPop',   // NimblePDF document opened
+		NOTIFY_CLOSE_MSG = 'BPcl',  // NimblePDF closed
+		NOTIFY_QUIT_MSG = 'BPqt',   // Close all NimblePDF applications
 		REQUEST_TITLE_MSG = 'BPrt', // Request the window titles
 	};
 
@@ -119,6 +119,6 @@ private:
 	BBitmap* fTextAnnotImages[TextAnnot::no_of_types];
 };
 
-#define gApp ((BepdfApplication*)(be_app))
+#define gApp ((NimblePDFApplication*)(be_app))
 
 #endif

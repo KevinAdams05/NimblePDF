@@ -1,5 +1,5 @@
 /*  
- * BePDF: The PDF reader for Haiku.
+ * NimblePDF: The PDF reader for Haiku.
  * 	 Copyright (C) 1997 Benoit Triquet.
  * 	 Copyright (C) 1998-2000 Hubert Figuiere.
  * 	 Copyright (C) 2000-2011 Michael Pfeiffer.
@@ -22,7 +22,7 @@
 
 #if defined(__BEOS__) || defined(__HAIKU__)
 #include "Logging.h"
-#include "BepdfApplication.h"
+#include "NimblePDFApplication.h"
 #include "AnnotationRenderer.h"
 #include <Bitmap.h>
 #include <View.h>
@@ -220,9 +220,9 @@ void GraphicsStream::Fill()
 	AddCr("f");
 }
 
-// Implementation of BePDFAnnotAppearance
+// Implementation of NimblePDFAnnotAppearance
 
-void BePDFAnnotAppearance::Init(Annotation* annot)
+void NimblePDFAnnotAppearance::Init(Annotation* annot)
 {
 	fBBox = *annot->GetRect();
 	double swap;
@@ -250,12 +250,12 @@ void BePDFAnnotAppearance::Init(Annotation* annot)
 }
 
 // Coordinate transformation from user to form
-PDFPoint BePDFAnnotAppearance::UserToForm(PDFPoint p)
+PDFPoint NimblePDFAnnotAppearance::UserToForm(PDFPoint p)
 {
 	return p - fDelta;
 }
 
-PDFPoint BePDFAnnotAppearance::PointBetween(PDFPoint p1, PDFPoint p2, float f)
+PDFPoint NimblePDFAnnotAppearance::PointBetween(PDFPoint p1, PDFPoint p2, float f)
 {
 	PDFPoint p(p2.x - p1.x, p2.y - p1.y);
 	p.x *= f;
@@ -265,7 +265,7 @@ PDFPoint BePDFAnnotAppearance::PointBetween(PDFPoint p1, PDFPoint p2, float f)
 	return p;
 }
 
-void BePDFAnnotAppearance::DoStyledAnnot(StyledAnnot* a)
+void NimblePDFAnnotAppearance::DoStyledAnnot(StyledAnnot* a)
 {
 	float w = a->GetBorderStyle()->GetWidth();
 	if (w != 1.0) {
@@ -273,7 +273,7 @@ void BePDFAnnotAppearance::DoStyledAnnot(StyledAnnot* a)
 	}
 }
 
-void BePDFAnnotAppearance::Stroke(PDFQuadPoints& qp, float f)
+void NimblePDFAnnotAppearance::Stroke(PDFQuadPoints& qp, float f)
 {
 	PDFPoint p1 = PointBetween(qp[0], qp[2], f);
 	PDFPoint p2 = PointBetween(qp[1], qp[3], f);
@@ -282,7 +282,7 @@ void BePDFAnnotAppearance::Stroke(PDFQuadPoints& qp, float f)
 	fAS.Stroke();
 }
 
-void BePDFAnnotAppearance::DoMarkupAnnot(MarkupAnnot* a, float f)
+void NimblePDFAnnotAppearance::DoMarkupAnnot(MarkupAnnot* a, float f)
 {
 	DoStyledAnnot(a);
 	for (int i = 0; i < a->QuadPointsLength(); i++) {
@@ -290,7 +290,7 @@ void BePDFAnnotAppearance::DoMarkupAnnot(MarkupAnnot* a, float f)
 	}
 }
 
-void BePDFAnnotAppearance::Stroke(PDFQuadPoints& qp)
+void NimblePDFAnnotAppearance::Stroke(PDFQuadPoints& qp)
 {
 	fAS.MoveTo(UserToForm(qp[0]));
 	fAS.LineTo(UserToForm(qp[1]));
@@ -300,15 +300,15 @@ void BePDFAnnotAppearance::Stroke(PDFQuadPoints& qp)
 	fAS.Stroke();
 }
 
-BePDFAnnotAppearance::BePDFAnnotAppearance()
+NimblePDFAnnotAppearance::NimblePDFAnnotAppearance()
     : fEncoder(fAS.GetString())
 {}
 
-BePDFAnnotAppearance::~BePDFAnnotAppearance()
+NimblePDFAnnotAppearance::~NimblePDFAnnotAppearance()
 {}
 
 // Annotation visitor implementation
-void BePDFAnnotAppearance::DoText(TextAnnot* a)
+void NimblePDFAnnotAppearance::DoText(TextAnnot* a)
 {
 #if defined(__BEOS__) || defined(__HAIKU__)
 	Init(a);
@@ -368,11 +368,11 @@ void BePDFAnnotAppearance::DoText(TextAnnot* a)
 }
 
 
-void BePDFAnnotAppearance::DoLink(LinkAnnot* a)
+void NimblePDFAnnotAppearance::DoLink(LinkAnnot* a)
 {}
 
 
-void BePDFAnnotAppearance::DoFreeText(FreeTextAnnot* a)
+void NimblePDFAnnotAppearance::DoFreeText(FreeTextAnnot* a)
 {
 	/* Acrobat 5 does not require it
 	Init(a);
@@ -389,7 +389,7 @@ void BePDFAnnotAppearance::DoFreeText(FreeTextAnnot* a)
 }
 
 
-void BePDFAnnotAppearance::DoLine(LineAnnot* a)
+void NimblePDFAnnotAppearance::DoLine(LineAnnot* a)
 {
 	Init(a);
 	DoStyledAnnot(a);
@@ -398,7 +398,7 @@ void BePDFAnnotAppearance::DoLine(LineAnnot* a)
 }
 
 
-void BePDFAnnotAppearance::DoSquare(SquareAnnot* a)
+void NimblePDFAnnotAppearance::DoSquare(SquareAnnot* a)
 {
 	Init(a);
 	DoStyledAnnot(a);
@@ -415,7 +415,7 @@ void BePDFAnnotAppearance::DoSquare(SquareAnnot* a)
 }
 
 
-void BePDFAnnotAppearance::DoCircle(CircleAnnot* a)
+void NimblePDFAnnotAppearance::DoCircle(CircleAnnot* a)
 {
 	Init(a);
 	DoStyledAnnot(a);
@@ -437,7 +437,7 @@ void BePDFAnnotAppearance::DoCircle(CircleAnnot* a)
 }
 
 
-void BePDFAnnotAppearance::DoHighlight(HighlightAnnot* a)
+void NimblePDFAnnotAppearance::DoHighlight(HighlightAnnot* a)
 {
 	Init(a);
 	fAS.SetLineWidth(3.0);
@@ -447,14 +447,14 @@ void BePDFAnnotAppearance::DoHighlight(HighlightAnnot* a)
 }
 
 
-void BePDFAnnotAppearance::DoUnderline(UnderlineAnnot* a)
+void NimblePDFAnnotAppearance::DoUnderline(UnderlineAnnot* a)
 {
 	Init(a);
 	DoMarkupAnnot(a, 0.85);
 }
 
 
-void BePDFAnnotAppearance::StrokeSquiggly(PDFPoint p1, PDFPoint p2, float height)
+void NimblePDFAnnotAppearance::StrokeSquiggly(PDFPoint p1, PDFPoint p2, float height)
 {
 	if (height <= 0.001)
 		return;
@@ -485,7 +485,7 @@ void BePDFAnnotAppearance::StrokeSquiggly(PDFPoint p1, PDFPoint p2, float height
 	fAS.Stroke();
 }
 
-void BePDFAnnotAppearance::DoSquiggly(SquigglyAnnot* a)
+void NimblePDFAnnotAppearance::DoSquiggly(SquigglyAnnot* a)
 {
 	Init(a);
 	DoStyledAnnot(a);
@@ -500,61 +500,61 @@ void BePDFAnnotAppearance::DoSquiggly(SquigglyAnnot* a)
 }
 
 
-void BePDFAnnotAppearance::DoStrikeOut(StrikeOutAnnot* a)
+void NimblePDFAnnotAppearance::DoStrikeOut(StrikeOutAnnot* a)
 {
 	Init(a);
 	DoMarkupAnnot(a, 0.55);
 }
 
-void BePDFAnnotAppearance::DoStamp(StampAnnot* a)
+void NimblePDFAnnotAppearance::DoStamp(StampAnnot* a)
 {
 	// not implemented yet
 }
 
 
-void BePDFAnnotAppearance::DoInk(InkAnnot* a)
+void NimblePDFAnnotAppearance::DoInk(InkAnnot* a)
 {
 	// not implemented yet
 }
 
 
-void BePDFAnnotAppearance::DoPopup(PopupAnnot* a)
+void NimblePDFAnnotAppearance::DoPopup(PopupAnnot* a)
 {
 	// has no appearance stream
 }
 
 
-void BePDFAnnotAppearance::DoFileAttachment(FileAttachmentAnnot* a)
+void NimblePDFAnnotAppearance::DoFileAttachment(FileAttachmentAnnot* a)
 {
 	// not implemented yet
 }
 
 
-void BePDFAnnotAppearance::DoSound(SoundAnnot* a)
+void NimblePDFAnnotAppearance::DoSound(SoundAnnot* a)
 {
 	// not implemented yet
 }
 
 
-void BePDFAnnotAppearance::DoMovie(MovieAnnot* a)
+void NimblePDFAnnotAppearance::DoMovie(MovieAnnot* a)
 {
 	// not implemented yet
 }
 
 
-void BePDFAnnotAppearance::DoWidget(WidgetAnnot* a)
+void NimblePDFAnnotAppearance::DoWidget(WidgetAnnot* a)
 {
 	// not implemented yet
 }
 
 
-void BePDFAnnotAppearance::DoPrinterMark(PrinterMarkAnnot* a)
+void NimblePDFAnnotAppearance::DoPrinterMark(PrinterMarkAnnot* a)
 {
 	// not implemented yet
 }
 
 
-void BePDFAnnotAppearance::DoTrapNet(TrapNetAnnot* a)
+void NimblePDFAnnotAppearance::DoTrapNet(TrapNetAnnot* a)
 {
 	// not implemented yet
 }

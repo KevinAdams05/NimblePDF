@@ -1,4 +1,4 @@
-1	Ukrainian	application/x-vnd.mp-xpdf	1765081836
+1	Ukrainian	application/x-vnd.Haiku-NimblePDF	1765081836
  in	PrintSettingsWindow		 в
 All pages	PrintSettingsWindow		Усі сторінки
 Color	PrintSettingsWindow		Колір
@@ -26,8 +26,8 @@ Zoom must be between 25 and 400!	PrintSettingsWindow		Масштаб має бу
 [link type 'movie' not supported]	PDFView		[тип посилання 'відео' не підтримується]
 [unknown link]	PDFView		[невідоме посилання]
 Annotation	PDFView		Анотація
-BePDF reading file: 	PDFView		BePDF читає файл: 
-BePDF: Launch	PDFView		BePDF: Запуск
+NimblePDF reading file: 	PDFView		NimblePDF читає файл: 
+NimblePDF: Launch	PDFView		NimblePDF: Запуск
 Cancel	PDFView		Скасувати
 Copy link	PDFView		Копіювати посилання
 Delete	PDFView		Видалити
@@ -55,8 +55,8 @@ Save selected attachment to file	AttachmentView		Зберегти виділен
 Save selected attachments into directory	AttachmentView		Зберегти вибрані вкладення до папки
 Saving attachment(s):	AttachmentView		Збереження вкладень:
 Abort	PrintingProgressWindow		Перервати
-BePDF printing	PrintingProgressWindow		BePDF друкує
-BePDF printing document: 	PrintingProgressWindow		BePDF друкує документ: 
+NimblePDF printing	PrintingProgressWindow		NimblePDF друкує
+NimblePDF printing document: 	PrintingProgressWindow		NimblePDF друкує документ: 
 Page:	PrintingProgressWindow		Сторінка:
 Page: %d	PrintingProgressWindow		Сторінка: %d
 Stop	PrintingProgressWindow		Зупинити
@@ -90,7 +90,7 @@ Title:	FileInfoWindow		Заголовок:
 Type	FileInfoWindow		Тип
 Version:	FileInfoWindow		Версія:
 Yes	FileInfoWindow		Так
-About BePDF…	PDFWindow		Про BePDF…
+About NimblePDF…	PDFWindow		Про NimblePDF…
 Add	PDFWindow		Додати
 Add circle annotation	PDFWindow		Додати окружність
 Add comment text annotation	PDFWindow		Додати коментар
@@ -120,7 +120,7 @@ Add widget annotation	PDFWindow		Додати віджет
 Back	PDFWindow		Назад
 Back in page history list	PDFWindow		Назад по списку історії сторінок
 Bookmark	PDFWindow		Закладка
-Can not overwrite a PDF file that's currently opened in BePDF! Please choose another file name.	PDFWindow		Неможливо перезаписати PDF файл, який в даний час відкритий в BePDF! Виберіть інше ім'я файлу.
+Can not overwrite a PDF file that's currently opened in NimblePDF! Please choose another file name.	PDFWindow		Неможливо перезаписати PDF файл, який в даний час відкритий в NimblePDF! Виберіть інше ім'я файлу.
 Close	PDFWindow		Закрити
 Copy selection	PDFWindow		Копіювати виділене
 Could not write PDF file!	PDFWindow		Помилка збереження PDF файлу!
@@ -220,23 +220,23 @@ System fonts	AnnotationWindow		Системні шрифти
 Title:	AnnotationWindow		Назва:
 User fonts	AnnotationWindow		Шрифти користувача
 Will take effect at next program launch.	AnnotationWindow		Зміни набудуть чинності при наступному запуску програми.
-Alpha	BepdfApplication		Альфа
-BePDF is based on XPDF %s, %s.	BepdfApplication	XPDF version, copyright	BePDF базується на XPDF %s, %s.
-BePDF: Error opening file!	BepdfApplication		BePDF: Помилка відкриття файлу!
-Beta	BepdfApplication		Бета
-Close	BepdfApplication		Закрити
-Development	BepdfApplication		Розробка
-Error	BepdfApplication		Помилка
-Final	BepdfApplication		Фінал
-Gamma	BepdfApplication		Гамма
-Golden Master	BepdfApplication		Золотий Майстер
-Unknown	BepdfApplication		Невідомо
-Version	BepdfApplication		Версія
+Alpha	NimblePDFApplication		Альфа
+NimblePDF is based on XPDF %s, %s.	NimblePDFApplication	XPDF version, copyright	NimblePDF базується на XPDF %s, %s.
+NimblePDF: Error opening file!	NimblePDFApplication		NimblePDF: Помилка відкриття файлу!
+Beta	NimblePDFApplication		Бета
+Close	NimblePDFApplication		Закрити
+Development	NimblePDFApplication		Розробка
+Error	NimblePDFApplication		Помилка
+Final	NimblePDFApplication		Фінал
+Gamma	NimblePDFApplication		Гамма
+Golden Master	NimblePDFApplication		Золотий Майстер
+Unknown	NimblePDFApplication		Невідомо
+Version	NimblePDFApplication		Версія
 Auto open	TraceWindow		Автовідкриття
 Clear	TraceWindow		Очистити
 Error messages	TraceWindow		Повідомлення про помилки
 Floating	TraceWindow		Плаваючий
-BePDF status	StatusWindow		BePDF статус
+NimblePDF status	StatusWindow		NimblePDF статус
 Enter Password	PasswordWindow		Введіть пароль
 OK	PasswordWindow		OK
 Owner password	PasswordWindow		Пароль власника

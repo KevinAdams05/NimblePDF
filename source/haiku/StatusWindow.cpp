@@ -1,5 +1,5 @@
 /*
- * BePDF: The PDF reader for Haiku.
+ * NimblePDF: The PDF reader for Haiku.
  * 	 Copyright (C) 1997 Benoit Triquet.
  * 	 Copyright (C) 1998-2000 Hubert Figuiere.
  * 	 Copyright (C) 2000-2011 Michael Pfeiffer.
@@ -25,14 +25,14 @@
 #include <StatusBar.h>
 #include <StringView.h>
 
-#include "BepdfApplication.h"
+#include "NimblePDFApplication.h"
 #include "StatusWindow.h"
 
 #undef B_TRANSLATION_CONTEXT
 #define B_TRANSLATION_CONTEXT "StatusWindow"
 
 StatusWindow::StatusWindow(const char* text, BRect aRect)
-    : BWindow(aRect, B_TRANSLATE("BePDF status"), B_MODAL_WINDOW, B_NOT_RESIZABLE | B_NOT_ZOOMABLE | B_NOT_CLOSABLE)
+    : BWindow(aRect, B_TRANSLATE("NimblePDF status"), B_MODAL_WINDOW, B_NOT_RESIZABLE | B_NOT_ZOOMABLE | B_NOT_CLOSABLE)
 {
 	BStringView* stringView = new BStringView("stringView", text);
 	fStatus = new BStatusBar("fStatus");

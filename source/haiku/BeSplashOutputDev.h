@@ -2,7 +2,7 @@
 //
 // BeSplashOutputDev.h
 //
-// BePDF's Haiku-specific subclass of poppler's SplashOutputDev. Ported
+// NimblePDF's Haiku-specific subclass of poppler's SplashOutputDev. Ported
 // from xpdf XSplashOutputDev (Glyph & Cog, LLC, 2003) by Michael W.
 // Pfeiffer (2004-2005). Moved into source/haiku/ and ported to poppler
 // 25.12 during the NimblePDF migration (Kevin Adams, 2026).

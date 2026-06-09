@@ -2,7 +2,7 @@
 //
 // BeSplashOutputDev.cpp
 //
-// BePDF's Haiku-specific subclass of poppler's SplashOutputDev. Ported
+// NimblePDF's Haiku-specific subclass of poppler's SplashOutputDev. Ported
 // from xpdf XSplashOutputDev (Glyph & Cog, LLC, 2003) by Michael W.
 // Pfeiffer (2004-2005). Moved into source/haiku/ and ported to poppler
 // 25.12 during the NimblePDF migration (Kevin Adams, 2026).
@@ -364,7 +364,7 @@ bool BeSplashOutputDev::findText(Unicode* s, int len,
 	double* xMax, double* yMax)
 {
 	// Poppler's findText adds a `wholeWord` parameter after `backward`;
-	// we always pass false (xpdf had no equivalent, and BePDF never
+	// we always pass false (xpdf had no equivalent, and NimblePDF never
 	// exposed a whole-word search option in the UI).
 	return fText->findText(s, len, startAtTop, stopAtBottom,
 		startAtLast, stopAtLast,

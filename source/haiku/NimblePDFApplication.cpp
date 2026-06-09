@@ -1,5 +1,5 @@
 /*
- * BePDF: The PDF reader for Haiku.
+ * NimblePDF: The PDF reader for Haiku.
  * 	 Copyright (C) 1997 Benoit Triquet.
  * 	 Copyright (C) 1998-2000 Hubert Figuiere.
  * 	 Copyright (C) 2000-2011 Michael Pfeiffer.
@@ -44,17 +44,17 @@
 // InitXpdf with poppler's GlobalParams setup.
 
 #include "PDFWindow.h"
-#include "BepdfApplication.h"
+#include "NimblePDFApplication.h"
 #include "ResourceLoader.h"
 #include "PasswordWindow.h"
-#include "BePDF.h"
+#include "NimblePDF.h"
 #include "TraceWindow.h"
 #include "FileInfoWindow.h"
 
 #undef B_TRANSLATION_CONTEXT
-#define B_TRANSLATION_CONTEXT "BepdfApplication"
+#define B_TRANSLATION_CONTEXT "NimblePDFApplication"
 
-static const char* bePDFCopyright = "© 1997 Benoit Triquet\n"
+static const char* nimblePDFCopyright = "© 1997 Benoit Triquet\n"
                                     "© 1998-2000 Hubert Figuiere\n"
                                     "© 2000-2011 Michael Pfeiffer\n"
                                     "© 2013-2017 waddlesplash\n";
@@ -62,9 +62,9 @@ static const char* bePDFCopyright = "© 1997 Benoit Triquet\n"
 static const char* GPLCopyright = "\n\n"
                                   "This program is free software under the GNU GPL v2, or any later version.\n";
 
-static const char* PAGE_NUM_MSG_KEY = "bepdf:page_num";
+static const char* PAGE_NUM_MSG_KEY = "nimblepdf:page_num";
 
-static const char* settingsFilename = "BePDF";
+static const char* settingsFilename = "NimblePDF";
 
 static const char* attachmentNames[] = {"GRAPH_ANNOT", "PAPER_CLIP_ANNOT", "PUSH_PIN_ANNOT", "TAG_ANNOT", "UNKNOWN_ATTACHMENT_ANNOT"};
 
@@ -118,7 +118,7 @@ bool PDFFilter::Filter(const entry_ref* ref, BNode* node, struct stat_beos* st, 
 ///////////////////////////////////////////////////////////
 int main()
 {
-	new BepdfApplication();
+	new NimblePDFApplication();
 
 	be_app->Run();
 
@@ -128,7 +128,7 @@ int main()
 
 
 ///////////////////////////////////////////////////////////
-void BepdfApplication::LoadImages(BBitmap* images[], const char* names[], int num)
+void NimblePDFApplication::LoadImages(BBitmap* images[], const char* names[], int num)
 {
 	for (int i = 0; i < num; i++) {
 		images[i] = LoadBitmap(names[i], 'BBMP');
@@ -138,7 +138,7 @@ void BepdfApplication::LoadImages(BBitmap* images[], const char* names[], int nu
 }
 
 ///////////////////////////////////////////////////////////
-void BepdfApplication::FreeImages(BBitmap* images[], int num)
+void NimblePDFApplication::FreeImages(BBitmap* images[], int num)
 {
 	for (int i = 0; i < num; i++) {
 		delete images[i];
@@ -147,8 +147,8 @@ void BepdfApplication::FreeImages(BBitmap* images[], int num)
 }
 
 ///////////////////////////////////////////////////////////
-BepdfApplication::BepdfApplication()
-    : BApplication(BEPDF_APP_SIG)
+NimblePDFApplication::NimblePDFApplication()
+    : BApplication(NIMBLEPDF_APP_SIG)
 {
 	fSettings = new GlobalSettings();
 	fOpenFilePanel = NULL;
@@ -190,7 +190,7 @@ BepdfApplication::BepdfApplication()
 	BPath path(fAppPath);
 	LoadSettings();
 
-	InitBePDF();
+	InitNimblePDF();
 }
 
 #include <memory>
@@ -226,14 +226,14 @@ static void setGlobalParameter(const char* type, const char* arg1, const char* a
  *
  * For now this returns an empty vector so Phase A type swaps compile.
  * Effect at runtime: CJK display-CID-font auto-discovery in
- * BepdfApplication::Initialize is a no-op until the rewrite lands.
+ * NimblePDFApplication::Initialize is a no-op until the rewrite lands.
  */
 std::vector<GooString*>* getCIDToUnicodeNames(GlobalParams* globalParams)
 {
 	return new std::vector<GooString*>();
 }
 
-void BepdfApplication::Initialize()
+void NimblePDFApplication::Initialize()
 {
 	if (!fInitialized) {
 		fInitialized = true;
@@ -321,7 +321,7 @@ void BepdfApplication::Initialize()
 }
 
 ///////////////////////////////////////////////////////////
-BepdfApplication::~BepdfApplication()
+NimblePDFApplication::~NimblePDFApplication()
 {
 	SaveSettings();
 
@@ -346,12 +346,12 @@ BepdfApplication::~BepdfApplication()
 	FreeImages(fAttachmentImages, FileAttachmentAnnot::no_of_types);
 	FreeImages(fTextAnnotImages, TextAnnot::no_of_types);
 
-	ExitBePDF();
+	ExitNimblePDF();
 }
 
 
 ///////////////////////////////////////////////////////////
-void BepdfApplication::ReadyToRun()
+void NimblePDFApplication::ReadyToRun()
 {
 #if 1
 	fStdoutTracer = new OutputTracer(1, "stdout", GetSettings());
@@ -377,41 +377,31 @@ void BepdfApplication::ReadyToRun()
 }
 
 ///////////////////////////////////////////////////////////
-void BepdfApplication::AboutRequested()
+void NimblePDFApplication::AboutRequested()
 {
 	BString version;
-	BString str("BePDF\n");
+	BString str("NimblePDF\n");
 	str += B_TRANSLATE("Version");
 	str += " ";
 	str += GetVersion(version);
 	str += "\n";
 
-	str += bePDFCopyright;
+	str += nimblePDFCopyright;
 	str += "\n";
 
 	str +=
-	    BString().SetToFormat(B_TRANSLATE_COMMENT("BePDF is based on poppler %s.", "poppler version"), POPPLER_VERSION);
+	    BString().SetToFormat(B_TRANSLATE_COMMENT("NimblePDF is based on poppler %s.", "poppler version"), POPPLER_VERSION);
 
 	str += GPLCopyright;
 
 	BAlert* about = new BAlert("About", str.String(), "OK");
 	BTextView* v = about->TextView();
 	if (v) {
-		rgb_color red = {255, 0, 51, 255};
-		rgb_color blue = {0, 102, 255, 255};
-
 		v->SetStylable(true);
 		char* text = (char*)v->Text();
-		char* s = text;
-		// set all Be in BePDF in blue and red
-		while ((s = strstr(s, "BePDF")) != NULL) {
-			int32 i = s - text;
-			v->SetFontAndColor(i, i + 1, NULL, 0, &blue);
-			v->SetFontAndColor(i + 1, i + 2, NULL, 0, &red);
-			s += 2;
-		}
-		// first text line
-		s = strchr(text, '\n');
+
+		// Enlarge the product-name line (the first line) of the About text.
+		char* s = strchr(text, '\n');
 		BFont font;
 		v->GetFontAndColor(0, &font);
 		font.SetSize(16);
@@ -425,7 +415,7 @@ void BepdfApplication::AboutRequested()
 	the file panel will tell by itself if openning have been cancelled
 	or not.
 */
-void BepdfApplication::OpenFilePanel()
+void NimblePDFApplication::OpenFilePanel()
 {
 	if (fOpenFilePanel == NULL) {
 		fOpenFilePanel = new BFilePanel(B_OPEN_PANEL, NULL, NULL, B_FILE_NODE, true, NULL, NULL);
@@ -441,7 +431,7 @@ void BepdfApplication::OpenFilePanel()
 	the file panel will tell by itself if openning have been cancelled
 	or not.
 */
-void BepdfApplication::OpenSaveFilePanel(BHandler* handler, bool fileMode, BRefFilter* filter, BMessage* msg, const char* name)
+void NimblePDFApplication::OpenSaveFilePanel(BHandler* handler, bool fileMode, BRefFilter* filter, BMessage* msg, const char* name)
 {
 	BFilePanel* panel = NULL;
 
@@ -501,12 +491,12 @@ void BepdfApplication::OpenSaveFilePanel(BHandler* handler, bool fileMode, BRefF
 	panel->Show();
 }
 
-void BepdfApplication::OpenSaveFilePanel(BHandler* handler, BRefFilter* filter, BMessage* msg, const char* name)
+void NimblePDFApplication::OpenSaveFilePanel(BHandler* handler, BRefFilter* filter, BMessage* msg, const char* name)
 {
 	OpenSaveFilePanel(handler, true, filter, msg, name);
 }
 
-void BepdfApplication::OpenSaveToDirectoryFilePanel(BHandler* handler, BRefFilter* filter, BMessage* msg, const char* name)
+void NimblePDFApplication::OpenSaveToDirectoryFilePanel(BHandler* handler, BRefFilter* filter, BMessage* msg, const char* name)
 {
 	OpenSaveFilePanel(handler, false, filter, msg, name);
 }
@@ -514,12 +504,12 @@ void BepdfApplication::OpenSaveToDirectoryFilePanel(BHandler* handler, BRefFilte
 
 /*
   NOTIFY_QUIT_MSG:
-  Or to quit all BePDF applications.
+  Or to quit all NimblePDF applications.
 */
-void BepdfApplication::Notify(uint32 cmd)
+void NimblePDFApplication::Notify(uint32 cmd)
 {
 	BList list;
-	be_roster->GetAppList(BEPDF_APP_SIG, &list);
+	be_roster->GetAppList(NIMBLEPDF_APP_SIG, &list);
 	const int n = list.CountItems() - 1;
 	BMessage msg(cmd);
 	// notify all but this team
@@ -528,7 +518,7 @@ void BepdfApplication::Notify(uint32 cmd)
 		if (who == fTeamID)
 			continue; // skip own team
 		status_t status;
-		BMessenger app(BEPDF_APP_SIG, who, &status);
+		BMessenger app(NIMBLEPDF_APP_SIG, who, &status);
 		if (status == B_OK) {
 			app.SendMessage(&msg, (BHandler*)NULL, 0);
 		}
@@ -537,7 +527,7 @@ void BepdfApplication::Notify(uint32 cmd)
 	PostMessage(&msg, (BHandler*)NULL, 0);
 }
 
-bool BepdfApplication::QuitRequested()
+bool NimblePDFApplication::QuitRequested()
 {
 	delete fStdoutTracer;
 	fStdoutTracer = NULL;
@@ -555,7 +545,7 @@ bool BepdfApplication::QuitRequested()
 /*
 	Opens everything.
 */
-void BepdfApplication::RefsReceived(BMessage* msg)
+void NimblePDFApplication::RefsReceived(BMessage* msg)
 {
 	uint32 type;
 	int32 count;
@@ -629,7 +619,7 @@ void BepdfApplication::RefsReceived(BMessage* msg)
 			if (!ok) {
 				if (!encrypted) {
 					BAlert* error = new BAlert(B_TRANSLATE("Error"),
-					    B_TRANSLATE("BePDF: Error opening file!"),
+					    B_TRANSLATE("NimblePDF: Error opening file!"),
 					    B_TRANSLATE("Close"),
 					    NULL,
 					    NULL,
@@ -665,7 +655,7 @@ void BepdfApplication::RefsReceived(BMessage* msg)
 
 
 ///////////////////////////////////////////////////////////
-void BepdfApplication::MessageReceived(BMessage* msg)
+void NimblePDFApplication::MessageReceived(BMessage* msg)
 {
 	if (msg == NULL) {
 		Trace(LOG_DEBUG, "xpdf: message NULL received\n");
@@ -700,7 +690,7 @@ void BepdfApplication::MessageReceived(BMessage* msg)
 
 
 ///////////////////////////////////////////////////////////
-void BepdfApplication::ArgvReceived(int32 argc, char** argv)
+void NimblePDFApplication::ArgvReceived(int32 argc, char** argv)
 {
 	// TODO(poppler-migration, phase G): xpdf provided parseArgs() with
 	// ArgDesc tables for flag-style command-line parsing (e.g. -h, -v).
@@ -728,9 +718,9 @@ void BepdfApplication::ArgvReceived(int32 argc, char** argv)
 	}
 
 	// print banner
-	//	fprintf(errFile, "BePDF version %s\n", pdfViewerVersion);
+	//	fprintf(errFile, "NimblePDF version %s\n", pdfViewerVersion);
 	//	fprintf(errFile, "based on xpdf %s %s\n", xpdfVersion, xpdfCopyright);
-	//	fprintf(errFile, "and based on BePDF %s\n%s\n", bePDFVersion, bePDFCopyright);
+	//	fprintf(errFile, "and based on NimblePDF %s\n%s\n", nimblePDFVersion, nimblePDFCopyright);
 	//	fprintf(errFile, "%s%s\n", pdfViewerCopyright, GPLCopyright);
 
 	BMessage msg(B_REFS_RECEIVED);
@@ -744,7 +734,7 @@ void BepdfApplication::ArgvReceived(int32 argc, char** argv)
 
 
 ///////////////////////////////////////////////////////////
-void BepdfApplication::LoadSettings()
+void NimblePDFApplication::LoadSettings()
 {
 	BPath path;
 	if (find_directory(B_USER_SETTINGS_DIRECTORY, &path) == B_OK && path.Append(settingsFilename) == B_OK) {
@@ -753,7 +743,7 @@ void BepdfApplication::LoadSettings()
 }
 
 ///////////////////////////////////////////////////////////
-void BepdfApplication::SaveSettings()
+void NimblePDFApplication::SaveSettings()
 {
 	BPath path;
 	if (find_directory(B_USER_SETTINGS_DIRECTORY, &path) == B_OK && path.Append(settingsFilename) == B_OK) {
@@ -780,7 +770,7 @@ static struct {
     {NULL, NULL, NULL, 0}};
 
 ///////////////////////////////////////////////////////////
-void BepdfApplication::UpdateAttr(BNode& node, const char* name, type_code type, off_t offset, void* buffer, size_t length)
+void NimblePDFApplication::UpdateAttr(BNode& node, const char* name, type_code type, off_t offset, void* buffer, size_t length)
 {
 	char dummy[10];
 	if (B_ENTRY_NOT_FOUND == node.ReadAttr(name, type, offset, (char*)dummy, sizeof(dummy))) {
@@ -790,7 +780,7 @@ void BepdfApplication::UpdateAttr(BNode& node, const char* name, type_code type,
 
 
 ///////////////////////////////////////////////////////////
-void BepdfApplication::UpdateFileAttributes(PDFDoc* doc, entry_ref* ref)
+void NimblePDFApplication::UpdateFileAttributes(PDFDoc* doc, entry_ref* ref)
 {
 	BNode node(ref);
 	if (node.InitCheck() != B_OK)
@@ -834,7 +824,7 @@ void BepdfApplication::UpdateFileAttributes(PDFDoc* doc, entry_ref* ref)
 }
 
 
-const char* BepdfApplication::GetVersion(BString& version)
+const char* NimblePDFApplication::GetVersion(BString& version)
 {
 	version = "?.?.?";
 	if (be_app == NULL) {

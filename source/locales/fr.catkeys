@@ -1,4 +1,4 @@
-1	French	application/x-vnd.mp-xpdf	1765081836
+1	French	application/x-vnd.Haiku-NimblePDF	1765081836
  in	PrintSettingsWindow		in
 All pages	PrintSettingsWindow		Toutes les pages
 Color	PrintSettingsWindow		Couleur
@@ -26,8 +26,8 @@ Zoom must be between 25 and 400!	PrintSettingsWindow		Le zoom doit être entre 2
 [link type 'movie' not supported]	PDFView		[lien de type 'vidéo' non supporté]
 [unknown link]	PDFView		[lien inconnu]
 Annotation	PDFView		Annotation
-BePDF reading file: 	PDFView		BePDF lit le fichier :
-BePDF: Launch	PDFView		BePDF : Lancement
+NimblePDF reading file: 	PDFView		NimblePDF lit le fichier :
+NimblePDF: Launch	PDFView		NimblePDF : Lancement
 Cancel	PDFView		Annuler
 Copy link	PDFView		Copier le lien
 Delete	PDFView		Effacer
@@ -55,8 +55,8 @@ Save selected attachment to file	AttachmentView		Enregistrer la pièce jointe s�
 Save selected attachments into directory	AttachmentView		Enregistrer les pièces jointes sélectionnées dans le répertoire
 Saving attachment(s):	AttachmentView		Enregistrer les pièces jointes :
 Abort	PrintingProgressWindow		Abandon
-BePDF printing	PrintingProgressWindow		BePDF en cours d'impression
-BePDF printing document: 	PrintingProgressWindow		BePDF imprime le document :
+NimblePDF printing	PrintingProgressWindow		NimblePDF en cours d'impression
+NimblePDF printing document: 	PrintingProgressWindow		NimblePDF imprime le document :
 Page:	PrintingProgressWindow		Page :
 Page: %d	PrintingProgressWindow		Page : %d
 Stop	PrintingProgressWindow		Stopper
@@ -90,7 +90,7 @@ Title:	FileInfoWindow		Titre :
 Type	FileInfoWindow		Type
 Version:	FileInfoWindow		Version :
 Yes	FileInfoWindow		Oui
-About BePDF…	PDFWindow		À propos de BePDF…
+About NimblePDF…	PDFWindow		À propos de NimblePDF…
 Add	PDFWindow		Ajouter
 Add circle annotation	PDFWindow		Ajouter une annotation circulaire
 Add comment text annotation	PDFWindow		Ajouter une annotation de type commentaire
@@ -120,7 +120,7 @@ Add widget annotation	PDFWindow		Ajouter une annotation gadget
 Back	PDFWindow		Retour
 Back in page history list	PDFWindow		En arrière dans l'historique des pages
 Bookmark	PDFWindow		Marque-page
-Can not overwrite a PDF file that's currently opened in BePDF! Please choose another file name.	PDFWindow		Impossible d'écraser un fichier PDF actuellement ouvert dans BePDF ! Veuillez choisir un autre nom de fichier.
+Can not overwrite a PDF file that's currently opened in NimblePDF! Please choose another file name.	PDFWindow		Impossible d'écraser un fichier PDF actuellement ouvert dans NimblePDF ! Veuillez choisir un autre nom de fichier.
 Close	PDFWindow		Fermer
 Copy selection	PDFWindow		Copier la sélection
 Could not write PDF file!	PDFWindow		Impossible d'écrire le fichier PDF !
@@ -220,23 +220,23 @@ System fonts	AnnotationWindow		Polices système
 Title:	AnnotationWindow		Titre :
 User fonts	AnnotationWindow		Polices utilisateur
 Will take effect at next program launch.	AnnotationWindow		Prendront effet au prochain lancement du programme.
-Alpha	BepdfApplication		Alpha
-BePDF is based on XPDF %s, %s.	BepdfApplication	XPDF version, copyright	BePDF est basé sur XPDF %s, %s.
-BePDF: Error opening file!	BepdfApplication		BePDF : Erreur à l'ouverture du fichier !
-Beta	BepdfApplication		Bêta
-Close	BepdfApplication		Fermer
-Development	BepdfApplication		Développement
-Error	BepdfApplication		Erreur
-Final	BepdfApplication		Finale
-Gamma	BepdfApplication		Gamma
-Golden Master	BepdfApplication		Version finale
-Unknown	BepdfApplication		Inconnu
-Version	BepdfApplication		Version
+Alpha	NimblePDFApplication		Alpha
+NimblePDF is based on XPDF %s, %s.	NimblePDFApplication	XPDF version, copyright	NimblePDF est basé sur XPDF %s, %s.
+NimblePDF: Error opening file!	NimblePDFApplication		NimblePDF : Erreur à l'ouverture du fichier !
+Beta	NimblePDFApplication		Bêta
+Close	NimblePDFApplication		Fermer
+Development	NimblePDFApplication		Développement
+Error	NimblePDFApplication		Erreur
+Final	NimblePDFApplication		Finale
+Gamma	NimblePDFApplication		Gamma
+Golden Master	NimblePDFApplication		Version finale
+Unknown	NimblePDFApplication		Inconnu
+Version	NimblePDFApplication		Version
 Auto open	TraceWindow		Ouverture automatique
 Clear	TraceWindow		Nettoyer
 Error messages	TraceWindow		Messages d'erreur
 Floating	TraceWindow		Flottant
-BePDF status	StatusWindow		Statut de BePDF
+NimblePDF status	StatusWindow		Statut de NimblePDF
 Enter Password	PasswordWindow		Entrer le mot de passe
 OK	PasswordWindow		D'accord
 Owner password	PasswordWindow		Mot de passe propriétaire

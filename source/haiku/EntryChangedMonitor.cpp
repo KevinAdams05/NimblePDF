@@ -1,5 +1,5 @@
 /*
- * BePDF: The PDF reader for Haiku.
+ * NimblePDF: The PDF reader for Haiku.
  * 	 Copyright (C) 1997 Benoit Triquet.
  * 	 Copyright (C) 1998-2000 Hubert Figuiere.
  * 	 Copyright (C) 2000-2011 Michael Pfeiffer.
@@ -73,7 +73,7 @@ void EntryChangedMonitor::MessageReceived(BMessage* msg)
 	// Haiku sends a B_STAT_CHANGED notification
 	// when attributes are changed too
 	// this leads to an infinite loop, as
-	// BePDF changes file attributes after
+	// NimblePDF changes file attributes after
 	// loading a file.
 	// TODO check if file has changed and only
 	// then notify the listener

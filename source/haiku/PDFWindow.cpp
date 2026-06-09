@@ -1,5 +1,5 @@
 /*
- * BePDF: The PDF reader for Haiku.
+ * NimblePDF: The PDF reader for Haiku.
  * 	 Copyright (C) 1997 Benoit Triquet.
  * 	 Copyright (C) 1998-2000 Hubert Figuiere.
  * 	 Copyright (C) 2000-2011 Michael Pfeiffer.
@@ -52,13 +52,13 @@
 #include <Debug.h>
 #include <LayoutBuilder.h>
 
-// BePDF
+// NimblePDF
 #include "Logging.h"
 #include "AnnotationWindow.h"
 #include "AnnotWriter.h"
 #include "AttachmentView.h"
-#include "BePDF.h"
-#include "BepdfApplication.h"
+#include "NimblePDF.h"
+#include "NimblePDFApplication.h"
 #include "EntryMenuItem.h"
 #include "FileInfoWindow.h"
 #include "FindTextWindow.h"
@@ -103,7 +103,7 @@ bool RecentDocumentsMenu::AddDynamicItem(add_state s)
 		delete item;
 	}
 
-	be_roster->GetRecentDocuments(&list, 20, NULL, BEPDF_APP_SIG);
+	be_roster->GetRecentDocuments(&list, 20, NULL, NIMBLEPDF_APP_SIG);
 	for (int i = 0; list.FindRef("refs", i, &ref) == B_OK; i++) {
 		BEntry entry(&ref);
 		if (entry.Exists() && entry.GetName(name) == B_OK) {
@@ -309,11 +309,11 @@ void PDFWindow::StoreFileAttributes()
 		entry_ref cur_ref;
 		if (fCurrentFile.InitCheck() == B_OK) {
 			fCurrentFile.GetRef(&cur_ref);
-			// BePDF #115 defensive guard: only update bookmarks if the
+			// NimblePDF #115 defensive guard: only update bookmarks if the
 			// outlines view actually loaded them this session. Without
 			// this check, closing a file whose bookmark panel was never
 			// opened would write an empty list back to the
-			// bepdf:bookmarks attribute and silently destroy the user's
+			// nimblepdf:bookmarks attribute and silently destroy the user's
 			// saved bookmarks.
 			if (fOutlinesView->WasActivated()) {
 				BMessage bm;
@@ -360,7 +360,7 @@ bool PDFWindow::LoadFile(entry_ref* ref, const char* ownerPassword, const char* 
 		// load new file
 		if (fMainView->LoadFile(ref, &fFileAttributes, ownerPassword, userPassword, false, encrypted)) {
 			fEntryChangedMonitor.StartWatching(ref);
-			be_roster->AddToRecentDocuments(ref, BEPDF_APP_SIG);
+			be_roster->AddToRecentDocuments(ref, NIMBLEPDF_APP_SIG);
 			fCurrentFile.SetTo(ref);
 			InitAfterOpen();
 			return true;
@@ -540,14 +540,14 @@ void PDFWindow::UpdateWindowsMenu()
 	BMenuItem *item;
 	while ((item = fWindowsMenu->RemoveItem((int32)0)) != NULL) delete item;
 	BList list;
-	be_roster->GetAppList(BEPDF_APP_SIG, &list);
+	be_roster->GetAppList(NIMBLEPDF_APP_SIG, &list);
 	entry_ref ref;
 	const int n = list.CountItems();
 
 	for (int i = n-1; i >= 0; i --) {
 		team_id who = (team_id)list.ItemAt(i);
 		char s[256];
-		sprintf(s, "BePDF %d", who);
+		sprintf(s, "NimblePDF %d", who);
 		fWindowsMenu->AddItem(new BMenuItem(s, NULL));
 	}
 */
@@ -658,7 +658,7 @@ BMenuBar* PDFWindow::BuildMenu()
 	    .AddItem(B_TRANSLATE("Visit homepage" B_UTF8_ELLIPSIS), HOME_PAGE_CMD)
 	    .AddItem(B_TRANSLATE("Issue tracker" B_UTF8_ELLIPSIS), BUG_REPORT_CMD)
 	    .AddSeparator()
-	    .AddItem(B_TRANSLATE("About BePDF" B_UTF8_ELLIPSIS), ABOUT_APP_CMD)
+	    .AddItem(B_TRANSLATE("About NimblePDF" B_UTF8_ELLIPSIS), ABOUT_APP_CMD)
 	    .End();
 
 	fZoomMenu->SetRadioMode(true);
@@ -971,7 +971,7 @@ void PDFWindow::MessageReceived(BMessage* message)
 		gApp->OpenFilePanel();
 		break;
 	case NEW_WINDOW_CMD:
-		be_roster->Launch(BEPDF_APP_SIG, 0, (char**)NULL);
+		be_roster->Launch(NIMBLEPDF_APP_SIG, 0, (char**)NULL);
 		break;
 	case OPEN_IN_NEW_WINDOW_CMD: {
 		BMessage m(B_REFS_RECEIVED);
@@ -994,7 +994,7 @@ void PDFWindow::MessageReceived(BMessage* message)
 		PostMessage(B_QUIT_REQUESTED);
 		break;
 	case QUIT_APP_CMD:
-		gApp->Notify(BepdfApplication::NOTIFY_QUIT_MSG);
+		gApp->Notify(NimblePDFApplication::NOTIFY_QUIT_MSG);
 		break;
 	case PAGESETUP_FILE_CMD:
 		fMainView->PageSetup();
@@ -1171,13 +1171,13 @@ void PDFWindow::MessageReceived(BMessage* message)
 		OpenHelp();
 		break;
 	case ONLINE_HELP_CMD:
-		LaunchHTMLBrowser("http://haikuarchives.github.io/BePDF/English/table_of_contents.html");
+		LaunchHTMLBrowser("http://haikuarchives.github.io/NimblePDF/English/table_of_contents.html");
 		break;
 	case HOME_PAGE_CMD:
-		LaunchHTMLBrowser("http://haikuarchives.github.io/BePDF/");
+		LaunchHTMLBrowser("http://haikuarchives.github.io/NimblePDF/");
 		break;
 	case BUG_REPORT_CMD:
-		LaunchHTMLBrowser("http://github.com/HaikuArchives/BePDF/issues/");
+		LaunchHTMLBrowser("http://github.com/HaikuArchives/NimblePDF/issues/");
 		break;
 	case PREFERENCES_FILE_CMD:
 		fPreferencesItem->SetEnabled(false);
@@ -1435,7 +1435,7 @@ void PDFWindow::MessageReceived(BMessage* message)
 void PDFWindow::OpenPDF(const char* file)
 {
 	char* argv[2] = {(char*)file, NULL};
-	be_roster->Launch(BEPDF_APP_SIG, 1, argv);
+	be_roster->Launch(NIMBLEPDF_APP_SIG, 1, argv);
 }
 
 
@@ -1562,7 +1562,7 @@ void PDFWindow::ShowLeftPanel(int panel)
 		gApp->GetSettings()->SetLeftPanel(panel);
 		fLayerView->CardLayout()->SetVisibleItem(panel);
 	}
-	// BePDF #115: Activate must fire whenever BOOKMARKS_PANEL becomes
+	// NimblePDF #115: Activate must fire whenever BOOKMARKS_PANEL becomes
 	// (or already is) the visible panel — not only when the index
 	// transitions. At startup the default visible index is 0, which
 	// equals BOOKMARKS_PANEL, so the old `!=` guard skipped Activate
@@ -1811,7 +1811,7 @@ void PDFWindow::InitAnnotTemplates()
 	line[0] = PDFPoint(rect.x1, rect.y1);
 	line[1] = PDFPoint(rect.x2, rect.y1);
 
-	PDFFont* font = BePDFAcroForm::GetStandardFonts()->FindByName("Helvetica");
+	PDFFont* font = NimblePDFAcroForm::GetStandardFonts()->FindByName("Helvetica");
 	ASSERT(font != NULL);
 	SetAnnotTemplate(ADD_FREETEXT_ANNOT_CMD, new FreeTextAnnot(rect, font));
 
@@ -1889,7 +1889,7 @@ public:
 	{
 		BAlert* alert = NULL;
 
-		AnnotWriter writer(GetXRef(), fMainView->GetPDFDoc(), fMainView->GetPageRenderer()->GetAnnotsList(), fMainView->GetBePDFAcroForm());
+		AnnotWriter writer(GetXRef(), fMainView->GetPDFDoc(), fMainView->GetPageRenderer()->GetAnnotsList(), fMainView->GetNimblePDFAcroForm());
 		if (writer.WriteTo(fPath.String())) {
 			alert = new BAlert(
 			    "Information", B_TRANSLATE("PDF file successfully written!"), B_TRANSLATE("OK"), 0, 0, B_WIDTH_AS_USUAL, B_STOP_ALERT);
@@ -1928,7 +1928,7 @@ void PDFWindow::SaveFile(BMessage* msg)
 		} else {
 			BAlert* alert = NULL;
 			alert = new BAlert(B_TRANSLATE("Warning"),
-			    B_TRANSLATE("Can not overwrite a PDF file that's currently opened in BePDF! Please choose another file name."),
+			    B_TRANSLATE("Can not overwrite a PDF file that's currently opened in NimblePDF! Please choose another file name."),
 			    B_TRANSLATE("OK"));
 			alert->Go();
 		}

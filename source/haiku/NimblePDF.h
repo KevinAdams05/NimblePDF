@@ -1,5 +1,5 @@
 /*
- * BePDF: The PDF reader for Haiku.
+ * NimblePDF: The PDF reader for Haiku.
  * 	 Copyright (C) 1997 Benoit Triquet.
  * 	 Copyright (C) 1998-2000 Hubert Figuiere.
  * 	 Copyright (C) 2000-2011 Michael Pfeiffer.
@@ -28,7 +28,7 @@
 
 // global lock
 extern BLocker* gPdfLock;
-// the BScreen initialized with InitBePDF()
+// the BScreen initialized with InitNimblePDF()
 extern BScreen* gScreen;
 
 // Automatically locks and unlocks gPdfLock in constructor and destructor.
@@ -39,8 +39,8 @@ public:
 };
 
 // Initializes global variables
-void InitBePDF();
+void InitNimblePDF();
 // Frees global variables
-void ExitBePDF();
+void ExitNimblePDF();
 
 #endif

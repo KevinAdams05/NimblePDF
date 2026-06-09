@@ -5,7 +5,7 @@
 ## architecture of Haiku.
 
 # The name of the binary.
-NAME = BePDF
+NAME = NimblePDF
 TARGET_DIR= ../dist
 
 # The type of binary, must be one of:
@@ -16,7 +16,7 @@ TARGET_DIR= ../dist
 TYPE = APP
 
 # 	If you plan to use localization, specify the application's MIME signature.
-APP_MIME_SIG = application/x-vnd.mp-xpdf
+APP_MIME_SIG = application/x-vnd.Haiku-NimblePDF
 
 #	The following lines tell Pe and Eddie where the SRCS, RDEFS, and RSRCS are
 #	so that Pe and Eddie can fill them in for you.
@@ -36,9 +36,9 @@ SRCS = haiku/AnnotAppearance.cpp \
 	haiku/AnnotationWindow.cpp \
 	haiku/AttachmentView.cpp \
 	haiku/BeFontEncoding.cpp \
-	haiku/BePDF.cpp \
+	haiku/NimblePDF.cpp \
 	haiku/BeSplashOutputDev.cpp \
-	haiku/BepdfApplication.cpp \
+	haiku/NimblePDFApplication.cpp \
 	haiku/BitmapPool.cpp \
 	haiku/CachedPage.cpp \
 	haiku/DisplayCIDFonts.cpp \
@@ -72,7 +72,7 @@ SRCS = haiku/AnnotAppearance.cpp \
 
 #	Specify the resource definition files to use. Full or relative paths can be
 #	used.
-RDEFS = haiku/BePDF.rdef
+RDEFS = haiku/NimblePDF.rdef
 
 #	Specify the resource files to use. Full or relative paths can be used.
 #	Both RDEFS and RSRCS can be utilized in the same Makefile.

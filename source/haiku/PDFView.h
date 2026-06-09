@@ -1,5 +1,5 @@
 /*
- * BePDF: The PDF reader for Haiku.
+ * NimblePDF: The PDF reader for Haiku.
  * 	 Copyright (C) 1997 Benoit Triquet.
  * 	 Copyright (C) 1998-2000 Hubert Figuiere.
  * 	 Copyright (C) 2000-2011 Michael Pfeiffer.
@@ -57,7 +57,7 @@ class PDFView : public BView {
 private:
 	bool fLoading;
 	PDFDoc* fDoc;
-	BePDFAcroForm* fBePDFAcroForm;
+	NimblePDFAcroForm* fNimblePDFAcroForm;
 	bool fOk;
 	int fZoom;
 	BBitmap* fBitmap;
@@ -282,7 +282,7 @@ public:
 	void UpdateSettings(GlobalSettings* settings);
 
 	// Annotation
-	BePDFAcroForm* GetBePDFAcroForm() { return fBePDFAcroForm; }
+	NimblePDFAcroForm* GetNimblePDFAcroForm() { return fNimblePDFAcroForm; }
 	void BeginEditAnnot();
 	void InsertAnnotation(Annotation* a);
 	void ClearAnnotationWindow();
