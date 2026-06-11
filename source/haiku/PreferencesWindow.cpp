@@ -43,7 +43,7 @@
 #include "PreferencesWindow.h"
 
 #undef B_TRANSLATION_CONTEXT
-#define B_TRANSLATION_CONTEXT "AnnotationWindow"
+#define B_TRANSLATION_CONTEXT "PreferencesWindow"
 
 void PreferencesWindow::UpdateWorkspace()
 {
