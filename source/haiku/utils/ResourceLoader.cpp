@@ -9,10 +9,10 @@ static const type_code icon = 'ICON', miniIcon = 'MICN';
 
 BBitmap* LoadLargeIcon(const char* name)
 {
-	BResources* res = BApplication::AppResources();
-	if (res != NULL) {
+	BResources* resources = BApplication::AppResources();
+	if (resources != NULL) {
 		size_t length;
-		const void* bits = res->LoadResource(icon, name, &length);
+		const void* bits = resources->LoadResource(icon, name, &length);
 		if ((bits != NULL) && (length == B_LARGE_ICON * B_LARGE_ICON)) {
 			BRect rect(0, 0, B_LARGE_ICON - 1, B_LARGE_ICON - 1);
 			BBitmap* bitmap = new BBitmap(rect, B_CMAP8);
@@ -25,10 +25,10 @@ BBitmap* LoadLargeIcon(const char* name)
 
 BBitmap* LoadLargeIcon(int32 id)
 {
-	BResources* res = BApplication::AppResources();
-	if (res != NULL) {
+	BResources* resources = BApplication::AppResources();
+	if (resources != NULL) {
 		size_t length;
-		const void* bits = res->LoadResource(icon, id, &length);
+		const void* bits = resources->LoadResource(icon, id, &length);
 		if ((bits != NULL) && (length == B_LARGE_ICON * B_LARGE_ICON)) {
 			BRect rect(0, 0, B_LARGE_ICON - 1, B_LARGE_ICON - 1);
 			BBitmap* bitmap = new BBitmap(rect, B_CMAP8);
@@ -41,10 +41,10 @@ BBitmap* LoadLargeIcon(int32 id)
 
 BBitmap* LoadMiniIcon(const char* name)
 {
-	BResources* res = BApplication::AppResources();
-	if (res != NULL) {
+	BResources* resources = BApplication::AppResources();
+	if (resources != NULL) {
 		size_t length;
-		const void* bits = res->LoadResource(miniIcon, name, &length);
+		const void* bits = resources->LoadResource(miniIcon, name, &length);
 		if ((bits != NULL) && (length == B_MINI_ICON * B_MINI_ICON)) {
 			BRect rect(0, 0, B_MINI_ICON - 1, B_MINI_ICON - 1);
 			BBitmap* bitmap = new BBitmap(rect, B_CMAP8);
@@ -57,10 +57,10 @@ BBitmap* LoadMiniIcon(const char* name)
 
 BBitmap* LoadMiniIcon(int32 id)
 {
-	BResources* res = BApplication::AppResources();
-	if (res != NULL) {
+	BResources* resources = BApplication::AppResources();
+	if (resources != NULL) {
 		size_t length;
-		const void* bits = res->LoadResource(miniIcon, id, &length);
+		const void* bits = resources->LoadResource(miniIcon, id, &length);
 		if ((bits != NULL) && (length == B_MINI_ICON * B_MINI_ICON)) {
 			BRect rect(0, 0, B_MINI_ICON - 1, B_MINI_ICON - 1);
 			BBitmap* bitmap = new BBitmap(rect, B_CMAP8);
@@ -76,13 +76,13 @@ BBitmap* LoadBitmap(const char* name, uint32 type_code)
 	if (type_code == B_TRANSLATOR_BITMAP) {
 		return BTranslationUtils::GetBitmap(type_code, name);
 	} else {
-		BResources* res = BApplication::AppResources();
-		if (res != NULL) {
+		BResources* resources = BApplication::AppResources();
+		if (resources != NULL) {
 			size_t length;
-			const void* bits = res->LoadResource(type_code, name, &length);
-			BMessage m;
-			if (bits && m.Unflatten((char*)bits) == B_OK) {
-				BBitmap* bitmap = (BBitmap*)BBitmap::Instantiate(&m);
+			const void* bits = resources->LoadResource(type_code, name, &length);
+			BMessage message;
+			if (bits && message.Unflatten((char*)bits) == B_OK) {
+				BBitmap* bitmap = (BBitmap*)BBitmap::Instantiate(&message);
 				return bitmap;
 			}
 		}
@@ -92,9 +92,9 @@ BBitmap* LoadBitmap(const char* name, uint32 type_code)
 
 BBitmap* LoadVectorIcon(const char* name, int32 size)
 {
-	BResources* res = BApplication::AppResources();
+	BResources* resources = BApplication::AppResources();
 	size_t length = 0;
-	const void* data = res->LoadResource(B_VECTOR_ICON_TYPE, name, &length);
+	const void* data = resources->LoadResource(B_VECTOR_ICON_TYPE, name, &length);
 	BBitmap* dest = new BBitmap(BRect(0, 0, size, size), B_RGBA32);
 	if (data != NULL && BIconUtils::GetVectorIcon((uint8*)data, length, dest) == B_OK)
 		return dest;

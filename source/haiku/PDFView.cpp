@@ -1513,7 +1513,7 @@ bool PDFView::HandleLink(BPoint point)
 		case actionMovie: // fall through
 		// unknown action type
 		case actionUnknown:
-			fprintf(stdout, B_TRANSLATE("Unknown link action type: '%s'"), ((LinkUnknown*)action)->getAction().c_str());
+			Trace(LOG_WARNING, "unknown link action type: '%s'", ((LinkUnknown*)action)->getAction().c_str());
 			break;
 		}
 	}

@@ -353,12 +353,8 @@ NimblePDFApplication::~NimblePDFApplication()
 ///////////////////////////////////////////////////////////
 void NimblePDFApplication::ReadyToRun()
 {
-#if 1
 	fStdoutTracer = new OutputTracer(1, "stdout", GetSettings());
 	fStderrTracer = new OutputTracer(2, "stderr", GetSettings());
-#else
-	fStdoutTracer = fStderrTracer = NULL;
-#endif
 
 	Initialize();
 	if (!fGotSomething) {
