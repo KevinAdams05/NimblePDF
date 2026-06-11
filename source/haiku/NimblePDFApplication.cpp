@@ -33,7 +33,7 @@
 #include <Deskbar.h>
 #include <Alert.h>
 
-#include "Logging.h"
+#include "Trace.h"
 // xpdf "config.h" and "Error.h" replaced by poppler headers; pkg-config
 // adds the poppler header path.
 #include "Error.h"

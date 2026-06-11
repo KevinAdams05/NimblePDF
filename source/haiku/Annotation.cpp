@@ -27,7 +27,7 @@
 #include <Debug.h>
 #include <stack>
 
-#include "Logging.h"
+#include "Trace.h"
 #include "Annotation.h"
 
 // Local convenience macro for the legacy LOG("string") call sites in this

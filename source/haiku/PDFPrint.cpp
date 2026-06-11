@@ -26,7 +26,7 @@
 #include <Object.h>
 #include <Gfx.h>
 // NimblePDF
-#include "Logging.h"
+#include "Trace.h"
 #include "NimblePDFApplication.h"
 #include "PDFView.h"
 #include "PrintingProgressWindow.h"

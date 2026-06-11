@@ -33,7 +33,7 @@
 #include <Path.h>
 #include <Debug.h>
 
-#include "Logging.h"
+#include "Trace.h"
 #include "NimblePDFApplication.h" // for images only
 #include "PageRenderer.h"
 #include "CachedPage.h"

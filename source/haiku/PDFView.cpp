@@ -55,7 +55,7 @@
 #include <TextOutputDev.h>
 #include <Gfx.h>
 // NimblePDF
-#include "Logging.h"
+#include "Trace.h"
 #include "AnnotationWindow.h"
 #include "AnnotWriter.h"
 #include "NimblePDF.h"

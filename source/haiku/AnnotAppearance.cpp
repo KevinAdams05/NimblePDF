@@ -21,7 +21,7 @@
  */
 
 #if defined(__BEOS__) || defined(__HAIKU__)
-#include "Logging.h"
+#include "Trace.h"
 #include "NimblePDFApplication.h"
 #include "AnnotationRenderer.h"
 #include <Bitmap.h>

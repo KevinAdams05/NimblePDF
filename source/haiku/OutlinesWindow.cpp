@@ -35,7 +35,7 @@
 #include <Link.h>
 #include <Object.h>
 // NimblePDF
-#include "Logging.h"
+#include "Trace.h"
 #include "NimblePDF.h"
 #include "LayoutUtils.h"
 #include "TextConversion.h"

@@ -53,7 +53,7 @@
 #include <LayoutBuilder.h>
 
 // NimblePDF
-#include "Logging.h"
+#include "Trace.h"
 #include "AnnotationWindow.h"
 #include "AnnotWriter.h"
 #include "AttachmentView.h"
