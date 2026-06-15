@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="940" height="660" viewBox="0 0 940 660" font-family="DejaVu Sans, Verdana, sans-serif">
+  <defs>
+    <style>
+      .title { font-size: 21px; font-weight: bold; fill: #14315c; }
+      .sub   { font-size: 12px; fill: #5a6b82; }
+      .lbl   { font-size: 14px; font-weight: bold; }
+      .small { font-size: 11.5px; }
+      .tiny  { font-size: 10.5px; fill: #44505f; }
+      .box   { rx: 8; ry: 8; stroke-width: 1.5; }
+    </style>
+  </defs>
+
+  <rect width="940" height="660" fill="#f7f9fc"/>
+  <text x="32" y="40" class="title">NimblePDF — cross-platform architecture</text>
+  <text x="32" y="60" class="sub">Shared portable core + thin platform seams + per-toolkit frontends. The hard part (PDF rendering) is poppler — already portable.</text>
+
+  <!-- Frontends row -->
+  <text x="32" y="98" class="lbl" fill="#14315c">Frontends (UI)</text>
+
+  <rect x="32"  y="110" width="200" height="92" class="box" fill="#dbeafe" stroke="#2563eb"/>
+  <text x="132" y="134" text-anchor="middle" class="lbl" fill="#1e3a8a">Haiku — BeAPI</text>
+  <text x="132" y="154" text-anchor="middle" class="small" fill="#1e3a8a">B*  (Window/View/Menu)</text>
+  <text x="132" y="174" text-anchor="middle" class="tiny">✔ shipping (v2.2.0)</text>
+  <text x="132" y="190" text-anchor="middle" class="tiny">the reference frontend</text>
+
+  <rect x="248" y="110" width="200" height="92" class="box" fill="#dcfce7" stroke="#16a34a"/>
+  <text x="348" y="134" text-anchor="middle" class="lbl" fill="#14532d">Linux — Qt 6</text>
+  <text x="348" y="154" text-anchor="middle" class="small" fill="#14532d">QMainWindow / QWidget</text>
+  <text x="348" y="174" text-anchor="middle" class="tiny">Phase 1 — do first</text>
+  <text x="348" y="190" text-anchor="middle" class="tiny">proves the core split</text>
+
+  <rect x="464" y="110" width="200" height="92" class="box" fill="#dcfce7" stroke="#16a34a"/>
+  <text x="564" y="134" text-anchor="middle" class="lbl" fill="#14532d">Windows — Qt 6</text>
+  <text x="564" y="154" text-anchor="middle" class="small" fill="#14532d">same Qt code as Linux</text>
+  <text x="564" y="174" text-anchor="middle" class="tiny">Phase 2 — mostly free</text>
+  <text x="564" y="190" text-anchor="middle" class="tiny">build + installer differ</text>
+
+  <rect x="680" y="110" width="200" height="92" class="box" fill="#fef9c3" stroke="#ca8a04"/>
+  <text x="780" y="134" text-anchor="middle" class="lbl" fill="#713f12">KevRexOS — os::</text>
+  <text x="780" y="154" text-anchor="middle" class="small" fill="#713f12">os::Window / os::View</text>
+  <text x="780" y="174" text-anchor="middle" class="tiny">Phase 3 — gated on GUI</text>
+  <text x="780" y="190" text-anchor="middle" class="tiny">see KEVREXOS_PORT_ANALYSIS</text>
+
+  <!-- arrows frontends -> abstraction -->
+  <g stroke="#94a3b8" stroke-width="1.5" marker-end="url(#ar)">
+    <line x1="132" y1="202" x2="132" y2="232"/>
+    <line x1="348" y1="202" x2="348" y2="232"/>
+    <line x1="564" y1="202" x2="564" y2="232"/>
+    <line x1="780" y1="202" x2="780" y2="232"/>
+  </g>
+  <defs>
+    <marker id="ar" markerWidth="9" markerHeight="9" refX="5" refY="3" orient="auto">
+      <path d="M0,0 L6,3 L0,6 Z" fill="#94a3b8"/>
+    </marker>
+  </defs>
+
+  <!-- Abstraction layer -->
+  <rect x="32" y="234" width="848" height="96" class="box" fill="#ede9fe" stroke="#7c3aed"/>
+  <text x="48" y="258" class="lbl" fill="#4c1d95">Platform abstraction seams  (one implementation per frontend)</text>
+  <g class="small" fill="#4c1d95">
+    <rect x="48"  y="270" width="150" height="24" rx="5" fill="#fff" stroke="#a78bfa"/><text x="123" y="286" text-anchor="middle">IRenderTarget / Bitmap</text>
+    <rect x="206" y="270" width="132" height="24" rx="5" fill="#fff" stroke="#a78bfa"/><text x="272" y="286" text-anchor="middle">ISettingsStore</text>
+    <rect x="346" y="270" width="124" height="24" rx="5" fill="#fff" stroke="#a78bfa"/><text x="408" y="286" text-anchor="middle">IFileChooser</text>
+    <rect x="478" y="270" width="124" height="24" rx="5" fill="#fff" stroke="#a78bfa"/><text x="540" y="286" text-anchor="middle">IFileWatcher</text>
+    <rect x="610" y="270" width="104" height="24" rx="5" fill="#fff" stroke="#a78bfa"/><text x="662" y="286" text-anchor="middle">IPrinter</text>
+    <rect x="722" y="270" width="158" height="24" rx="5" fill="#fff" stroke="#a78bfa"/><text x="801" y="286" text-anchor="middle">IClipboard · IStringCatalog</text>
+  </g>
+  <text x="48" y="318" class="tiny" fill="#4c1d95">Haiku → BBitmap / BNode-attrs / BFilePanel / watch_node / BPrintJob / catkeys ·  Qt → QImage / QSettings / QFileDialog / QFileSystemWatcher / QPrinter / Qt Linguist ·  KevRexOS → os::Bitmap / os::Attribute / os::FileRequester / os::NodeMonitor</text>
+
+  <!-- arrow abstraction -> core -->
+  <line x1="456" y1="330" x2="456" y2="360" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#ar)"/>
+
+  <!-- Core layer -->
+  <rect x="32" y="362" width="848" height="170" class="box" fill="#e0f2fe" stroke="#0284c7"/>
+  <text x="48" y="386" class="lbl" fill="#075985">NimblePDF Core  —  libnimblepdf-core  (portable C++, no UI toolkit)</text>
+  <g class="small" fill="#075985">
+    <rect x="48"  y="398" width="196" height="40" rx="6" fill="#fff" stroke="#38bdf8"/>
+    <text x="146" y="414" text-anchor="middle" class="lbl" fill="#075985" font-size="12">DocumentController</text>
+    <text x="146" y="430" text-anchor="middle" class="tiny">page/zoom/rotate/nav, hit-test</text>
+
+    <rect x="252" y="398" width="196" height="40" rx="6" fill="#fff" stroke="#38bdf8"/>
+    <text x="350" y="414" text-anchor="middle" class="lbl" fill="#075985" font-size="12">SplashRenderer</text>
+    <text x="350" y="430" text-anchor="middle" class="tiny">poppler page → RGBA buffer</text>
+
+    <rect x="456" y="398" width="196" height="40" rx="6" fill="#fff" stroke="#38bdf8"/>
+    <text x="554" y="414" text-anchor="middle" class="lbl" fill="#075985" font-size="12">Annotations</text>
+    <text x="554" y="430" text-anchor="middle" class="tiny">model · appearance · writer</text>
+
+    <rect x="660" y="398" width="196" height="40" rx="6" fill="#fff" stroke="#38bdf8"/>
+    <text x="758" y="414" text-anchor="middle" class="lbl" fill="#075985" font-size="12">Search · Outline</text>
+    <text x="758" y="430" text-anchor="middle" class="tiny">TextPage · TreeParser</text>
+
+    <rect x="48"  y="446" width="196" height="34" rx="6" fill="#fff" stroke="#38bdf8"/><text x="146" y="467" text-anchor="middle">Save (XRef rewrite)</text>
+    <rect x="252" y="446" width="196" height="34" rx="6" fill="#fff" stroke="#38bdf8"/><text x="350" y="467" text-anchor="middle">History · PageCache</text>
+    <rect x="456" y="446" width="196" height="34" rx="6" fill="#fff" stroke="#38bdf8"/><text x="554" y="467" text-anchor="middle">Fonts · Encoding · CID</text>
+    <rect x="660" y="446" width="196" height="34" rx="6" fill="#fff" stroke="#38bdf8"/><text x="758" y="467" text-anchor="middle">Settings model · Labels</text>
+  </g>
+  <text x="48" y="502" class="tiny" fill="#075985">Already ~45% of LOC and toolkit-free today. The one real refactor: split the non-UI half out of PDFView (2705 lines) into DocumentController.</text>
+  <text x="48" y="520" class="tiny" fill="#075985">Text↔string conversion stays at the TextConversion seam; no poppler types leak above the core.</text>
+
+  <!-- arrow core -> poppler -->
+  <line x1="456" y1="532" x2="456" y2="562" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#ar)"/>
+
+  <!-- poppler -->
+  <rect x="32" y="564" width="848" height="62" class="box" fill="#f1f5f9" stroke="#475569"/>
+  <text x="456" y="590" text-anchor="middle" class="lbl" fill="#1e293b">poppler 25.12  (libpoppler core + Splash backend)</text>
+  <text x="456" y="610" text-anchor="middle" class="tiny">Already cross-platform — Linux: distro pkg · Windows: vcpkg/MSYS2 build · Haiku: poppler25.12 hpkg · KevRexOS: port in progress</text>
+
+  <text x="32" y="648" class="tiny">Frontends own only UI + the seam implementations. Everything below the purple line is written once.</text>
+</svg>
