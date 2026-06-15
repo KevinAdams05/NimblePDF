@@ -1236,13 +1236,13 @@ void PDFWindow::MessageReceived(BMessage* message)
 		OpenHelp();
 		break;
 	case ONLINE_HELP_CMD:
-		LaunchHTMLBrowser("http://haikuarchives.github.io/NimblePDF/English/table_of_contents.html");
+		LaunchHTMLBrowser("http://github.com/KevinAdams05/NimblePDF/Docs/English/table_of_contents.html");
 		break;
 	case HOME_PAGE_CMD:
-		LaunchHTMLBrowser("http://haikuarchives.github.io/NimblePDF/");
+		LaunchHTMLBrowser("http://github.com/KevinAdams05/NimblePDF/");
 		break;
 	case BUG_REPORT_CMD:
-		LaunchHTMLBrowser("http://github.com/HaikuArchives/NimblePDF/issues/");
+		LaunchHTMLBrowser("http://github.com/KevinAdams05/NimblePDF/issues/");
 		break;
 	case PREFERENCES_FILE_CMD:
 		fPreferencesItem->SetEnabled(false);

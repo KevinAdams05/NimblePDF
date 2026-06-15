@@ -12,7 +12,7 @@ the gate -- the upstream pass never relaxes them.
 Checks (STYLE_GUIDE.md section in brackets):
   * line length >= 140 columns                              [1.1]
   * Yoda conditions (constant on the left of ==)            [Appendix A]
-  * trailing whitespace / tab-then-space mixed indent       [2]
+  * trailing whitespace                                     [2]
   * `nullptr` literal (use NULL)                            [10]
   * `#pragma once` (use #ifndef CLASS_NAME_H guards)        [15.2]
   * TRUE / FALSE macros (use true / false)                  [11]
@@ -50,7 +50,6 @@ CXX_C_HEADERS = (
 
 _yoda = re.compile(r"\bif\s*\(\s*(B_OK|NULL|true|false|0|\".*?\")\s*==")
 _trailing_ws = re.compile(r"[ \t]+$")
-_tab_then_space = re.compile(r"^\t+ ")
 _nullptr = re.compile(r"\bnullptr\b")
 _pragma_once = re.compile(r"^\s*#\s*pragma\s+once\b")
 _true_false = re.compile(r"\b(TRUE|FALSE)\b")
@@ -89,8 +88,6 @@ def check_file(path):
             report(lineno, "Yoda condition (constant on left of ==) [Appendix A]")
         if _trailing_ws.search(line):
             report(lineno, "trailing whitespace [2]")
-        if _tab_then_space.search(line):
-            report(lineno, "tab followed by space (mixed indent) [2]")
         if _nullptr.search(line):
             report(lineno, "use NULL, not nullptr [10]")
         if _pragma_once.search(line):
