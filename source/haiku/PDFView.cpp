@@ -1852,8 +1852,10 @@ void PDFView::RestartDoc()
 ///////////////////////////////////////////////////////////////////////////
 void PDFView::PostRedraw(thread_id id, BBitmap* bitmap)
 {
-	// TODO
-	if (id != -1) {
+	// Only finalize when this message belongs to the *current* render. A stale
+	// UPDATE_MSG queued by a previous render thread (Wait() does not drain the
+	// looper queue) must not mark the new render finished. Mirrors RedrawAborted.
+	if ((fRendererID == id) && (id != -1)) {
 		fRendering = false;
 		fRendererID = -1;
 		Invalidate();

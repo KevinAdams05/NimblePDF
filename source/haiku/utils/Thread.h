@@ -51,6 +51,7 @@ private:
 	static int32 DoRun(void* data);
 
 	thread_id fThreadId;
+	bool fResumed;
 };
 
 #endif

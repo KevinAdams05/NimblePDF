@@ -20,6 +20,7 @@
 
 Thread::Thread(const char* name, int32 priority)
 {
+	fResumed = false;
 	fThreadId = spawn_thread(DoRun, name, priority, this);
 }
 
@@ -47,12 +48,23 @@ status_t Thread::Resume()
 {
 	status_t result = InitCheck();
 	if (result != B_OK) {
+		// spawn_thread() failed; no thread exists, so self-delete is safe.
 		delete this;
 		return result;
 	}
 
+	if (fResumed) {
+		// Already resumed once: DoRun owns this object now and will delete it.
+		// Re-resuming would risk a double-free, so refuse (header one-call rule).
+		return B_ERROR;
+	}
+	fResumed = true;
+
 	result = resume_thread(fThreadId);
 	if (result != B_OK) {
+		// The thread is still suspended and DoRun will never run; kill it so it
+		// can't later execute against a freed object, then self-delete.
+		kill_thread(fThreadId);
 		delete this;
 	}
 	return result;
