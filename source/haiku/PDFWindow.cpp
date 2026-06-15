@@ -1955,8 +1955,19 @@ public:
 	{
 		BAlert* alert = NULL;
 
-		AnnotWriter writer(GetXRef(), fMainView->GetPDFDoc(), fMainView->GetPageRenderer()->GetAnnotsList(), fMainView->GetNimblePDFAcroForm());
-		if (writer.WriteTo(fPath.String())) {
+		bool written;
+		{
+			// Serialize against the render thread: WriteTo() mutates the shared
+			// XRef/Catalog that PageRenderer::Render() also touches under
+			// gPdfLock, and the writer ctor reads the doc + annotation list.
+			// This thread never takes the window lock, so holding gPdfLock here
+			// cannot invert the render thread's gPdfLock->fBitmap ordering.
+			PDFLock lock;
+			AnnotWriter writer(GetXRef(), fMainView->GetPDFDoc(), fMainView->GetPageRenderer()->GetAnnotsList(), fMainView->GetNimblePDFAcroForm());
+			written = writer.WriteTo(fPath.String());
+		}
+
+		if (written) {
 			alert = new BAlert(
 			    "Information", B_TRANSLATE("PDF file successfully written!"), B_TRANSLATE("OK"), 0, 0, B_WIDTH_AS_USUAL, B_STOP_ALERT);
 		} else {
