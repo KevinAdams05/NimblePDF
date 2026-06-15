@@ -21,30 +21,6 @@ Bugs are welcome! To log a bug, [please log it here in github as an issue](https
 PRs are welcome! However, please test all code changes on Beta5 and the latest nightly before opening the PR!
 
 
-## Repository layout
-
-```
-NimblePDF/
-├── assets/             # Logos, icon source artwork
-├── dist/               # Resource files shipped with the app
-│   ├── docs/           # User-facing docs (help, license texts)
-│   ├── encodings/      # CMap and encoding tables
-│   ├── fonts/          # Bundled fonts
-│   └── license/        # Third-party license texts
-├── docs/               # Developer documentation
-│   └── STYLE_GUIDE.md  # Coding style (read this first)
-├── source/             # NimblePDF application source
-│   ├── graphics/       # Vector graphics primitives
-│   ├── haiku/          # Haiku-specific UI and integration
-│   │   └── utils/      # Small helpers
-│   ├── locales/        # Translation catalogs
-│   └── Makefile        # Haiku Generic Makefile
-├── scripts/            # Dev/lint helpers
-├── build.sh            # Top-level build entry point
-├── LICENSE             # GPL v2+ (NimblePDF) + third-party license notes
-└── README.md           # This file
-```
-
 ## Building
 
 NimblePDF builds natively on Haiku using the standard
@@ -95,8 +71,8 @@ See individual source-file headers for per-file copyright details.
 
 ## Credits
 
-- **BePDF** — the foundation NimblePDF builds on. Thanks to Michael
-  Pfeiffer and the BePDF/HaikuArchives contributors.
+- **BePDF** — the foundation NimblePDF builds on. Thanks to Benoit Triquet, Hubert Figuiere,
+  Michael Pfeiffer, waddlesplash and the BePDF/HaikuArchives contributors.
 - **xpdf** — the original rendering engine (Glyph & Cog), inherited via
   BePDF and since replaced by poppler.
 - **poppler** — the rendering engine NimblePDF now uses.
