@@ -1,0 +1,34 @@
+name			nimblepdf
+version			2.2.0-1
+architecture	x86_64
+summary			"A fast, full-featured PDF reader for Haiku"
+
+description		"NimblePDF is a native Haiku PDF reader, forked from BePDF with
+the original xpdf rendering engine replaced by poppler. It supports page
+navigation, text search, bookmarks and document outlines, annotations,
+embedded-file attachments, and printing.
+
+NimblePDF is free software under the GNU General Public License, version 2 or
+(at your option) any later version."
+
+packager		"Kevin Adams <kevinadams05@gmail.com>"
+vendor			"Kevin Adams"
+
+licenses {
+	"GNU GPL v2"
+}
+
+copyrights {
+	"2026 Kevin Adams"
+	"1997-2017 Benoit Triquet, Hubert Figuiere, Michael Pfeiffer, waddlesplash (BePDF)"
+}
+
+provides {
+	nimblepdf = 2.2.0
+	app:NimblePDF = 2.2.0
+}
+
+requires {
+	haiku >= r1~beta5
+	lib:libpoppler >= 155
+}

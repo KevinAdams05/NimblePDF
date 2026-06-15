@@ -49,3 +49,6 @@ kevinnotes/
 # Python caches (for scripts/)
 __pycache__/
 *.pyc
+
+# .hpkg packaging staging
+build-pkg/
