@@ -339,14 +339,18 @@ bool PDFView::LoadFile(
 	// and have to ensure that the window thread does not access data
 	// that is being loaded (Draw() just fills the entire view with a background color).
 	fLoading = true;
-	bool isLocked = Window()->IsLocked();
+	// Window() is NULL when LoadFile runs from the constructor (the view is not
+	// attached yet); guard the unlock/relock dance so the initial load works
+	// before attachment and behaves unchanged on reloads (view attached).
+	BWindow* window = Window();
+	bool isLocked = window != NULL && window->IsLocked();
 	if (isLocked) {
 		Invalidate();
-		Window()->Unlock();
+		window->Unlock();
 	}
 	bool opened = OpenFile(ref, ownerPassword, userPassword, encrypted);
 	if (isLocked)
-		Window()->Lock();
+		window->Lock();
 	fLoading = false;
 	fPageRenderer.StartDoc(fColorSpace);
 	if (!opened) {
@@ -723,10 +727,13 @@ void PDFView::SetAction(mouse_action action)
 ///////////////////////////////////////////////////////////////////////////
 void PDFView::SetViewCursor(BCursor* cursor, bool sync)
 {
-	if (Window()->Lock()) {
-		fViewCursor = cursor;
+	fViewCursor = cursor;
+	// Window() is NULL until the view is attached (this is also called from the
+	// constructor); only touch the app_server cursor when we can lock a window.
+	BWindow* window = Window();
+	if (window != NULL && window->Lock()) {
 		BView::SetViewCursor(cursor, sync);
-		Window()->Unlock();
+		window->Unlock();
 	}
 }
 

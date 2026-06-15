@@ -35,7 +35,7 @@
 #define DEFINE_SETTER(type, Type, method, name, value) \
 	void GlobalSettings::Set##method(type name)        \
 	{                                                  \
-		fChanged = fChanged || (_##name == name);      \
+		fChanged = fChanged || (_##name != name);      \
 		_##name = name;                                \
 	}
 #define DEFINE_GETTER(type, Type, method, name, value) \
@@ -154,7 +154,7 @@
 #define DEFINE_STRING_SETTER(method, name, value)        \
 	void GlobalSettings::Set##method(const char* string) \
 	{                                                    \
-		fChanged = fChanged || (_##name == string);      \
+		fChanged = fChanged || (_##name != string);      \
 		_##name = string;                                \
 	}
 #define DEFINE_STRING_GETTER(method, name, value)   \

@@ -148,7 +148,11 @@ PrintSettingsWindow::PrintSettingsWindow(PDFDoc* doc, GlobalSettings* settings, 
 		break;
 		//		case 1440: i = 5; break;
 	}
-	resolution->ItemAt(i)->SetMarked(true);
+	// A stored DPI of 600/720 maps to an index past the menu's items; guard so
+	// a persisted value with no matching item can't NULL-deref on open.
+	BMenuItem* resolutionItem = resolution->ItemAt(i);
+	if (resolutionItem != NULL)
+		resolutionItem->SetMarked(true);
 
 	// Page selection
 	if ((settings->GetPrintSelection() >= 0) && (settings->GetPrintSelection() < 3)) {

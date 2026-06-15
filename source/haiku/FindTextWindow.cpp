@@ -181,5 +181,5 @@ void FindTextWindow::SetPage(int32 page)
 	char* buffer = new char[strlen(fmt) + 30];
 	sprintf(buffer, fmt, page);
 	fPage->SetText(buffer);
-	delete buffer;
+	delete[] buffer;
 }

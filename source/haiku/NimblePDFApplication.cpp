@@ -634,15 +634,19 @@ void NimblePDFApplication::RefsReceived(BMessage* msg)
 				if (fWindow == NULL)
 					delete win;
 
-			} else if (fWindow == NULL) {
-				fWindow = win;
-				win->Show();
-			}
-			// jump to page if provided
-			if (pageNum != 0) {
-				BMessage goToPageMsg(PDFWindow::GOTO_PAGE_CMD);
-				goToPageMsg.AddInt32("page", pageNum);
-				fWindow->MessageReceived(&goToPageMsg);
+			} else {
+				if (fWindow == NULL) {
+					fWindow = win;
+					win->Show();
+				}
+				// jump to page if provided -- only on a successful open, and
+				// post to the window's looper rather than calling its handler
+				// from this (the application) thread.
+				if (pageNum != 0 && fWindow != NULL) {
+					BMessage goToPageMsg(PDFWindow::GOTO_PAGE_CMD);
+					goToPageMsg.AddInt32("page", pageNum);
+					fWindow->PostMessage(&goToPageMsg);
+				}
 			}
 			// stop after first document
 			fGotSomething = true;
@@ -696,38 +700,27 @@ void NimblePDFApplication::ArgvReceived(int32 argc, char** argv)
 	// drop the flag handling — the GUI launch path doesn't need it.
 	// For Phase A we accept argv[1] as the PDF path and argv[2] (if
 	// given) as the page number; no flags.
-	int pg;
+	int pg = 1;
 	entry_ref fileToOpen;
-
-	char** argvCopy = new char*[argc];
-	for (int i = 0; i < argc; i++) {
-		argvCopy[i] = argv[i];
-	}
 
 	if (!(argc == 2 || argc == 3)) {
 		Trace(LOG_ERR, "usage: %s <pdf-path> [<page>]", argv[0]);
 		be_app->PostMessage(B_QUIT_REQUESTED);
 		return;
 	}
-	if (argc == 3) {
-		pg = atoi(argvCopy[2]);
-	} else {
-		pg = 1;
-	}
-
-	// print banner
-	//	fprintf(errFile, "NimblePDF version %s\n", pdfViewerVersion);
-	//	fprintf(errFile, "based on xpdf %s %s\n", xpdfVersion, xpdfCopyright);
-	//	fprintf(errFile, "and based on NimblePDF %s\n%s\n", nimblePDFVersion, nimblePDFCopyright);
-	//	fprintf(errFile, "%s%s\n", pdfViewerCopyright, GPLCopyright);
+	if (argc == 3)
+		pg = atoi(argv[2]);
 
 	BMessage msg(B_REFS_RECEIVED);
 	msg.AddInt32(PAGE_NUM_MSG_KEY, pg);
-	get_ref_for_path(argvCopy[1], &fileToOpen);
+	if (get_ref_for_path(argv[1], &fileToOpen) != B_OK) {
+		Trace(LOG_ERR, "NimblePDF: cannot resolve path: %s", argv[1]);
+		be_app->PostMessage(B_QUIT_REQUESTED);
+		return;
+	}
 	msg.AddRef("refs", &fileToOpen);
 	PostMessage(&msg);
 	fGotSomething = true;
-	delete argvCopy;
 }
 
 

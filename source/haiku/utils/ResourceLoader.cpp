@@ -93,9 +93,12 @@ BBitmap* LoadBitmap(const char* name, uint32 type_code)
 BBitmap* LoadVectorIcon(const char* name, int32 size)
 {
 	BResources* resources = BApplication::AppResources();
+	if (resources == NULL)
+		return NULL;
 	size_t length = 0;
 	const void* data = resources->LoadResource(B_VECTOR_ICON_TYPE, name, &length);
-	BBitmap* dest = new BBitmap(BRect(0, 0, size, size), B_RGBA32);
+	// BRect edges are inclusive, so a size x size bitmap is BRect(0,0,size-1,size-1).
+	BBitmap* dest = new BBitmap(BRect(0, 0, size - 1, size - 1), B_RGBA32);
 	if (data != NULL && BIconUtils::GetVectorIcon((uint8*)data, length, dest) == B_OK)
 		return dest;
 	delete dest;

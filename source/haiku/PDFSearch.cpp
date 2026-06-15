@@ -241,7 +241,7 @@ found:
 #endif
 
 done:
-	delete u;
+	delete[] u;
 	Window()->PostMessage((uint32)(found ? FindTextWindow::TEXT_FOUND_NOTIFY_MSG : FindTextWindow::TEXT_NOT_FOUND_NOTIFY_MSG));
 	return 0 /*found*/;
 }

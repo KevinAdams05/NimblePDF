@@ -230,21 +230,24 @@ bool FileAttributes::Read(entry_ref* ref, GlobalSettings* s)
 		while (buffer) {
 			attr_size = node.ReadAttr("nimblepdf:bookmarks", B_MESSAGE_TYPE, 0, buffer, buf_size);
 			if (attr_size == buf_size) {
-				// resize buffer
+				// buffer was too small; grow it and re-read. Use a temporary so
+				// a failed realloc doesn't leak (and orphan) the old buffer.
 				buf_size += 65536;
-				buffer = (char*)realloc(buffer, buf_size);
+				char* resized = (char*)realloc(buffer, buf_size);
+				if (resized == NULL) {
+					free(buffer);
+					buffer = NULL;
+					break;
+				}
+				buffer = resized;
 			} else {
 				// entire attribute read
 				break;
 			}
 		}
-		if (attr_size <= 0) {
+		if (buffer == NULL || attr_size <= 0 || bookmarks.Unflatten(buffer) != B_OK)
 			bookmarks.MakeEmpty();
-		} else {
-			bookmarks.Unflatten(buffer);
-		}
-		if (buffer)
-			free(buffer);
+		free(buffer);
 		return true;
 	}
 	return false;
