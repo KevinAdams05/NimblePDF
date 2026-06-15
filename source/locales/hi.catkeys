@@ -1,254 +1,261 @@
-1	Hindi	application/x-vnd.Haiku-NimblePDF	1765081836
- in	PrintSettingsWindow		mein
-All pages	PrintSettingsWindow		Sabhee prshthon
-Color	PrintSettingsWindow		Rang
-DPI	PrintSettingsWindow		DPI
-Even pages	PrintSettingsWindow		Sam prsthon
-Gray scale	PrintSettingsWindow		Gray scale
-Height: 	PrintSettingsWindow		Oonchaee:
-Max. printer resolution	PrintSettingsWindow		Max. printer resolution
-Mode	PrintSettingsWindow		Mode
-Normal	PrintSettingsWindow		Saadhaaran
-Odd pages	PrintSettingsWindow		Visham prshth
-OK	PrintSettingsWindow		Theek
-Order	PrintSettingsWindow		Kram
-Page	PrintSettingsWindow		Prshth
-Pages	PrintSettingsWindow		Prshthon
-Print	PrintSettingsWindow		Chhaap
-Print settings	PrintSettingsWindow		Chaapne ki settings
-Reverse	PrintSettingsWindow		Oolta
-Rotation	PrintSettingsWindow		Chakkar
-Width: 	PrintSettingsWindow		chaudaee:
-Wrong parameter!	PrintSettingsWindow		Galat parameter!
-Zoom (%)	PrintSettingsWindow		Zoom (%)
-Zoom must be between 25 and 400!	PrintSettingsWindow		Zoom 25 aur 400 ke beech hona chaahie!
-[internal link]	PDFView		[aantarik link]
-[link type 'movie' not supported]	PDFView		[link prakaar philm samarthit nahin]
-[unknown link]	PDFView		[agyaat link]
-Annotation	PDFView		Tipanee
-NimblePDF reading file: 	PDFView		NimblePDF pathan file:
-NimblePDF: Launch	PDFView		NimblePDF: prakshepan
-Cancel	PDFView		Radh karana
-Copy link	PDFView		pratiroop jodana
-Delete	PDFView		Hataana
-Edit	PDFView		sampaadit karen
-Execute the command:	PDFView		aadesh nishpaadit karen:
-Go to page %d	PDFView		prshth% d par jaen
-Leave annotation editing mode	PDFView		Tipaanee sampadaan mode chodein
-OK	PDFView		Theek
-Open in new window	PDFView		Naya window mai khole
-Properties	PDFView		Gun
-Save file attachment as…	PDFView		file anulagnak ko is roop mein sahejen ...
-Saving file attachment:	PDFView		file anulagnak ko is roop mein sahejen ...
-Unknown link action type: '%s'	PDFView		agyaat link kaarravaee prakaar: % s
-<empty>	OutlinesWindow		<khalee>
-Document	OutlinesWindow		Dastaavez
-Edit title for bookmark	OutlinesWindow		Bookmark ke lie sheershak sampaadit karen
-No title	OutlinesWindow		koee sheershak nahin
-OK	OutlinesWindow		Theek
-User defined	OutlinesWindow		upayogakarta paribhaashit
-<empty>	AttachmentView		<khaalee>
-Description	AttachmentView		vivaran
-File name	AttachmentView		File ka naam
-Save attachment(s) as	AttachmentView		anulagnak sahejen
-Save selected attachment to file	AttachmentView		file ke lie chayanit anulagnak sahejen
-Save selected attachments into directory	AttachmentView		nirdeshika mein chayanit anulagnakon ko sahejen
-Saving attachment(s):	AttachmentView		anulagnak sahejana:
-Abort	PrintingProgressWindow		nirast karen
-NimblePDF printing	PrintingProgressWindow		NimblePDF ki chapae
-NimblePDF printing document: 	PrintingProgressWindow		NimblePDF chapne ki dastaveez:
-Page:	PrintingProgressWindow		Prsth:
-Page: %d	PrintingProgressWindow		Prsth: %d
-Stop	PrintingProgressWindow		Ruken
-Abort	FileInfoWindow		Nirast
-Allowed	FileInfoWindow		Anumati
-Annotations:	FileInfoWindow		Tipanee:
-Author:	FileInfoWindow		Lekhak:
-Copy & paste:	FileInfoWindow		Nakal karo aur chipkao
-Created:	FileInfoWindow		banaaya tha:
-Creator:	FileInfoWindow		banaane vaala:
-Denied	FileInfoWindow		inkaar kiya
-Document	FileInfoWindow		dastaavez
-Editing:	FileInfoWindow		Sampaadan:
-Embedded name	FileInfoWindow		Embedded naam
-Encrypted:	FileInfoWindow		Ko gopit:
-File info	FileInfoWindow		File jankaaree
-Filename:	FileInfoWindow		File ka  naam:
-Fonts of this page	FileInfoWindow		is prsth ke lipi
-Keywords:	FileInfoWindow		Keywords:
-Linearized:	FileInfoWindow		Raikhik:
-Modified:	FileInfoWindow		Sanshodhit:
-Name	FileInfoWindow		Naam
-No	FileInfoWindow		nahin
-Path:	FileInfoWindow		Path:
-Printing:	FileInfoWindow		Mudran:
-Producer:	FileInfoWindow		utpaadak:
-Security	FileInfoWindow		Suraksha
-Show all fonts	FileInfoWindow		Sabhee font dikhae
-Subject:	FileInfoWindow		Vishay:
-Title:	FileInfoWindow		sheershak:
-Type	FileInfoWindow		Prakaar
-Version:	FileInfoWindow		sanskaran:
-Yes	FileInfoWindow		Haan
-About NimblePDF…	PDFWindow		NimblePDF ke barein mein...
-Add	PDFWindow		jodana
-Add circle annotation	PDFWindow		vrtt tipanee  jodein
-Add comment text annotation	PDFWindow		paath tipanee jodein
-Add file attachment annotation	PDFWindow		file attachment tipaanee jodein
-Add free text annotation	PDFWindow		mupht paath  tipanee jodein
-Add help text annotation	PDFWindow		madad paath tipanee jodein
-Add highlight annotation	PDFWindow		mukhy aakarshan tipanee jodein
-Add ink annotation	PDFWindow		syahee tipanee jodein
-Add insert text annotation	PDFWindow		text tipanee jodein
-Add key text annotation	PDFWindow		mukhy paath tipanee jodein
-Add line annotation	PDFWindow		line tipaanee jodein
-Add link annotation	PDFWindow		sampark tipaanee jodein
-Add movie annotation	PDFWindow		chalachitr tipaanee jodein
-Add new paragraph text annotation	PDFWindow		naya anuchchhed paath tipanee jodein
-Add note text annotation	PDFWindow		tipanee paath tipanee jodein
-Add paragraph text annotation	PDFWindow		Anuchhed paath tipanee jodein
-Add popup annotation	PDFWindow		Popup tipanee  jodein
-Add printer mark annotation	PDFWindow		Printer chihn tipanee  jodein
-Add sound annotation	PDFWindow		dhvani tipanee  jodein
-Add square annotation	PDFWindow		Varg tipanee jodein
-Add squiggly annotation	PDFWindow		Squiggly tipanee jodein
-Add stamp annotation	PDFWindow		stamp tipanee jodein
-Add strikeout annotation	PDFWindow		Strikeout tipanee jodein
-Add trapnet annotation	PDFWindow		trapnet tipanee jodein
-Add underline annotation	PDFWindow		Underline tipanee jodein
-Add widget annotation	PDFWindow		widget tipanee jodein
-Back	PDFWindow		Vaapas
-Back in page history list	PDFWindow		prshth itihaas soochee mein vaapas
-Bookmark	PDFWindow		Bookmark
-Can not overwrite a PDF file that's currently opened in NimblePDF! Please choose another file name.	PDFWindow		vartamaan mein NimblePDF mein kholee gaee pdf fail ko adhilekhit nahin kiya ja sakata hai! krpaya koee aur file naam chunen.
-Close	PDFWindow		Band kare
-Copy selection	PDFWindow		Chayan ka pratilipi kare
-Could not write PDF file!	PDFWindow		PDF file nahin likh sakte
-Custom zoom factor (%d%%)	PDFWindow		Custom zoom factor (%d%%)
-Delete	PDFWindow		Hataana
-Edit	PDFWindow		sampaadit karen
+1	Hindi	application/x-vnd.Haiku-NimblePDF	777513411
 Editing of annotations in an encrypted PDF file isn't supported yet!	PDFWindow		encrypted file mein tipaanee ka sampaadan abhee tak samarthit nahin hai!
-English.pdf	PDFWindow	Replace with the PDF name of the help document, if there is one for your language.	Hindi.pdf
-File	PDFWindow		File
-File info…	PDFWindow		File ke baare mein…
-Find	PDFWindow		Khoj
+Cancel	PDFView		Radh karana
+NimblePDF printing document: 	PrintingProgressWindow		NimblePDF chapne ki dastaveez:
+Go to previous page	PDFWindow		pichhale prshth par jaen
+Subject:	FileInfoWindow		Vishay:
+Add strikeout annotation	PDFWindow		Strikeout tipanee jodein
+Owner password	PasswordWindow		Maalik ka password
+NimblePDF: Error opening file!	NimblePDFApplication		NimblePDF: file kholane mein truti!
+Alpha	NimblePDFApplication		Alpha
+Show document view only	PreferencesWindow		Show document view only
+NimblePDF printing	PrintingProgressWindow		NimblePDF ki chapae
+Rendering engine	NimblePDFApplication		Rendering engine
+NimblePDF is free software under the GNU General Public License, version 2 or (at your option) any later version.	NimblePDFApplication		NimblePDF is free software under the GNU General Public License, version 2 or (at your option) any later version.
+Add insert text annotation	PDFWindow		text tipanee jodein
+Unknown	NimblePDFApplication		Anajaan
+Delete	PDFWindow		Hataana
+A fast, full-featured PDF reader for Haiku.	NimblePDFApplication		A fast, full-featured PDF reader for Haiku.
+Color	PrintSettingsWindow		Rang
+View	PDFWindow		Dekhna
+Search string not found.	PDFSearch		khoj string nahin milee.
+Normal	PrintSettingsWindow		Saadhaaran
+Add widget annotation	PDFWindow		widget tipanee jodein
+Rendering by poppler %s.	NimblePDFApplication	poppler version	Rendering by poppler %s.
+Asian fonts	PreferencesWindow		Asian fonts
+Zoom in	PDFWindow		Zoom in
+Page:	FindTextWindow		Prshth:
+Rotation	PrintSettingsWindow		Chakkar
+Error messages	TraceWindow		truti sandesh
+Jump to page	PDFWindow		prsth par jaen
+Mode	PrintSettingsWindow		Mode
+Save as…	PDFWindow		ke roop rakshit karen…
+Execute the command:	PDFView		aadesh nishpaadit karen:
+Open in workspace:	PreferencesWindow		Open in workspace:
+Author	PreferencesWindow		Author
+Issue tracker…	PDFWindow		mudda par nazar rakhane vaala…
+NimblePDF status	StatusWindow		NimblePDF stithi
+Can not overwrite a PDF file that's currently opened in NimblePDF! Please choose another file name.	PDFWindow		vartamaan mein NimblePDF mein kholee gaee pdf fail ko adhilekhit nahin kiya ja sakata hai! krpaya koee aur file naam chunen.
+Printing:	FileInfoWindow		Mudran:
+Font:	AnnotationWindow		Lipi:
+User fonts	PreferencesWindow		User fonts
+Zoom must be between 25 and 400!	PrintSettingsWindow		Zoom 25 aur 400 ke beech hona chaahie!
+Save attachment(s) as	AttachmentView		anulagnak sahejen
+Open…	PDFWindow		Kholee...
+NimblePDF reading file: 	PDFView		NimblePDF pathan file:
+OK	PDFView		Theek
+Date:	AnnotationWindow		Dinaank:
+Show page list	PDFWindow		Prshth soochee dikhaen
+Restore page number	PreferencesWindow		Restore page number
+OK	PasswordWindow		Theek
+Name	FileInfoWindow		Naam
+Document	OutlinesWindow		Dastaavez
+Hide side bar	PDFWindow		kinaare kee baadha ko hataen
+Page setup…	PDFWindow		Prshth byabastha…
+Add ink annotation	PDFWindow		syahee tipanee jodein
+Source code	NimblePDFApplication		Source code
+Find: 	FindTextWindow		Khoj:
+Zoom	PDFWindow		Zoom
+Based on BePDF	NimblePDFApplication		Based on BePDF
+Go to next page	PDFWindow		agale pej par jaen
+Add square annotation	PDFWindow		Varg tipanee jodein
+[internal link]	PDFView		[aantarik link]
+Fonts of this page	FileInfoWindow		is prsth ke lipi
+Last	PDFWindow		Antim
+About NimblePDF…	PDFWindow		NimblePDF ke barein mein...
+Abort	FileInfoWindow		Nirast
+Restore window position and size	PreferencesWindow		Restore window position and size
 Find next	PDFWindow		agala dhoondho
-Find next…	PDFWindow		agala dhoondho...
-Find…	PDFWindow		Khoj...
-First	PDFWindow		Pratham
-Fit to page	PDFWindow		prsth ke liye fit
-Fit to page width	PDFWindow		prsth ke chaudaee ke liye fit
-Forward	PDFWindow		aage
-Forward in page history list	PDFWindow		prshth itihaas soochee mein aage
-Fullscreen	PDFWindow		Poorn-screen
-Fullscreen mode	PDFWindow		Poorn-screen mode
+All pages	PrintSettingsWindow		Sabhee prshthon
+Show annotation toolbar	PDFWindow		Annotation toolbar dikhaen
+File name	AttachmentView		File ka naam
+Go to start of document	PDFWindow		dastaavez kee shuruaat karane ke lie jao
 Go back 10 pages	PDFWindow		10 pej peechhe jaen
 Go forward 10 pages	PDFWindow		10 pej aage badhen
-Go to end of document	PDFWindow		dastaavez ke ant mein jaen
-Go to next page	PDFWindow		agale pej par jaen
-Go to previous page	PDFWindow		pichhale prshth par jaen
-Go to start of document	PDFWindow		dastaavez kee shuruaat karane ke lie jao
-Help	PDFWindow		Madad
-Hide side bar	PDFWindow		kinaare kee baadha ko hataen
-Issue tracker…	PDFWindow		mudda par nazar rakhane vaala…
-Jump to page	PDFWindow		prsth par jaen
-Last	PDFWindow		Antim
-Leave annotation editing mode	PDFWindow		annotation sampaadan mode chhod dein
-Next	PDFWindow		aagaamee
-of %d	PDFWindow		% d ka
-OK	PDFWindow		Theek
-Online help…	PDFWindow		Online sahaayata…
-Open file	PDFWindow		khulee file
-Open in new window…	PDFWindow		Nayee window mein kholee...
-Open…	PDFWindow		Kholee...
-Page	PDFWindow		Prshth
-Page %d	PDFWindow		Prshth %d
-Page setup…	PDFWindow		Prshth byabastha…
-PDF file successfully written!	PDFWindow		PDF file saphalataapoorvak likhee gaee hai!!
-Preferences…	PDFWindow		Pasand…
-Previous	PDFWindow		pichhala
-Print	PDFWindow		Chhaap
-Print…	PDFWindow		Chhaap…
-Quit	PDFWindow		chhodana
-Reload	PDFWindow		Punah laadna
-Reload file	PDFWindow		Punah file laadna
-Rotate clockwise	PDFWindow		ghadee kee suee kee disha mein ghumao
-Rotate counter-clockwise	PDFWindow		ghadee kee sooee ke viparit disha mein ghumaayen
-Rotation	PDFWindow		Chakkar
-Save as…	PDFWindow		ke roop rakshit karen…
-Save file as	PDFWindow		file ko is roop mein sahejen
-Saving copy of PDF file:	PDFWindow		PDF file ki pratilipi bachat karna:
-Search	PDFWindow		Dhoondhna
-Select all	PDFWindow		sabhee ka chayan kare
-Select none	PDFWindow		kisee ka chayan na karen
+Add file attachment annotation	PDFWindow		file attachment tipaanee jodein
+System fonts	PreferencesWindow		System fonts
 Show annotation tool bar	PDFWindow		Annotation tool bar dikhaen
-Show annotation toolbar	PDFWindow		Annotation toolbar dikhaen
-Show attachments	PDFWindow		Sanlagnak dikhaen
+Fit to page width	PDFWindow		prsth ke chaudaee ke liye fit
+DPI	PrintSettingsWindow		DPI
+Find…	PDFWindow		Khoj...
+Odd pages	PrintSettingsWindow		Visham prshth
+Add sound annotation	PDFWindow		dhvani tipanee  jodein
 Show bookmarks	PDFWindow		Bookmark dikhaen
-Show error messages	PDFWindow		Truti sandesh dikhaen
-Show help…	PDFWindow		Madad dikhaen...
-Show page list	PDFWindow		Prshth soochee dikhaen
-View	PDFWindow		Dekhna
-Visit homepage…	PDFWindow		Homepage par jaen...
-Warning	PDFWindow		Chetaavanee
-Zoom	PDFWindow		Zoom
-Zoom in	PDFWindow		Zoom in
-Zoom out	PDFWindow		Zoom out
-Align:	AnnotationWindow		Sanrekhit:
-Annotation	AnnotationWindow		Tippanee
-Asian fonts	AnnotationWindow		Asia Lipi
-Author	AnnotationWindow		Lekhak
-Automatic	AnnotationWindow		Svachaalit
-current	AnnotationWindow		Vartaman
-Date:	AnnotationWindow		Dinaank:
-Display	AnnotationWindow		Pradarshan
-Document	AnnotationWindow		Dastaavez
-Filled rectangle	AnnotationWindow		Poorn  Aayat
-Font:	AnnotationWindow		Lipi:
-Fullscreen mode	AnnotationWindow		Poorn Patalik sadhan
-Invert vertical mouse scrolling	AnnotationWindow		Audha khada  mouse scrolling
-Open in workspace:	AnnotationWindow		Karyakhetra mein khole:
-Preferences	AnnotationWindow		Pasand:
-Restore page number	AnnotationWindow		prshth sankhya punarsthaapit karen
-Restore window position and size	AnnotationWindow		window kee sthiti aur aakaar ko punarsthaapit karen
-Selection rectangle	AnnotationWindow		Chayaan Aayat
-Show document view only	AnnotationWindow		keval dastaavez drshy dikhaen
-Show toolbar, statusbar and scrollbars, too	AnnotationWindow		toolbar, sthiti pattee aur scrollbars bhee dikhae
-Size:	AnnotationWindow		aakaar:
-Stroked rectangle	AnnotationWindow		pathareelee aayat
-System fonts	AnnotationWindow		machine lipi
-Title:	AnnotationWindow		Sheershak:
-User fonts	AnnotationWindow		Upayogakarta lipi
-Will take effect at next program launch.	AnnotationWindow		agale kaaryakram ke shubhaarambh par prabhaavee hoga.
-Alpha	NimblePDFApplication		Alpha
-NimblePDF is based on XPDF %s, %s.	NimblePDFApplication	XPDF version, copyright	NimblePDF XPDF %s, %s. par aadhaarit hai
-NimblePDF: Error opening file!	NimblePDFApplication		NimblePDF: file kholane mein truti!
-Beta	NimblePDFApplication		Beta
-Close	NimblePDFApplication		band kare
-Development	NimblePDFApplication		vikaas
-Error	NimblePDFApplication		Truti
-Final	NimblePDFApplication		Antim
-Gamma	NimblePDFApplication		Gamma
-Golden Master	NimblePDFApplication		Golden Master
-Unknown	NimblePDFApplication		Anajaan
-Version	NimblePDFApplication		Sanskaran
-Auto open	TraceWindow		svachaalit kholein
+Max. printer resolution	PrintSettingsWindow		Max. printer resolution
+Quit	PDFWindow		chhodana
+Options	FindTextWindow		vikalp
+File	PDFWindow		File
+Fullscreen mode	PDFWindow		Poorn-screen mode
+Find text	FindTextWindow		Paath Dhoondhna
 Clear	TraceWindow		saanf
-Error messages	TraceWindow		truti sandesh
-Floating	TraceWindow		chal
-NimblePDF status	StatusWindow		NimblePDF stithi
+Print	PrintSettingsWindow		Chhaap
 Enter Password	PasswordWindow		Passowrd darj karen
-OK	PasswordWindow		Theek
-Owner password	PasswordWindow		Maalik ka password
+Online help…	PDFWindow		Online sahaayata…
+Filename:	FileInfoWindow		File ka  naam:
+Document	PreferencesWindow		Document
+Embedded name	FileInfoWindow		Embedded naam
+Close	NimblePDFApplication		band kare
+Copy link	PDFView		pratiroop jodana
+First	PDFWindow		Pratham
+Add	PDFWindow		jodana
+<empty>	AttachmentView		<khaalee>
+Open in new window…	PDFWindow		Nayee window mein kholee...
+Preferences…	PDFWindow		Pasand…
+Beta	NimblePDFApplication		Beta
+OK	PDFSearch		Theek
+Delete	PDFView		Hataana
+Zoom (%)	PrintSettingsWindow		Zoom (%)
+Type	FileInfoWindow		Prakaar
+Custom zoom factor (%d%%)	PDFWindow		Custom zoom factor (%d%%)
+Add stamp annotation	PDFWindow		stamp tipanee jodein
+Abort	PrintingProgressWindow		nirast karen
+Align:	AnnotationWindow		Sanrekhit:
+Go to end of document	PDFWindow		dastaavez ke ant mein jaen
+Auto open	TraceWindow		svachaalit kholein
+Back	PDFWindow		Vaapas
+Pages	PrintSettingsWindow		Prshthon
+Add movie annotation	PDFWindow		chalachitr tipaanee jodein
+Add circle annotation	PDFWindow		vrtt tipanee  jodein
+Show error messages	PDFWindow		Truti sandesh dikhaen
+Golden Master	NimblePDFApplication		Golden Master
+Document	FileInfoWindow		dastaavez
+Width: 	PrintSettingsWindow		chaudaee:
+Author:	FileInfoWindow		Lekhak:
+Add highlight annotation	PDFWindow		mukhy aakarshan tipanee jodein
+Add new paragraph text annotation	PDFWindow		naya anuchchhed paath tipanee jodein
+of %d	PDFWindow		% d ka
+Security	FileInfoWindow		Suraksha
+Denied	FileInfoWindow		inkaar kiya
+Save file as	PDFWindow		file ko is roop mein sahejen
+Order	PrintSettingsWindow		Kram
+Properties	PDFView		Gun
+Add comment text annotation	PDFWindow		paath tipanee jodein
+Description	AttachmentView		vivaran
+Add underline annotation	PDFWindow		Underline tipanee jodein
+Development	NimblePDFApplication		vikaas
+Saving copy of PDF file:	PDFWindow		PDF file ki pratilipi bachat karna:
+Page: %d	FindTextWindow		Prshth: %d
+Page	PDFWindow		Prshth
+Add squiggly annotation	PDFWindow		Squiggly tipanee jodein
+Annotation	PDFView		Tipanee
+Add trapnet annotation	PDFWindow		trapnet tipanee jodein
+Producer:	FileInfoWindow		utpaadak:
+Keywords:	FileInfoWindow		Keywords:
+Forward in page history list	PDFWindow		prshth itihaas soochee mein aage
+Page:	PrintingProgressWindow		Prsth:
+Error getting page number!	NimblePDFApplication		Error getting page number!
+Find next…	PDFWindow		agala dhoondho...
+Visit homepage…	PDFWindow		Homepage par jaen...
+Even pages	PrintSettingsWindow		Sam prsthon
+Stop	FindTextWindow		Ruko
+Print	PDFWindow		Chhaap
+Add link annotation	PDFWindow		sampark tipaanee jodein
+ in	PrintSettingsWindow		mein
+Fullscreen mode	PreferencesWindow		Fullscreen mode
+[link type 'movie' not supported]	PDFView		[link prakaar philm samarthit nahin]
+Annotation	AnnotationWindow		Tippanee
+Bookmark	PDFWindow		Bookmark
+Next	PDFWindow		aagaamee
+Reverse	PrintSettingsWindow		Oolta
+Page: %d	PrintingProgressWindow		Prsth: %d
+Select none	PDFWindow		kisee ka chayan na karen
+Rotate counter-clockwise	PDFWindow		ghadee kee sooee ke viparit disha mein ghumaayen
+<empty>	OutlinesWindow		<khalee>
+Error	NimblePDFApplication		Truti
+Add key text annotation	PDFWindow		mukhy paath tipanee jodein
+Forward	PDFWindow		aage
+Size:	AnnotationWindow		aakaar:
+Zoom out	PDFWindow		Zoom out
+Display	PreferencesWindow		Display
+Modified:	FileInfoWindow		Sanshodhit:
+License	NimblePDFApplication		License
+Preferences	PreferencesWindow		Preferences
+Go to page %d	PDFView		prshth% d par jaen
+OK	OutlinesWindow		Theek
+Copy selection	PDFWindow		Chayan ka pratilipi kare
+Final	NimblePDFApplication		Antim
+Annotations:	FileInfoWindow		Tipanee:
+Select all	PDFWindow		sabhee ka chayan kare
+PDF file successfully written!	PDFWindow		PDF file saphalataapoorvak likhee gaee hai!!
+OK	PDFWindow		Theek
+Previous	PDFWindow		pichhala
+File info	FileInfoWindow		File jankaaree
+Gamma	NimblePDFApplication		Gamma
+Search	PDFWindow		Dhoondhna
+Leave annotation editing mode	PDFView		Tipaanee sampadaan mode chodein
+Edit	PDFView		sampaadit karen
+Saving attachment(s):	AttachmentView		anulagnak sahejana:
+Leave annotation editing mode	PDFWindow		annotation sampaadan mode chhod dein
+OK	PrintSettingsWindow		Theek
+Add free text annotation	PDFWindow		mupht paath  tipanee jodein
+Open file	PDFWindow		khulee file
+Print settings	PrintSettingsWindow		Chaapne ki settings
+Back in page history list	PDFWindow		prshth itihaas soochee mein vaapas
+Find	PDFWindow		Khoj
+Yes	FileInfoWindow		Haan
+[unknown link]	PDFView		[agyaat link]
+Floating	TraceWindow		chal
+Add help text annotation	PDFWindow		madad paath tipanee jodein
+Stop	PrintingProgressWindow		Ruken
+Add popup annotation	PDFWindow		Popup tipanee  jodein
+Show attachments	PDFWindow		Sanlagnak dikhaen
+Edit	PDFWindow		sampaadit karen
+Show help…	PDFWindow		Madad dikhaen...
+Add printer mark annotation	PDFWindow		Printer chihn tipanee  jodein
+Search backwards	FindTextWindow		peechhe kee aur khojen
+Reload	PDFWindow		Punah laadna
+Add line annotation	PDFWindow		line tipaanee jodein
+Help	PDFWindow		Madad
+Will take effect at next program launch.	PreferencesWindow		Will take effect at next program launch.
+NimblePDF is a fork of BePDF, the long-running Haiku PDF reader, with the original xpdf engine replaced by poppler.	NimblePDFApplication		NimblePDF is a fork of BePDF, the long-running Haiku PDF reader, with the original xpdf engine replaced by poppler.
+Rotation	PDFWindow		Chakkar
+Encrypted:	FileInfoWindow		Ko gopit:
+Gray scale	PrintSettingsWindow		Gray scale
+Save file attachment as…	PDFView		file anulagnak ko is roop mein sahejen ...
+Show toolbar, statusbar and scrollbars, too	PreferencesWindow		Show toolbar, statusbar and scrollbars, too
+Close	PDFWindow		Band kare
+No title	OutlinesWindow		koee sheershak nahin
+Page	PrintSettingsWindow		Prshth
+current	PreferencesWindow		current
+Created:	FileInfoWindow		banaaya tha:
+Title:	AnnotationWindow		Sheershak:
+Saving file attachment:	PDFView		file anulagnak ko is roop mein sahejen ...
+Open in new window	PDFView		Naya window mai khole
+Height: 	PrintSettingsWindow		Oonchaee:
+File info…	PDFWindow		File ke baare mein…
+Allowed	FileInfoWindow		Anumati
+Add paragraph text annotation	PDFWindow		Anuchhed paath tipanee jodein
+Selection rectangle	PreferencesWindow		Selection rectangle
+Linearized:	FileInfoWindow		Raikhik:
+No	FileInfoWindow		nahin
+NimblePDF: Launch	PDFView		NimblePDF: prakshepan
+Fit to page	PDFWindow		prsth ke liye fit
+Reload file	PDFWindow		Punah file laadna
+Path:	FileInfoWindow		Path:
+Print…	PDFWindow		Chhaap…
+Copy & paste:	FileInfoWindow		Nakal karo aur chipkao
+Page %d	PDFWindow		Prshth %d
+Edit title for bookmark	OutlinesWindow		Bookmark ke lie sheershak sampaadit karen
+Version:	FileInfoWindow		sanskaran:
+English.pdf	PDFWindow	Replace with the PDF name of the help document, if there is one for your language.	Hindi.pdf
+Automatic	AnnotationWindow		Svachaalit
+Title:	FileInfoWindow		sheershak:
+Warning	PDFWindow		Chetaavanee
+User defined	OutlinesWindow		upayogakarta paribhaashit
+Fullscreen	PDFWindow		Poorn-screen
+Invert vertical mouse scrolling	PreferencesWindow		Invert vertical mouse scrolling
+Save selected attachment to file	AttachmentView		file ke lie chayanit anulagnak sahejen
+Add note text annotation	PDFWindow		tipanee paath tipanee jodein
+Editing:	FileInfoWindow		Sampaadan:
 User password	PasswordWindow		Upayogakarta ka password
 Find	FindTextWindow		Khoj
-Find text	FindTextWindow		Paath Dhoondhna
-Find: 	FindTextWindow		Khoj:
+Could not write PDF file!	PDFWindow		PDF file nahin likh sakte
+Filled rectangle	PreferencesWindow		Filled rectangle
 Ignore case	FindTextWindow		maamale ke antar ko anadekha karen
-Options	FindTextWindow		vikalp
-Page:	FindTextWindow		Prshth:
-Page: %d	FindTextWindow		Prshth: %d
-Search backwards	FindTextWindow		peechhe kee aur khojen
-Stop	FindTextWindow		Ruko
-OK	PDFSearch		Theek
-Search string not found.	PDFSearch		khoj string nahin milee.
+Creator:	FileInfoWindow		banaane vaala:
+Invalid file reference received!	NimblePDFApplication		Invalid file reference received!
+Save selected attachments into directory	AttachmentView		nirdeshika mein chayanit anulagnakon ko sahejen
+Wrong parameter!	PrintSettingsWindow		Galat parameter!
+Rotate clockwise	PDFWindow		ghadee kee suee kee disha mein ghumao
+Stroked rectangle	PreferencesWindow		Stroked rectangle
+Show all fonts	FileInfoWindow		Sabhee font dikhae

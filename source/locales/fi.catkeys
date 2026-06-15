@@ -1,254 +1,261 @@
-1	Finnish	application/x-vnd.Haiku-NimblePDF	1765081836
- in	PrintSettingsWindow		:ssa
-All pages	PrintSettingsWindow		Kaikki sivut
-Color	PrintSettingsWindow		Väri
-DPI	PrintSettingsWindow		DPI
-Even pages	PrintSettingsWindow		Parilliset sivut
-Gray scale	PrintSettingsWindow		Harmaaskaala
-Height: 	PrintSettingsWindow		Korkeus:
-Max. printer resolution	PrintSettingsWindow		Tulostimen enimmäisresoluutio
-Mode	PrintSettingsWindow		Tila
-Normal	PrintSettingsWindow		Normaali
-Odd pages	PrintSettingsWindow		Parittomat sivut
-OK	PrintSettingsWindow		Valmis
-Order	PrintSettingsWindow		Järjestys
-Page	PrintSettingsWindow		Sivu
-Pages	PrintSettingsWindow		Sivut
-Print	PrintSettingsWindow		Tulosta
-Print settings	PrintSettingsWindow		Tulostusasetukset
-Reverse	PrintSettingsWindow		Käänteinen
-Rotation	PrintSettingsWindow		Kierto
-Width: 	PrintSettingsWindow		Leveys:
-Wrong parameter!	PrintSettingsWindow		Väärä parametri!
-Zoom (%)	PrintSettingsWindow		Lähennä/Loitonna (%)
-Zoom must be between 25 and 400!	PrintSettingsWindow		Lähennyksen/Loitonnuksen on oltava välillä 25 ... 400!
-[internal link]	PDFView		[sisäinen linkki]
-[link type 'movie' not supported]	PDFView		[linkkityyppiä 'movie' ei tueta]
-[unknown link]	PDFView		[tuntematon linkki]
-Annotation	PDFView		Kommentti
-NimblePDF reading file: 	PDFView		NimblePDF lukee tiedostoa:
-NimblePDF: Launch	PDFView		NimblePDF: Käynnistä
-Cancel	PDFView		Peru
-Copy link	PDFView		Kopioi linkki
-Delete	PDFView		Poista
-Edit	PDFView		Muokkaa
-Execute the command:	PDFView		Suorita komento:
-Go to page %d	PDFView		Siirry sivulle %d
-Leave annotation editing mode	PDFView		Jätä kommentin muokkaustila
-OK	PDFView		Valmis
-Open in new window	PDFView		Avaa uudessa ikkunassa
-Properties	PDFView		Ominaisuudet
-Save file attachment as…	PDFView		Tallenna tiedostoliite nimellä…
-Saving file attachment:	PDFView		Tallennetaan tiedostoliite:
-Unknown link action type: '%s'	PDFView		Tuntematon linkkitoimintatyyppi: '%s'
-<empty>	OutlinesWindow		<tyhjä>
-Document	OutlinesWindow		Asiakirja
-Edit title for bookmark	OutlinesWindow		Muokkaa kirjanmerkin otsikkoa
-No title	OutlinesWindow		Ei otsikkoa
-OK	OutlinesWindow		Valmis
-User defined	OutlinesWindow		Käyttäjän määritelemä
-<empty>	AttachmentView		<tyhjä>
-Description	AttachmentView		Kuvaus
-File name	AttachmentView		Tiedostonimi
-Save attachment(s) as	AttachmentView		Tallenna liitteet nimellä
-Save selected attachment to file	AttachmentView		Tallenna valitut liitteet tiedostoon
-Save selected attachments into directory	AttachmentView		Tallenna valitut liitteet kansioon
-Saving attachment(s):	AttachmentView		Tallenna liitteet:
-Abort	PrintingProgressWindow		Keskeytä
-NimblePDF printing	PrintingProgressWindow		NimblePDF tulostaa
-NimblePDF printing document: 	PrintingProgressWindow		NimblePDF tulostaa asiakirjan:
-Page:	PrintingProgressWindow		Sivu:
-Page: %d	PrintingProgressWindow		Sivu: %d
-Stop	PrintingProgressWindow		Pysäytä
-Abort	FileInfoWindow		Peru
-Allowed	FileInfoWindow		Sallittu
-Annotations:	FileInfoWindow		Kommentit:
-Author:	FileInfoWindow		Tekijä:
-Copy & paste:	FileInfoWindow		Kopio & liitä:
-Created:	FileInfoWindow		Luotu:
-Creator:	FileInfoWindow		Tekijä:
-Denied	FileInfoWindow		Kielletty
-Document	FileInfoWindow		Asiakirja
-Editing:	FileInfoWindow		Muokataan:
-Embedded name	FileInfoWindow		Upotettu nimi
-Encrypted:	FileInfoWindow		Salattu:
-File info	FileInfoWindow		Tiedostotiedot
-Filename:	FileInfoWindow		Tiedostonimi:
-Fonts of this page	FileInfoWindow		Tämän sivun kirjasimet
-Keywords:	FileInfoWindow		Avainsanat:
-Linearized:	FileInfoWindow		Linearisoitu:
-Modified:	FileInfoWindow		Muokattu:
-Name	FileInfoWindow		Nimi
-No	FileInfoWindow		Ei
-Path:	FileInfoWindow		Polku:
-Printing:	FileInfoWindow		Tulostetaan:
-Producer:	FileInfoWindow		Tuottaja:
-Security	FileInfoWindow		Turvallisuus
-Show all fonts	FileInfoWindow		Näytä kaikki kirjasimet
-Subject:	FileInfoWindow		Aihe:
-Title:	FileInfoWindow		Otsikko:
-Type	FileInfoWindow		Tyyppi
-Version:	FileInfoWindow		Versio:
-Yes	FileInfoWindow		Kyllä
-About NimblePDF…	PDFWindow		Ohjelmasta NimblePDF…
-Add	PDFWindow		Lisää
-Add circle annotation	PDFWindow		Lisää ympyräkommentti
-Add comment text annotation	PDFWindow		Lisää kommenttitekstikommentti
-Add file attachment annotation	PDFWindow		Lisää tiedostoliitekommentti
-Add free text annotation	PDFWindow		Lisää vapaa tekstikommentti
-Add help text annotation	PDFWindow		Lisää opastetekstikommentti
-Add highlight annotation	PDFWindow		Lisää korostuskommentti
-Add ink annotation	PDFWindow		Lisää mustekommentti
-Add insert text annotation	PDFWindow		Lisää lisää teksti-kommentti
-Add key text annotation	PDFWindow		Lisää avaintekstikommentti
-Add line annotation	PDFWindow		Lisää rivikommentti
-Add link annotation	PDFWindow		Lisää linkkikommentti
-Add movie annotation	PDFWindow		Lisää elokuvakommentti
-Add new paragraph text annotation	PDFWindow		Lisää uusi kappale tekstikommenttiin
-Add note text annotation	PDFWindow		Lisää muistiinpanotekstikommentti
-Add paragraph text annotation	PDFWindow		Lisää kappale tekstikommenttiin
-Add popup annotation	PDFWindow		Lisää ponnahdusikkunakommentti
-Add printer mark annotation	PDFWindow		Lisää tulostinmerkintäkommentti
-Add sound annotation	PDFWindow		Lisää äänikommentti
-Add square annotation	PDFWindow		Lisää nelikulmiokommentti
-Add squiggly annotation	PDFWindow		Lisää koukeroinen kommentti
-Add stamp annotation	PDFWindow		Lisää leimakommentti
-Add strikeout annotation	PDFWindow		Lisää yliviivattu kommentti
-Add trapnet annotation	PDFWindow		Lisää ansaverkkokommentti
-Add underline annotation	PDFWindow		Lisää alleviivattu kommentti
-Add widget annotation	PDFWindow		Lisää näyttöliittymäkomponenttikommentti
-Back	PDFWindow		Takaisin
-Back in page history list	PDFWindow		Takaisin sivuhistorialuetteloon
-Bookmark	PDFWindow		Kirjanmerkki
-Can not overwrite a PDF file that's currently opened in NimblePDF! Please choose another file name.	PDFWindow		Parhaillaan NimblePDF:ssä avoinna olean PDF-tiedoston korvaaminen epäonnistui! Valitse toinen tiedostonimi.
-Close	PDFWindow		Sulje
-Copy selection	PDFWindow		Kopioi valinta
-Could not write PDF file!	PDFWindow		PDF-tiedoston kirjoittaminen epäonnistui!
-Custom zoom factor (%d%%)	PDFWindow		Oma lähennä-/loitonna-tekijä (%d%%)
-Delete	PDFWindow		Poista
-Edit	PDFWindow		Muokkaa
+1	Finnish	application/x-vnd.Haiku-NimblePDF	777513411
 Editing of annotations in an encrypted PDF file isn't supported yet!	PDFWindow		Salatun PDF-tiedoston kommenttien muokkausta ei tueta vielä!
-English.pdf	PDFWindow	Replace with the PDF name of the help document, if there is one for your language.	English.pdf
-File	PDFWindow		Tiedosto
-File info…	PDFWindow		Tiedostotiedot…
-Find	PDFWindow		Etsi
+Cancel	PDFView		Peru
+NimblePDF printing document: 	PrintingProgressWindow		NimblePDF tulostaa asiakirjan:
+Go to previous page	PDFWindow		Siirry edelliselle sivulle
+Subject:	FileInfoWindow		Aihe:
+Add strikeout annotation	PDFWindow		Lisää yliviivattu kommentti
+Owner password	PasswordWindow		Omistajan salasana
+NimblePDF: Error opening file!	NimblePDFApplication		NimblePDF: Virhe tiedoston avaamisessa!
+Alpha	NimblePDFApplication		Alfa
+Show document view only	PreferencesWindow		Show document view only
+NimblePDF printing	PrintingProgressWindow		NimblePDF tulostaa
+Rendering engine	NimblePDFApplication		Rendering engine
+NimblePDF is free software under the GNU General Public License, version 2 or (at your option) any later version.	NimblePDFApplication		NimblePDF is free software under the GNU General Public License, version 2 or (at your option) any later version.
+Add insert text annotation	PDFWindow		Lisää lisää teksti-kommentti
+Unknown	NimblePDFApplication		Tuntematon
+Delete	PDFWindow		Poista
+A fast, full-featured PDF reader for Haiku.	NimblePDFApplication		A fast, full-featured PDF reader for Haiku.
+Color	PrintSettingsWindow		Väri
+View	PDFWindow		Näkymä
+Search string not found.	PDFSearch		Hakumerkkijonoa ei löytynyt.
+Normal	PrintSettingsWindow		Normaali
+Add widget annotation	PDFWindow		Lisää näyttöliittymäkomponenttikommentti
+Rendering by poppler %s.	NimblePDFApplication	poppler version	Rendering by poppler %s.
+Asian fonts	PreferencesWindow		Asian fonts
+Zoom in	PDFWindow		Lähennä
+Page:	FindTextWindow		Sivu:
+Rotation	PrintSettingsWindow		Kierto
+Error messages	TraceWindow		Virheilmoitukset
+Jump to page	PDFWindow		Siirry sivulle
+Mode	PrintSettingsWindow		Tila
+Save as…	PDFWindow		Tallenna nimellä…
+Execute the command:	PDFView		Suorita komento:
+Open in workspace:	PreferencesWindow		Open in workspace:
+Author	PreferencesWindow		Author
+Issue tracker…	PDFWindow		Tapahtumajäljittäjä…
+NimblePDF status	StatusWindow		NimblePDF-tila
+Can not overwrite a PDF file that's currently opened in NimblePDF! Please choose another file name.	PDFWindow		Parhaillaan NimblePDF:ssä avoinna olean PDF-tiedoston korvaaminen epäonnistui! Valitse toinen tiedostonimi.
+Printing:	FileInfoWindow		Tulostetaan:
+Font:	AnnotationWindow		Kirjasin:
+User fonts	PreferencesWindow		User fonts
+Zoom must be between 25 and 400!	PrintSettingsWindow		Lähennyksen/Loitonnuksen on oltava välillä 25 ... 400!
+Save attachment(s) as	AttachmentView		Tallenna liitteet nimellä
+Open…	PDFWindow		Avaa…
+NimblePDF reading file: 	PDFView		NimblePDF lukee tiedostoa:
+OK	PDFView		Valmis
+Date:	AnnotationWindow		Päivämäärä:
+Show page list	PDFWindow		Näytä sivuluettelo
+Restore page number	PreferencesWindow		Restore page number
+OK	PasswordWindow		Valmis
+Name	FileInfoWindow		Nimi
+Document	OutlinesWindow		Asiakirja
+Hide side bar	PDFWindow		Piilota sivupalkki
+Page setup…	PDFWindow		Sivuasetukset…
+Add ink annotation	PDFWindow		Lisää mustekommentti
+Source code	NimblePDFApplication		Source code
+Find: 	FindTextWindow		Etsi:
+Zoom	PDFWindow		Lähennä/Loitonna
+Based on BePDF	NimblePDFApplication		Based on BePDF
+Go to next page	PDFWindow		Siirry seuraavalle sivulle
+Add square annotation	PDFWindow		Lisää nelikulmiokommentti
+[internal link]	PDFView		[sisäinen linkki]
+Fonts of this page	FileInfoWindow		Tämän sivun kirjasimet
+Last	PDFWindow		Viimeinen
+About NimblePDF…	PDFWindow		Ohjelmasta NimblePDF…
+Abort	FileInfoWindow		Peru
+Restore window position and size	PreferencesWindow		Restore window position and size
 Find next	PDFWindow		Etsi seuraava
-Find next…	PDFWindow		Etsi seuraava…
-Find…	PDFWindow		Etsi…
-First	PDFWindow		Ensimmäinen
-Fit to page	PDFWindow		Sovita sivuun
-Fit to page width	PDFWindow		Sovita sivuleveyteen
-Forward	PDFWindow		Eteenpäin
-Forward in page history list	PDFWindow		Eteenpäin sivuhistorialuettelossa
-Fullscreen	PDFWindow		Kokonäyttö
-Fullscreen mode	PDFWindow		Kokonäyttötila
+All pages	PrintSettingsWindow		Kaikki sivut
+Show annotation toolbar	PDFWindow		Näytä kommenttityökalupalkki
+File name	AttachmentView		Tiedostonimi
+Go to start of document	PDFWindow		Siirry asiakirjan alkuun
 Go back 10 pages	PDFWindow		Siirry 10 sivua taaksepäin
 Go forward 10 pages	PDFWindow		Siirry 10 sivua eteenpäin
-Go to end of document	PDFWindow		Siirry asiakirjan loppuun
-Go to next page	PDFWindow		Siirry seuraavalle sivulle
-Go to previous page	PDFWindow		Siirry edelliselle sivulle
-Go to start of document	PDFWindow		Siirry asiakirjan alkuun
-Help	PDFWindow		Opaste
-Hide side bar	PDFWindow		Piilota sivupalkki
-Issue tracker…	PDFWindow		Tapahtumajäljittäjä…
-Jump to page	PDFWindow		Siirry sivulle
-Last	PDFWindow		Viimeinen
-Leave annotation editing mode	PDFWindow		Jätä kommenttien muokkaustila
-Next	PDFWindow		Seuraava
-of %d	PDFWindow		/ %d
-OK	PDFWindow		Valmis
-Online help…	PDFWindow		Verkko-opaste…
-Open file	PDFWindow		Avaa tiedosto
-Open in new window…	PDFWindow		Avaa uudessa ikkunassa…
-Open…	PDFWindow		Avaa…
-Page	PDFWindow		Sivu
-Page %d	PDFWindow		Sivu %d
-Page setup…	PDFWindow		Sivuasetukset…
-PDF file successfully written!	PDFWindow		PDF-tiedoston kirjoittaminen onnistui!
-Preferences…	PDFWindow		Asetukset…
-Previous	PDFWindow		Edellinen
-Print	PDFWindow		Tulosta
-Print…	PDFWindow		Tulosta…
-Quit	PDFWindow		Poistu
-Reload	PDFWindow		Lataa uudelleen
-Reload file	PDFWindow		Lataa tiedosto uudelleen
-Rotate clockwise	PDFWindow		Kierrä myötäpäivään
-Rotate counter-clockwise	PDFWindow		Kierrä vastapäivään
-Rotation	PDFWindow		Kierto
-Save as…	PDFWindow		Tallenna nimellä…
-Save file as	PDFWindow		Tallenna tiedosto nimellä
-Saving copy of PDF file:	PDFWindow		Tallennetaan PDF-tiedoston kopio:
-Search	PDFWindow		Etsi
-Select all	PDFWindow		Valitse kaikki
-Select none	PDFWindow		Älä valitse mitään
+Add file attachment annotation	PDFWindow		Lisää tiedostoliitekommentti
+System fonts	PreferencesWindow		System fonts
 Show annotation tool bar	PDFWindow		Näytä kommenttityökalupalkki
-Show annotation toolbar	PDFWindow		Näytä kommenttityökalupalkki
-Show attachments	PDFWindow		Näytä liitteet
+Fit to page width	PDFWindow		Sovita sivuleveyteen
+DPI	PrintSettingsWindow		DPI
+Find…	PDFWindow		Etsi…
+Odd pages	PrintSettingsWindow		Parittomat sivut
+Add sound annotation	PDFWindow		Lisää äänikommentti
 Show bookmarks	PDFWindow		Näytä kirjanmerkit
-Show error messages	PDFWindow		Näytä virheilmoitukset
-Show help…	PDFWindow		Näytä opaste…
-Show page list	PDFWindow		Näytä sivuluettelo
-View	PDFWindow		Näkymä
-Visit homepage…	PDFWindow		Vieraile kotisivulla…
-Warning	PDFWindow		Varoitus
-Zoom	PDFWindow		Lähennä/Loitonna
-Zoom in	PDFWindow		Lähennä
-Zoom out	PDFWindow		Loitonna
-Align:	AnnotationWindow		Tasaa:
-Annotation	AnnotationWindow		Kommentti
-Asian fonts	AnnotationWindow		Aasialaiset kirjasimet
-Author	AnnotationWindow		Tekijä
-Automatic	AnnotationWindow		Automaattinen
-current	AnnotationWindow		nykyinen
-Date:	AnnotationWindow		Päivämäärä:
-Display	AnnotationWindow		Näyttö
-Document	AnnotationWindow		Asiakirja
-Filled rectangle	AnnotationWindow		Täytetty nelikulmio
-Font:	AnnotationWindow		Kirjasin:
-Fullscreen mode	AnnotationWindow		Kokonäyttötila
-Invert vertical mouse scrolling	AnnotationWindow		Käännä pystysuora hiirivieritys
-Open in workspace:	AnnotationWindow		Avaa työtilassa:
-Preferences	AnnotationWindow		Asetukset
-Restore page number	AnnotationWindow		Palauta sivunumerointi
-Restore window position and size	AnnotationWindow		Palauta ikkunan sijainti ja koko
-Selection rectangle	AnnotationWindow		Valintanelikulmio
-Show document view only	AnnotationWindow		Näytä vain nykyinen asiakirja
-Show toolbar, statusbar and scrollbars, too	AnnotationWindow		Näytä myös työkalupalkki, tilapalkki ja työkalupalkit
-Size:	AnnotationWindow		Koko:
-Stroked rectangle	AnnotationWindow		Vinoviivoitettu nelikulmio
-System fonts	AnnotationWindow		Järjestelmäkirjasimet
-Title:	AnnotationWindow		Otsikko:
-User fonts	AnnotationWindow		Käyttäjäkirjasimet
-Will take effect at next program launch.	AnnotationWindow		Tulee voimaan ohjelma seuraavan käynnistyksen jälkeen.
-Alpha	NimblePDFApplication		Alfa
-NimblePDF is based on XPDF %s, %s.	NimblePDFApplication	XPDF version, copyright	NimblePDF perustuu XPDF-versioon %s, %s.
-NimblePDF: Error opening file!	NimblePDFApplication		NimblePDF: Virhe tiedoston avaamisessa!
-Beta	NimblePDFApplication		Beeta
-Close	NimblePDFApplication		Sulje
-Development	NimblePDFApplication		Kehitys
-Error	NimblePDFApplication		Virhe
-Final	NimblePDFApplication		Lopullinen
-Gamma	NimblePDFApplication		Gamma
-Golden Master	NimblePDFApplication		Golden Master
-Unknown	NimblePDFApplication		Tuntematon
-Version	NimblePDFApplication		Versio
-Auto open	TraceWindow		Avaa automaattisesti
+Max. printer resolution	PrintSettingsWindow		Tulostimen enimmäisresoluutio
+Quit	PDFWindow		Poistu
+Options	FindTextWindow		Valitsimet
+File	PDFWindow		Tiedosto
+Fullscreen mode	PDFWindow		Kokonäyttötila
+Find text	FindTextWindow		Etsi teksti
 Clear	TraceWindow		Tyhjennä
-Error messages	TraceWindow		Virheilmoitukset
-Floating	TraceWindow		Kelluva
-NimblePDF status	StatusWindow		NimblePDF-tila
+Print	PrintSettingsWindow		Tulosta
 Enter Password	PasswordWindow		Kirjoita salasana
-OK	PasswordWindow		Valmis
-Owner password	PasswordWindow		Omistajan salasana
+Online help…	PDFWindow		Verkko-opaste…
+Filename:	FileInfoWindow		Tiedostonimi:
+Document	PreferencesWindow		Document
+Embedded name	FileInfoWindow		Upotettu nimi
+Close	NimblePDFApplication		Sulje
+Copy link	PDFView		Kopioi linkki
+First	PDFWindow		Ensimmäinen
+Add	PDFWindow		Lisää
+<empty>	AttachmentView		<tyhjä>
+Open in new window…	PDFWindow		Avaa uudessa ikkunassa…
+Preferences…	PDFWindow		Asetukset…
+Beta	NimblePDFApplication		Beeta
+OK	PDFSearch		Valmis
+Delete	PDFView		Poista
+Zoom (%)	PrintSettingsWindow		Lähennä/Loitonna (%)
+Type	FileInfoWindow		Tyyppi
+Custom zoom factor (%d%%)	PDFWindow		Oma lähennä-/loitonna-tekijä (%d%%)
+Add stamp annotation	PDFWindow		Lisää leimakommentti
+Abort	PrintingProgressWindow		Keskeytä
+Align:	AnnotationWindow		Tasaa:
+Go to end of document	PDFWindow		Siirry asiakirjan loppuun
+Auto open	TraceWindow		Avaa automaattisesti
+Back	PDFWindow		Takaisin
+Pages	PrintSettingsWindow		Sivut
+Add movie annotation	PDFWindow		Lisää elokuvakommentti
+Add circle annotation	PDFWindow		Lisää ympyräkommentti
+Show error messages	PDFWindow		Näytä virheilmoitukset
+Golden Master	NimblePDFApplication		Golden Master
+Document	FileInfoWindow		Asiakirja
+Width: 	PrintSettingsWindow		Leveys:
+Author:	FileInfoWindow		Tekijä:
+Add highlight annotation	PDFWindow		Lisää korostuskommentti
+Add new paragraph text annotation	PDFWindow		Lisää uusi kappale tekstikommenttiin
+of %d	PDFWindow		/ %d
+Security	FileInfoWindow		Turvallisuus
+Denied	FileInfoWindow		Kielletty
+Save file as	PDFWindow		Tallenna tiedosto nimellä
+Order	PrintSettingsWindow		Järjestys
+Properties	PDFView		Ominaisuudet
+Add comment text annotation	PDFWindow		Lisää kommenttitekstikommentti
+Description	AttachmentView		Kuvaus
+Add underline annotation	PDFWindow		Lisää alleviivattu kommentti
+Development	NimblePDFApplication		Kehitys
+Saving copy of PDF file:	PDFWindow		Tallennetaan PDF-tiedoston kopio:
+Page: %d	FindTextWindow		Sivu: %d
+Page	PDFWindow		Sivu
+Add squiggly annotation	PDFWindow		Lisää koukeroinen kommentti
+Annotation	PDFView		Kommentti
+Add trapnet annotation	PDFWindow		Lisää ansaverkkokommentti
+Producer:	FileInfoWindow		Tuottaja:
+Keywords:	FileInfoWindow		Avainsanat:
+Forward in page history list	PDFWindow		Eteenpäin sivuhistorialuettelossa
+Page:	PrintingProgressWindow		Sivu:
+Error getting page number!	NimblePDFApplication		Error getting page number!
+Find next…	PDFWindow		Etsi seuraava…
+Visit homepage…	PDFWindow		Vieraile kotisivulla…
+Even pages	PrintSettingsWindow		Parilliset sivut
+Stop	FindTextWindow		Pysäytä
+Print	PDFWindow		Tulosta
+Add link annotation	PDFWindow		Lisää linkkikommentti
+ in	PrintSettingsWindow		:ssa
+Fullscreen mode	PreferencesWindow		Fullscreen mode
+[link type 'movie' not supported]	PDFView		[linkkityyppiä 'movie' ei tueta]
+Annotation	AnnotationWindow		Kommentti
+Bookmark	PDFWindow		Kirjanmerkki
+Next	PDFWindow		Seuraava
+Reverse	PrintSettingsWindow		Käänteinen
+Page: %d	PrintingProgressWindow		Sivu: %d
+Select none	PDFWindow		Älä valitse mitään
+Rotate counter-clockwise	PDFWindow		Kierrä vastapäivään
+<empty>	OutlinesWindow		<tyhjä>
+Error	NimblePDFApplication		Virhe
+Add key text annotation	PDFWindow		Lisää avaintekstikommentti
+Forward	PDFWindow		Eteenpäin
+Size:	AnnotationWindow		Koko:
+Zoom out	PDFWindow		Loitonna
+Display	PreferencesWindow		Display
+Modified:	FileInfoWindow		Muokattu:
+License	NimblePDFApplication		License
+Preferences	PreferencesWindow		Preferences
+Go to page %d	PDFView		Siirry sivulle %d
+OK	OutlinesWindow		Valmis
+Copy selection	PDFWindow		Kopioi valinta
+Final	NimblePDFApplication		Lopullinen
+Annotations:	FileInfoWindow		Kommentit:
+Select all	PDFWindow		Valitse kaikki
+PDF file successfully written!	PDFWindow		PDF-tiedoston kirjoittaminen onnistui!
+OK	PDFWindow		Valmis
+Previous	PDFWindow		Edellinen
+File info	FileInfoWindow		Tiedostotiedot
+Gamma	NimblePDFApplication		Gamma
+Search	PDFWindow		Etsi
+Leave annotation editing mode	PDFView		Jätä kommentin muokkaustila
+Edit	PDFView		Muokkaa
+Saving attachment(s):	AttachmentView		Tallenna liitteet:
+Leave annotation editing mode	PDFWindow		Jätä kommenttien muokkaustila
+OK	PrintSettingsWindow		Valmis
+Add free text annotation	PDFWindow		Lisää vapaa tekstikommentti
+Open file	PDFWindow		Avaa tiedosto
+Print settings	PrintSettingsWindow		Tulostusasetukset
+Back in page history list	PDFWindow		Takaisin sivuhistorialuetteloon
+Find	PDFWindow		Etsi
+Yes	FileInfoWindow		Kyllä
+[unknown link]	PDFView		[tuntematon linkki]
+Floating	TraceWindow		Kelluva
+Add help text annotation	PDFWindow		Lisää opastetekstikommentti
+Stop	PrintingProgressWindow		Pysäytä
+Add popup annotation	PDFWindow		Lisää ponnahdusikkunakommentti
+Show attachments	PDFWindow		Näytä liitteet
+Edit	PDFWindow		Muokkaa
+Show help…	PDFWindow		Näytä opaste…
+Add printer mark annotation	PDFWindow		Lisää tulostinmerkintäkommentti
+Search backwards	FindTextWindow		Etsi taaksepäin
+Reload	PDFWindow		Lataa uudelleen
+Add line annotation	PDFWindow		Lisää rivikommentti
+Help	PDFWindow		Opaste
+Will take effect at next program launch.	PreferencesWindow		Will take effect at next program launch.
+NimblePDF is a fork of BePDF, the long-running Haiku PDF reader, with the original xpdf engine replaced by poppler.	NimblePDFApplication		NimblePDF is a fork of BePDF, the long-running Haiku PDF reader, with the original xpdf engine replaced by poppler.
+Rotation	PDFWindow		Kierto
+Encrypted:	FileInfoWindow		Salattu:
+Gray scale	PrintSettingsWindow		Harmaaskaala
+Save file attachment as…	PDFView		Tallenna tiedostoliite nimellä…
+Show toolbar, statusbar and scrollbars, too	PreferencesWindow		Show toolbar, statusbar and scrollbars, too
+Close	PDFWindow		Sulje
+No title	OutlinesWindow		Ei otsikkoa
+Page	PrintSettingsWindow		Sivu
+current	PreferencesWindow		current
+Created:	FileInfoWindow		Luotu:
+Title:	AnnotationWindow		Otsikko:
+Saving file attachment:	PDFView		Tallennetaan tiedostoliite:
+Open in new window	PDFView		Avaa uudessa ikkunassa
+Height: 	PrintSettingsWindow		Korkeus:
+File info…	PDFWindow		Tiedostotiedot…
+Allowed	FileInfoWindow		Sallittu
+Add paragraph text annotation	PDFWindow		Lisää kappale tekstikommenttiin
+Selection rectangle	PreferencesWindow		Selection rectangle
+Linearized:	FileInfoWindow		Linearisoitu:
+No	FileInfoWindow		Ei
+NimblePDF: Launch	PDFView		NimblePDF: Käynnistä
+Fit to page	PDFWindow		Sovita sivuun
+Reload file	PDFWindow		Lataa tiedosto uudelleen
+Path:	FileInfoWindow		Polku:
+Print…	PDFWindow		Tulosta…
+Copy & paste:	FileInfoWindow		Kopio & liitä:
+Page %d	PDFWindow		Sivu %d
+Edit title for bookmark	OutlinesWindow		Muokkaa kirjanmerkin otsikkoa
+Version:	FileInfoWindow		Versio:
+English.pdf	PDFWindow	Replace with the PDF name of the help document, if there is one for your language.	English.pdf
+Automatic	AnnotationWindow		Automaattinen
+Title:	FileInfoWindow		Otsikko:
+Warning	PDFWindow		Varoitus
+User defined	OutlinesWindow		Käyttäjän määritelemä
+Fullscreen	PDFWindow		Kokonäyttö
+Invert vertical mouse scrolling	PreferencesWindow		Invert vertical mouse scrolling
+Save selected attachment to file	AttachmentView		Tallenna valitut liitteet tiedostoon
+Add note text annotation	PDFWindow		Lisää muistiinpanotekstikommentti
+Editing:	FileInfoWindow		Muokataan:
 User password	PasswordWindow		Käyttäjän salasana
 Find	FindTextWindow		Etsi
-Find text	FindTextWindow		Etsi teksti
-Find: 	FindTextWindow		Etsi:
+Could not write PDF file!	PDFWindow		PDF-tiedoston kirjoittaminen epäonnistui!
+Filled rectangle	PreferencesWindow		Filled rectangle
 Ignore case	FindTextWindow		Ohita kirjainkoko
-Options	FindTextWindow		Valitsimet
-Page:	FindTextWindow		Sivu:
-Page: %d	FindTextWindow		Sivu: %d
-Search backwards	FindTextWindow		Etsi taaksepäin
-Stop	FindTextWindow		Pysäytä
-OK	PDFSearch		Valmis
-Search string not found.	PDFSearch		Hakumerkkijonoa ei löytynyt.
+Creator:	FileInfoWindow		Tekijä:
+Invalid file reference received!	NimblePDFApplication		Invalid file reference received!
+Save selected attachments into directory	AttachmentView		Tallenna valitut liitteet kansioon
+Wrong parameter!	PrintSettingsWindow		Väärä parametri!
+Rotate clockwise	PDFWindow		Kierrä myötäpäivään
+Stroked rectangle	PreferencesWindow		Stroked rectangle
+Show all fonts	FileInfoWindow		Näytä kaikki kirjasimet

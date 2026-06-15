@@ -1,254 +1,261 @@
-1	Italian	application/x-vnd.Haiku-NimblePDF	1765081836
- in	PrintSettingsWindow		pollici
-All pages	PrintSettingsWindow		Tutte le pagine
-Color	PrintSettingsWindow		Colore
-DPI	PrintSettingsWindow		DPI
-Even pages	PrintSettingsWindow		Pagine pari
-Gray scale	PrintSettingsWindow		Scala di grigi
-Height: 	PrintSettingsWindow		Altezza: 
-Max. printer resolution	PrintSettingsWindow		Risoluzione max stampa
-Mode	PrintSettingsWindow		Modalità
-Normal	PrintSettingsWindow		Normale
-Odd pages	PrintSettingsWindow		Pagine dispari
-OK	PrintSettingsWindow		OK
-Order	PrintSettingsWindow		Ordine
-Page	PrintSettingsWindow		Pagina
-Pages	PrintSettingsWindow		Pagine
-Print	PrintSettingsWindow		Stampa
-Print settings	PrintSettingsWindow		Impostazioni stampa
-Reverse	PrintSettingsWindow		Rovescio
-Rotation	PrintSettingsWindow		Rotazione
-Width: 	PrintSettingsWindow		Larghezza: 
-Wrong parameter!	PrintSettingsWindow		Parametro errato!
-Zoom (%)	PrintSettingsWindow		Ingrandimento (%)
-Zoom must be between 25 and 400!	PrintSettingsWindow		Ingrandimento obbligatorio tra 25 e 400!
-[internal link]	PDFView		[collegamento interno]
-[link type 'movie' not supported]	PDFView		[tipo collegamento 'filmato' non supportato]
-[unknown link]	PDFView		[link sconosciuto]
-Annotation	PDFView		Annotazione
-NimblePDF reading file: 	PDFView		NimblePDF - Lettura file: 
-NimblePDF: Launch	PDFView		NimblePDF: Avvio
-Cancel	PDFView		Annulla
-Copy link	PDFView		Copia collegamento
-Delete	PDFView		Cancella
-Edit	PDFView		Modifica
-Execute the command:	PDFView		Esegui il comando:
-Go to page %d	PDFView		Vai a pagina %d
-Leave annotation editing mode	PDFView		Abbandona modalità modifica annotazione
-OK	PDFView		OK
-Open in new window	PDFView		Apri in nuova finestra
-Properties	PDFView		Proprietà
-Save file attachment as…	PDFView		Salva file allegato come…
-Saving file attachment:	PDFView		Salvataggio file allegato:
-Unknown link action type: '%s'	PDFView		Tipo collegamento azione sconosciuto: '%s'
-<empty>	OutlinesWindow		<vuoto>
-Document	OutlinesWindow		Documento
-Edit title for bookmark	OutlinesWindow		Modifica titolo del segnalibro
-No title	OutlinesWindow		Senza titolo
-OK	OutlinesWindow		OK
-User defined	OutlinesWindow		Definito da utente
-<empty>	AttachmentView		<vuoto>
-Description	AttachmentView		Descrizione
-File name	AttachmentView		Nome file
-Save attachment(s) as	AttachmentView		Salva allegato/i come
-Save selected attachment to file	AttachmentView		Salva l'allegato selezionato come
-Save selected attachments into directory	AttachmentView		Salva l'allegato selezionato nella cartella
-Saving attachment(s):	AttachmentView		Salvataggio allegato/i:
-Abort	PrintingProgressWindow		Interrompi
-NimblePDF printing	PrintingProgressWindow		Stampa NimblePDF
-NimblePDF printing document: 	PrintingProgressWindow		Stampa documento NimblePDF: 
-Page:	PrintingProgressWindow		Pagina:
-Page: %d	PrintingProgressWindow		Pagina: %d
-Stop	PrintingProgressWindow		Ferma
-Abort	FileInfoWindow		Interrompi
-Allowed	FileInfoWindow		Consentito
-Annotations:	FileInfoWindow		Annotazioni:
-Author:	FileInfoWindow		Autore:
-Copy & paste:	FileInfoWindow		Copia e incolla:
-Created:	FileInfoWindow		Creato:
-Creator:	FileInfoWindow		Creatore:
-Denied	FileInfoWindow		Negato
-Document	FileInfoWindow		Documento
-Editing:	FileInfoWindow		Modifica:
-Embedded name	FileInfoWindow		Nome incorporato
-Encrypted:	FileInfoWindow		Criptato:
-File info	FileInfoWindow		Informazioni file
-Filename:	FileInfoWindow		Nome file:
-Fonts of this page	FileInfoWindow		Font in questa pagina
-Keywords:	FileInfoWindow		Parole chiave:
-Linearized:	FileInfoWindow		Linearizzato:
-Modified:	FileInfoWindow		Modificato:
-Name	FileInfoWindow		Nome
-No	FileInfoWindow		No
-Path:	FileInfoWindow		Percorso:
-Printing:	FileInfoWindow		Stampa:
-Producer:	FileInfoWindow		Produttore:
-Security	FileInfoWindow		Sicurezza
-Show all fonts	FileInfoWindow		Mostra tutti i font
-Subject:	FileInfoWindow		Oggetto:
-Title:	FileInfoWindow		Titolo:
-Type	FileInfoWindow		Tipo
-Version:	FileInfoWindow		Versione:
-Yes	FileInfoWindow		Si
-About NimblePDF…	PDFWindow		Informazioni su NimblePDF…
-Add	PDFWindow		Aggiungi
-Add circle annotation	PDFWindow		Aggiungi nota : cerchio
-Add comment text annotation	PDFWindow		Aggiungi nota : commento di testo
-Add file attachment annotation	PDFWindow		Aggiungi nota file allegato
-Add free text annotation	PDFWindow		Aggiungi nota : testo libero
-Add help text annotation	PDFWindow		Aggiungi nota : testo aiuto
-Add highlight annotation	PDFWindow		Aggiungi nota : evidenziatore
-Add ink annotation	PDFWindow		Aggiungi nota : inchiostro
-Add insert text annotation	PDFWindow		Aggiungi nota : testo inseribile
-Add key text annotation	PDFWindow		Aggiungi nota : testo chiave
-Add line annotation	PDFWindow		Aggiungi nota : linea
-Add link annotation	PDFWindow		Aggiungi nota : collegamento
-Add movie annotation	PDFWindow		Aggiungi nota : filmato
-Add new paragraph text annotation	PDFWindow		Aggiungi nota : paragrafo di testo
-Add note text annotation	PDFWindow		Aggiungi nota : annotazione
-Add paragraph text annotation	PDFWindow		Aggiungi nota : paragrafo di testo
-Add popup annotation	PDFWindow		Aggiungi nota : popup
-Add printer mark annotation	PDFWindow		Aggiungi nota : indicatore di stampa
-Add sound annotation	PDFWindow		Aggiungi nota : suono
-Add square annotation	PDFWindow		Aggiungi nota : quadrato
-Add squiggly annotation	PDFWindow		Aggiungi nota : onda
-Add stamp annotation	PDFWindow		Aggiungi nota : timbro
-Add strikeout annotation	PDFWindow		Aggiungi nota : testo barrato
-Add trapnet annotation	PDFWindow		Aggiungi nota : trappola
-Add underline annotation	PDFWindow		Aggiungi nota : testo sottolineato
-Add widget annotation	PDFWindow		Aggiungi nota : widget
-Back	PDFWindow		Indietro
-Back in page history list	PDFWindow		Arretra nella lista storia pagine
-Bookmark	PDFWindow		Segnalibro
-Can not overwrite a PDF file that's currently opened in NimblePDF! Please choose another file name.	PDFWindow		Non posso sovrascrivere un file PDF attualmente aperto da NimblePDF! Scegli un altro nome file.
-Close	PDFWindow		Chiudi
-Copy selection	PDFWindow		Copia selezione
-Could not write PDF file!	PDFWindow		Impossibile scrivere file PDF!
-Custom zoom factor (%d%%)	PDFWindow		Fattore ingrandimento personalizzato (%d%%)
-Delete	PDFWindow		Cancella
-Edit	PDFWindow		Modifica
+1	Italian	application/x-vnd.Haiku-NimblePDF	777513411
 Editing of annotations in an encrypted PDF file isn't supported yet!	PDFWindow		La modifica delle note in un file PDF criptato non è ancora supportato!
-English.pdf	PDFWindow	Replace with the PDF name of the help document, if there is one for your language.	Italiano.pdf
-File	PDFWindow		File
-File info…	PDFWindow		Informazioni file…
-Find	PDFWindow		Trova
+Cancel	PDFView		Annulla
+NimblePDF printing document: 	PrintingProgressWindow		Stampa documento NimblePDF: 
+Go to previous page	PDFWindow		Vai alla pagina precedente
+Subject:	FileInfoWindow		Oggetto:
+Add strikeout annotation	PDFWindow		Aggiungi nota : testo barrato
+Owner password	PasswordWindow		Password proprietario
+NimblePDF: Error opening file!	NimblePDFApplication		NimblePDF: Errore apertura file!
+Alpha	NimblePDFApplication		Alfa
+Show document view only	PreferencesWindow		Show document view only
+NimblePDF printing	PrintingProgressWindow		Stampa NimblePDF
+Rendering engine	NimblePDFApplication		Rendering engine
+NimblePDF is free software under the GNU General Public License, version 2 or (at your option) any later version.	NimblePDFApplication		NimblePDF is free software under the GNU General Public License, version 2 or (at your option) any later version.
+Add insert text annotation	PDFWindow		Aggiungi nota : testo inseribile
+Unknown	NimblePDFApplication		Sconosciuto
+Delete	PDFWindow		Cancella
+A fast, full-featured PDF reader for Haiku.	NimblePDFApplication		A fast, full-featured PDF reader for Haiku.
+Color	PrintSettingsWindow		Colore
+View	PDFWindow		Visualizza
+Search string not found.	PDFSearch		Stringa di ricerca non trovata.
+Normal	PrintSettingsWindow		Normale
+Add widget annotation	PDFWindow		Aggiungi nota : widget
+Rendering by poppler %s.	NimblePDFApplication	poppler version	Rendering by poppler %s.
+Asian fonts	PreferencesWindow		Asian fonts
+Zoom in	PDFWindow		Ingrandisci
+Page:	FindTextWindow		Pagina:
+Rotation	PrintSettingsWindow		Rotazione
+Error messages	TraceWindow		Messaggi errore
+Jump to page	PDFWindow		Salta alla pagina
+Mode	PrintSettingsWindow		Modalità
+Save as…	PDFWindow		Salva come…
+Execute the command:	PDFView		Esegui il comando:
+Open in workspace:	PreferencesWindow		Open in workspace:
+Author	PreferencesWindow		Author
+Issue tracker…	PDFWindow		Traccia anomalia…
+NimblePDF status	StatusWindow		Stato NimblePDF
+Can not overwrite a PDF file that's currently opened in NimblePDF! Please choose another file name.	PDFWindow		Non posso sovrascrivere un file PDF attualmente aperto da NimblePDF! Scegli un altro nome file.
+Printing:	FileInfoWindow		Stampa:
+Font:	AnnotationWindow		Font:
+User fonts	PreferencesWindow		User fonts
+Zoom must be between 25 and 400!	PrintSettingsWindow		Ingrandimento obbligatorio tra 25 e 400!
+Save attachment(s) as	AttachmentView		Salva allegato/i come
+Open…	PDFWindow		Apri…
+NimblePDF reading file: 	PDFView		NimblePDF - Lettura file: 
+OK	PDFView		OK
+Date:	AnnotationWindow		Data:
+Show page list	PDFWindow		Mostra lista pagine
+Restore page number	PreferencesWindow		Restore page number
+OK	PasswordWindow		OK
+Name	FileInfoWindow		Nome
+Document	OutlinesWindow		Documento
+Hide side bar	PDFWindow		Nascondi barra laterale
+Page setup…	PDFWindow		Imposta pagina…
+Add ink annotation	PDFWindow		Aggiungi nota : inchiostro
+Source code	NimblePDFApplication		Source code
+Find: 	FindTextWindow		Trova:
+Zoom	PDFWindow		Ingrandimento
+Based on BePDF	NimblePDFApplication		Based on BePDF
+Go to next page	PDFWindow		Vai alla pagina seguente
+Add square annotation	PDFWindow		Aggiungi nota : quadrato
+[internal link]	PDFView		[collegamento interno]
+Fonts of this page	FileInfoWindow		Font in questa pagina
+Last	PDFWindow		Fine
+About NimblePDF…	PDFWindow		Informazioni su NimblePDF…
+Abort	FileInfoWindow		Interrompi
+Restore window position and size	PreferencesWindow		Restore window position and size
 Find next	PDFWindow		Trova seguente
-Find next…	PDFWindow		Trova seguente…
-Find…	PDFWindow		Trova…
-First	PDFWindow		Inizio
-Fit to page	PDFWindow		Adatta alla pagina
-Fit to page width	PDFWindow		Adatta alla laghezza pagina
-Forward	PDFWindow		Avanza
-Forward in page history list	PDFWindow		Avanza nella lista cronologia pagine
-Fullscreen	PDFWindow		Schermo intero
-Fullscreen mode	PDFWindow		Modalità schermo intero
+All pages	PrintSettingsWindow		Tutte le pagine
+Show annotation toolbar	PDFWindow		Mostra barra strumenti note
+File name	AttachmentView		Nome file
+Go to start of document	PDFWindow		Vai a inizio documento
 Go back 10 pages	PDFWindow		Arretra 10 pagine
 Go forward 10 pages	PDFWindow		Avanza 10 pagine
-Go to end of document	PDFWindow		Vai alla fine del documento
-Go to next page	PDFWindow		Vai alla pagina seguente
-Go to previous page	PDFWindow		Vai alla pagina precedente
-Go to start of document	PDFWindow		Vai a inizio documento
-Help	PDFWindow		Aiuto
-Hide side bar	PDFWindow		Nascondi barra laterale
-Issue tracker…	PDFWindow		Traccia anomalia…
-Jump to page	PDFWindow		Salta alla pagina
-Last	PDFWindow		Fine
-Leave annotation editing mode	PDFWindow		Abbandona modalità modifica nota
-Next	PDFWindow		Seguente
-of %d	PDFWindow		di %d
-OK	PDFWindow		OK
-Online help…	PDFWindow		Aiuto in linea…
-Open file	PDFWindow		Apri file
-Open in new window…	PDFWindow		Apri in nuova finestra…
-Open…	PDFWindow		Apri…
-Page	PDFWindow		Pagina
-Page %d	PDFWindow		Pagina %d
-Page setup…	PDFWindow		Imposta pagina…
-PDF file successfully written!	PDFWindow		Scrittura file PDF completata!
-Preferences…	PDFWindow		Preferenze…
-Previous	PDFWindow		Precedente
-Print	PDFWindow		Stampa
-Print…	PDFWindow		Stampa…
-Quit	PDFWindow		Esci
-Reload	PDFWindow		Ricarica
-Reload file	PDFWindow		Ricarica file
-Rotate clockwise	PDFWindow		Ruota senso orario
-Rotate counter-clockwise	PDFWindow		Ruota senso anti-orario
-Rotation	PDFWindow		Rotazione
-Save as…	PDFWindow		Salva come…
-Save file as	PDFWindow		Salva file come
-Saving copy of PDF file:	PDFWindow		Salvataggio copia file PDF:
-Search	PDFWindow		Cerca
-Select all	PDFWindow		Seleziona tutto
-Select none	PDFWindow		Annulla selezione
+Add file attachment annotation	PDFWindow		Aggiungi nota file allegato
+System fonts	PreferencesWindow		System fonts
 Show annotation tool bar	PDFWindow		Mostra barra strumenti note
-Show annotation toolbar	PDFWindow		Mostra barra strumenti note
-Show attachments	PDFWindow		Mostra allegati
+Fit to page width	PDFWindow		Adatta alla laghezza pagina
+DPI	PrintSettingsWindow		DPI
+Find…	PDFWindow		Trova…
+Odd pages	PrintSettingsWindow		Pagine dispari
+Add sound annotation	PDFWindow		Aggiungi nota : suono
 Show bookmarks	PDFWindow		Mostra segnalibri
-Show error messages	PDFWindow		Mostra messaggi errore
-Show help…	PDFWindow		Mostra aiuto…
-Show page list	PDFWindow		Mostra lista pagine
-View	PDFWindow		Visualizza
-Visit homepage…	PDFWindow		Visita homepage…
-Warning	PDFWindow		Attenzione
-Zoom	PDFWindow		Ingrandimento
-Zoom in	PDFWindow		Ingrandisci
-Zoom out	PDFWindow		Rimpicciolisci
-Align:	AnnotationWindow		Allineamento:
-Annotation	AnnotationWindow		Nota
-Asian fonts	AnnotationWindow		Font asiatici
-Author	AnnotationWindow		Autore
-Automatic	AnnotationWindow		Automatico
-current	AnnotationWindow		attuale
-Date:	AnnotationWindow		Data:
-Display	AnnotationWindow		Monitor
-Document	AnnotationWindow		Documento
-Filled rectangle	AnnotationWindow		Rettangolo pieno
-Font:	AnnotationWindow		Font:
-Fullscreen mode	AnnotationWindow		Modalità schermo intero
-Invert vertical mouse scrolling	AnnotationWindow		Inverti scorrimento verticale del mouse
-Open in workspace:	AnnotationWindow		Apri nel workspace:
-Preferences	AnnotationWindow		Preferenze
-Restore page number	AnnotationWindow		Ripristina numero pagina
-Restore window position and size	AnnotationWindow		Ripristina posizione e dimensione finestra
-Selection rectangle	AnnotationWindow		Selezione rettangolare
-Show document view only	AnnotationWindow		Mostra solamente visuale documento
-Show toolbar, statusbar and scrollbars, too	AnnotationWindow		Mostra anche barre strumenti, di stato e scorrimento
-Size:	AnnotationWindow		Dimensione:
-Stroked rectangle	AnnotationWindow		Rettangolo contornato
-System fonts	AnnotationWindow		Font di sistema
-Title:	AnnotationWindow		Titolo:
-User fonts	AnnotationWindow		Font utente
-Will take effect at next program launch.	AnnotationWindow		Avrà effetto al prossimo avvio del programma.
-Alpha	NimblePDFApplication		Alfa
-NimblePDF is based on XPDF %s, %s.	NimblePDFApplication	XPDF version, copyright	NimblePDF è basato su XPDF %s, %s.
-NimblePDF: Error opening file!	NimblePDFApplication		NimblePDF: Errore apertura file!
-Beta	NimblePDFApplication		Beta
-Close	NimblePDFApplication		Chiudi
-Development	NimblePDFApplication		Sviluppo
-Error	NimblePDFApplication		Errore
-Final	NimblePDFApplication		Finale
-Gamma	NimblePDFApplication		Gamma
-Golden Master	NimblePDFApplication		Golden Master
-Unknown	NimblePDFApplication		Sconosciuto
-Version	NimblePDFApplication		Versione
-Auto open	TraceWindow		Apri automaticamente
+Max. printer resolution	PrintSettingsWindow		Risoluzione max stampa
+Quit	PDFWindow		Esci
+Options	FindTextWindow		Opzioni
+File	PDFWindow		File
+Fullscreen mode	PDFWindow		Modalità schermo intero
+Find text	FindTextWindow		Trova testo
 Clear	TraceWindow		Pulisci
-Error messages	TraceWindow		Messaggi errore
-Floating	TraceWindow		Primo piano
-NimblePDF status	StatusWindow		Stato NimblePDF
+Print	PrintSettingsWindow		Stampa
 Enter Password	PasswordWindow		Inserisci password
-OK	PasswordWindow		OK
-Owner password	PasswordWindow		Password proprietario
+Online help…	PDFWindow		Aiuto in linea…
+Filename:	FileInfoWindow		Nome file:
+Document	PreferencesWindow		Document
+Embedded name	FileInfoWindow		Nome incorporato
+Close	NimblePDFApplication		Chiudi
+Copy link	PDFView		Copia collegamento
+First	PDFWindow		Inizio
+Add	PDFWindow		Aggiungi
+<empty>	AttachmentView		<vuoto>
+Open in new window…	PDFWindow		Apri in nuova finestra…
+Preferences…	PDFWindow		Preferenze…
+Beta	NimblePDFApplication		Beta
+OK	PDFSearch		OK
+Delete	PDFView		Cancella
+Zoom (%)	PrintSettingsWindow		Ingrandimento (%)
+Type	FileInfoWindow		Tipo
+Custom zoom factor (%d%%)	PDFWindow		Fattore ingrandimento personalizzato (%d%%)
+Add stamp annotation	PDFWindow		Aggiungi nota : timbro
+Abort	PrintingProgressWindow		Interrompi
+Align:	AnnotationWindow		Allineamento:
+Go to end of document	PDFWindow		Vai alla fine del documento
+Auto open	TraceWindow		Apri automaticamente
+Back	PDFWindow		Indietro
+Pages	PrintSettingsWindow		Pagine
+Add movie annotation	PDFWindow		Aggiungi nota : filmato
+Add circle annotation	PDFWindow		Aggiungi nota : cerchio
+Show error messages	PDFWindow		Mostra messaggi errore
+Golden Master	NimblePDFApplication		Golden Master
+Document	FileInfoWindow		Documento
+Width: 	PrintSettingsWindow		Larghezza: 
+Author:	FileInfoWindow		Autore:
+Add highlight annotation	PDFWindow		Aggiungi nota : evidenziatore
+Add new paragraph text annotation	PDFWindow		Aggiungi nota : paragrafo di testo
+of %d	PDFWindow		di %d
+Security	FileInfoWindow		Sicurezza
+Denied	FileInfoWindow		Negato
+Save file as	PDFWindow		Salva file come
+Order	PrintSettingsWindow		Ordine
+Properties	PDFView		Proprietà
+Add comment text annotation	PDFWindow		Aggiungi nota : commento di testo
+Description	AttachmentView		Descrizione
+Add underline annotation	PDFWindow		Aggiungi nota : testo sottolineato
+Development	NimblePDFApplication		Sviluppo
+Saving copy of PDF file:	PDFWindow		Salvataggio copia file PDF:
+Page: %d	FindTextWindow		Pagina: %d
+Page	PDFWindow		Pagina
+Add squiggly annotation	PDFWindow		Aggiungi nota : onda
+Annotation	PDFView		Annotazione
+Add trapnet annotation	PDFWindow		Aggiungi nota : trappola
+Producer:	FileInfoWindow		Produttore:
+Keywords:	FileInfoWindow		Parole chiave:
+Forward in page history list	PDFWindow		Avanza nella lista cronologia pagine
+Page:	PrintingProgressWindow		Pagina:
+Error getting page number!	NimblePDFApplication		Error getting page number!
+Find next…	PDFWindow		Trova seguente…
+Visit homepage…	PDFWindow		Visita homepage…
+Even pages	PrintSettingsWindow		Pagine pari
+Stop	FindTextWindow		Ferma
+Print	PDFWindow		Stampa
+Add link annotation	PDFWindow		Aggiungi nota : collegamento
+ in	PrintSettingsWindow		pollici
+Fullscreen mode	PreferencesWindow		Fullscreen mode
+[link type 'movie' not supported]	PDFView		[tipo collegamento 'filmato' non supportato]
+Annotation	AnnotationWindow		Nota
+Bookmark	PDFWindow		Segnalibro
+Next	PDFWindow		Seguente
+Reverse	PrintSettingsWindow		Rovescio
+Page: %d	PrintingProgressWindow		Pagina: %d
+Select none	PDFWindow		Annulla selezione
+Rotate counter-clockwise	PDFWindow		Ruota senso anti-orario
+<empty>	OutlinesWindow		<vuoto>
+Error	NimblePDFApplication		Errore
+Add key text annotation	PDFWindow		Aggiungi nota : testo chiave
+Forward	PDFWindow		Avanza
+Size:	AnnotationWindow		Dimensione:
+Zoom out	PDFWindow		Rimpicciolisci
+Display	PreferencesWindow		Display
+Modified:	FileInfoWindow		Modificato:
+License	NimblePDFApplication		License
+Preferences	PreferencesWindow		Preferences
+Go to page %d	PDFView		Vai a pagina %d
+OK	OutlinesWindow		OK
+Copy selection	PDFWindow		Copia selezione
+Final	NimblePDFApplication		Finale
+Annotations:	FileInfoWindow		Annotazioni:
+Select all	PDFWindow		Seleziona tutto
+PDF file successfully written!	PDFWindow		Scrittura file PDF completata!
+OK	PDFWindow		OK
+Previous	PDFWindow		Precedente
+File info	FileInfoWindow		Informazioni file
+Gamma	NimblePDFApplication		Gamma
+Search	PDFWindow		Cerca
+Leave annotation editing mode	PDFView		Abbandona modalità modifica annotazione
+Edit	PDFView		Modifica
+Saving attachment(s):	AttachmentView		Salvataggio allegato/i:
+Leave annotation editing mode	PDFWindow		Abbandona modalità modifica nota
+OK	PrintSettingsWindow		OK
+Add free text annotation	PDFWindow		Aggiungi nota : testo libero
+Open file	PDFWindow		Apri file
+Print settings	PrintSettingsWindow		Impostazioni stampa
+Back in page history list	PDFWindow		Arretra nella lista storia pagine
+Find	PDFWindow		Trova
+Yes	FileInfoWindow		Si
+[unknown link]	PDFView		[link sconosciuto]
+Floating	TraceWindow		Primo piano
+Add help text annotation	PDFWindow		Aggiungi nota : testo aiuto
+Stop	PrintingProgressWindow		Ferma
+Add popup annotation	PDFWindow		Aggiungi nota : popup
+Show attachments	PDFWindow		Mostra allegati
+Edit	PDFWindow		Modifica
+Show help…	PDFWindow		Mostra aiuto…
+Add printer mark annotation	PDFWindow		Aggiungi nota : indicatore di stampa
+Search backwards	FindTextWindow		Ricerca retrograda
+Reload	PDFWindow		Ricarica
+Add line annotation	PDFWindow		Aggiungi nota : linea
+Help	PDFWindow		Aiuto
+Will take effect at next program launch.	PreferencesWindow		Will take effect at next program launch.
+NimblePDF is a fork of BePDF, the long-running Haiku PDF reader, with the original xpdf engine replaced by poppler.	NimblePDFApplication		NimblePDF is a fork of BePDF, the long-running Haiku PDF reader, with the original xpdf engine replaced by poppler.
+Rotation	PDFWindow		Rotazione
+Encrypted:	FileInfoWindow		Criptato:
+Gray scale	PrintSettingsWindow		Scala di grigi
+Save file attachment as…	PDFView		Salva file allegato come…
+Show toolbar, statusbar and scrollbars, too	PreferencesWindow		Show toolbar, statusbar and scrollbars, too
+Close	PDFWindow		Chiudi
+No title	OutlinesWindow		Senza titolo
+Page	PrintSettingsWindow		Pagina
+current	PreferencesWindow		current
+Created:	FileInfoWindow		Creato:
+Title:	AnnotationWindow		Titolo:
+Saving file attachment:	PDFView		Salvataggio file allegato:
+Open in new window	PDFView		Apri in nuova finestra
+Height: 	PrintSettingsWindow		Altezza: 
+File info…	PDFWindow		Informazioni file…
+Allowed	FileInfoWindow		Consentito
+Add paragraph text annotation	PDFWindow		Aggiungi nota : paragrafo di testo
+Selection rectangle	PreferencesWindow		Selection rectangle
+Linearized:	FileInfoWindow		Linearizzato:
+No	FileInfoWindow		No
+NimblePDF: Launch	PDFView		NimblePDF: Avvio
+Fit to page	PDFWindow		Adatta alla pagina
+Reload file	PDFWindow		Ricarica file
+Path:	FileInfoWindow		Percorso:
+Print…	PDFWindow		Stampa…
+Copy & paste:	FileInfoWindow		Copia e incolla:
+Page %d	PDFWindow		Pagina %d
+Edit title for bookmark	OutlinesWindow		Modifica titolo del segnalibro
+Version:	FileInfoWindow		Versione:
+English.pdf	PDFWindow	Replace with the PDF name of the help document, if there is one for your language.	Italiano.pdf
+Automatic	AnnotationWindow		Automatico
+Title:	FileInfoWindow		Titolo:
+Warning	PDFWindow		Attenzione
+User defined	OutlinesWindow		Definito da utente
+Fullscreen	PDFWindow		Schermo intero
+Invert vertical mouse scrolling	PreferencesWindow		Invert vertical mouse scrolling
+Save selected attachment to file	AttachmentView		Salva l'allegato selezionato come
+Add note text annotation	PDFWindow		Aggiungi nota : annotazione
+Editing:	FileInfoWindow		Modifica:
 User password	PasswordWindow		Password utente
 Find	FindTextWindow		Trova
-Find text	FindTextWindow		Trova testo
-Find: 	FindTextWindow		Trova:
+Could not write PDF file!	PDFWindow		Impossibile scrivere file PDF!
+Filled rectangle	PreferencesWindow		Filled rectangle
 Ignore case	FindTextWindow		Non discriminare maiuscole e minuscole
-Options	FindTextWindow		Opzioni
-Page:	FindTextWindow		Pagina:
-Page: %d	FindTextWindow		Pagina: %d
-Search backwards	FindTextWindow		Ricerca retrograda
-Stop	FindTextWindow		Ferma
-OK	PDFSearch		OK
-Search string not found.	PDFSearch		Stringa di ricerca non trovata.
+Creator:	FileInfoWindow		Creatore:
+Invalid file reference received!	NimblePDFApplication		Invalid file reference received!
+Save selected attachments into directory	AttachmentView		Salva l'allegato selezionato nella cartella
+Wrong parameter!	PrintSettingsWindow		Parametro errato!
+Rotate clockwise	PDFWindow		Ruota senso orario
+Stroked rectangle	PreferencesWindow		Stroked rectangle
+Show all fonts	FileInfoWindow		Mostra tutti i font

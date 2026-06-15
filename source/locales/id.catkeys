@@ -1,254 +1,261 @@
-1	Indonesian	application/x-vnd.Haiku-NimblePDF	1765081836
- in	PrintSettingsWindow		dalam
-All pages	PrintSettingsWindow		Semua halaman
-Color	PrintSettingsWindow		Warna
-DPI	PrintSettingsWindow		DPI
-Even pages	PrintSettingsWindow		Halaman genap
-Gray scale	PrintSettingsWindow		Skala abu-abu
-Height: 	PrintSettingsWindow		Tinggi:
-Max. printer resolution	PrintSettingsWindow		Maks. resolusi printer
-Mode	PrintSettingsWindow		Moda
-Normal	PrintSettingsWindow		Normal
-Odd pages	PrintSettingsWindow		Halaman ganjil
-OK	PrintSettingsWindow		OKE
-Order	PrintSettingsWindow		Order
-Page	PrintSettingsWindow		Halaman
-Pages	PrintSettingsWindow		Halaman
-Print	PrintSettingsWindow		Mencetak
-Print settings	PrintSettingsWindow		Pengaturan cetak
-Reverse	PrintSettingsWindow		Membalikkan
-Rotation	PrintSettingsWindow		Rotasi
-Width: 	PrintSettingsWindow		Width:
-Wrong parameter!	PrintSettingsWindow		Parameter salah!
-Zoom (%)	PrintSettingsWindow		Perbesaran (%)
-Zoom must be between 25 and 400!	PrintSettingsWindow		Perbesaran harus diantara 25 dan 400!
-[internal link]	PDFView		[tautan internal]
-[link type 'movie' not supported]	PDFView		[tipe tautan 'film' tidak didukung]
-[unknown link]	PDFView		[tautan tak-diketahui]
-Annotation	PDFView		Anotasi
-NimblePDF reading file: 	PDFView		NimblePDF membaca file:
-NimblePDF: Launch	PDFView		NimblePDF: Luncurkan
-Cancel	PDFView		Batal
-Copy link	PDFView		Salin Tautan
-Delete	PDFView		Hapus
-Edit	PDFView		Sunting
-Execute the command:	PDFView		Menjalankan perintah:
-Go to page %d	PDFView		Menuju ke halaman %d
-Leave annotation editing mode	PDFView		Tinggalkan mode pengeditan anotasi
-OK	PDFView		OKE
-Open in new window	PDFView		Buka di jendela baru
-Properties	PDFView		Properti
-Save file attachment as…	PDFView		Simpan lampiran file sebagai…
-Saving file attachment:	PDFView		Menyimpan lampiran file:
-Unknown link action type: '%s'	PDFView		Jenis tindakan tautan tidak dikenal: '%s'
-<empty>	OutlinesWindow		<kosong>
-Document	OutlinesWindow		Dokumen
-Edit title for bookmark	OutlinesWindow		Sunting judul bookmark
-No title	OutlinesWindow		Tiada judul
-OK	OutlinesWindow		OKE
-User defined	OutlinesWindow		Ditetapkan pengguna
-<empty>	AttachmentView		<kosong>
-Description	AttachmentView		Deskripsi
-File name	AttachmentView		Nama berkas
-Save attachment(s) as	AttachmentView		Simpan sisipan sebagai
-Save selected attachment to file	AttachmentView		Simpan lampiran yang dipilih ke file
-Save selected attachments into directory	AttachmentView		Simpan lampiran yang dipilih ke dalam direktori
-Saving attachment(s):	AttachmentView		Simpan lampiran:
-Abort	PrintingProgressWindow		Batal
-NimblePDF printing	PrintingProgressWindow		Pencetakan NimblePDF
-NimblePDF printing document: 	PrintingProgressWindow		Pencetakan dokumen NimblePDF:
-Page:	PrintingProgressWindow		Halaman:
-Page: %d	PrintingProgressWindow		Halaman: %d
-Stop	PrintingProgressWindow		Berhenti
-Abort	FileInfoWindow		Batal
-Allowed	FileInfoWindow		Diijinkan
-Annotations:	FileInfoWindow		Catatan:
-Author:	FileInfoWindow		Penulis:
-Copy & paste:	FileInfoWindow		Salin & tempel:
-Created:	FileInfoWindow		Dibuat:
-Creator:	FileInfoWindow		Pencipta:
-Denied	FileInfoWindow		Ditolak
-Document	FileInfoWindow		Dokumen
-Editing:	FileInfoWindow		suntingan:
-Embedded name	FileInfoWindow		Nama tertanam
-Encrypted:	FileInfoWindow		Terenkripsi:
-File info	FileInfoWindow		Info berkas
-Filename:	FileInfoWindow		Namaberkas:
-Fonts of this page	FileInfoWindow		Font halaman ini
-Keywords:	FileInfoWindow		Katakunci:
-Linearized:	FileInfoWindow		Linier:
-Modified:	FileInfoWindow		Diubah:
-Name	FileInfoWindow		Nama
-No	FileInfoWindow		Tidak
-Path:	FileInfoWindow		Jalur:
-Printing:	FileInfoWindow		Pencetekan:
-Producer:	FileInfoWindow		Produsen:
-Security	FileInfoWindow		Keamanan
-Show all fonts	FileInfoWindow		Tunjukkan semua font
-Subject:	FileInfoWindow		Subyek:
-Title:	FileInfoWindow		Judul:
-Type	FileInfoWindow		Tipe
-Version:	FileInfoWindow		Versi:
-Yes	FileInfoWindow		Ya
-About NimblePDF…	PDFWindow		Tentang NimblePDF…
-Add	PDFWindow		Tambah
-Add circle annotation	PDFWindow		Tambahkan anotasi lingkaran
-Add comment text annotation	PDFWindow		Tambahkan anotasi teks komentar
-Add file attachment annotation	PDFWindow		Tambahkan anotasi lampiran file
-Add free text annotation	PDFWindow		Tambahkan anotasi teks bebas
-Add help text annotation	PDFWindow		Tambahkan anotasi teks bantuan
-Add highlight annotation	PDFWindow		Tambahkan anotasi sorot
-Add ink annotation	PDFWindow		Tambahkan anotasi tinta
-Add insert text annotation	PDFWindow		Tambahkan sisipan anotasi teks
-Add key text annotation	PDFWindow		Tambahkan anotasi teks kunci
-Add line annotation	PDFWindow		Tambahkan anotasi garis
-Add link annotation	PDFWindow		Tambahkan anotasi tautan
-Add movie annotation	PDFWindow		Tambahkan anotasi film
-Add new paragraph text annotation	PDFWindow		Tambahkan anotasi teks paragraf baru
-Add note text annotation	PDFWindow		Tambahkan catatan teks catatan
-Add paragraph text annotation	PDFWindow		Tambahkan anotasi teks paragraf
-Add popup annotation	PDFWindow		Tambahkan anotasi munculan
-Add printer mark annotation	PDFWindow		Tambahkan anotasi tanda pencetak
-Add sound annotation	PDFWindow		Tambahkan anotasi suara
-Add square annotation	PDFWindow		Tambahkan anotasi persegi
-Add squiggly annotation	PDFWindow		Tambahkan anotasi bentuk-lekukan
-Add stamp annotation	PDFWindow		Tambahkan anotasi stempel
-Add strikeout annotation	PDFWindow		Tambahkan anotasi coretan
-Add trapnet annotation	PDFWindow		Tambahkan anotasi trapnet
-Add underline annotation	PDFWindow		Tambahkan anotasi garis bawah
-Add widget annotation	PDFWindow		Tambahkan anotasi widget
-Back	PDFWindow		Kembali
-Back in page history list	PDFWindow		Kembali ke daftar riwayat halaman
-Bookmark	PDFWindow		Penunjuk halaman buku
-Can not overwrite a PDF file that's currently opened in NimblePDF! Please choose another file name.	PDFWindow		Tidak dapat menimpa file PDF yang saat ini dibuka di NimblePDF! Silakan pilih nama file lain.
-Close	PDFWindow		Tutup
-Copy selection	PDFWindow		Salin pilihan
-Could not write PDF file!	PDFWindow		Tidak dapat menulis file PDF!
-Custom zoom factor (%d%%)	PDFWindow		Faktor pembesaran kastem(%d%%)
-Delete	PDFWindow		Hapus
-Edit	PDFWindow		Sunting
+1	Indonesian	application/x-vnd.Haiku-NimblePDF	777513411
 Editing of annotations in an encrypted PDF file isn't supported yet!	PDFWindow		Mengedit anotasi dalam file PDF terenkripsi belum didukung!
-English.pdf	PDFWindow	Replace with the PDF name of the help document, if there is one for your language.	English.pdf
-File	PDFWindow		Berkas
-File info…	PDFWindow		Info file…
-Find	PDFWindow		Menemukan
+Cancel	PDFView		Batal
+NimblePDF printing document: 	PrintingProgressWindow		Pencetakan dokumen NimblePDF:
+Go to previous page	PDFWindow		ke halaman sebelumnya
+Subject:	FileInfoWindow		Subyek:
+Add strikeout annotation	PDFWindow		Tambahkan anotasi coretan
+Owner password	PasswordWindow		Sandi pemilik
+NimblePDF: Error opening file!	NimblePDFApplication		NimblePDF: Ada kesalahan saat buka berkas!
+Alpha	NimblePDFApplication		Alfa
+Show document view only	PreferencesWindow		Show document view only
+NimblePDF printing	PrintingProgressWindow		Pencetakan NimblePDF
+Rendering engine	NimblePDFApplication		Rendering engine
+NimblePDF is free software under the GNU General Public License, version 2 or (at your option) any later version.	NimblePDFApplication		NimblePDF is free software under the GNU General Public License, version 2 or (at your option) any later version.
+Add insert text annotation	PDFWindow		Tambahkan sisipan anotasi teks
+Unknown	NimblePDFApplication		Tak-diketahui
+Delete	PDFWindow		Hapus
+A fast, full-featured PDF reader for Haiku.	NimblePDFApplication		A fast, full-featured PDF reader for Haiku.
+Color	PrintSettingsWindow		Warna
+View	PDFWindow		Tinjau
+Search string not found.	PDFSearch		Pencarian kata tidak ditemukan.
+Normal	PrintSettingsWindow		Normal
+Add widget annotation	PDFWindow		Tambahkan anotasi widget
+Rendering by poppler %s.	NimblePDFApplication	poppler version	Rendering by poppler %s.
+Asian fonts	PreferencesWindow		Asian fonts
+Zoom in	PDFWindow		Perbesar
+Page:	FindTextWindow		Halaman:
+Rotation	PrintSettingsWindow		Rotasi
+Error messages	TraceWindow		Pesan kesalahan
+Jump to page	PDFWindow		Lompat ke halaman
+Mode	PrintSettingsWindow		Moda
+Save as…	PDFWindow		Simpan sebagai…
+Execute the command:	PDFView		Menjalankan perintah:
+Open in workspace:	PreferencesWindow		Open in workspace:
+Author	PreferencesWindow		Author
+Issue tracker…	PDFWindow		Pelacak masalah…
+NimblePDF status	StatusWindow		status NimblePDF
+Can not overwrite a PDF file that's currently opened in NimblePDF! Please choose another file name.	PDFWindow		Tidak dapat menimpa file PDF yang saat ini dibuka di NimblePDF! Silakan pilih nama file lain.
+Printing:	FileInfoWindow		Pencetekan:
+Font:	AnnotationWindow		Fonta:
+User fonts	PreferencesWindow		User fonts
+Zoom must be between 25 and 400!	PrintSettingsWindow		Perbesaran harus diantara 25 dan 400!
+Save attachment(s) as	AttachmentView		Simpan sisipan sebagai
+Open…	PDFWindow		Buka…
+NimblePDF reading file: 	PDFView		NimblePDF membaca file:
+OK	PDFView		OKE
+Date:	AnnotationWindow		Tanggal:
+Show page list	PDFWindow		Tampilkan daftar halaman
+Restore page number	PreferencesWindow		Restore page number
+OK	PasswordWindow		OKE
+Name	FileInfoWindow		Nama
+Document	OutlinesWindow		Dokumen
+Hide side bar	PDFWindow		Sembunyikan bilah samping
+Page setup…	PDFWindow		Pengaturan halaman…
+Add ink annotation	PDFWindow		Tambahkan anotasi tinta
+Source code	NimblePDFApplication		Source code
+Find: 	FindTextWindow		Temukan:
+Zoom	PDFWindow		Perbesaran
+Based on BePDF	NimblePDFApplication		Based on BePDF
+Go to next page	PDFWindow		Ke halaman berikutnya
+Add square annotation	PDFWindow		Tambahkan anotasi persegi
+[internal link]	PDFView		[tautan internal]
+Fonts of this page	FileInfoWindow		Font halaman ini
+Last	PDFWindow		Terakhir
+About NimblePDF…	PDFWindow		Tentang NimblePDF…
+Abort	FileInfoWindow		Batal
+Restore window position and size	PreferencesWindow		Restore window position and size
 Find next	PDFWindow		Temukan selanjutnya
-Find next…	PDFWindow		Temukan selanjutnya
-Find…	PDFWindow		Temukan…
-First	PDFWindow		Pertama
-Fit to page	PDFWindow		Sesuaikan dengan halaman
-Fit to page width	PDFWindow		Sesuaikan dengan lebar halaman
-Forward	PDFWindow		Selanjutnya
-Forward in page history list	PDFWindow		Selanjutnya dalam daftar riwayat halaman
-Fullscreen	PDFWindow		LayarPenuh
-Fullscreen mode	PDFWindow		Mode LayarPenuh
+All pages	PrintSettingsWindow		Semua halaman
+Show annotation toolbar	PDFWindow		Tampilkan bilah alat anotasi
+File name	AttachmentView		Nama berkas
+Go to start of document	PDFWindow		Pergi ke awal dari dokumen
 Go back 10 pages	PDFWindow		Mundur 10 halaman
 Go forward 10 pages	PDFWindow		Maju 10 halaman
-Go to end of document	PDFWindow		Menuju ke akhir dokumen
-Go to next page	PDFWindow		Ke halaman berikutnya
-Go to previous page	PDFWindow		ke halaman sebelumnya
-Go to start of document	PDFWindow		Pergi ke awal dari dokumen
-Help	PDFWindow		Tolong
-Hide side bar	PDFWindow		Sembunyikan bilah samping
-Issue tracker…	PDFWindow		Pelacak masalah…
-Jump to page	PDFWindow		Lompat ke halaman
-Last	PDFWindow		Terakhir
-Leave annotation editing mode	PDFWindow		Tinggalkan mode pengeditan anotasi
-Next	PDFWindow		Selanjutnya
-of %d	PDFWindow		dari %d
-OK	PDFWindow		OKE
-Online help…	PDFWindow		Bantuan online…
-Open file	PDFWindow		Membuka berkas
-Open in new window…	PDFWindow		Buka di jendela baru…
-Open…	PDFWindow		Buka…
-Page	PDFWindow		Halaman
-Page %d	PDFWindow		Halaman %d
-Page setup…	PDFWindow		Pengaturan halaman…
-PDF file successfully written!	PDFWindow		File PDF berhasil ditulis!
-Preferences…	PDFWindow		Preferensi…
-Previous	PDFWindow		Sebelumya
-Print	PDFWindow		Cetak
-Print…	PDFWindow		Cetak…
-Quit	PDFWindow		Keluar
-Reload	PDFWindow		Muat-ulang
-Reload file	PDFWindow		Muat ulang file
-Rotate clockwise	PDFWindow		Putar searah jarum jam
-Rotate counter-clockwise	PDFWindow		Putar berlawanan arah jarum jam
-Rotation	PDFWindow		Rotasi
-Save as…	PDFWindow		Simpan sebagai…
-Save file as	PDFWindow		Simpan file sebagai
-Saving copy of PDF file:	PDFWindow		Menyimpan salinan file PDF:
-Search	PDFWindow		Pencarian
-Select all	PDFWindow		Pilih Semua
-Select none	PDFWindow		Takada yang dipilih
+Add file attachment annotation	PDFWindow		Tambahkan anotasi lampiran file
+System fonts	PreferencesWindow		System fonts
 Show annotation tool bar	PDFWindow		Tampilkan bilah alat anotasi
-Show annotation toolbar	PDFWindow		Tampilkan bilah alat anotasi
-Show attachments	PDFWindow		Tampilkan lampiran
+Fit to page width	PDFWindow		Sesuaikan dengan lebar halaman
+DPI	PrintSettingsWindow		DPI
+Find…	PDFWindow		Temukan…
+Odd pages	PrintSettingsWindow		Halaman ganjil
+Add sound annotation	PDFWindow		Tambahkan anotasi suara
 Show bookmarks	PDFWindow		Tampilkan bookmark
-Show error messages	PDFWindow		Tampilkan pesan kesalahan
-Show help…	PDFWindow		Menunjukkan bantuan…
-Show page list	PDFWindow		Tampilkan daftar halaman
-View	PDFWindow		Tinjau
-Visit homepage…	PDFWindow		Kunjungi laman…
-Warning	PDFWindow		Peringatan
-Zoom	PDFWindow		Perbesaran
-Zoom in	PDFWindow		Perbesar
-Zoom out	PDFWindow		Perkecil
-Align:	AnnotationWindow		Rata:
-Annotation	AnnotationWindow		Anotasi
-Asian fonts	AnnotationWindow		Font asia
-Author	AnnotationWindow		Penulis
-Automatic	AnnotationWindow		Otomatis
-current	AnnotationWindow		sekarang
-Date:	AnnotationWindow		Tanggal:
-Display	AnnotationWindow		Tampilan
-Document	AnnotationWindow		Dokumen
-Filled rectangle	AnnotationWindow		Persegi terisi
-Font:	AnnotationWindow		Fonta:
-Fullscreen mode	AnnotationWindow		Moda layar penuh
-Invert vertical mouse scrolling	AnnotationWindow		Balikkan gulir mouse vertikal
-Open in workspace:	AnnotationWindow		buka di workspace:
-Preferences	AnnotationWindow		Preferensi
-Restore page number	AnnotationWindow		Kembalikan nomor halaman
-Restore window position and size	AnnotationWindow		Kembalikan posisi dan ukuran jendela
-Selection rectangle	AnnotationWindow		Seleksi persegi
-Show document view only	AnnotationWindow		Tampilkan hanya tampilan dokumen
-Show toolbar, statusbar and scrollbars, too	AnnotationWindow		Tampilkan juga bilah alat, bilah status, dan bilah gulir
-Size:	AnnotationWindow		Ukuran:
-Stroked rectangle	AnnotationWindow		Persegi tercoret
-System fonts	AnnotationWindow		Huruf system
-Title:	AnnotationWindow		Judul:
-User fonts	AnnotationWindow		Huruf user
-Will take effect at next program launch.	AnnotationWindow		Akan berlaku pada peluncuran program berikutnya.
-Alpha	NimblePDFApplication		Alfa
-NimblePDF is based on XPDF %s, %s.	NimblePDFApplication	XPDF version, copyright	NimblePDF didasarkan pada XPDF %s, %s.
-NimblePDF: Error opening file!	NimblePDFApplication		NimblePDF: Ada kesalahan saat buka berkas!
-Beta	NimblePDFApplication		Beta
-Close	NimblePDFApplication		Tutup
-Development	NimblePDFApplication		Pengembangan
-Error	NimblePDFApplication		Kesalahan
-Final	NimblePDFApplication		Final
-Gamma	NimblePDFApplication		Gama
-Golden Master	NimblePDFApplication		Master emas
-Unknown	NimblePDFApplication		Tak-diketahui
-Version	NimblePDFApplication		Versi
-Auto open	TraceWindow		buka Auto
+Max. printer resolution	PrintSettingsWindow		Maks. resolusi printer
+Quit	PDFWindow		Keluar
+Options	FindTextWindow		Pilihan
+File	PDFWindow		Berkas
+Fullscreen mode	PDFWindow		Mode LayarPenuh
+Find text	FindTextWindow		Temukan teks
 Clear	TraceWindow		Bersih
-Error messages	TraceWindow		Pesan kesalahan
-Floating	TraceWindow		Mengambang
-NimblePDF status	StatusWindow		status NimblePDF
+Print	PrintSettingsWindow		Mencetak
 Enter Password	PasswordWindow		Masukkan sandi
-OK	PasswordWindow		OKE
-Owner password	PasswordWindow		Sandi pemilik
+Online help…	PDFWindow		Bantuan online…
+Filename:	FileInfoWindow		Namaberkas:
+Document	PreferencesWindow		Document
+Embedded name	FileInfoWindow		Nama tertanam
+Close	NimblePDFApplication		Tutup
+Copy link	PDFView		Salin Tautan
+First	PDFWindow		Pertama
+Add	PDFWindow		Tambah
+<empty>	AttachmentView		<kosong>
+Open in new window…	PDFWindow		Buka di jendela baru…
+Preferences…	PDFWindow		Preferensi…
+Beta	NimblePDFApplication		Beta
+OK	PDFSearch		OKE
+Delete	PDFView		Hapus
+Zoom (%)	PrintSettingsWindow		Perbesaran (%)
+Type	FileInfoWindow		Tipe
+Custom zoom factor (%d%%)	PDFWindow		Faktor pembesaran kastem(%d%%)
+Add stamp annotation	PDFWindow		Tambahkan anotasi stempel
+Abort	PrintingProgressWindow		Batal
+Align:	AnnotationWindow		Rata:
+Go to end of document	PDFWindow		Menuju ke akhir dokumen
+Auto open	TraceWindow		buka Auto
+Back	PDFWindow		Kembali
+Pages	PrintSettingsWindow		Halaman
+Add movie annotation	PDFWindow		Tambahkan anotasi film
+Add circle annotation	PDFWindow		Tambahkan anotasi lingkaran
+Show error messages	PDFWindow		Tampilkan pesan kesalahan
+Golden Master	NimblePDFApplication		Master emas
+Document	FileInfoWindow		Dokumen
+Width: 	PrintSettingsWindow		Width:
+Author:	FileInfoWindow		Penulis:
+Add highlight annotation	PDFWindow		Tambahkan anotasi sorot
+Add new paragraph text annotation	PDFWindow		Tambahkan anotasi teks paragraf baru
+of %d	PDFWindow		dari %d
+Security	FileInfoWindow		Keamanan
+Denied	FileInfoWindow		Ditolak
+Save file as	PDFWindow		Simpan file sebagai
+Order	PrintSettingsWindow		Order
+Properties	PDFView		Properti
+Add comment text annotation	PDFWindow		Tambahkan anotasi teks komentar
+Description	AttachmentView		Deskripsi
+Add underline annotation	PDFWindow		Tambahkan anotasi garis bawah
+Development	NimblePDFApplication		Pengembangan
+Saving copy of PDF file:	PDFWindow		Menyimpan salinan file PDF:
+Page: %d	FindTextWindow		Halaman: %d
+Page	PDFWindow		Halaman
+Add squiggly annotation	PDFWindow		Tambahkan anotasi bentuk-lekukan
+Annotation	PDFView		Anotasi
+Add trapnet annotation	PDFWindow		Tambahkan anotasi trapnet
+Producer:	FileInfoWindow		Produsen:
+Keywords:	FileInfoWindow		Katakunci:
+Forward in page history list	PDFWindow		Selanjutnya dalam daftar riwayat halaman
+Page:	PrintingProgressWindow		Halaman:
+Error getting page number!	NimblePDFApplication		Error getting page number!
+Find next…	PDFWindow		Temukan selanjutnya
+Visit homepage…	PDFWindow		Kunjungi laman…
+Even pages	PrintSettingsWindow		Halaman genap
+Stop	FindTextWindow		Berhenti
+Print	PDFWindow		Cetak
+Add link annotation	PDFWindow		Tambahkan anotasi tautan
+ in	PrintSettingsWindow		dalam
+Fullscreen mode	PreferencesWindow		Fullscreen mode
+[link type 'movie' not supported]	PDFView		[tipe tautan 'film' tidak didukung]
+Annotation	AnnotationWindow		Anotasi
+Bookmark	PDFWindow		Penunjuk halaman buku
+Next	PDFWindow		Selanjutnya
+Reverse	PrintSettingsWindow		Membalikkan
+Page: %d	PrintingProgressWindow		Halaman: %d
+Select none	PDFWindow		Takada yang dipilih
+Rotate counter-clockwise	PDFWindow		Putar berlawanan arah jarum jam
+<empty>	OutlinesWindow		<kosong>
+Error	NimblePDFApplication		Kesalahan
+Add key text annotation	PDFWindow		Tambahkan anotasi teks kunci
+Forward	PDFWindow		Selanjutnya
+Size:	AnnotationWindow		Ukuran:
+Zoom out	PDFWindow		Perkecil
+Display	PreferencesWindow		Display
+Modified:	FileInfoWindow		Diubah:
+License	NimblePDFApplication		License
+Preferences	PreferencesWindow		Preferences
+Go to page %d	PDFView		Menuju ke halaman %d
+OK	OutlinesWindow		OKE
+Copy selection	PDFWindow		Salin pilihan
+Final	NimblePDFApplication		Final
+Annotations:	FileInfoWindow		Catatan:
+Select all	PDFWindow		Pilih Semua
+PDF file successfully written!	PDFWindow		File PDF berhasil ditulis!
+OK	PDFWindow		OKE
+Previous	PDFWindow		Sebelumya
+File info	FileInfoWindow		Info berkas
+Gamma	NimblePDFApplication		Gama
+Search	PDFWindow		Pencarian
+Leave annotation editing mode	PDFView		Tinggalkan mode pengeditan anotasi
+Edit	PDFView		Sunting
+Saving attachment(s):	AttachmentView		Simpan lampiran:
+Leave annotation editing mode	PDFWindow		Tinggalkan mode pengeditan anotasi
+OK	PrintSettingsWindow		OKE
+Add free text annotation	PDFWindow		Tambahkan anotasi teks bebas
+Open file	PDFWindow		Membuka berkas
+Print settings	PrintSettingsWindow		Pengaturan cetak
+Back in page history list	PDFWindow		Kembali ke daftar riwayat halaman
+Find	PDFWindow		Menemukan
+Yes	FileInfoWindow		Ya
+[unknown link]	PDFView		[tautan tak-diketahui]
+Floating	TraceWindow		Mengambang
+Add help text annotation	PDFWindow		Tambahkan anotasi teks bantuan
+Stop	PrintingProgressWindow		Berhenti
+Add popup annotation	PDFWindow		Tambahkan anotasi munculan
+Show attachments	PDFWindow		Tampilkan lampiran
+Edit	PDFWindow		Sunting
+Show help…	PDFWindow		Menunjukkan bantuan…
+Add printer mark annotation	PDFWindow		Tambahkan anotasi tanda pencetak
+Search backwards	FindTextWindow		Search backwards
+Reload	PDFWindow		Muat-ulang
+Add line annotation	PDFWindow		Tambahkan anotasi garis
+Help	PDFWindow		Tolong
+Will take effect at next program launch.	PreferencesWindow		Will take effect at next program launch.
+NimblePDF is a fork of BePDF, the long-running Haiku PDF reader, with the original xpdf engine replaced by poppler.	NimblePDFApplication		NimblePDF is a fork of BePDF, the long-running Haiku PDF reader, with the original xpdf engine replaced by poppler.
+Rotation	PDFWindow		Rotasi
+Encrypted:	FileInfoWindow		Terenkripsi:
+Gray scale	PrintSettingsWindow		Skala abu-abu
+Save file attachment as…	PDFView		Simpan lampiran file sebagai…
+Show toolbar, statusbar and scrollbars, too	PreferencesWindow		Show toolbar, statusbar and scrollbars, too
+Close	PDFWindow		Tutup
+No title	OutlinesWindow		Tiada judul
+Page	PrintSettingsWindow		Halaman
+current	PreferencesWindow		current
+Created:	FileInfoWindow		Dibuat:
+Title:	AnnotationWindow		Judul:
+Saving file attachment:	PDFView		Menyimpan lampiran file:
+Open in new window	PDFView		Buka di jendela baru
+Height: 	PrintSettingsWindow		Tinggi:
+File info…	PDFWindow		Info file…
+Allowed	FileInfoWindow		Diijinkan
+Add paragraph text annotation	PDFWindow		Tambahkan anotasi teks paragraf
+Selection rectangle	PreferencesWindow		Selection rectangle
+Linearized:	FileInfoWindow		Linier:
+No	FileInfoWindow		Tidak
+NimblePDF: Launch	PDFView		NimblePDF: Luncurkan
+Fit to page	PDFWindow		Sesuaikan dengan halaman
+Reload file	PDFWindow		Muat ulang file
+Path:	FileInfoWindow		Jalur:
+Print…	PDFWindow		Cetak…
+Copy & paste:	FileInfoWindow		Salin & tempel:
+Page %d	PDFWindow		Halaman %d
+Edit title for bookmark	OutlinesWindow		Sunting judul bookmark
+Version:	FileInfoWindow		Versi:
+English.pdf	PDFWindow	Replace with the PDF name of the help document, if there is one for your language.	English.pdf
+Automatic	AnnotationWindow		Otomatis
+Title:	FileInfoWindow		Judul:
+Warning	PDFWindow		Peringatan
+User defined	OutlinesWindow		Ditetapkan pengguna
+Fullscreen	PDFWindow		LayarPenuh
+Invert vertical mouse scrolling	PreferencesWindow		Invert vertical mouse scrolling
+Save selected attachment to file	AttachmentView		Simpan lampiran yang dipilih ke file
+Add note text annotation	PDFWindow		Tambahkan catatan teks catatan
+Editing:	FileInfoWindow		suntingan:
 User password	PasswordWindow		Sandi pengguna
 Find	FindTextWindow		Temukan
-Find text	FindTextWindow		Temukan teks
-Find: 	FindTextWindow		Temukan:
+Could not write PDF file!	PDFWindow		Tidak dapat menulis file PDF!
+Filled rectangle	PreferencesWindow		Filled rectangle
 Ignore case	FindTextWindow		Abaikan besar-kecil huruf
-Options	FindTextWindow		Pilihan
-Page:	FindTextWindow		Halaman:
-Page: %d	FindTextWindow		Halaman: %d
-Search backwards	FindTextWindow		Search backwards
-Stop	FindTextWindow		Berhenti
-OK	PDFSearch		OKE
-Search string not found.	PDFSearch		Pencarian kata tidak ditemukan.
+Creator:	FileInfoWindow		Pencipta:
+Invalid file reference received!	NimblePDFApplication		Invalid file reference received!
+Save selected attachments into directory	AttachmentView		Simpan lampiran yang dipilih ke dalam direktori
+Wrong parameter!	PrintSettingsWindow		Parameter salah!
+Rotate clockwise	PDFWindow		Putar searah jarum jam
+Stroked rectangle	PreferencesWindow		Stroked rectangle
+Show all fonts	FileInfoWindow		Tunjukkan semua font

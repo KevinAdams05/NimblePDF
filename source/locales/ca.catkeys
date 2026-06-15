@@ -1,254 +1,261 @@
-1	Catalan	application/x-vnd.Haiku-NimblePDF	1765081836
- in	PrintSettingsWindow		 a
-All pages	PrintSettingsWindow		Totes les pàgines
-Color	PrintSettingsWindow		Color
-DPI	PrintSettingsWindow		DPI
-Even pages	PrintSettingsWindow		Pàgines parells
-Gray scale	PrintSettingsWindow		Escala de grisos
-Height: 	PrintSettingsWindow		Alçada: 
-Max. printer resolution	PrintSettingsWindow		Resolució màx. de la impressora
-Mode	PrintSettingsWindow		Mode
-Normal	PrintSettingsWindow		Normal
-Odd pages	PrintSettingsWindow		Pàgines senars
-OK	PrintSettingsWindow		D'acord
-Order	PrintSettingsWindow		Ordre
-Page	PrintSettingsWindow		Pàgina
-Pages	PrintSettingsWindow		Pàgines
-Print	PrintSettingsWindow		Imprimeix
-Print settings	PrintSettingsWindow		Configuració de la impressió
-Reverse	PrintSettingsWindow		Inversa
-Rotation	PrintSettingsWindow		Rotació
-Width: 	PrintSettingsWindow		Amplada: 
-Wrong parameter!	PrintSettingsWindow		Paràmetre incorrecte!
-Zoom (%)	PrintSettingsWindow		Ampliació (%)
-Zoom must be between 25 and 400!	PrintSettingsWindow		L'ampliació ha de ser d'entre 25 i 400!
-[internal link]	PDFView		[enllaç intern]
-[link type 'movie' not supported]	PDFView		[no s'admet el tipus d'enllaç "movie"]
-[unknown link]	PDFView		[enllaç desconegut]
-Annotation	PDFView		Anotació
-NimblePDF reading file: 	PDFView		Fitxer de lectura de NimblePDF:
-NimblePDF: Launch	PDFView		NimblePDF: inicia
-Cancel	PDFView		Cancel·la
-Copy link	PDFView		Copia l'enllaç
-Delete	PDFView		Suprimeix
-Edit	PDFView		Edita
-Execute the command:	PDFView		Executa l'ordre:
-Go to page %d	PDFView		Ves a la pàgina %d
-Leave annotation editing mode	PDFView		Abandona el mode d’edició d’anotacions
-OK	PDFView		D'acord
-Open in new window	PDFView		Obre en una finestra nova
-Properties	PDFView		Propietats
-Save file attachment as…	PDFView		Desa el fitxer adjunt com a...
-Saving file attachment:	PDFView		Es desa el fitxer adjunt:
-Unknown link action type: '%s'	PDFView		Tipus d'acció d'enllaç desconegut: %s
-<empty>	OutlinesWindow		<buit>
-Document	OutlinesWindow		Document
-Edit title for bookmark	OutlinesWindow		Edita el títol per al marcador
-No title	OutlinesWindow		Sense títol
-OK	OutlinesWindow		D'acord
-User defined	OutlinesWindow		Definit per l'usuari
-<empty>	AttachmentView		<buit>
-Description	AttachmentView		Descripció
-File name	AttachmentView		Nom del fitxer
-Save attachment(s) as	AttachmentView		Desa els adjunts com a
-Save selected attachment to file	AttachmentView		Desa l'adjunt seleccionat en un fitxer
-Save selected attachments into directory	AttachmentView		Desa els adjunts seleccionats en un directori
-Saving attachment(s):	AttachmentView		Es desen els adjunts:
-Abort	PrintingProgressWindow		Avorta
-NimblePDF printing	PrintingProgressWindow		El NimblePDF imprimeix
-NimblePDF printing document: 	PrintingProgressWindow		Document que el NimblePDF imprimeix:
-Page:	PrintingProgressWindow		Pàgina:
-Page: %d	PrintingProgressWindow		Pàgina: %d
-Stop	PrintingProgressWindow		Atura
-Abort	FileInfoWindow		Avorta
-Allowed	FileInfoWindow		Permès
-Annotations:	FileInfoWindow		Anotacions:
-Author:	FileInfoWindow		Autor:
-Copy & paste:	FileInfoWindow		Copia i enganxa:
-Created:	FileInfoWindow		Creat:
-Creator:	FileInfoWindow		Creador:
-Denied	FileInfoWindow		Denegat
-Document	FileInfoWindow		Document
-Editing:	FileInfoWindow		Edició:
-Embedded name	FileInfoWindow		Nom encastat
-Encrypted:	FileInfoWindow		Encriptat:
-File info	FileInfoWindow		Informació del fitxer
-Filename:	FileInfoWindow		Nom del fitxer:
-Fonts of this page	FileInfoWindow		Codi d'aquesta pàgina
-Keywords:	FileInfoWindow		Paraules clau:
-Linearized:	FileInfoWindow		Linealitzat:
-Modified:	FileInfoWindow		Modificat:
-Name	FileInfoWindow		Nom
-No	FileInfoWindow		No
-Path:	FileInfoWindow		Camí:
-Printing:	FileInfoWindow		Impressió:
-Producer:	FileInfoWindow		Productor:
-Security	FileInfoWindow		Seguretat
-Show all fonts	FileInfoWindow		Mostra totes les lletres
-Subject:	FileInfoWindow		Assumpte:
-Title:	FileInfoWindow		Títol:
-Type	FileInfoWindow		Tipus
-Version:	FileInfoWindow		Versió:
-Yes	FileInfoWindow		Sí
-About NimblePDF…	PDFWindow		Quant a NimblePDF…
-Add	PDFWindow		Afegeix
-Add circle annotation	PDFWindow		Afegeix una anotació de cercle
-Add comment text annotation	PDFWindow		Afegeix una anotació de text de comentari
-Add file attachment annotation	PDFWindow		Afegeix una anotació de fitxer adjunt
-Add free text annotation	PDFWindow		Afegeix una anotació de text lliure
-Add help text annotation	PDFWindow		Afegeix una anotació de text d’ajuda
-Add highlight annotation	PDFWindow		Afegeix una anotació destacada
-Add ink annotation	PDFWindow		Afegeix una anotació de tinta
-Add insert text annotation	PDFWindow		Afegeix una anotació d'inserció de text
-Add key text annotation	PDFWindow		Afegeix una anotació de text clau
-Add line annotation	PDFWindow		Afegeix una anotació de línia
-Add link annotation	PDFWindow		Afegeix una anotació d'enllaç
-Add movie annotation	PDFWindow		Afegeix una anotació de pel·lícula
-Add new paragraph text annotation	PDFWindow		Afegeix una anotació de text de paràgraf nou
-Add note text annotation	PDFWindow		Afegeix una anotació de text de nota
-Add paragraph text annotation	PDFWindow		Afegeix una anotació de text de paràgraf
-Add popup annotation	PDFWindow		Afegeix una anotació emergent
-Add printer mark annotation	PDFWindow		Afegeix una anotació de marca d'impressora
-Add sound annotation	PDFWindow		Afegeix una anotació de so
-Add square annotation	PDFWindow		Afegeix una anotació quadrada
-Add squiggly annotation	PDFWindow		Afegeix una anotació de línia serpentejant
-Add stamp annotation	PDFWindow		Afegeix una anotació de segell
-Add strikeout annotation	PDFWindow		Afegeix una anotació de ratllada
-Add trapnet annotation	PDFWindow		Afegiu una anotació de tampa de xarxa
-Add underline annotation	PDFWindow		Afegeix una anotació de subratllat
-Add widget annotation	PDFWindow		Afegeix una anotació de giny
-Back	PDFWindow		Enrere
-Back in page history list	PDFWindow		Enrere en la llista de l'historial de pàgines
-Bookmark	PDFWindow		Marcador
-Can not overwrite a PDF file that's currently opened in NimblePDF! Please choose another file name.	PDFWindow		No es pot sobreescriure un fitxer PDF obert actualment al NimblePDF! Si us plau, trieu un altre nom de fitxer.
-Close	PDFWindow		Tanca
-Copy selection	PDFWindow		Copia la selecció
-Could not write PDF file!	PDFWindow		No s'ha pogut escriure el fitxer PDF!
-Custom zoom factor (%d%%)	PDFWindow		Zoom personalitzat (%d%%)
-Delete	PDFWindow		Suprimeix
-Edit	PDFWindow		Edita
+1	Catalan	application/x-vnd.Haiku-NimblePDF	777513411
 Editing of annotations in an encrypted PDF file isn't supported yet!	PDFWindow		L'edició de les anotacions en un fitxer PDF encriptat encara no s'admet.
-English.pdf	PDFWindow	Replace with the PDF name of the help document, if there is one for your language.	English.pdf
-File	PDFWindow		Fitxer
-File info…	PDFWindow		Informació del fitxer...
-Find	PDFWindow		Troba
+Cancel	PDFView		Cancel·la
+NimblePDF printing document: 	PrintingProgressWindow		Document que el NimblePDF imprimeix:
+Go to previous page	PDFWindow		Ves a la pàgina anterior
+Subject:	FileInfoWindow		Assumpte:
+Add strikeout annotation	PDFWindow		Afegeix una anotació de ratllada
+Owner password	PasswordWindow		Contrasenya del propietari
+NimblePDF: Error opening file!	NimblePDFApplication		NimblePDF: error en obrir el fitxer!
+Alpha	NimblePDFApplication		Alfa
+Show document view only	PreferencesWindow		Show document view only
+NimblePDF printing	PrintingProgressWindow		El NimblePDF imprimeix
+Rendering engine	NimblePDFApplication		Rendering engine
+NimblePDF is free software under the GNU General Public License, version 2 or (at your option) any later version.	NimblePDFApplication		NimblePDF is free software under the GNU General Public License, version 2 or (at your option) any later version.
+Add insert text annotation	PDFWindow		Afegeix una anotació d'inserció de text
+Unknown	NimblePDFApplication		Desconegut
+Delete	PDFWindow		Suprimeix
+A fast, full-featured PDF reader for Haiku.	NimblePDFApplication		A fast, full-featured PDF reader for Haiku.
+Color	PrintSettingsWindow		Color
+View	PDFWindow		Visualització
+Search string not found.	PDFSearch		No s'ha trobat la cadena de cerca.
+Normal	PrintSettingsWindow		Normal
+Add widget annotation	PDFWindow		Afegeix una anotació de giny
+Rendering by poppler %s.	NimblePDFApplication	poppler version	Rendering by poppler %s.
+Asian fonts	PreferencesWindow		Asian fonts
+Zoom in	PDFWindow		Amplia
+Page:	FindTextWindow		Pàgina:
+Rotation	PrintSettingsWindow		Rotació
+Error messages	TraceWindow		Missatges d'error
+Jump to page	PDFWindow		Salta a la pàgina
+Mode	PrintSettingsWindow		Mode
+Save as…	PDFWindow		Desa com a...
+Execute the command:	PDFView		Executa l'ordre:
+Open in workspace:	PreferencesWindow		Open in workspace:
+Author	PreferencesWindow		Author
+Issue tracker…	PDFWindow		Seguiment de problemes...
+NimblePDF status	StatusWindow		Estat del NimblePDF
+Can not overwrite a PDF file that's currently opened in NimblePDF! Please choose another file name.	PDFWindow		No es pot sobreescriure un fitxer PDF obert actualment al NimblePDF! Si us plau, trieu un altre nom de fitxer.
+Printing:	FileInfoWindow		Impressió:
+Font:	AnnotationWindow		Lletra:
+User fonts	PreferencesWindow		User fonts
+Zoom must be between 25 and 400!	PrintSettingsWindow		L'ampliació ha de ser d'entre 25 i 400!
+Save attachment(s) as	AttachmentView		Desa els adjunts com a
+Open…	PDFWindow		Obre...
+NimblePDF reading file: 	PDFView		Fitxer de lectura de NimblePDF:
+OK	PDFView		D'acord
+Date:	AnnotationWindow		Data:
+Show page list	PDFWindow		Mostra la llista de pàgines
+Restore page number	PreferencesWindow		Restore page number
+OK	PasswordWindow		D'acord
+Name	FileInfoWindow		Nom
+Document	OutlinesWindow		Document
+Hide side bar	PDFWindow		Amaga la barra lateral
+Page setup…	PDFWindow		Configuració de la pàgina...
+Add ink annotation	PDFWindow		Afegeix una anotació de tinta
+Source code	NimblePDFApplication		Source code
+Find: 	FindTextWindow		Troba:
+Zoom	PDFWindow		Zoom
+Based on BePDF	NimblePDFApplication		Based on BePDF
+Go to next page	PDFWindow		Ves a la pàgina següent
+Add square annotation	PDFWindow		Afegeix una anotació quadrada
+[internal link]	PDFView		[enllaç intern]
+Fonts of this page	FileInfoWindow		Codi d'aquesta pàgina
+Last	PDFWindow		Darrera
+About NimblePDF…	PDFWindow		Quant a NimblePDF…
+Abort	FileInfoWindow		Avorta
+Restore window position and size	PreferencesWindow		Restore window position and size
 Find next	PDFWindow		Troba'n el següent
-Find next…	PDFWindow		Troba'n el següent...
-Find…	PDFWindow		Troba...
-First	PDFWindow		Primera
-Fit to page	PDFWindow		Ajusta a la pàgina
-Fit to page width	PDFWindow		Ajusta a l'amplada de la pàgina
-Forward	PDFWindow		Endavant
-Forward in page history list	PDFWindow		Endavant en la llista de pàgines de l'historial
-Fullscreen	PDFWindow		Pantalla completa
-Fullscreen mode	PDFWindow		Mode de pantalla completa
+All pages	PrintSettingsWindow		Totes les pàgines
+Show annotation toolbar	PDFWindow		Mostra la barra d’eines d’anotació
+File name	AttachmentView		Nom del fitxer
+Go to start of document	PDFWindow		Ves a l'inici del document
 Go back 10 pages	PDFWindow		Ves enrere 10 pàgines
 Go forward 10 pages	PDFWindow		Ves endavant 10 pàgines
-Go to end of document	PDFWindow		Ves al final del document
-Go to next page	PDFWindow		Ves a la pàgina següent
-Go to previous page	PDFWindow		Ves a la pàgina anterior
-Go to start of document	PDFWindow		Ves a l'inici del document
-Help	PDFWindow		Ajuda
-Hide side bar	PDFWindow		Amaga la barra lateral
-Issue tracker…	PDFWindow		Seguiment de problemes...
-Jump to page	PDFWindow		Salta a la pàgina
-Last	PDFWindow		Darrera
-Leave annotation editing mode	PDFWindow		Abandona el mode d’edició d’anotacions
-Next	PDFWindow		Següent
-of %d	PDFWindow		de %d
-OK	PDFWindow		D'acord
-Online help…	PDFWindow		Ajuda en línia...
-Open file	PDFWindow		Obre un fitxer
-Open in new window…	PDFWindow		Obre en una finestra nova...
-Open…	PDFWindow		Obre...
-Page	PDFWindow		Pàgina
-Page %d	PDFWindow		Pàgina %d
-Page setup…	PDFWindow		Configuració de la pàgina...
-PDF file successfully written!	PDFWindow		Fitxer PDF escrit correctament!
-Preferences…	PDFWindow		Preferències…
-Previous	PDFWindow		Anterior
-Print	PDFWindow		Imprimeix
-Print…	PDFWindow		Imprimeix...
-Quit	PDFWindow		Surt
-Reload	PDFWindow		Torna a carregar
-Reload file	PDFWindow		Torna a carregar el fitxer
-Rotate clockwise	PDFWindow		Gira en el sentit del rellotge
-Rotate counter-clockwise	PDFWindow		Gira en sentit antihorari
-Rotation	PDFWindow		Rotació
-Save as…	PDFWindow		Desa com a...
-Save file as	PDFWindow		Desa el fitxer com a
-Saving copy of PDF file:	PDFWindow		Es desa la còpia del fitxer PDF:
-Search	PDFWindow		Cerca
-Select all	PDFWindow		Selecciona-ho tot
-Select none	PDFWindow		Desmarca-ho tot
+Add file attachment annotation	PDFWindow		Afegeix una anotació de fitxer adjunt
+System fonts	PreferencesWindow		System fonts
 Show annotation tool bar	PDFWindow		Mostra la barra d’eines d’anotació
-Show annotation toolbar	PDFWindow		Mostra la barra d’eines d’anotació
-Show attachments	PDFWindow		Mostra els adjunts
+Fit to page width	PDFWindow		Ajusta a l'amplada de la pàgina
+DPI	PrintSettingsWindow		DPI
+Find…	PDFWindow		Troba...
+Odd pages	PrintSettingsWindow		Pàgines senars
+Add sound annotation	PDFWindow		Afegeix una anotació de so
 Show bookmarks	PDFWindow		Mostra els marcadors
-Show error messages	PDFWindow		Mostra els missatges d'error
-Show help…	PDFWindow		Mostra l'ajuda...
-Show page list	PDFWindow		Mostra la llista de pàgines
-View	PDFWindow		Visualització
-Visit homepage…	PDFWindow		Visita la pàgina d'inici
-Warning	PDFWindow		Avís
-Zoom	PDFWindow		Zoom
-Zoom in	PDFWindow		Amplia
-Zoom out	PDFWindow		Redueix
-Align:	AnnotationWindow		Alineació:
-Annotation	AnnotationWindow		Anotació
-Asian fonts	AnnotationWindow		Lletres asiàtiques
-Author	AnnotationWindow		Autor
-Automatic	AnnotationWindow		Automàtic
-current	AnnotationWindow		actual
-Date:	AnnotationWindow		Data:
-Display	AnnotationWindow		Pantalla
-Document	AnnotationWindow		Document
-Filled rectangle	AnnotationWindow		Rectangle ple
-Font:	AnnotationWindow		Lletra:
-Fullscreen mode	AnnotationWindow		Mode de pantalla completa
-Invert vertical mouse scrolling	AnnotationWindow		Inverteix el desplaçament del ratolí vertical
-Open in workspace:	AnnotationWindow		Obre a l'espai de treball:
-Preferences	AnnotationWindow		Preferències
-Restore page number	AnnotationWindow		Restaura el número de pàgina
-Restore window position and size	AnnotationWindow		Restaura la posició i la mida de la finestra
-Selection rectangle	AnnotationWindow		Rectangle de selecció
-Show document view only	AnnotationWindow		Mostra només la visualització de documents
-Show toolbar, statusbar and scrollbars, too	AnnotationWindow		Mostra la barra d’eines, la barra d’estat i les barres de desplaçament, també
-Size:	AnnotationWindow		Mida:
-Stroked rectangle	AnnotationWindow		Rectangle traçat
-System fonts	AnnotationWindow		Lletres del sistema
-Title:	AnnotationWindow		Títol:
-User fonts	AnnotationWindow		Lletres de l'usuari
-Will take effect at next program launch.	AnnotationWindow		Tindrà efecte al proper inici del programa.
-Alpha	NimblePDFApplication		Alfa
-NimblePDF is based on XPDF %s, %s.	NimblePDFApplication	XPDF version, copyright	NimblePDF està basat en XPDF %s, %s.
-NimblePDF: Error opening file!	NimblePDFApplication		NimblePDF: error en obrir el fitxer!
-Beta	NimblePDFApplication		Beta
-Close	NimblePDFApplication		Tanca
-Development	NimblePDFApplication		Desenvolupament
-Error	NimblePDFApplication		Error
-Final	NimblePDFApplication		Final
-Gamma	NimblePDFApplication		Gamma
-Golden Master	NimblePDFApplication		Mestre d’Or
-Unknown	NimblePDFApplication		Desconegut
-Version	NimblePDFApplication		Versió
-Auto open	TraceWindow		Obre automàticament
+Max. printer resolution	PrintSettingsWindow		Resolució màx. de la impressora
+Quit	PDFWindow		Surt
+Options	FindTextWindow		Opcions
+File	PDFWindow		Fitxer
+Fullscreen mode	PDFWindow		Mode de pantalla completa
+Find text	FindTextWindow		Troba el text:
 Clear	TraceWindow		Neteja
-Error messages	TraceWindow		Missatges d'error
-Floating	TraceWindow		Flotant
-NimblePDF status	StatusWindow		Estat del NimblePDF
+Print	PrintSettingsWindow		Imprimeix
 Enter Password	PasswordWindow		Escriviu la contrasenya
-OK	PasswordWindow		D'acord
-Owner password	PasswordWindow		Contrasenya del propietari
+Online help…	PDFWindow		Ajuda en línia...
+Filename:	FileInfoWindow		Nom del fitxer:
+Document	PreferencesWindow		Document
+Embedded name	FileInfoWindow		Nom encastat
+Close	NimblePDFApplication		Tanca
+Copy link	PDFView		Copia l'enllaç
+First	PDFWindow		Primera
+Add	PDFWindow		Afegeix
+<empty>	AttachmentView		<buit>
+Open in new window…	PDFWindow		Obre en una finestra nova...
+Preferences…	PDFWindow		Preferències…
+Beta	NimblePDFApplication		Beta
+OK	PDFSearch		D'acord
+Delete	PDFView		Suprimeix
+Zoom (%)	PrintSettingsWindow		Ampliació (%)
+Type	FileInfoWindow		Tipus
+Custom zoom factor (%d%%)	PDFWindow		Zoom personalitzat (%d%%)
+Add stamp annotation	PDFWindow		Afegeix una anotació de segell
+Abort	PrintingProgressWindow		Avorta
+Align:	AnnotationWindow		Alineació:
+Go to end of document	PDFWindow		Ves al final del document
+Auto open	TraceWindow		Obre automàticament
+Back	PDFWindow		Enrere
+Pages	PrintSettingsWindow		Pàgines
+Add movie annotation	PDFWindow		Afegeix una anotació de pel·lícula
+Add circle annotation	PDFWindow		Afegeix una anotació de cercle
+Show error messages	PDFWindow		Mostra els missatges d'error
+Golden Master	NimblePDFApplication		Mestre d’Or
+Document	FileInfoWindow		Document
+Width: 	PrintSettingsWindow		Amplada: 
+Author:	FileInfoWindow		Autor:
+Add highlight annotation	PDFWindow		Afegeix una anotació destacada
+Add new paragraph text annotation	PDFWindow		Afegeix una anotació de text de paràgraf nou
+of %d	PDFWindow		de %d
+Security	FileInfoWindow		Seguretat
+Denied	FileInfoWindow		Denegat
+Save file as	PDFWindow		Desa el fitxer com a
+Order	PrintSettingsWindow		Ordre
+Properties	PDFView		Propietats
+Add comment text annotation	PDFWindow		Afegeix una anotació de text de comentari
+Description	AttachmentView		Descripció
+Add underline annotation	PDFWindow		Afegeix una anotació de subratllat
+Development	NimblePDFApplication		Desenvolupament
+Saving copy of PDF file:	PDFWindow		Es desa la còpia del fitxer PDF:
+Page: %d	FindTextWindow		Pàgina: %d
+Page	PDFWindow		Pàgina
+Add squiggly annotation	PDFWindow		Afegeix una anotació de línia serpentejant
+Annotation	PDFView		Anotació
+Add trapnet annotation	PDFWindow		Afegiu una anotació de tampa de xarxa
+Producer:	FileInfoWindow		Productor:
+Keywords:	FileInfoWindow		Paraules clau:
+Forward in page history list	PDFWindow		Endavant en la llista de pàgines de l'historial
+Page:	PrintingProgressWindow		Pàgina:
+Error getting page number!	NimblePDFApplication		Error getting page number!
+Find next…	PDFWindow		Troba'n el següent...
+Visit homepage…	PDFWindow		Visita la pàgina d'inici
+Even pages	PrintSettingsWindow		Pàgines parells
+Stop	FindTextWindow		Interromp
+Print	PDFWindow		Imprimeix
+Add link annotation	PDFWindow		Afegeix una anotació d'enllaç
+ in	PrintSettingsWindow		 a
+Fullscreen mode	PreferencesWindow		Fullscreen mode
+[link type 'movie' not supported]	PDFView		[no s'admet el tipus d'enllaç "movie"]
+Annotation	AnnotationWindow		Anotació
+Bookmark	PDFWindow		Marcador
+Next	PDFWindow		Següent
+Reverse	PrintSettingsWindow		Inversa
+Page: %d	PrintingProgressWindow		Pàgina: %d
+Select none	PDFWindow		Desmarca-ho tot
+Rotate counter-clockwise	PDFWindow		Gira en sentit antihorari
+<empty>	OutlinesWindow		<buit>
+Error	NimblePDFApplication		Error
+Add key text annotation	PDFWindow		Afegeix una anotació de text clau
+Forward	PDFWindow		Endavant
+Size:	AnnotationWindow		Mida:
+Zoom out	PDFWindow		Redueix
+Display	PreferencesWindow		Display
+Modified:	FileInfoWindow		Modificat:
+License	NimblePDFApplication		License
+Preferences	PreferencesWindow		Preferences
+Go to page %d	PDFView		Ves a la pàgina %d
+OK	OutlinesWindow		D'acord
+Copy selection	PDFWindow		Copia la selecció
+Final	NimblePDFApplication		Final
+Annotations:	FileInfoWindow		Anotacions:
+Select all	PDFWindow		Selecciona-ho tot
+PDF file successfully written!	PDFWindow		Fitxer PDF escrit correctament!
+OK	PDFWindow		D'acord
+Previous	PDFWindow		Anterior
+File info	FileInfoWindow		Informació del fitxer
+Gamma	NimblePDFApplication		Gamma
+Search	PDFWindow		Cerca
+Leave annotation editing mode	PDFView		Abandona el mode d’edició d’anotacions
+Edit	PDFView		Edita
+Saving attachment(s):	AttachmentView		Es desen els adjunts:
+Leave annotation editing mode	PDFWindow		Abandona el mode d’edició d’anotacions
+OK	PrintSettingsWindow		D'acord
+Add free text annotation	PDFWindow		Afegeix una anotació de text lliure
+Open file	PDFWindow		Obre un fitxer
+Print settings	PrintSettingsWindow		Configuració de la impressió
+Back in page history list	PDFWindow		Enrere en la llista de l'historial de pàgines
+Find	PDFWindow		Troba
+Yes	FileInfoWindow		Sí
+[unknown link]	PDFView		[enllaç desconegut]
+Floating	TraceWindow		Flotant
+Add help text annotation	PDFWindow		Afegeix una anotació de text d’ajuda
+Stop	PrintingProgressWindow		Atura
+Add popup annotation	PDFWindow		Afegeix una anotació emergent
+Show attachments	PDFWindow		Mostra els adjunts
+Edit	PDFWindow		Edita
+Show help…	PDFWindow		Mostra l'ajuda...
+Add printer mark annotation	PDFWindow		Afegeix una anotació de marca d'impressora
+Search backwards	FindTextWindow		Cerca enrere
+Reload	PDFWindow		Torna a carregar
+Add line annotation	PDFWindow		Afegeix una anotació de línia
+Help	PDFWindow		Ajuda
+Will take effect at next program launch.	PreferencesWindow		Will take effect at next program launch.
+NimblePDF is a fork of BePDF, the long-running Haiku PDF reader, with the original xpdf engine replaced by poppler.	NimblePDFApplication		NimblePDF is a fork of BePDF, the long-running Haiku PDF reader, with the original xpdf engine replaced by poppler.
+Rotation	PDFWindow		Rotació
+Encrypted:	FileInfoWindow		Encriptat:
+Gray scale	PrintSettingsWindow		Escala de grisos
+Save file attachment as…	PDFView		Desa el fitxer adjunt com a...
+Show toolbar, statusbar and scrollbars, too	PreferencesWindow		Show toolbar, statusbar and scrollbars, too
+Close	PDFWindow		Tanca
+No title	OutlinesWindow		Sense títol
+Page	PrintSettingsWindow		Pàgina
+current	PreferencesWindow		current
+Created:	FileInfoWindow		Creat:
+Title:	AnnotationWindow		Títol:
+Saving file attachment:	PDFView		Es desa el fitxer adjunt:
+Open in new window	PDFView		Obre en una finestra nova
+Height: 	PrintSettingsWindow		Alçada: 
+File info…	PDFWindow		Informació del fitxer...
+Allowed	FileInfoWindow		Permès
+Add paragraph text annotation	PDFWindow		Afegeix una anotació de text de paràgraf
+Selection rectangle	PreferencesWindow		Selection rectangle
+Linearized:	FileInfoWindow		Linealitzat:
+No	FileInfoWindow		No
+NimblePDF: Launch	PDFView		NimblePDF: inicia
+Fit to page	PDFWindow		Ajusta a la pàgina
+Reload file	PDFWindow		Torna a carregar el fitxer
+Path:	FileInfoWindow		Camí:
+Print…	PDFWindow		Imprimeix...
+Copy & paste:	FileInfoWindow		Copia i enganxa:
+Page %d	PDFWindow		Pàgina %d
+Edit title for bookmark	OutlinesWindow		Edita el títol per al marcador
+Version:	FileInfoWindow		Versió:
+English.pdf	PDFWindow	Replace with the PDF name of the help document, if there is one for your language.	English.pdf
+Automatic	AnnotationWindow		Automàtic
+Title:	FileInfoWindow		Títol:
+Warning	PDFWindow		Avís
+User defined	OutlinesWindow		Definit per l'usuari
+Fullscreen	PDFWindow		Pantalla completa
+Invert vertical mouse scrolling	PreferencesWindow		Invert vertical mouse scrolling
+Save selected attachment to file	AttachmentView		Desa l'adjunt seleccionat en un fitxer
+Add note text annotation	PDFWindow		Afegeix una anotació de text de nota
+Editing:	FileInfoWindow		Edició:
 User password	PasswordWindow		Contrasenya de l’usuari
 Find	FindTextWindow		Troba
-Find text	FindTextWindow		Troba el text:
-Find: 	FindTextWindow		Troba:
+Could not write PDF file!	PDFWindow		No s'ha pogut escriure el fitxer PDF!
+Filled rectangle	PreferencesWindow		Filled rectangle
 Ignore case	FindTextWindow		Ignora'n la caixa
-Options	FindTextWindow		Opcions
-Page:	FindTextWindow		Pàgina:
-Page: %d	FindTextWindow		Pàgina: %d
-Search backwards	FindTextWindow		Cerca enrere
-Stop	FindTextWindow		Interromp
-OK	PDFSearch		D'acord
-Search string not found.	PDFSearch		No s'ha trobat la cadena de cerca.
+Creator:	FileInfoWindow		Creador:
+Invalid file reference received!	NimblePDFApplication		Invalid file reference received!
+Save selected attachments into directory	AttachmentView		Desa els adjunts seleccionats en un directori
+Wrong parameter!	PrintSettingsWindow		Paràmetre incorrecte!
+Rotate clockwise	PDFWindow		Gira en el sentit del rellotge
+Stroked rectangle	PreferencesWindow		Stroked rectangle
+Show all fonts	FileInfoWindow		Mostra totes les lletres

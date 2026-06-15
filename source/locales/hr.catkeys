@@ -1,254 +1,261 @@
-1	Croatian	application/x-vnd.Haiku-NimblePDF	1765081836
-Close	NimblePDFApplication		Zatvori
-Error	NimblePDFApplication		Greška
-Beta	NimblePDFApplication		Beta
-Gamma	NimblePDFApplication		Gama
-Golden Master	NimblePDFApplication		Golden Master
+1	Croatian	application/x-vnd.Haiku-NimblePDF	777513411
+Editing of annotations in an encrypted PDF file isn't supported yet!	PDFWindow		Editing of annotations in an encrypted PDF file isn't supported yet!
+Cancel	PDFView		Otkaži
+NimblePDF printing document: 	PrintingProgressWindow		NimblePDF printing document: 
+Go to previous page	PDFWindow		Go to previous page
+Subject:	FileInfoWindow		Subject:
+Add strikeout annotation	PDFWindow		Add strikeout annotation
+Owner password	PasswordWindow		Lozinka vlasnika
 NimblePDF: Error opening file!	NimblePDFApplication		NimblePDF: Greška pri otvaranju datoteke!
 Alpha	NimblePDFApplication		Alfa
-Version	NimblePDFApplication		Inačica
-Development	NimblePDFApplication		Razvoj
-Unknown	NimblePDFApplication		Nepoznato
-Final	NimblePDFApplication		Završno
-NimblePDF is based on XPDF %s, %s.	NimblePDFApplication	XPDF version, copyright	NimblePDF je baziran na XPDF-u %s, %s.
-Show bookmarks	PDFWindow		Show bookmarks
-of %d	PDFWindow		of %d
-Zoom in	PDFWindow		Zoom in
-About NimblePDF…	PDFWindow		O NimblePDF-u…
-Go to next page	PDFWindow		Go to next page
-View	PDFWindow		View
-Show annotation tool bar	PDFWindow		Show annotation tool bar
-Select none	PDFWindow		Select none
-Add trapnet annotation	PDFWindow		Add trapnet annotation
-Add underline annotation	PDFWindow		Add underline annotation
-Show help…	PDFWindow		Show help…
-Help	PDFWindow		Help
-Add popup annotation	PDFWindow		Add popup annotation
-Find…	PDFWindow		Find…
-Reload	PDFWindow		Reload
-First	PDFWindow		First
-Fit to page	PDFWindow		Fit to page
-Add key text annotation	PDFWindow		Add key text annotation
-File	PDFWindow		File
-PDF file successfully written!	PDFWindow		PDF file successfully written!
-Warning	PDFWindow		Warning
-Zoom out	PDFWindow		Zoom out
-Show error messages	PDFWindow		Show error messages
-Add movie annotation	PDFWindow		Add movie annotation
-Open…	PDFWindow		Open…
-Add widget annotation	PDFWindow		Add widget annotation
+Show document view only	PreferencesWindow		Show document view only
+NimblePDF printing	PrintingProgressWindow		NimblePDF printing
+Rendering engine	NimblePDFApplication		Rendering engine
+NimblePDF is free software under the GNU General Public License, version 2 or (at your option) any later version.	NimblePDFApplication		NimblePDF is free software under the GNU General Public License, version 2 or (at your option) any later version.
 Add insert text annotation	PDFWindow		Add insert text annotation
-Find	PDFWindow		Find
-Add ink annotation	PDFWindow		Add ink annotation
-Go to start of document	PDFWindow		Go to start of document
-Go to previous page	PDFWindow		Go to previous page
-Save as…	PDFWindow		Save as…
-Reload file	PDFWindow		Reload file
-Find next…	PDFWindow		Find next…
-Fullscreen mode	PDFWindow		Fullscreen mode
-Show page list	PDFWindow		Show page list
-Back	PDFWindow		Back
-Add note text annotation	PDFWindow		Add note text annotation
-Close	PDFWindow		Close
-Add printer mark annotation	PDFWindow		Add printer mark annotation
-Go forward 10 pages	PDFWindow		Go forward 10 pages
-Page %d	PDFWindow		Page %d
-Forward in page history list	PDFWindow		Forward in page history list
-Add new paragraph text annotation	PDFWindow		Add new paragraph text annotation
-Fullscreen	PDFWindow		Fullscreen
-Add sound annotation	PDFWindow		Add sound annotation
-Add comment text annotation	PDFWindow		Add comment text annotation
-Page	PDFWindow		Page
-File info…	PDFWindow		File info…
-Page setup…	PDFWindow		Page setup…
-Print	PDFWindow		Print
-Issue tracker…	PDFWindow		Issue tracker…
-Preferences…	PDFWindow		Preferences…
-Rotation	PDFWindow		Rotation
-Last	PDFWindow		Last
-Add stamp annotation	PDFWindow		Add stamp annotation
-Add squiggly annotation	PDFWindow		Add squiggly annotation
-Can not overwrite a PDF file that's currently opened in NimblePDF! Please choose another file name.	PDFWindow		Can not overwrite a PDF file that's currently opened in NimblePDF! Please choose another file name.
-Copy selection	PDFWindow		Copy selection
-Add free text annotation	PDFWindow		Add free text annotation
-Next	PDFWindow		Next
-Forward	PDFWindow		Forward
-Hide side bar	PDFWindow		Hide side bar
-Jump to page	PDFWindow		Jump to page
-Add line annotation	PDFWindow		Add line annotation
-Add circle annotation	PDFWindow		Add circle annotation
-Save file as	PDFWindow		Save file as
-Show annotation toolbar	PDFWindow		Show annotation toolbar
-Add link annotation	PDFWindow		Add link annotation
-Previous	PDFWindow		Previous
-Leave annotation editing mode	PDFWindow		Leave annotation editing mode
-Rotate clockwise	PDFWindow		Rotate clockwise
-Find next	PDFWindow		Find next
-Add strikeout annotation	PDFWindow		Add strikeout annotation
-English.pdf	PDFWindow	Replace with the PDF name of the help document, if there is one for your language.	English.pdf
-Bookmark	PDFWindow		Bookmark
-Could not write PDF file!	PDFWindow		Could not write PDF file!
-OK	PDFWindow		OK
-Add	PDFWindow		Dodaj
-Edit	PDFWindow		Edit
-Online help…	PDFWindow		Online help…
-Quit	PDFWindow		Quit
-Back in page history list	PDFWindow		Back in page history list
-Open file	PDFWindow		Open file
-Visit homepage…	PDFWindow		Visit homepage…
-Show attachments	PDFWindow		Show attachments
-Add paragraph text annotation	PDFWindow		Add paragraph text annotation
-Go back 10 pages	PDFWindow		Go back 10 pages
-Print…	PDFWindow		Print…
-Go to end of document	PDFWindow		Go to end of document
-Rotate counter-clockwise	PDFWindow		Rotate counter-clockwise
+Unknown	NimblePDFApplication		Nepoznato
 Delete	PDFWindow		Delete
-Select all	PDFWindow		Select all
-Add square annotation	PDFWindow		Add square annotation
-Fit to page width	PDFWindow		Fit to page width
+A fast, full-featured PDF reader for Haiku.	NimblePDFApplication		A fast, full-featured PDF reader for Haiku.
+Color	PrintSettingsWindow		Color
+View	PDFWindow		View
+Search string not found.	PDFSearch		Search string not found.
+Normal	PrintSettingsWindow		Normal
+Add widget annotation	PDFWindow		Add widget annotation
+Rendering by poppler %s.	NimblePDFApplication	poppler version	Rendering by poppler %s.
+Asian fonts	PreferencesWindow		Asian fonts
+Zoom in	PDFWindow		Zoom in
+Page:	FindTextWindow		Stranica:
+Rotation	PrintSettingsWindow		Rotation
+Error messages	TraceWindow		Error messages
+Jump to page	PDFWindow		Jump to page
+Mode	PrintSettingsWindow		Mode
+Save as…	PDFWindow		Save as…
+Execute the command:	PDFView		Izvrši naredbu:
+Open in workspace:	PreferencesWindow		Open in workspace:
+Author	PreferencesWindow		Author
+Issue tracker…	PDFWindow		Issue tracker…
+NimblePDF status	StatusWindow		NimblePDF status
+Can not overwrite a PDF file that's currently opened in NimblePDF! Please choose another file name.	PDFWindow		Can not overwrite a PDF file that's currently opened in NimblePDF! Please choose another file name.
+Printing:	FileInfoWindow		Ispis:
+Font:	AnnotationWindow		Font:
+User fonts	PreferencesWindow		User fonts
+Zoom must be between 25 and 400!	PrintSettingsWindow		Zoom must be between 25 and 400!
+Save attachment(s) as	AttachmentView		Spremi privitak(e) kao
+Open…	PDFWindow		Open…
+NimblePDF reading file: 	PDFView		NimblePDF reading file: 
+OK	PDFView		U redu
+Date:	AnnotationWindow		Datum:
+Show page list	PDFWindow		Show page list
+Restore page number	PreferencesWindow		Restore page number
+OK	PasswordWindow		U redu
+Name	FileInfoWindow		Ime
+Document	OutlinesWindow		Dokument
+Hide side bar	PDFWindow		Hide side bar
+Page setup…	PDFWindow		Page setup…
+Add ink annotation	PDFWindow		Add ink annotation
+Source code	NimblePDFApplication		Source code
+Find: 	FindTextWindow		Nađi:
 Zoom	PDFWindow		Zoom
-Search	PDFWindow		Search
-Editing of annotations in an encrypted PDF file isn't supported yet!	PDFWindow		Editing of annotations in an encrypted PDF file isn't supported yet!
-Saving copy of PDF file:	PDFWindow		Saving copy of PDF file:
-Add help text annotation	PDFWindow		Add help text annotation
-Custom zoom factor (%d%%)	PDFWindow		Custom zoom factor (%d%%)
-Open in new window…	PDFWindow		Open in new window…
-Add highlight annotation	PDFWindow		Add highlight annotation
+Based on BePDF	NimblePDFApplication		Based on BePDF
+Go to next page	PDFWindow		Go to next page
+Add square annotation	PDFWindow		Add square annotation
+[internal link]	PDFView		[internal link]
+Fonts of this page	FileInfoWindow		Fontovi na ovoj stranici
+Last	PDFWindow		Last
+About NimblePDF…	PDFWindow		O NimblePDF-u…
+Abort	FileInfoWindow		Prekini
+Restore window position and size	PreferencesWindow		Restore window position and size
+Find next	PDFWindow		Find next
+All pages	PrintSettingsWindow		All pages
+Show annotation toolbar	PDFWindow		Show annotation toolbar
+File name	AttachmentView		Ime datoteke
+Go to start of document	PDFWindow		Go to start of document
+Go back 10 pages	PDFWindow		Go back 10 pages
+Go forward 10 pages	PDFWindow		Go forward 10 pages
 Add file attachment annotation	PDFWindow		Add file attachment annotation
-Go to page %d	PDFView		Idi na stranicu %d
-NimblePDF: Launch	PDFView		NimblePDF: Pokreni
+System fonts	PreferencesWindow		System fonts
+Show annotation tool bar	PDFWindow		Show annotation tool bar
+Fit to page width	PDFWindow		Fit to page width
+DPI	PrintSettingsWindow		DPI
+Find…	PDFWindow		Find…
+Odd pages	PrintSettingsWindow		Odd pages
+Add sound annotation	PDFWindow		Add sound annotation
+Show bookmarks	PDFWindow		Show bookmarks
+Max. printer resolution	PrintSettingsWindow		Max. printer resolution
+Quit	PDFWindow		Quit
+Options	FindTextWindow		Opcije
+File	PDFWindow		File
+Fullscreen mode	PDFWindow		Fullscreen mode
+Find text	FindTextWindow		Nađi tekst
+Clear	TraceWindow		Clear
+Print	PrintSettingsWindow		Print
+Enter Password	PasswordWindow		Unesi lozinku
+Online help…	PDFWindow		Online help…
+Filename:	FileInfoWindow		Ime datoteke:
+Document	PreferencesWindow		Document
+Embedded name	FileInfoWindow		Embedded name
+Close	NimblePDFApplication		Zatvori
 Copy link	PDFView		Kopiraj poveznicu
+First	PDFWindow		First
+Add	PDFWindow		Dodaj
+<empty>	AttachmentView		<empty>
+Open in new window…	PDFWindow		Open in new window…
+Preferences…	PDFWindow		Preferences…
+Beta	NimblePDFApplication		Beta
+OK	PDFSearch		U redu
+Delete	PDFView		Izbriši
+Zoom (%)	PrintSettingsWindow		Zoom (%)
+Type	FileInfoWindow		Vrsta
+Custom zoom factor (%d%%)	PDFWindow		Custom zoom factor (%d%%)
+Add stamp annotation	PDFWindow		Add stamp annotation
+Abort	PrintingProgressWindow		Abort
+Align:	AnnotationWindow		Poravnaj:
+Go to end of document	PDFWindow		Go to end of document
+Auto open	TraceWindow		Auto open
+Back	PDFWindow		Back
+Pages	PrintSettingsWindow		Pages
+Add movie annotation	PDFWindow		Add movie annotation
+Add circle annotation	PDFWindow		Add circle annotation
+Show error messages	PDFWindow		Show error messages
+Golden Master	NimblePDFApplication		Golden Master
+Document	FileInfoWindow		Dokument
+Width: 	PrintSettingsWindow		Width: 
+Author:	FileInfoWindow		Autor:
+Add highlight annotation	PDFWindow		Add highlight annotation
+Add new paragraph text annotation	PDFWindow		Add new paragraph text annotation
+of %d	PDFWindow		of %d
+Security	FileInfoWindow		Sigurnost
+Denied	FileInfoWindow		Odbijeno
+Save file as	PDFWindow		Save file as
+Order	PrintSettingsWindow		Order
+Properties	PDFView		Osobitosti
+Add comment text annotation	PDFWindow		Add comment text annotation
+Description	AttachmentView		Opis
+Add underline annotation	PDFWindow		Add underline annotation
+Development	NimblePDFApplication		Razvoj
+Saving copy of PDF file:	PDFWindow		Saving copy of PDF file:
+Page: %d	FindTextWindow		Stranica: %d
+Page	PDFWindow		Page
+Add squiggly annotation	PDFWindow		Add squiggly annotation
+Annotation	PDFView		Annotation
+Add trapnet annotation	PDFWindow		Add trapnet annotation
+Producer:	FileInfoWindow		Producer:
+Keywords:	FileInfoWindow		Ključne riječi:
+Forward in page history list	PDFWindow		Forward in page history list
+Page:	PrintingProgressWindow		Page:
+Error getting page number!	NimblePDFApplication		Error getting page number!
+Find next…	PDFWindow		Find next…
+Visit homepage…	PDFWindow		Visit homepage…
+Even pages	PrintSettingsWindow		Even pages
+Stop	FindTextWindow		Stani
+Print	PDFWindow		Print
+Add link annotation	PDFWindow		Add link annotation
+ in	PrintSettingsWindow		 in
+Fullscreen mode	PreferencesWindow		Fullscreen mode
+[link type 'movie' not supported]	PDFView		[link type 'movie' not supported]
+Annotation	AnnotationWindow		Annotation
+Bookmark	PDFWindow		Bookmark
+Next	PDFWindow		Next
+Reverse	PrintSettingsWindow		Reverse
+Page: %d	PrintingProgressWindow		Page: %d
+Select none	PDFWindow		Select none
+Rotate counter-clockwise	PDFWindow		Rotate counter-clockwise
+<empty>	OutlinesWindow		<empty>
+Error	NimblePDFApplication		Greška
+Add key text annotation	PDFWindow		Add key text annotation
+Forward	PDFWindow		Forward
+Size:	AnnotationWindow		Veličina:
+Zoom out	PDFWindow		Zoom out
+Display	PreferencesWindow		Display
+Modified:	FileInfoWindow		Izmjenjeno:
+License	NimblePDFApplication		License
+Preferences	PreferencesWindow		Preferences
+Go to page %d	PDFView		Idi na stranicu %d
+OK	OutlinesWindow		U redu
+Copy selection	PDFWindow		Copy selection
+Final	NimblePDFApplication		Završno
+Annotations:	FileInfoWindow		Annotations:
+Select all	PDFWindow		Select all
+PDF file successfully written!	PDFWindow		PDF file successfully written!
+OK	PDFWindow		OK
+Previous	PDFWindow		Previous
+File info	FileInfoWindow		Informacije o datoteci
+Gamma	NimblePDFApplication		Gama
+Search	PDFWindow		Search
+Leave annotation editing mode	PDFView		Leave annotation editing mode
+Edit	PDFView		Uredi
+Saving attachment(s):	AttachmentView		Spremanje privitak(a):
+Leave annotation editing mode	PDFWindow		Leave annotation editing mode
+OK	PrintSettingsWindow		OK
+Add free text annotation	PDFWindow		Add free text annotation
+Open file	PDFWindow		Open file
+Print settings	PrintSettingsWindow		Print settings
+Back in page history list	PDFWindow		Back in page history list
+Find	PDFWindow		Find
+Yes	FileInfoWindow		Da
+[unknown link]	PDFView		[unknown link]
+Floating	TraceWindow		Floating
+Add help text annotation	PDFWindow		Add help text annotation
+Stop	PrintingProgressWindow		Stop
+Add popup annotation	PDFWindow		Add popup annotation
+Show attachments	PDFWindow		Show attachments
+Edit	PDFWindow		Edit
+Show help…	PDFWindow		Show help…
+Add printer mark annotation	PDFWindow		Add printer mark annotation
+Search backwards	FindTextWindow		Traži unatrag
+Reload	PDFWindow		Reload
+Add line annotation	PDFWindow		Add line annotation
+Help	PDFWindow		Help
+Will take effect at next program launch.	PreferencesWindow		Will take effect at next program launch.
+NimblePDF is a fork of BePDF, the long-running Haiku PDF reader, with the original xpdf engine replaced by poppler.	NimblePDFApplication		NimblePDF is a fork of BePDF, the long-running Haiku PDF reader, with the original xpdf engine replaced by poppler.
+Rotation	PDFWindow		Rotation
+Encrypted:	FileInfoWindow		Encrypted:
+Gray scale	PrintSettingsWindow		Gray scale
+Save file attachment as…	PDFView		Spremi datoteku privitka kao...
+Show toolbar, statusbar and scrollbars, too	PreferencesWindow		Show toolbar, statusbar and scrollbars, too
+Close	PDFWindow		Close
+No title	OutlinesWindow		Nema naslova
+Page	PrintSettingsWindow		Page
+current	PreferencesWindow		current
+Created:	FileInfoWindow		Napravljeno:
+Title:	AnnotationWindow		Naslov:
 Saving file attachment:	PDFView		Spremam datoteku privitka:
 Open in new window	PDFView		Otvori u novom prozoru
-Save file attachment as…	PDFView		Spremi datoteku privitka kao...
-[link type 'movie' not supported]	PDFView		[link type 'movie' not supported]
-Cancel	PDFView		Otkaži
-[unknown link]	PDFView		[unknown link]
-Execute the command:	PDFView		Izvrši naredbu:
-Properties	PDFView		Osobitosti
-Unknown link action type: '%s'	PDFView		Unknown link action type: '%s'
-Annotation	PDFView		Annotation
-Delete	PDFView		Izbriši
-Leave annotation editing mode	PDFView		Leave annotation editing mode
-[internal link]	PDFView		[internal link]
-OK	PDFView		U redu
-NimblePDF reading file: 	PDFView		NimblePDF reading file: 
-Edit	PDFView		Uredi
-Keywords:	FileInfoWindow		Ključne riječi:
-Subject:	FileInfoWindow		Subject:
-Encrypted:	FileInfoWindow		Encrypted:
-Type	FileInfoWindow		Vrsta
-Abort	FileInfoWindow		Prekini
-Denied	FileInfoWindow		Odbijeno
-Creator:	FileInfoWindow		Tvorac:
-Document	FileInfoWindow		Dokument
-Fonts of this page	FileInfoWindow		Fontovi na ovoj stranici
-Path:	FileInfoWindow		Putanja:
-Name	FileInfoWindow		Ime
-Filename:	FileInfoWindow		Ime datoteke:
-Yes	FileInfoWindow		Da
-Annotations:	FileInfoWindow		Annotations:
-Producer:	FileInfoWindow		Producer:
-Allowed	FileInfoWindow		Dopušteno
-Copy & paste:	FileInfoWindow		Kopiraj & zalijepi:
-Modified:	FileInfoWindow		Izmjenjeno:
-Editing:	FileInfoWindow		Uređivanje:
-Title:	FileInfoWindow		Naslov:
-Created:	FileInfoWindow		Napravljeno:
-Linearized:	FileInfoWindow		Linearized:
-Version:	FileInfoWindow		Inačica:
-No	FileInfoWindow		Ne
-Author:	FileInfoWindow		Autor:
-Security	FileInfoWindow		Sigurnost
-Embedded name	FileInfoWindow		Embedded name
-Printing:	FileInfoWindow		Ispis:
-File info	FileInfoWindow		Informacije o datoteci
-Show all fonts	FileInfoWindow		Pokaži sve fontove
-All pages	PrintSettingsWindow		All pages
- in	PrintSettingsWindow		 in
-Pages	PrintSettingsWindow		Pages
-Page	PrintSettingsWindow		Page
-Max. printer resolution	PrintSettingsWindow		Max. printer resolution
-DPI	PrintSettingsWindow		DPI
-Zoom (%)	PrintSettingsWindow		Zoom (%)
-Gray scale	PrintSettingsWindow		Gray scale
-Color	PrintSettingsWindow		Color
-Normal	PrintSettingsWindow		Normal
-Rotation	PrintSettingsWindow		Rotation
-Print settings	PrintSettingsWindow		Print settings
-Print	PrintSettingsWindow		Print
-Reverse	PrintSettingsWindow		Reverse
-Odd pages	PrintSettingsWindow		Odd pages
-Zoom must be between 25 and 400!	PrintSettingsWindow		Zoom must be between 25 and 400!
-Mode	PrintSettingsWindow		Mode
-Order	PrintSettingsWindow		Order
 Height: 	PrintSettingsWindow		Height: 
-Width: 	PrintSettingsWindow		Width: 
-OK	PrintSettingsWindow		OK
-Even pages	PrintSettingsWindow		Even pages
-Wrong parameter!	PrintSettingsWindow		Wrong parameter!
-Show toolbar, statusbar and scrollbars, too	AnnotationWindow		Show toolbar, statusbar and scrollbars, too
-Fullscreen mode	AnnotationWindow		Cijeli zaslon
-Will take effect at next program launch.	AnnotationWindow		Will take effect at next program launch.
-Filled rectangle	AnnotationWindow		Filled rectangle
-Align:	AnnotationWindow		Poravnaj:
-Title:	AnnotationWindow		Naslov:
-User fonts	AnnotationWindow		Fontovi korisnika
-Asian fonts	AnnotationWindow		Azijski fontovi
-Restore window position and size	AnnotationWindow		Obnovi poziciju i veličinu prozora
-Author	AnnotationWindow		Autor
-Open in workspace:	AnnotationWindow		Otvori u radnom prostoru:
-Preferences	AnnotationWindow		Osobitosti
-Show document view only	AnnotationWindow		Show document view only
-Automatic	AnnotationWindow		Automatski
-Font:	AnnotationWindow		Font:
-Restore page number	AnnotationWindow		Obnovi broj stranice
-System fonts	AnnotationWindow		Fontovi sustava
-Stroked rectangle	AnnotationWindow		Stroked rectangle
-current	AnnotationWindow		trenutno
-Annotation	AnnotationWindow		Annotation
-Selection rectangle	AnnotationWindow		Selection rectangle
-Display	AnnotationWindow		Prikaz
-Document	AnnotationWindow		Dokument
-Size:	AnnotationWindow		Veličina:
-Date:	AnnotationWindow		Datum:
-Invert vertical mouse scrolling	AnnotationWindow		Invert vertical mouse scrolling
-<empty>	OutlinesWindow		<empty>
-Document	OutlinesWindow		Dokument
+File info…	PDFWindow		File info…
+Allowed	FileInfoWindow		Dopušteno
+Add paragraph text annotation	PDFWindow		Add paragraph text annotation
+Selection rectangle	PreferencesWindow		Selection rectangle
+Linearized:	FileInfoWindow		Linearized:
+No	FileInfoWindow		Ne
+NimblePDF: Launch	PDFView		NimblePDF: Pokreni
+Fit to page	PDFWindow		Fit to page
+Reload file	PDFWindow		Reload file
+Path:	FileInfoWindow		Putanja:
+Print…	PDFWindow		Print…
+Copy & paste:	FileInfoWindow		Kopiraj & zalijepi:
+Page %d	PDFWindow		Page %d
 Edit title for bookmark	OutlinesWindow		Uredite naslov bilješke
-No title	OutlinesWindow		Nema naslova
+Version:	FileInfoWindow		Inačica:
+English.pdf	PDFWindow	Replace with the PDF name of the help document, if there is one for your language.	English.pdf
+Automatic	AnnotationWindow		Automatski
+Title:	FileInfoWindow		Naslov:
+Warning	PDFWindow		Warning
 User defined	OutlinesWindow		Definirao korisnik
-OK	OutlinesWindow		U redu
-NimblePDF printing document: 	PrintingProgressWindow		NimblePDF printing document: 
-NimblePDF printing	PrintingProgressWindow		NimblePDF printing
-Stop	PrintingProgressWindow		Stop
-Abort	PrintingProgressWindow		Abort
-Page:	PrintingProgressWindow		Page:
-Page: %d	PrintingProgressWindow		Page: %d
-Clear	TraceWindow		Clear
-Auto open	TraceWindow		Auto open
-Floating	TraceWindow		Floating
-Error messages	TraceWindow		Error messages
-Options	FindTextWindow		Opcije
-Ignore case	FindTextWindow		Ignore case
-Page:	FindTextWindow		Stranica:
-Find: 	FindTextWindow		Nađi:
-Stop	FindTextWindow		Stani
-Find	FindTextWindow		Nađi
-Find text	FindTextWindow		Nađi tekst
-Search backwards	FindTextWindow		Traži unatrag
-Page: %d	FindTextWindow		Stranica: %d
-Save selected attachments into directory	AttachmentView		Spremi odabrane privitke u direktorij
-File name	AttachmentView		Ime datoteke
-Save attachment(s) as	AttachmentView		Spremi privitak(e) kao
-Saving attachment(s):	AttachmentView		Spremanje privitak(a):
+Fullscreen	PDFWindow		Fullscreen
+Invert vertical mouse scrolling	PreferencesWindow		Invert vertical mouse scrolling
 Save selected attachment to file	AttachmentView		Spremi odabrani privitak u datoteku
-Description	AttachmentView		Opis
-<empty>	AttachmentView		<empty>
-Search string not found.	PDFSearch		Search string not found.
-OK	PDFSearch		U redu
-NimblePDF status	StatusWindow		NimblePDF status
+Add note text annotation	PDFWindow		Add note text annotation
+Editing:	FileInfoWindow		Uređivanje:
 User password	PasswordWindow		Lozinka korisnika
-Enter Password	PasswordWindow		Unesi lozinku
-Owner password	PasswordWindow		Lozinka vlasnika
-OK	PasswordWindow		U redu
+Find	FindTextWindow		Nađi
+Could not write PDF file!	PDFWindow		Could not write PDF file!
+Filled rectangle	PreferencesWindow		Filled rectangle
+Ignore case	FindTextWindow		Ignore case
+Creator:	FileInfoWindow		Tvorac:
+Invalid file reference received!	NimblePDFApplication		Invalid file reference received!
+Save selected attachments into directory	AttachmentView		Spremi odabrane privitke u direktorij
+Wrong parameter!	PrintSettingsWindow		Wrong parameter!
+Rotate clockwise	PDFWindow		Rotate clockwise
+Stroked rectangle	PreferencesWindow		Stroked rectangle
+Show all fonts	FileInfoWindow		Pokaži sve fontove

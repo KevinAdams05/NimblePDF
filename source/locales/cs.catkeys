@@ -1,254 +1,261 @@
-1	Czech	application/x-vnd.Haiku-NimblePDF	1765081836
- in	PrintSettingsWindow		 v
-All pages	PrintSettingsWindow		Všechny stránky
-Color	PrintSettingsWindow		Barevný
-DPI	PrintSettingsWindow		DPI
-Even pages	PrintSettingsWindow		Sudé stránky
-Gray scale	PrintSettingsWindow		Černobílý
-Height: 	PrintSettingsWindow		Výška:
-Max. printer resolution	PrintSettingsWindow		Maximální rozlišení tiskárny
-Mode	PrintSettingsWindow		Režim
-Normal	PrintSettingsWindow		Normální
-Odd pages	PrintSettingsWindow		Liché stránky
-OK	PrintSettingsWindow		OK
-Order	PrintSettingsWindow		Pořadí
-Page	PrintSettingsWindow		Stránka
-Pages	PrintSettingsWindow		Stránky
-Print	PrintSettingsWindow		Tisknout
-Print settings	PrintSettingsWindow		Nastavení tisku
-Reverse	PrintSettingsWindow		Obráceně
-Rotation	PrintSettingsWindow		Otočení
-Width: 	PrintSettingsWindow		Šířka:
-Wrong parameter!	PrintSettingsWindow		Špatný parametr!
-Zoom (%)	PrintSettingsWindow		Zvětšení (%)
-Zoom must be between 25 and 400!	PrintSettingsWindow		Zvětšení musí být mezi 25 a 400.
-[internal link]	PDFView		[vnitřní odkaz]
-[link type 'movie' not supported]	PDFView		[typ odkazu 'film' není podporován]
-[unknown link]	PDFView		[neznámý odkaz]
-Annotation	PDFView		Poznámka
-NimblePDF reading file: 	PDFView		NimblePDF načítá soubor:
-NimblePDF: Launch	PDFView		NimblePDF: Spustit
-Cancel	PDFView		Zrušit
-Copy link	PDFView		Kopírovat odkaz
-Delete	PDFView		Smazat
-Edit	PDFView		Úpravy
-Execute the command:	PDFView		Spustit příkaz:
-Go to page %d	PDFView		Přejít na stránku %d
-Leave annotation editing mode	PDFView		Ukončit úpravu poznámek
-OK	PDFView		OK
-Open in new window	PDFView		Otevřít v novém okně
-Properties	PDFView		Vlastnosti
-Save file attachment as…	PDFView		Uložit přílohu jako…
-Saving file attachment:	PDFView		Ukládám přílohu:
-Unknown link action type: '%s'	PDFView		Neznámý typ odkazované aplikace: '%s'
-<empty>	OutlinesWindow		<prázdné>
-Document	OutlinesWindow		Dokument
-Edit title for bookmark	OutlinesWindow		Upravit název záložky
-No title	OutlinesWindow		Žádný název
-OK	OutlinesWindow		OK
-User defined	OutlinesWindow		Uživatelovy
-<empty>	AttachmentView		<žádné>
-Description	AttachmentView		Popis
-File name	AttachmentView		Název souboru
-Save attachment(s) as	AttachmentView		Uložit přílohy jako
-Save selected attachment to file	AttachmentView		Uložit zvolené přílohy do souboru
-Save selected attachments into directory	AttachmentView		Uložit zvolené přílohy do adresáře
-Saving attachment(s):	AttachmentView		Ukládám přílohy:
-Abort	PrintingProgressWindow		Přerušit
-NimblePDF printing	PrintingProgressWindow		NimblePDF tiskne
-NimblePDF printing document: 	PrintingProgressWindow		NimblePDF tiskne dokument:
-Page:	PrintingProgressWindow		Stránka:
-Page: %d	PrintingProgressWindow		Stránka: %d
-Stop	PrintingProgressWindow		Zastavit
-Abort	FileInfoWindow		Přerušit
-Allowed	FileInfoWindow		Povoleno
-Annotations:	FileInfoWindow		Poznámky:
-Author:	FileInfoWindow		Autor:
-Copy & paste:	FileInfoWindow		Kopírování a vkládání:
-Created:	FileInfoWindow		Vytvořeno:
-Creator:	FileInfoWindow		Tvůrce:
-Denied	FileInfoWindow		Odepřeno
-Document	FileInfoWindow		Dokument
-Editing:	FileInfoWindow		Úpravy:
-Embedded name	FileInfoWindow		Vložený název
-Encrypted:	FileInfoWindow		Šifrováno:
-File info	FileInfoWindow		Informace o souboru
-Filename:	FileInfoWindow		Název souboru:
-Fonts of this page	FileInfoWindow		Písma na této stránce
-Keywords:	FileInfoWindow		Klíčová slova:
-Linearized:	FileInfoWindow		Linearizováno:
-Modified:	FileInfoWindow		Upraveno:
-Name	FileInfoWindow		Název
-No	FileInfoWindow		Ne
-Path:	FileInfoWindow		Cesta:
-Printing:	FileInfoWindow		Tisknutí:
-Producer:	FileInfoWindow		Producent:
-Security	FileInfoWindow		Zabezpečení
-Show all fonts	FileInfoWindow		Zobrazit všechna písma
-Subject:	FileInfoWindow		Předmět:
-Title:	FileInfoWindow		Název:
-Type	FileInfoWindow		Typ
-Version:	FileInfoWindow		Verze:
-Yes	FileInfoWindow		Ano
-About NimblePDF…	PDFWindow		O NimblePDF…
-Add	PDFWindow		Přidat
-Add circle annotation	PDFWindow		Přidat kruh
-Add comment text annotation	PDFWindow		Přidat komentář
-Add file attachment annotation	PDFWindow		Přidat přílohu
-Add free text annotation	PDFWindow		Přidat volný text
-Add help text annotation	PDFWindow		Přidat nápovědu
-Add highlight annotation	PDFWindow		Přidat zvýrazněnou poznámku
-Add ink annotation	PDFWindow		Přidat odkaz
-Add insert text annotation	PDFWindow		Přidat textovou poznámku
-Add key text annotation	PDFWindow		Přidat klíčovou poznámku
-Add line annotation	PDFWindow		Přidat čáru
-Add link annotation	PDFWindow		Přidat odkaz
-Add movie annotation	PDFWindow		Přidat filmovou poznámku
-Add new paragraph text annotation	PDFWindow		Přidat poznámku nového odstavce
-Add note text annotation	PDFWindow		Přidat poznámku
-Add paragraph text annotation	PDFWindow		Přidat poznámku nového odstavce
-Add popup annotation	PDFWindow		Přidat vyskakovací poznámku
-Add printer mark annotation	PDFWindow		Přidat poznámku tiskárny
-Add sound annotation	PDFWindow		Přidat zvukovou poznámku
-Add square annotation	PDFWindow		Přidat čtverec
-Add squiggly annotation	PDFWindow		Přidat zkroucenou poznámku
-Add stamp annotation	PDFWindow		Přidat razítko
-Add strikeout annotation	PDFWindow		Přidat škrtnutou poznámku
-Add trapnet annotation	PDFWindow		Přidat přesahující poznámku
-Add underline annotation	PDFWindow		Přidat podtrženou poznámku
-Add widget annotation	PDFWindow		Přidat widgetovou poznámku
-Back	PDFWindow		Zpět
-Back in page history list	PDFWindow		Zpět v historii stránek
-Bookmark	PDFWindow		Záložka
-Can not overwrite a PDF file that's currently opened in NimblePDF! Please choose another file name.	PDFWindow		Nelze přepisovat PDF soubor, který je otevřen v NimblePDF! Zvolte jiný soubor.
-Close	PDFWindow		Zavřít
-Copy selection	PDFWindow		Kopírovat výběr
-Could not write PDF file!	PDFWindow		PDF soubor nelze zapsat!
-Custom zoom factor (%d%%)	PDFWindow		Vlastní zvětšení (%d%%)
-Delete	PDFWindow		Smazat
-Edit	PDFWindow		Upravit
+1	Czech	application/x-vnd.Haiku-NimblePDF	777513411
 Editing of annotations in an encrypted PDF file isn't supported yet!	PDFWindow		Úprava poznámek v šifrovaném PDF souboru zatím není podporována!
-English.pdf	PDFWindow	Replace with the PDF name of the help document, if there is one for your language.	Czech.pdf
-File	PDFWindow		Soubor
-File info…	PDFWindow		Informace o souboru…
-Find	PDFWindow		Hledat
+Cancel	PDFView		Zrušit
+NimblePDF printing document: 	PrintingProgressWindow		NimblePDF tiskne dokument:
+Go to previous page	PDFWindow		Přejít na předchozí stránku
+Subject:	FileInfoWindow		Předmět:
+Add strikeout annotation	PDFWindow		Přidat škrtnutou poznámku
+Owner password	PasswordWindow		Heslo vlastníka
+NimblePDF: Error opening file!	NimblePDFApplication		NimblePDF: Chyba otevření souboru!
+Alpha	NimblePDFApplication		Alfa
+Show document view only	PreferencesWindow		Show document view only
+NimblePDF printing	PrintingProgressWindow		NimblePDF tiskne
+Rendering engine	NimblePDFApplication		Rendering engine
+NimblePDF is free software under the GNU General Public License, version 2 or (at your option) any later version.	NimblePDFApplication		NimblePDF is free software under the GNU General Public License, version 2 or (at your option) any later version.
+Add insert text annotation	PDFWindow		Přidat textovou poznámku
+Unknown	NimblePDFApplication		Neznámo
+Delete	PDFWindow		Smazat
+A fast, full-featured PDF reader for Haiku.	NimblePDFApplication		A fast, full-featured PDF reader for Haiku.
+Color	PrintSettingsWindow		Barevný
+View	PDFWindow		Zobrazit
+Search string not found.	PDFSearch		Hledaný řetězec nenalezen.
+Normal	PrintSettingsWindow		Normální
+Add widget annotation	PDFWindow		Přidat widgetovou poznámku
+Rendering by poppler %s.	NimblePDFApplication	poppler version	Rendering by poppler %s.
+Asian fonts	PreferencesWindow		Asian fonts
+Zoom in	PDFWindow		Zvětšit
+Page:	FindTextWindow		Stránka:
+Rotation	PrintSettingsWindow		Otočení
+Error messages	TraceWindow		Chybové hlášky
+Jump to page	PDFWindow		Skočit na
+Mode	PrintSettingsWindow		Režim
+Save as…	PDFWindow		Uložit jako…
+Execute the command:	PDFView		Spustit příkaz:
+Open in workspace:	PreferencesWindow		Open in workspace:
+Author	PreferencesWindow		Author
+Issue tracker…	PDFWindow		Hlášení problémů…
+NimblePDF status	StatusWindow		NimblePDF stav
+Can not overwrite a PDF file that's currently opened in NimblePDF! Please choose another file name.	PDFWindow		Nelze přepisovat PDF soubor, který je otevřen v NimblePDF! Zvolte jiný soubor.
+Printing:	FileInfoWindow		Tisknutí:
+Font:	AnnotationWindow		Písmo:
+User fonts	PreferencesWindow		User fonts
+Zoom must be between 25 and 400!	PrintSettingsWindow		Zvětšení musí být mezi 25 a 400.
+Save attachment(s) as	AttachmentView		Uložit přílohy jako
+Open…	PDFWindow		Otevřít…
+NimblePDF reading file: 	PDFView		NimblePDF načítá soubor:
+OK	PDFView		OK
+Date:	AnnotationWindow		Datum:
+Show page list	PDFWindow		Zobrazit seznam stránek
+Restore page number	PreferencesWindow		Restore page number
+OK	PasswordWindow		OK
+Name	FileInfoWindow		Název
+Document	OutlinesWindow		Dokument
+Hide side bar	PDFWindow		Schovat boční lištu
+Page setup…	PDFWindow		Nastavení stránky…
+Add ink annotation	PDFWindow		Přidat odkaz
+Source code	NimblePDFApplication		Source code
+Find: 	FindTextWindow		Hledat:
+Zoom	PDFWindow		Zvětšení
+Based on BePDF	NimblePDFApplication		Based on BePDF
+Go to next page	PDFWindow		Přejít na další stránku
+Add square annotation	PDFWindow		Přidat čtverec
+[internal link]	PDFView		[vnitřní odkaz]
+Fonts of this page	FileInfoWindow		Písma na této stránce
+Last	PDFWindow		Poslední
+About NimblePDF…	PDFWindow		O NimblePDF…
+Abort	FileInfoWindow		Přerušit
+Restore window position and size	PreferencesWindow		Restore window position and size
 Find next	PDFWindow		Najít další
-Find next…	PDFWindow		Hledat další…
-Find…	PDFWindow		Hledat…
-First	PDFWindow		První
-Fit to page	PDFWindow		Přizpůsobit velikosti
-Fit to page width	PDFWindow		Přizpůsobit šířce
-Forward	PDFWindow		Dopředu
-Forward in page history list	PDFWindow		Dopředu v historii stránek
-Fullscreen	PDFWindow		Na celou obrazovku
-Fullscreen mode	PDFWindow		Na celou obrazovku
+All pages	PrintSettingsWindow		Všechny stránky
+Show annotation toolbar	PDFWindow		Zobrazit lištu poznámek
+File name	AttachmentView		Název souboru
+Go to start of document	PDFWindow		Přejít na začátek dokumentu
 Go back 10 pages	PDFWindow		Přejít o 10 stránek zpět
 Go forward 10 pages	PDFWindow		Přejít o 10 stránek dopředu
-Go to end of document	PDFWindow		Přejít na konec dokumentu
-Go to next page	PDFWindow		Přejít na další stránku
-Go to previous page	PDFWindow		Přejít na předchozí stránku
-Go to start of document	PDFWindow		Přejít na začátek dokumentu
-Help	PDFWindow		Nápověda
-Hide side bar	PDFWindow		Schovat boční lištu
-Issue tracker…	PDFWindow		Hlášení problémů…
-Jump to page	PDFWindow		Skočit na
-Last	PDFWindow		Poslední
-Leave annotation editing mode	PDFWindow		Ukončit úpravy
-Next	PDFWindow		Další
-of %d	PDFWindow		z %d
-OK	PDFWindow		OK
-Online help…	PDFWindow		Nápověda na internetu…
-Open file	PDFWindow		Otevřít soubor
-Open in new window…	PDFWindow		Otevřít v novém okně…
-Open…	PDFWindow		Otevřít…
-Page	PDFWindow		Stránka
-Page %d	PDFWindow		Stránka %d
-Page setup…	PDFWindow		Nastavení stránky…
-PDF file successfully written!	PDFWindow		PDF soubor úspěšně zapsán!
-Preferences…	PDFWindow		Možnosti…
-Previous	PDFWindow		Předchozí
-Print	PDFWindow		Tisknout
-Print…	PDFWindow		Vytisknout…
-Quit	PDFWindow		Ukončit
-Reload	PDFWindow		Znovu načíst
-Reload file	PDFWindow		Znovu načíst soubor
-Rotate clockwise	PDFWindow		Otočit po směru hodinových ručiček
-Rotate counter-clockwise	PDFWindow		Otočit proti směru hodinových ručiček
-Rotation	PDFWindow		Otočení
-Save as…	PDFWindow		Uložit jako…
-Save file as	PDFWindow		Uložit soubor jako
-Saving copy of PDF file:	PDFWindow		Ukládání kopie PDF souboru:
-Search	PDFWindow		Hledat
-Select all	PDFWindow		Vybrat vše
-Select none	PDFWindow		Zrušit výběr
+Add file attachment annotation	PDFWindow		Přidat přílohu
+System fonts	PreferencesWindow		System fonts
 Show annotation tool bar	PDFWindow		Zobrazit lištu poznámek
-Show annotation toolbar	PDFWindow		Zobrazit lištu poznámek
-Show attachments	PDFWindow		Zobrazit přílohy
+Fit to page width	PDFWindow		Přizpůsobit šířce
+DPI	PrintSettingsWindow		DPI
+Find…	PDFWindow		Hledat…
+Odd pages	PrintSettingsWindow		Liché stránky
+Add sound annotation	PDFWindow		Přidat zvukovou poznámku
 Show bookmarks	PDFWindow		Zobrazit záložky
-Show error messages	PDFWindow		Chybové hlášky
-Show help…	PDFWindow		Zobrazit nápovědu…
-Show page list	PDFWindow		Zobrazit seznam stránek
-View	PDFWindow		Zobrazit
-Visit homepage…	PDFWindow		Navštívit stránku projektu…
-Warning	PDFWindow		Varování
-Zoom	PDFWindow		Zvětšení
-Zoom in	PDFWindow		Zvětšit
-Zoom out	PDFWindow		Zmenšit
-Align:	AnnotationWindow		Zarovnání:
-Annotation	AnnotationWindow		Poznámka
-Asian fonts	AnnotationWindow		Asijská písma
-Author	AnnotationWindow		Autor
-Automatic	AnnotationWindow		Automaticky
-current	AnnotationWindow		aktuální
-Date:	AnnotationWindow		Datum:
-Display	AnnotationWindow		Zobrazit
-Document	AnnotationWindow		Dokument
-Filled rectangle	AnnotationWindow		Vyplněný obdélník
-Font:	AnnotationWindow		Písmo:
-Fullscreen mode	AnnotationWindow		Režim celé obrazovky
-Invert vertical mouse scrolling	AnnotationWindow		Otočit svislé rolování myší
-Open in workspace:	AnnotationWindow		Otevřít v pracovním prostoru:
-Preferences	AnnotationWindow		Nastavení
-Restore page number	AnnotationWindow		Obnovit číslo stránky
-Restore window position and size	AnnotationWindow		Obnovit umístění a velikost okna
-Selection rectangle	AnnotationWindow		Obdélník výběru
-Show document view only	AnnotationWindow		Zobrazit pouze dokuemnt
-Show toolbar, statusbar and scrollbars, too	AnnotationWindow		Zobrazit také lišty nástrojů, stavu a posuvníky
-Size:	AnnotationWindow		Velikost:
-Stroked rectangle	AnnotationWindow		Obdélníkový obrys
-System fonts	AnnotationWindow		Systémová písma
-Title:	AnnotationWindow		Název:
-User fonts	AnnotationWindow		Uživatelská písma
-Will take effect at next program launch.	AnnotationWindow		Projeví se při příštím spuštění programu.
-Alpha	NimblePDFApplication		Alfa
-NimblePDF is based on XPDF %s, %s.	NimblePDFApplication	XPDF version, copyright	NimblePDF je založeno na XPDF %s, %s.
-NimblePDF: Error opening file!	NimblePDFApplication		NimblePDF: Chyba otevření souboru!
-Beta	NimblePDFApplication		Beta
-Close	NimblePDFApplication		Zavřít
-Development	NimblePDFApplication		Vývoj
-Error	NimblePDFApplication		Chyba
-Final	NimblePDFApplication		Finální
-Gamma	NimblePDFApplication		Gama
-Golden Master	NimblePDFApplication		Hlavní vydání
-Unknown	NimblePDFApplication		Neznámo
-Version	NimblePDFApplication		Verze
-Auto open	TraceWindow		Automaticky otevřít
+Max. printer resolution	PrintSettingsWindow		Maximální rozlišení tiskárny
+Quit	PDFWindow		Ukončit
+Options	FindTextWindow		Volby
+File	PDFWindow		Soubor
+Fullscreen mode	PDFWindow		Na celou obrazovku
+Find text	FindTextWindow		Hledat text
 Clear	TraceWindow		Vymazat
-Error messages	TraceWindow		Chybové hlášky
-Floating	TraceWindow		Plovoucí
-NimblePDF status	StatusWindow		NimblePDF stav
+Print	PrintSettingsWindow		Tisknout
 Enter Password	PasswordWindow		Vložit heslo
-OK	PasswordWindow		OK
-Owner password	PasswordWindow		Heslo vlastníka
+Online help…	PDFWindow		Nápověda na internetu…
+Filename:	FileInfoWindow		Název souboru:
+Document	PreferencesWindow		Document
+Embedded name	FileInfoWindow		Vložený název
+Close	NimblePDFApplication		Zavřít
+Copy link	PDFView		Kopírovat odkaz
+First	PDFWindow		První
+Add	PDFWindow		Přidat
+<empty>	AttachmentView		<žádné>
+Open in new window…	PDFWindow		Otevřít v novém okně…
+Preferences…	PDFWindow		Možnosti…
+Beta	NimblePDFApplication		Beta
+OK	PDFSearch		OK
+Delete	PDFView		Smazat
+Zoom (%)	PrintSettingsWindow		Zvětšení (%)
+Type	FileInfoWindow		Typ
+Custom zoom factor (%d%%)	PDFWindow		Vlastní zvětšení (%d%%)
+Add stamp annotation	PDFWindow		Přidat razítko
+Abort	PrintingProgressWindow		Přerušit
+Align:	AnnotationWindow		Zarovnání:
+Go to end of document	PDFWindow		Přejít na konec dokumentu
+Auto open	TraceWindow		Automaticky otevřít
+Back	PDFWindow		Zpět
+Pages	PrintSettingsWindow		Stránky
+Add movie annotation	PDFWindow		Přidat filmovou poznámku
+Add circle annotation	PDFWindow		Přidat kruh
+Show error messages	PDFWindow		Chybové hlášky
+Golden Master	NimblePDFApplication		Hlavní vydání
+Document	FileInfoWindow		Dokument
+Width: 	PrintSettingsWindow		Šířka:
+Author:	FileInfoWindow		Autor:
+Add highlight annotation	PDFWindow		Přidat zvýrazněnou poznámku
+Add new paragraph text annotation	PDFWindow		Přidat poznámku nového odstavce
+of %d	PDFWindow		z %d
+Security	FileInfoWindow		Zabezpečení
+Denied	FileInfoWindow		Odepřeno
+Save file as	PDFWindow		Uložit soubor jako
+Order	PrintSettingsWindow		Pořadí
+Properties	PDFView		Vlastnosti
+Add comment text annotation	PDFWindow		Přidat komentář
+Description	AttachmentView		Popis
+Add underline annotation	PDFWindow		Přidat podtrženou poznámku
+Development	NimblePDFApplication		Vývoj
+Saving copy of PDF file:	PDFWindow		Ukládání kopie PDF souboru:
+Page: %d	FindTextWindow		Stránka: %d
+Page	PDFWindow		Stránka
+Add squiggly annotation	PDFWindow		Přidat zkroucenou poznámku
+Annotation	PDFView		Poznámka
+Add trapnet annotation	PDFWindow		Přidat přesahující poznámku
+Producer:	FileInfoWindow		Producent:
+Keywords:	FileInfoWindow		Klíčová slova:
+Forward in page history list	PDFWindow		Dopředu v historii stránek
+Page:	PrintingProgressWindow		Stránka:
+Error getting page number!	NimblePDFApplication		Error getting page number!
+Find next…	PDFWindow		Hledat další…
+Visit homepage…	PDFWindow		Navštívit stránku projektu…
+Even pages	PrintSettingsWindow		Sudé stránky
+Stop	FindTextWindow		Zastavit
+Print	PDFWindow		Tisknout
+Add link annotation	PDFWindow		Přidat odkaz
+ in	PrintSettingsWindow		 v
+Fullscreen mode	PreferencesWindow		Fullscreen mode
+[link type 'movie' not supported]	PDFView		[typ odkazu 'film' není podporován]
+Annotation	AnnotationWindow		Poznámka
+Bookmark	PDFWindow		Záložka
+Next	PDFWindow		Další
+Reverse	PrintSettingsWindow		Obráceně
+Page: %d	PrintingProgressWindow		Stránka: %d
+Select none	PDFWindow		Zrušit výběr
+Rotate counter-clockwise	PDFWindow		Otočit proti směru hodinových ručiček
+<empty>	OutlinesWindow		<prázdné>
+Error	NimblePDFApplication		Chyba
+Add key text annotation	PDFWindow		Přidat klíčovou poznámku
+Forward	PDFWindow		Dopředu
+Size:	AnnotationWindow		Velikost:
+Zoom out	PDFWindow		Zmenšit
+Display	PreferencesWindow		Display
+Modified:	FileInfoWindow		Upraveno:
+License	NimblePDFApplication		License
+Preferences	PreferencesWindow		Preferences
+Go to page %d	PDFView		Přejít na stránku %d
+OK	OutlinesWindow		OK
+Copy selection	PDFWindow		Kopírovat výběr
+Final	NimblePDFApplication		Finální
+Annotations:	FileInfoWindow		Poznámky:
+Select all	PDFWindow		Vybrat vše
+PDF file successfully written!	PDFWindow		PDF soubor úspěšně zapsán!
+OK	PDFWindow		OK
+Previous	PDFWindow		Předchozí
+File info	FileInfoWindow		Informace o souboru
+Gamma	NimblePDFApplication		Gama
+Search	PDFWindow		Hledat
+Leave annotation editing mode	PDFView		Ukončit úpravu poznámek
+Edit	PDFView		Úpravy
+Saving attachment(s):	AttachmentView		Ukládám přílohy:
+Leave annotation editing mode	PDFWindow		Ukončit úpravy
+OK	PrintSettingsWindow		OK
+Add free text annotation	PDFWindow		Přidat volný text
+Open file	PDFWindow		Otevřít soubor
+Print settings	PrintSettingsWindow		Nastavení tisku
+Back in page history list	PDFWindow		Zpět v historii stránek
+Find	PDFWindow		Hledat
+Yes	FileInfoWindow		Ano
+[unknown link]	PDFView		[neznámý odkaz]
+Floating	TraceWindow		Plovoucí
+Add help text annotation	PDFWindow		Přidat nápovědu
+Stop	PrintingProgressWindow		Zastavit
+Add popup annotation	PDFWindow		Přidat vyskakovací poznámku
+Show attachments	PDFWindow		Zobrazit přílohy
+Edit	PDFWindow		Upravit
+Show help…	PDFWindow		Zobrazit nápovědu…
+Add printer mark annotation	PDFWindow		Přidat poznámku tiskárny
+Search backwards	FindTextWindow		Hledat v opačném směru
+Reload	PDFWindow		Znovu načíst
+Add line annotation	PDFWindow		Přidat čáru
+Help	PDFWindow		Nápověda
+Will take effect at next program launch.	PreferencesWindow		Will take effect at next program launch.
+NimblePDF is a fork of BePDF, the long-running Haiku PDF reader, with the original xpdf engine replaced by poppler.	NimblePDFApplication		NimblePDF is a fork of BePDF, the long-running Haiku PDF reader, with the original xpdf engine replaced by poppler.
+Rotation	PDFWindow		Otočení
+Encrypted:	FileInfoWindow		Šifrováno:
+Gray scale	PrintSettingsWindow		Černobílý
+Save file attachment as…	PDFView		Uložit přílohu jako…
+Show toolbar, statusbar and scrollbars, too	PreferencesWindow		Show toolbar, statusbar and scrollbars, too
+Close	PDFWindow		Zavřít
+No title	OutlinesWindow		Žádný název
+Page	PrintSettingsWindow		Stránka
+current	PreferencesWindow		current
+Created:	FileInfoWindow		Vytvořeno:
+Title:	AnnotationWindow		Název:
+Saving file attachment:	PDFView		Ukládám přílohu:
+Open in new window	PDFView		Otevřít v novém okně
+Height: 	PrintSettingsWindow		Výška:
+File info…	PDFWindow		Informace o souboru…
+Allowed	FileInfoWindow		Povoleno
+Add paragraph text annotation	PDFWindow		Přidat poznámku nového odstavce
+Selection rectangle	PreferencesWindow		Selection rectangle
+Linearized:	FileInfoWindow		Linearizováno:
+No	FileInfoWindow		Ne
+NimblePDF: Launch	PDFView		NimblePDF: Spustit
+Fit to page	PDFWindow		Přizpůsobit velikosti
+Reload file	PDFWindow		Znovu načíst soubor
+Path:	FileInfoWindow		Cesta:
+Print…	PDFWindow		Vytisknout…
+Copy & paste:	FileInfoWindow		Kopírování a vkládání:
+Page %d	PDFWindow		Stránka %d
+Edit title for bookmark	OutlinesWindow		Upravit název záložky
+Version:	FileInfoWindow		Verze:
+English.pdf	PDFWindow	Replace with the PDF name of the help document, if there is one for your language.	Czech.pdf
+Automatic	AnnotationWindow		Automaticky
+Title:	FileInfoWindow		Název:
+Warning	PDFWindow		Varování
+User defined	OutlinesWindow		Uživatelovy
+Fullscreen	PDFWindow		Na celou obrazovku
+Invert vertical mouse scrolling	PreferencesWindow		Invert vertical mouse scrolling
+Save selected attachment to file	AttachmentView		Uložit zvolené přílohy do souboru
+Add note text annotation	PDFWindow		Přidat poznámku
+Editing:	FileInfoWindow		Úpravy:
 User password	PasswordWindow		Heslo uživatele
 Find	FindTextWindow		Hledat
-Find text	FindTextWindow		Hledat text
-Find: 	FindTextWindow		Hledat:
+Could not write PDF file!	PDFWindow		PDF soubor nelze zapsat!
+Filled rectangle	PreferencesWindow		Filled rectangle
 Ignore case	FindTextWindow		Ignorovat velikost písma
-Options	FindTextWindow		Volby
-Page:	FindTextWindow		Stránka:
-Page: %d	FindTextWindow		Stránka: %d
-Search backwards	FindTextWindow		Hledat v opačném směru
-Stop	FindTextWindow		Zastavit
-OK	PDFSearch		OK
-Search string not found.	PDFSearch		Hledaný řetězec nenalezen.
+Creator:	FileInfoWindow		Tvůrce:
+Invalid file reference received!	NimblePDFApplication		Invalid file reference received!
+Save selected attachments into directory	AttachmentView		Uložit zvolené přílohy do adresáře
+Wrong parameter!	PrintSettingsWindow		Špatný parametr!
+Rotate clockwise	PDFWindow		Otočit po směru hodinových ručiček
+Stroked rectangle	PreferencesWindow		Stroked rectangle
+Show all fonts	FileInfoWindow		Zobrazit všechna písma

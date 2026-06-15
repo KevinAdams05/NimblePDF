@@ -1,254 +1,261 @@
-1	Greek (Modern)	application/x-vnd.Haiku-NimblePDF	1765081836
- in	PrintSettingsWindow		σε
-All pages	PrintSettingsWindow		Όλες οι σελίδες
-Color	PrintSettingsWindow		Χρώμα
-DPI	PrintSettingsWindow		DPI
-Even pages	PrintSettingsWindow		Ζυγές σελίδες
-Gray scale	PrintSettingsWindow		Ασπρόμαυρο
-Height: 	PrintSettingsWindow		Ύψος:
-Max. printer resolution	PrintSettingsWindow		Μέγιστη ανάλυση εκτυπωτή
-Mode	PrintSettingsWindow		Λειτουργία
-Normal	PrintSettingsWindow		Κανονική
-Odd pages	PrintSettingsWindow		Μονές σελίδες
-OK	PrintSettingsWindow		Εντάξει
-Order	PrintSettingsWindow		Σειρά
-Page	PrintSettingsWindow		Σελίδα
-Pages	PrintSettingsWindow		Σελίδες
-Print	PrintSettingsWindow		Εκτύπωση
-Print settings	PrintSettingsWindow		Ρυθμίσεις εκτύπωσης
-Reverse	PrintSettingsWindow		Αντιστροφή
-Rotation	PrintSettingsWindow		Περιστροφή
-Width: 	PrintSettingsWindow		Πλάτος:
-Wrong parameter!	PrintSettingsWindow		Εσφαλμένη παράμετρος!
-Zoom (%)	PrintSettingsWindow		Μεγέθυνση (%)
-Zoom must be between 25 and 400!	PrintSettingsWindow		Η τιμή της μεγέθυνσης πρέπει να είναι μεταξύ 25 και 400!
-[internal link]	PDFView		[εσωτ. σύνδεσμος]
-[link type 'movie' not supported]	PDFView		[οι σύνδεσμοι τύπου ταινία δεν υποστηρίζονται]
-[unknown link]	PDFView		[άγνωστος σύνδεσμος]
-Annotation	PDFView		Περίληψη
-NimblePDF reading file: 	PDFView		Το NimblePDF διαβάζει το αρχείο: 
-NimblePDF: Launch	PDFView		NimblePDF: Εκκίνηση
-Cancel	PDFView		Ακύρωση
-Copy link	PDFView		Αντιγραφή συνδέσμου
-Delete	PDFView		Διαγραφή
-Edit	PDFView		Επεξεργασία
-Execute the command:	PDFView		Εκτέλεση εντολής:
-Go to page %d	PDFView		Μετάβαση στην σελίδα %d
-Leave annotation editing mode	PDFView		Έξοδος από τον επεξεργαστή επισημειώσεων
-OK	PDFView		Εντάξει
-Open in new window	PDFView		Άνοιγμα σε νέο παράθυρο
-Properties	PDFView		Παράμετροι
-Save file attachment as…	PDFView		Αποθήκευση συννημένου αρχείου ως...
-Saving file attachment:	PDFView		Αποθήκευση συνημμένου αρχείου:
-Unknown link action type: '%s'	PDFView		Άγνωστο είδος ενέργειας συνδέσμου: '%s'
-<empty>	OutlinesWindow		<κενό>
-Document	OutlinesWindow		Έγγραφο
-Edit title for bookmark	OutlinesWindow		Επεξεργασία τίτλου σελιδοδείκτης
-No title	OutlinesWindow		Χωρίς τίτλο
-OK	OutlinesWindow		Εντάξει
-User defined	OutlinesWindow		Καθορισμένο από χρήστη
-<empty>	AttachmentView		<κενό>
-Description	AttachmentView		Περιγραφή
-File name	AttachmentView		Όνομα αρχείου
-Save attachment(s) as	AttachmentView		Αποθήκευση επισυννημένων αρχείων ως
-Save selected attachment to file	AttachmentView		Αποθήκευση επιλεγμένου συνημμένου σε αρχείου
-Save selected attachments into directory	AttachmentView		Αποθήκευση επιλεγμένου συνημμένου σε κατάλογο
-Saving attachment(s):	AttachmentView		Αποθήκευση συνημμένου(-ων):
-Abort	PrintingProgressWindow		Ακύρωση
-NimblePDF printing	PrintingProgressWindow		Το NimblePDF εκτυπώνει
-NimblePDF printing document: 	PrintingProgressWindow		Το NimblePDF εκτυπώνει το έγγραφο: 
-Page:	PrintingProgressWindow		Σελίδα:
-Page: %d	PrintingProgressWindow		Σελίδα: %d
-Stop	PrintingProgressWindow		Σταμάτημα
-Abort	FileInfoWindow		Ακύρωση
-Allowed	FileInfoWindow		Επιτρέπεται
-Annotations:	FileInfoWindow		Σημειώσεις:
-Author:	FileInfoWindow		Συγγραφέας:
-Copy & paste:	FileInfoWindow		Αντιγραφή και επικόλληση:
-Created:	FileInfoWindow		Δημιουργήθηκε:
-Creator:	FileInfoWindow		Δημιουργός:
-Denied	FileInfoWindow		Απαγορεύεται
-Document	FileInfoWindow		Έγγραφο
-Editing:	FileInfoWindow		Επεξεργασία:
-Embedded name	FileInfoWindow		Επισυνημμένο όνομα
-Encrypted:	FileInfoWindow		Κρυπτογραφημένο:
-File info	FileInfoWindow		Πληροφορίες αρχείου
-Filename:	FileInfoWindow		Όνομα αρχείου:
-Fonts of this page	FileInfoWindow		Γραμματοσειρές στην σελίδα
-Keywords:	FileInfoWindow		Λέξεις κλειδιά:
-Linearized:	FileInfoWindow		Γραμμικό:
-Modified:	FileInfoWindow		Επεξεργάστηκε:
-Name	FileInfoWindow		Όνομα
-No	FileInfoWindow		Όχι
-Path:	FileInfoWindow		Τοποθεσία αρχείου:
-Printing:	FileInfoWindow		Εκτύπωση:
-Producer:	FileInfoWindow		Παραγωγός:
-Security	FileInfoWindow		Ασφάλεια
-Show all fonts	FileInfoWindow		Εμφάνιση όλων των γραμματοσειρών
-Subject:	FileInfoWindow		Θέμα:
-Title:	FileInfoWindow		Τίτλος:
-Type	FileInfoWindow		Είδος
-Version:	FileInfoWindow		Έκδοση:
-Yes	FileInfoWindow		Ναι
-About NimblePDF…	PDFWindow		Σχετικά με το NimblePDF…
-Add	PDFWindow		Προσθήκη
-Add circle annotation	PDFWindow		Επισημείωση κύκλου
-Add comment text annotation	PDFWindow		Επισημείωση σχολίου
-Add file attachment annotation	PDFWindow		Επισημείωση αρχείου
-Add free text annotation	PDFWindow		Επισημείωση ελεύθερου κειμένου
-Add help text annotation	PDFWindow		Επισημείωση κειμένου βοήθειας
-Add highlight annotation	PDFWindow		Επισημείωση υπογράμμισης
-Add ink annotation	PDFWindow		Επισημείωση συνδέσμου
-Add insert text annotation	PDFWindow		Επισημείωση κειμένου προσθήκης
-Add key text annotation	PDFWindow		Επισημείωση κειμένου κλειδιού
-Add line annotation	PDFWindow		Επισημείωση γραμμής
-Add link annotation	PDFWindow		Επισημείωση συνδέσμου
-Add movie annotation	PDFWindow		Επισημείωση ταινίας
-Add new paragraph text annotation	PDFWindow		Επισημείωση παραγράφου
-Add note text annotation	PDFWindow		Επισημείωση κειμένου σημείωσης
-Add paragraph text annotation	PDFWindow		Add paragraph text annotation
-Add popup annotation	PDFWindow		Επισημείωση κειμένου με αναπήδηση
-Add printer mark annotation	PDFWindow		Επισημείωση σημείου εκτύπωσης
-Add sound annotation	PDFWindow		Επισημείωση ήχου
-Add square annotation	PDFWindow		Επισημείωση τετραγώνου
-Add squiggly annotation	PDFWindow		Επισημείωση ελεύθερης γραμμής
-Add stamp annotation	PDFWindow		Επισημείωση σφραγίδας
-Add strikeout annotation	PDFWindow		Επισημείωση κειμένου σε διαγραφή
-Add trapnet annotation	PDFWindow		Επισημείωση διχτυού
-Add underline annotation	PDFWindow		Επισημείωση υπογραμμισμένου κειμένου
-Add widget annotation	PDFWindow		Επισημείωση widget
-Back	PDFWindow		Πίσω
-Back in page history list	PDFWindow		Πίσω βάσει ιστορικού σελίδων
-Bookmark	PDFWindow		Σελιδοδείκτης
-Can not overwrite a PDF file that's currently opened in NimblePDF! Please choose another file name.	PDFWindow		Δεν είναι δυνατή η αντικατάσταση ενός αρχείου PDF το οποίο είναι ήδη ανοικτό στο NimblePDF! Παρακαλώ επιλέξτε άλλο όνομα αρχείου.
-Close	PDFWindow		Κλείσιμο
-Copy selection	PDFWindow		Αντιγραφή επιλογής
-Could not write PDF file!	PDFWindow		Δεν ήταν δυνατή η αποθήκευση του αρχείου PDF!
-Custom zoom factor (%d%%)	PDFWindow		Προσαρμοσμένο μέτρο μεγέθυνσης (%d%%)
-Delete	PDFWindow		Διαγραφή
-Edit	PDFWindow		Επεξεργασία
+1	Greek (Modern)	application/x-vnd.Haiku-NimblePDF	777513411
 Editing of annotations in an encrypted PDF file isn't supported yet!	PDFWindow		Η επεξεργασία επισημειώσεων δεν είναι ακόμα διαθέσιμη για τα κρυπτογραφημένα αρχεία PDF!
-English.pdf	PDFWindow	Replace with the PDF name of the help document, if there is one for your language.	English.pdf
-File	PDFWindow		Αρχείο
-File info…	PDFWindow		Πληροφορίες αρχείου...
-Find	PDFWindow		Αναζήτηση
+Cancel	PDFView		Ακύρωση
+NimblePDF printing document: 	PrintingProgressWindow		Το NimblePDF εκτυπώνει το έγγραφο: 
+Go to previous page	PDFWindow		Μετάβαση στην προηγούμενη σελίδα
+Subject:	FileInfoWindow		Θέμα:
+Add strikeout annotation	PDFWindow		Επισημείωση κειμένου σε διαγραφή
+Owner password	PasswordWindow		Κωδικός πρόσβασης κατόχου
+NimblePDF: Error opening file!	NimblePDFApplication		NimblePDF: Σφάλμα ανοίγματος αρχείου!
+Alpha	NimblePDFApplication		Alpha
+Show document view only	PreferencesWindow		Show document view only
+NimblePDF printing	PrintingProgressWindow		Το NimblePDF εκτυπώνει
+Rendering engine	NimblePDFApplication		Rendering engine
+NimblePDF is free software under the GNU General Public License, version 2 or (at your option) any later version.	NimblePDFApplication		NimblePDF is free software under the GNU General Public License, version 2 or (at your option) any later version.
+Add insert text annotation	PDFWindow		Επισημείωση κειμένου προσθήκης
+Unknown	NimblePDFApplication		Άγνωστη έκδοση
+Delete	PDFWindow		Διαγραφή
+A fast, full-featured PDF reader for Haiku.	NimblePDFApplication		A fast, full-featured PDF reader for Haiku.
+Color	PrintSettingsWindow		Χρώμα
+View	PDFWindow		Προβολή
+Search string not found.	PDFSearch		Η αναζητούμενη συμβολοσειρά δεν βρέθηκε.
+Normal	PrintSettingsWindow		Κανονική
+Add widget annotation	PDFWindow		Επισημείωση widget
+Rendering by poppler %s.	NimblePDFApplication	poppler version	Rendering by poppler %s.
+Asian fonts	PreferencesWindow		Asian fonts
+Zoom in	PDFWindow		Μεγέθυνση
+Page:	FindTextWindow		Σελίδα:
+Rotation	PrintSettingsWindow		Περιστροφή
+Error messages	TraceWindow		Μηνύματα σφαλμάτων
+Jump to page	PDFWindow		Μετάβαση στην σελίδα
+Mode	PrintSettingsWindow		Λειτουργία
+Save as…	PDFWindow		Αποθήκευση ως...
+Execute the command:	PDFView		Εκτέλεση εντολής:
+Open in workspace:	PreferencesWindow		Open in workspace:
+Author	PreferencesWindow		Author
+Issue tracker…	PDFWindow		Ιχνηλάτης προβλημάτων...
+NimblePDF status	StatusWindow		Κατάσταση του NimblePDF
+Can not overwrite a PDF file that's currently opened in NimblePDF! Please choose another file name.	PDFWindow		Δεν είναι δυνατή η αντικατάσταση ενός αρχείου PDF το οποίο είναι ήδη ανοικτό στο NimblePDF! Παρακαλώ επιλέξτε άλλο όνομα αρχείου.
+Printing:	FileInfoWindow		Εκτύπωση:
+Font:	AnnotationWindow		Γραμματοσειρά:
+User fonts	PreferencesWindow		User fonts
+Zoom must be between 25 and 400!	PrintSettingsWindow		Η τιμή της μεγέθυνσης πρέπει να είναι μεταξύ 25 και 400!
+Save attachment(s) as	AttachmentView		Αποθήκευση επισυννημένων αρχείων ως
+Open…	PDFWindow		Άνοιγμα...
+NimblePDF reading file: 	PDFView		Το NimblePDF διαβάζει το αρχείο: 
+OK	PDFView		Εντάξει
+Date:	AnnotationWindow		Ημερομηνία:
+Show page list	PDFWindow		Εμφάνιση λίστας σελίδων
+Restore page number	PreferencesWindow		Restore page number
+OK	PasswordWindow		Εντάξει
+Name	FileInfoWindow		Όνομα
+Document	OutlinesWindow		Έγγραφο
+Hide side bar	PDFWindow		Απόκρυψη πλευρικής μπάρας
+Page setup…	PDFWindow		Ρύθμιση σελίδας...
+Add ink annotation	PDFWindow		Επισημείωση συνδέσμου
+Source code	NimblePDFApplication		Source code
+Find: 	FindTextWindow		Αναζήτηση:
+Zoom	PDFWindow		Μεγέθυνση
+Based on BePDF	NimblePDFApplication		Based on BePDF
+Go to next page	PDFWindow		Μετάβαση στην επόμενη σελίδα
+Add square annotation	PDFWindow		Επισημείωση τετραγώνου
+[internal link]	PDFView		[εσωτ. σύνδεσμος]
+Fonts of this page	FileInfoWindow		Γραμματοσειρές στην σελίδα
+Last	PDFWindow		Τελευταία
+About NimblePDF…	PDFWindow		Σχετικά με το NimblePDF…
+Abort	FileInfoWindow		Ακύρωση
+Restore window position and size	PreferencesWindow		Restore window position and size
 Find next	PDFWindow		Αναζήτηση επόμενου
-Find next…	PDFWindow		Αναζήτηση επόμενου...
-Find…	PDFWindow		Αναζήτηση...
-First	PDFWindow		Πρώτο
-Fit to page	PDFWindow		Εστίαση σελίδας
-Fit to page width	PDFWindow		Εστίαση πλάτους σελίδας
-Forward	PDFWindow		Μπροστά
-Forward in page history list	PDFWindow		Μποστά βάσει ιστορικού σελίδων
-Fullscreen	PDFWindow		Πλήρης οθόνη
-Fullscreen mode	PDFWindow		Λειτουργία πλήρους οθόνης
+All pages	PrintSettingsWindow		Όλες οι σελίδες
+Show annotation toolbar	PDFWindow		Εμφάνιση μπάρας εργαλείων επισημείωσης
+File name	AttachmentView		Όνομα αρχείου
+Go to start of document	PDFWindow		Μετάβαση στην αρχή του εγγράφου
 Go back 10 pages	PDFWindow		Μετάβαση πίσω κατά 10 σελίδες
 Go forward 10 pages	PDFWindow		Μετάβαση μπρος κατά 10 σελίδες
-Go to end of document	PDFWindow		Μετάβαση στο τέλος του εγγράφου
-Go to next page	PDFWindow		Μετάβαση στην επόμενη σελίδα
-Go to previous page	PDFWindow		Μετάβαση στην προηγούμενη σελίδα
-Go to start of document	PDFWindow		Μετάβαση στην αρχή του εγγράφου
-Help	PDFWindow		Βοήθεια
-Hide side bar	PDFWindow		Απόκρυψη πλευρικής μπάρας
-Issue tracker…	PDFWindow		Ιχνηλάτης προβλημάτων...
-Jump to page	PDFWindow		Μετάβαση στην σελίδα
-Last	PDFWindow		Τελευταία
-Leave annotation editing mode	PDFWindow		Έξοδος από επεξεργαστή επί σημειώσεων
-Next	PDFWindow		Επόμενη
-of %d	PDFWindow		από %d
-OK	PDFWindow		Εντάξει
-Online help…	PDFWindow		Διαδικτυακή βοήθεια...
-Open file	PDFWindow		Άνοιγμα αρχείου
-Open in new window…	PDFWindow		Άνοιγμα σε νέο παράθυρο...
-Open…	PDFWindow		Άνοιγμα...
-Page	PDFWindow		Σελίδα
-Page %d	PDFWindow		Σελίδα %d
-Page setup…	PDFWindow		Ρύθμιση σελίδας...
-PDF file successfully written!	PDFWindow		Η αποθήκευση του αρχείου PDF ήταν επιτυχής.
-Preferences…	PDFWindow		Ρυθμίσεις...
-Previous	PDFWindow		Προηγούμενη
-Print	PDFWindow		Εκτύπωση
-Print…	PDFWindow		Εκτύπωση...
-Quit	PDFWindow		Έξοδος
-Reload	PDFWindow		Επαναφόρτωση
-Reload file	PDFWindow		Επαναφόρτωση αρχείου
-Rotate clockwise	PDFWindow		Περιστροφή κατά φορά ρολογιού
-Rotate counter-clockwise	PDFWindow		Περιστροφή κατά αντίστροφη φορά ρολογιού
-Rotation	PDFWindow		Περιστροφή
-Save as…	PDFWindow		Αποθήκευση ως...
-Save file as	PDFWindow		Αποθήκευση αρχείου ως
-Saving copy of PDF file:	PDFWindow		Αποθήκευση αντιγράφου του αρχείου PDF:
-Search	PDFWindow		Αναζήτηση
-Select all	PDFWindow		Επιλογή όλων
-Select none	PDFWindow		Ακύρωση επιλογής
+Add file attachment annotation	PDFWindow		Επισημείωση αρχείου
+System fonts	PreferencesWindow		System fonts
 Show annotation tool bar	PDFWindow		Εμφάνιση μπάρας εργαλείων επισημείωσης
-Show annotation toolbar	PDFWindow		Εμφάνιση μπάρας εργαλείων επισημείωσης
-Show attachments	PDFWindow		Εμφάνιση συνημμένων
+Fit to page width	PDFWindow		Εστίαση πλάτους σελίδας
+DPI	PrintSettingsWindow		DPI
+Find…	PDFWindow		Αναζήτηση...
+Odd pages	PrintSettingsWindow		Μονές σελίδες
+Add sound annotation	PDFWindow		Επισημείωση ήχου
 Show bookmarks	PDFWindow		Εμφάνιση σελιδοδεικτών
-Show error messages	PDFWindow		Εμφάνιση σφαλμάτων
-Show help…	PDFWindow		Εμφάνιση βοήθειας...
-Show page list	PDFWindow		Εμφάνιση λίστας σελίδων
-View	PDFWindow		Προβολή
-Visit homepage…	PDFWindow		Επίσκεψη ιστοσελίδας...
-Warning	PDFWindow		Προειδοποίηση
-Zoom	PDFWindow		Μεγέθυνση
-Zoom in	PDFWindow		Μεγέθυνση
-Zoom out	PDFWindow		Σμίκρυνση
-Align:	AnnotationWindow		Στοίχιση:
-Annotation	AnnotationWindow		Σημείωση
-Asian fonts	AnnotationWindow		Ασιάτικες γραμματοσειρές
-Author	AnnotationWindow		Συγγραφέας
-Automatic	AnnotationWindow		Αυτόματο
-current	AnnotationWindow		τρέχων
-Date:	AnnotationWindow		Ημερομηνία:
-Display	AnnotationWindow		Προβολή
-Document	AnnotationWindow		Έγγραφο
-Filled rectangle	AnnotationWindow		Γεμισμένο ορθογώνιο
-Font:	AnnotationWindow		Γραμματοσειρά:
-Fullscreen mode	AnnotationWindow		Λειτουργία πλήρης οθόνης
-Invert vertical mouse scrolling	AnnotationWindow		Αντιστροφή κάθετης κύλισης ποντικιού
-Open in workspace:	AnnotationWindow		Άνοιγμα σε χώρο εργασίας:
-Preferences	AnnotationWindow		Προτιμήσεις
-Restore page number	AnnotationWindow		Επαναφορά αριθμού σελίδας
-Restore window position and size	AnnotationWindow		Επαναφορά θέσης και μεγέθους παραθύρου
-Selection rectangle	AnnotationWindow		Ορθογώνιο επιλογής
-Show document view only	AnnotationWindow		Εμφάνιση μόνο προβολής εγγράφου
-Show toolbar, statusbar and scrollbars, too	AnnotationWindow		Εμφάνιση μπαρών εργαλείων, κατάστασης και κύλισης
-Size:	AnnotationWindow		Μέγεθος
-Stroked rectangle	AnnotationWindow		Περιγεγραμμένο ορθογώνιο
-System fonts	AnnotationWindow		Γραμματοσειρές συστήματος
-Title:	AnnotationWindow		Τίτλος:
-User fonts	AnnotationWindow		Γραμματοσειρές χρήστη
-Will take effect at next program launch.	AnnotationWindow		Θα εφαρμοστεί στην επόμενη έναρξη του προγράμματος.
-Alpha	NimblePDFApplication		Alpha
-NimblePDF is based on XPDF %s, %s.	NimblePDFApplication	XPDF version, copyright	Το NimblePDF είναι βασισμένο στο XPDF %s, %s.
-NimblePDF: Error opening file!	NimblePDFApplication		NimblePDF: Σφάλμα ανοίγματος αρχείου!
-Beta	NimblePDFApplication		Beta
-Close	NimblePDFApplication		Κλείσιμο
-Development	NimblePDFApplication		Έκδοση ανάπτυξης
-Error	NimblePDFApplication		Σφάλμα
-Final	NimblePDFApplication		Τελική έκδοση
-Gamma	NimblePDFApplication		Γάμμα έκδοση
-Golden Master	NimblePDFApplication		Χρυσή έκδοση
-Unknown	NimblePDFApplication		Άγνωστη έκδοση
-Version	NimblePDFApplication		Έκδοση
-Auto open	TraceWindow		Αυτόματο άνοιγμα
+Max. printer resolution	PrintSettingsWindow		Μέγιστη ανάλυση εκτυπωτή
+Quit	PDFWindow		Έξοδος
+Options	FindTextWindow		Ρυθμίσεις
+File	PDFWindow		Αρχείο
+Fullscreen mode	PDFWindow		Λειτουργία πλήρους οθόνης
+Find text	FindTextWindow		Αναζήτηση κειμένου
 Clear	TraceWindow		Καθάρισμα
-Error messages	TraceWindow		Μηνύματα σφαλμάτων
-Floating	TraceWindow		Αιωρούμενη
-NimblePDF status	StatusWindow		Κατάσταση του NimblePDF
+Print	PrintSettingsWindow		Εκτύπωση
 Enter Password	PasswordWindow		Εισάγετε κωδικό πρόσβασης
-OK	PasswordWindow		Εντάξει
-Owner password	PasswordWindow		Κωδικός πρόσβασης κατόχου
+Online help…	PDFWindow		Διαδικτυακή βοήθεια...
+Filename:	FileInfoWindow		Όνομα αρχείου:
+Document	PreferencesWindow		Document
+Embedded name	FileInfoWindow		Επισυνημμένο όνομα
+Close	NimblePDFApplication		Κλείσιμο
+Copy link	PDFView		Αντιγραφή συνδέσμου
+First	PDFWindow		Πρώτο
+Add	PDFWindow		Προσθήκη
+<empty>	AttachmentView		<κενό>
+Open in new window…	PDFWindow		Άνοιγμα σε νέο παράθυρο...
+Preferences…	PDFWindow		Ρυθμίσεις...
+Beta	NimblePDFApplication		Beta
+OK	PDFSearch		Εντάξει
+Delete	PDFView		Διαγραφή
+Zoom (%)	PrintSettingsWindow		Μεγέθυνση (%)
+Type	FileInfoWindow		Είδος
+Custom zoom factor (%d%%)	PDFWindow		Προσαρμοσμένο μέτρο μεγέθυνσης (%d%%)
+Add stamp annotation	PDFWindow		Επισημείωση σφραγίδας
+Abort	PrintingProgressWindow		Ακύρωση
+Align:	AnnotationWindow		Στοίχιση:
+Go to end of document	PDFWindow		Μετάβαση στο τέλος του εγγράφου
+Auto open	TraceWindow		Αυτόματο άνοιγμα
+Back	PDFWindow		Πίσω
+Pages	PrintSettingsWindow		Σελίδες
+Add movie annotation	PDFWindow		Επισημείωση ταινίας
+Add circle annotation	PDFWindow		Επισημείωση κύκλου
+Show error messages	PDFWindow		Εμφάνιση σφαλμάτων
+Golden Master	NimblePDFApplication		Χρυσή έκδοση
+Document	FileInfoWindow		Έγγραφο
+Width: 	PrintSettingsWindow		Πλάτος:
+Author:	FileInfoWindow		Συγγραφέας:
+Add highlight annotation	PDFWindow		Επισημείωση υπογράμμισης
+Add new paragraph text annotation	PDFWindow		Επισημείωση παραγράφου
+of %d	PDFWindow		από %d
+Security	FileInfoWindow		Ασφάλεια
+Denied	FileInfoWindow		Απαγορεύεται
+Save file as	PDFWindow		Αποθήκευση αρχείου ως
+Order	PrintSettingsWindow		Σειρά
+Properties	PDFView		Παράμετροι
+Add comment text annotation	PDFWindow		Επισημείωση σχολίου
+Description	AttachmentView		Περιγραφή
+Add underline annotation	PDFWindow		Επισημείωση υπογραμμισμένου κειμένου
+Development	NimblePDFApplication		Έκδοση ανάπτυξης
+Saving copy of PDF file:	PDFWindow		Αποθήκευση αντιγράφου του αρχείου PDF:
+Page: %d	FindTextWindow		Σελίδα: %d
+Page	PDFWindow		Σελίδα
+Add squiggly annotation	PDFWindow		Επισημείωση ελεύθερης γραμμής
+Annotation	PDFView		Περίληψη
+Add trapnet annotation	PDFWindow		Επισημείωση διχτυού
+Producer:	FileInfoWindow		Παραγωγός:
+Keywords:	FileInfoWindow		Λέξεις κλειδιά:
+Forward in page history list	PDFWindow		Μποστά βάσει ιστορικού σελίδων
+Page:	PrintingProgressWindow		Σελίδα:
+Error getting page number!	NimblePDFApplication		Error getting page number!
+Find next…	PDFWindow		Αναζήτηση επόμενου...
+Visit homepage…	PDFWindow		Επίσκεψη ιστοσελίδας...
+Even pages	PrintSettingsWindow		Ζυγές σελίδες
+Stop	FindTextWindow		Σταμάτημα
+Print	PDFWindow		Εκτύπωση
+Add link annotation	PDFWindow		Επισημείωση συνδέσμου
+ in	PrintSettingsWindow		σε
+Fullscreen mode	PreferencesWindow		Fullscreen mode
+[link type 'movie' not supported]	PDFView		[οι σύνδεσμοι τύπου ταινία δεν υποστηρίζονται]
+Annotation	AnnotationWindow		Σημείωση
+Bookmark	PDFWindow		Σελιδοδείκτης
+Next	PDFWindow		Επόμενη
+Reverse	PrintSettingsWindow		Αντιστροφή
+Page: %d	PrintingProgressWindow		Σελίδα: %d
+Select none	PDFWindow		Ακύρωση επιλογής
+Rotate counter-clockwise	PDFWindow		Περιστροφή κατά αντίστροφη φορά ρολογιού
+<empty>	OutlinesWindow		<κενό>
+Error	NimblePDFApplication		Σφάλμα
+Add key text annotation	PDFWindow		Επισημείωση κειμένου κλειδιού
+Forward	PDFWindow		Μπροστά
+Size:	AnnotationWindow		Μέγεθος
+Zoom out	PDFWindow		Σμίκρυνση
+Display	PreferencesWindow		Display
+Modified:	FileInfoWindow		Επεξεργάστηκε:
+License	NimblePDFApplication		License
+Preferences	PreferencesWindow		Preferences
+Go to page %d	PDFView		Μετάβαση στην σελίδα %d
+OK	OutlinesWindow		Εντάξει
+Copy selection	PDFWindow		Αντιγραφή επιλογής
+Final	NimblePDFApplication		Τελική έκδοση
+Annotations:	FileInfoWindow		Σημειώσεις:
+Select all	PDFWindow		Επιλογή όλων
+PDF file successfully written!	PDFWindow		Η αποθήκευση του αρχείου PDF ήταν επιτυχής.
+OK	PDFWindow		Εντάξει
+Previous	PDFWindow		Προηγούμενη
+File info	FileInfoWindow		Πληροφορίες αρχείου
+Gamma	NimblePDFApplication		Γάμμα έκδοση
+Search	PDFWindow		Αναζήτηση
+Leave annotation editing mode	PDFView		Έξοδος από τον επεξεργαστή επισημειώσεων
+Edit	PDFView		Επεξεργασία
+Saving attachment(s):	AttachmentView		Αποθήκευση συνημμένου(-ων):
+Leave annotation editing mode	PDFWindow		Έξοδος από επεξεργαστή επί σημειώσεων
+OK	PrintSettingsWindow		Εντάξει
+Add free text annotation	PDFWindow		Επισημείωση ελεύθερου κειμένου
+Open file	PDFWindow		Άνοιγμα αρχείου
+Print settings	PrintSettingsWindow		Ρυθμίσεις εκτύπωσης
+Back in page history list	PDFWindow		Πίσω βάσει ιστορικού σελίδων
+Find	PDFWindow		Αναζήτηση
+Yes	FileInfoWindow		Ναι
+[unknown link]	PDFView		[άγνωστος σύνδεσμος]
+Floating	TraceWindow		Αιωρούμενη
+Add help text annotation	PDFWindow		Επισημείωση κειμένου βοήθειας
+Stop	PrintingProgressWindow		Σταμάτημα
+Add popup annotation	PDFWindow		Επισημείωση κειμένου με αναπήδηση
+Show attachments	PDFWindow		Εμφάνιση συνημμένων
+Edit	PDFWindow		Επεξεργασία
+Show help…	PDFWindow		Εμφάνιση βοήθειας...
+Add printer mark annotation	PDFWindow		Επισημείωση σημείου εκτύπωσης
+Search backwards	FindTextWindow		Ανάποδη αναζήτηση
+Reload	PDFWindow		Επαναφόρτωση
+Add line annotation	PDFWindow		Επισημείωση γραμμής
+Help	PDFWindow		Βοήθεια
+Will take effect at next program launch.	PreferencesWindow		Will take effect at next program launch.
+NimblePDF is a fork of BePDF, the long-running Haiku PDF reader, with the original xpdf engine replaced by poppler.	NimblePDFApplication		NimblePDF is a fork of BePDF, the long-running Haiku PDF reader, with the original xpdf engine replaced by poppler.
+Rotation	PDFWindow		Περιστροφή
+Encrypted:	FileInfoWindow		Κρυπτογραφημένο:
+Gray scale	PrintSettingsWindow		Ασπρόμαυρο
+Save file attachment as…	PDFView		Αποθήκευση συννημένου αρχείου ως...
+Show toolbar, statusbar and scrollbars, too	PreferencesWindow		Show toolbar, statusbar and scrollbars, too
+Close	PDFWindow		Κλείσιμο
+No title	OutlinesWindow		Χωρίς τίτλο
+Page	PrintSettingsWindow		Σελίδα
+current	PreferencesWindow		current
+Created:	FileInfoWindow		Δημιουργήθηκε:
+Title:	AnnotationWindow		Τίτλος:
+Saving file attachment:	PDFView		Αποθήκευση συνημμένου αρχείου:
+Open in new window	PDFView		Άνοιγμα σε νέο παράθυρο
+Height: 	PrintSettingsWindow		Ύψος:
+File info…	PDFWindow		Πληροφορίες αρχείου...
+Allowed	FileInfoWindow		Επιτρέπεται
+Add paragraph text annotation	PDFWindow		Add paragraph text annotation
+Selection rectangle	PreferencesWindow		Selection rectangle
+Linearized:	FileInfoWindow		Γραμμικό:
+No	FileInfoWindow		Όχι
+NimblePDF: Launch	PDFView		NimblePDF: Εκκίνηση
+Fit to page	PDFWindow		Εστίαση σελίδας
+Reload file	PDFWindow		Επαναφόρτωση αρχείου
+Path:	FileInfoWindow		Τοποθεσία αρχείου:
+Print…	PDFWindow		Εκτύπωση...
+Copy & paste:	FileInfoWindow		Αντιγραφή και επικόλληση:
+Page %d	PDFWindow		Σελίδα %d
+Edit title for bookmark	OutlinesWindow		Επεξεργασία τίτλου σελιδοδείκτης
+Version:	FileInfoWindow		Έκδοση:
+English.pdf	PDFWindow	Replace with the PDF name of the help document, if there is one for your language.	English.pdf
+Automatic	AnnotationWindow		Αυτόματο
+Title:	FileInfoWindow		Τίτλος:
+Warning	PDFWindow		Προειδοποίηση
+User defined	OutlinesWindow		Καθορισμένο από χρήστη
+Fullscreen	PDFWindow		Πλήρης οθόνη
+Invert vertical mouse scrolling	PreferencesWindow		Invert vertical mouse scrolling
+Save selected attachment to file	AttachmentView		Αποθήκευση επιλεγμένου συνημμένου σε αρχείου
+Add note text annotation	PDFWindow		Επισημείωση κειμένου σημείωσης
+Editing:	FileInfoWindow		Επεξεργασία:
 User password	PasswordWindow		Κωδικός πρόσβασης χρήστη
 Find	FindTextWindow		Αναζήτηση
-Find text	FindTextWindow		Αναζήτηση κειμένου
-Find: 	FindTextWindow		Αναζήτηση:
+Could not write PDF file!	PDFWindow		Δεν ήταν δυνατή η αποθήκευση του αρχείου PDF!
+Filled rectangle	PreferencesWindow		Filled rectangle
 Ignore case	FindTextWindow		Μη διάκριση πεζών/κεφαλαίων
-Options	FindTextWindow		Ρυθμίσεις
-Page:	FindTextWindow		Σελίδα:
-Page: %d	FindTextWindow		Σελίδα: %d
-Search backwards	FindTextWindow		Ανάποδη αναζήτηση
-Stop	FindTextWindow		Σταμάτημα
-OK	PDFSearch		Εντάξει
-Search string not found.	PDFSearch		Η αναζητούμενη συμβολοσειρά δεν βρέθηκε.
+Creator:	FileInfoWindow		Δημιουργός:
+Invalid file reference received!	NimblePDFApplication		Invalid file reference received!
+Save selected attachments into directory	AttachmentView		Αποθήκευση επιλεγμένου συνημμένου σε κατάλογο
+Wrong parameter!	PrintSettingsWindow		Εσφαλμένη παράμετρος!
+Rotate clockwise	PDFWindow		Περιστροφή κατά φορά ρολογιού
+Stroked rectangle	PreferencesWindow		Stroked rectangle
+Show all fonts	FileInfoWindow		Εμφάνιση όλων των γραμματοσειρών

@@ -1,254 +1,261 @@
-1	Turkish	application/x-vnd.Haiku-NimblePDF	1765081836
- in	PrintSettingsWindow		içinde
-All pages	PrintSettingsWindow		Tüm sayfalar
-Color	PrintSettingsWindow		Renk
-DPI	PrintSettingsWindow		DPI
-Even pages	PrintSettingsWindow		Çift numaralı sayfalar
-Gray scale	PrintSettingsWindow		Gri tonlu
-Height: 	PrintSettingsWindow		Yükseklik:
-Max. printer resolution	PrintSettingsWindow		En çok yazıcı çözünürlüğü
-Mode	PrintSettingsWindow		Kip
-Normal	PrintSettingsWindow		Normal
-Odd pages	PrintSettingsWindow		Tek numaralı sayfalar
-OK	PrintSettingsWindow		Tamam
-Order	PrintSettingsWindow		Sıra
-Page	PrintSettingsWindow		Sayfa
-Pages	PrintSettingsWindow		Sayfalar
-Print	PrintSettingsWindow		Yazdır
-Print settings	PrintSettingsWindow		Yazdırma ayarları
-Reverse	PrintSettingsWindow		Tersi
-Rotation	PrintSettingsWindow		Döndürme
-Width: 	PrintSettingsWindow		Genişlik:
-Wrong parameter!	PrintSettingsWindow		Yanlış parametre!
-Zoom (%)	PrintSettingsWindow		Yakınlaştırma (%)
-Zoom must be between 25 and 400!	PrintSettingsWindow		Yakınlaştırma 25 ve 400 arasında olmalıdır!
-[internal link]	PDFView		[iç bağ]
-[link type 'movie' not supported]	PDFView		['film' bağlantı türü desteklenmiyor]
-[unknown link]	PDFView		[bilinmeyen bağlantı]
-Annotation	PDFView		Ek açıklama
-NimblePDF reading file: 	PDFView		NimblePDF dosyayı okuyor:
-NimblePDF: Launch	PDFView		NimblePDF: Çalıştır
-Cancel	PDFView		İptal
-Copy link	PDFView		Bağlantıyı kopyala
-Delete	PDFView		Sil
-Edit	PDFView		Düzenle
-Execute the command:	PDFView		Bu komutu çalıştır:
-Go to page %d	PDFView		%d. sayfaya git
-Leave annotation editing mode	PDFView		Düzenleme kipinden çık
-OK	PDFView		Tamam
-Open in new window	PDFView		Yeni pencerede aç
-Properties	PDFView		Özellikler
-Save file attachment as…	PDFView		Dosya ekini farklı kaydet…
-Saving file attachment:	PDFView		Dosya eki kaydediliyor:
-Unknown link action type: '%s'	PDFView		Bilinmeyen bağlantı eylem türü: '%s'
-<empty>	OutlinesWindow		<boş>
-Document	OutlinesWindow		Belge
-Edit title for bookmark	OutlinesWindow		Yer imi başlığını düzenle
-No title	OutlinesWindow		Başlık yok
-OK	OutlinesWindow		Tamam
-User defined	OutlinesWindow		Kullanıcı tanımlı
-<empty>	AttachmentView		<boş>
-Description	AttachmentView		Açıklama
-File name	AttachmentView		Dosya adı
-Save attachment(s) as	AttachmentView		Ek(ler)i farklı kaydet
-Save selected attachment to file	AttachmentView		Seçili eki dosyaya kaydet
-Save selected attachments into directory	AttachmentView		Seçili ekleri dizine kaydet
-Saving attachment(s):	AttachmentView		Ek(ler) kaydediliyor:
-Abort	PrintingProgressWindow		İptal et
-NimblePDF printing	PrintingProgressWindow		NimblePDF yazdırıyor
-NimblePDF printing document: 	PrintingProgressWindow		NimblePDF belgeyi yazdırıyor:
-Page:	PrintingProgressWindow		Sayfa:
-Page: %d	PrintingProgressWindow		Sayfa: %d
-Stop	PrintingProgressWindow		Durdur
-Abort	FileInfoWindow		İptal et
-Allowed	FileInfoWindow		İzin veriliyor
-Annotations:	FileInfoWindow		Ek açıklamalar:
-Author:	FileInfoWindow		Yazar:
-Copy & paste:	FileInfoWindow		Kopyala ve yapıştır:
-Created:	FileInfoWindow		Oluşturulma:
-Creator:	FileInfoWindow		Oluşturan:
-Denied	FileInfoWindow		İzin verilmiyor
-Document	FileInfoWindow		Belge
-Editing:	FileInfoWindow		Düzenleniyor:
-Embedded name	FileInfoWindow		Gömülü ad
-Encrypted:	FileInfoWindow		Şifrelenmiş:
-File info	FileInfoWindow		Dosya bilgisi
-Filename:	FileInfoWindow		Dosya adı:
-Fonts of this page	FileInfoWindow		Yazıtipleri
-Keywords:	FileInfoWindow		Anahtar sözcükler:
-Linearized:	FileInfoWindow		Doğrusallaştırılmış:
-Modified:	FileInfoWindow		Değiştirilme:
-Name	FileInfoWindow		Ad
-No	FileInfoWindow		Hayır
-Path:	FileInfoWindow		Yol:
-Printing:	FileInfoWindow		Yazdırma:
-Producer:	FileInfoWindow		Prodüktör:
-Security	FileInfoWindow		Güvenlik
-Show all fonts	FileInfoWindow		Tüm yazıtiplerini göster
-Subject:	FileInfoWindow		Konu:
-Title:	FileInfoWindow		Başlık:
-Type	FileInfoWindow		Tür
-Version:	FileInfoWindow		Sürüm:
-Yes	FileInfoWindow		Evet
-About NimblePDF…	PDFWindow		NimblePDF hakkında…
-Add	PDFWindow		Ekle
-Add circle annotation	PDFWindow		Daire
-Add comment text annotation	PDFWindow		Metin
-Add file attachment annotation	PDFWindow		Dosya eki
-Add free text annotation	PDFWindow		Serbest metin
-Add help text annotation	PDFWindow		Yardım metni
-Add highlight annotation	PDFWindow		Vurgulama
-Add ink annotation	PDFWindow		Mürekkep
-Add insert text annotation	PDFWindow		Metin ekle imi
-Add key text annotation	PDFWindow		Anahtar metin
-Add line annotation	PDFWindow		Çizgi
-Add link annotation	PDFWindow		Bağlantı
-Add movie annotation	PDFWindow		Film
-Add new paragraph text annotation	PDFWindow		Yeni paragraf metni
-Add note text annotation	PDFWindow		Not metni
-Add paragraph text annotation	PDFWindow		Paragraf metni
-Add popup annotation	PDFWindow		Açılır pencere
-Add printer mark annotation	PDFWindow		Yazıcı imi
-Add sound annotation	PDFWindow		Ses
-Add square annotation	PDFWindow		Kare
-Add squiggly annotation	PDFWindow		Dalgalı alt çizgiler
-Add stamp annotation	PDFWindow		Damga
-Add strikeout annotation	PDFWindow		Üstünü çiz
-Add trapnet annotation	PDFWindow		Kapan ağı
-Add underline annotation	PDFWindow		Altını çiz
-Add widget annotation	PDFWindow		Uygulamacık
-Back	PDFWindow		Geri
-Back in page history list	PDFWindow		Sayfa geçmişi listesinde geri
-Bookmark	PDFWindow		Yer İmleri
-Can not overwrite a PDF file that's currently opened in NimblePDF! Please choose another file name.	PDFWindow		Şu anda NimblePDF'de açık olan bir PDF dosyasının üzerine yazılamaz. Lütfen başka bir dosya adı seçin.
-Close	PDFWindow		Kapat
-Copy selection	PDFWindow		Seçimi kopyala
-Could not write PDF file!	PDFWindow		PDF dosyası yazılamadı!
-Custom zoom factor (%d%%)	PDFWindow		Özel yakınlaştırma çarpanı (%d%%)
-Delete	PDFWindow		Sil
-Edit	PDFWindow		Düzen
+1	Turkish	application/x-vnd.Haiku-NimblePDF	777513411
 Editing of annotations in an encrypted PDF file isn't supported yet!	PDFWindow		Şifreli bir PDF dosyasındaki ek açıklamaların düzenlenmesi henüz olanaklı değil!
-English.pdf	PDFWindow	Replace with the PDF name of the help document, if there is one for your language.	English.pdf
-File	PDFWindow		Dosya
-File info…	PDFWindow		Dosya bilgisi …
-Find	PDFWindow		Bul
+Cancel	PDFView		İptal
+NimblePDF printing document: 	PrintingProgressWindow		NimblePDF belgeyi yazdırıyor:
+Go to previous page	PDFWindow		Önceki sayfaya git
+Subject:	FileInfoWindow		Konu:
+Add strikeout annotation	PDFWindow		Üstünü çiz
+Owner password	PasswordWindow		Sahip şifresi
+NimblePDF: Error opening file!	NimblePDFApplication		NimblePDF: Dosya açılamadı!
+Alpha	NimblePDFApplication		Alfa
+Show document view only	PreferencesWindow		Show document view only
+NimblePDF printing	PrintingProgressWindow		NimblePDF yazdırıyor
+Rendering engine	NimblePDFApplication		Rendering engine
+NimblePDF is free software under the GNU General Public License, version 2 or (at your option) any later version.	NimblePDFApplication		NimblePDF is free software under the GNU General Public License, version 2 or (at your option) any later version.
+Add insert text annotation	PDFWindow		Metin ekle imi
+Unknown	NimblePDFApplication		Bilinmeyen
+Delete	PDFWindow		Sil
+A fast, full-featured PDF reader for Haiku.	NimblePDFApplication		A fast, full-featured PDF reader for Haiku.
+Color	PrintSettingsWindow		Renk
+View	PDFWindow		Görüntü
+Search string not found.	PDFSearch		Arama dizisi bulunamadı.
+Normal	PrintSettingsWindow		Normal
+Add widget annotation	PDFWindow		Uygulamacık
+Rendering by poppler %s.	NimblePDFApplication	poppler version	Rendering by poppler %s.
+Asian fonts	PreferencesWindow		Asian fonts
+Zoom in	PDFWindow		Yakınlaştır
+Page:	FindTextWindow		Sayfa:
+Rotation	PrintSettingsWindow		Döndürme
+Error messages	TraceWindow		Hata iletileri
+Jump to page	PDFWindow		Sayfaya atla
+Mode	PrintSettingsWindow		Kip
+Save as…	PDFWindow		Farklı kaydet…
+Execute the command:	PDFView		Bu komutu çalıştır:
+Open in workspace:	PreferencesWindow		Open in workspace:
+Author	PreferencesWindow		Author
+Issue tracker…	PDFWindow		Hata izleyicisi…
+NimblePDF status	StatusWindow		NimblePDF durumu
+Can not overwrite a PDF file that's currently opened in NimblePDF! Please choose another file name.	PDFWindow		Şu anda NimblePDF'de açık olan bir PDF dosyasının üzerine yazılamaz. Lütfen başka bir dosya adı seçin.
+Printing:	FileInfoWindow		Yazdırma:
+Font:	AnnotationWindow		Yazıtipi:
+User fonts	PreferencesWindow		User fonts
+Zoom must be between 25 and 400!	PrintSettingsWindow		Yakınlaştırma 25 ve 400 arasında olmalıdır!
+Save attachment(s) as	AttachmentView		Ek(ler)i farklı kaydet
+Open…	PDFWindow		Aç…
+NimblePDF reading file: 	PDFView		NimblePDF dosyayı okuyor:
+OK	PDFView		Tamam
+Date:	AnnotationWindow		Tarih:
+Show page list	PDFWindow		Sayfa listesini göster
+Restore page number	PreferencesWindow		Restore page number
+OK	PasswordWindow		Tamam
+Name	FileInfoWindow		Ad
+Document	OutlinesWindow		Belge
+Hide side bar	PDFWindow		Yan paneli gizle
+Page setup…	PDFWindow		Sayfa yapısı…
+Add ink annotation	PDFWindow		Mürekkep
+Source code	NimblePDFApplication		Source code
+Find: 	FindTextWindow		Bul:
+Zoom	PDFWindow		Yakınlaştırma
+Based on BePDF	NimblePDFApplication		Based on BePDF
+Go to next page	PDFWindow		Sonraki sayfaya git
+Add square annotation	PDFWindow		Kare
+[internal link]	PDFView		[iç bağ]
+Fonts of this page	FileInfoWindow		Yazıtipleri
+Last	PDFWindow		Son
+About NimblePDF…	PDFWindow		NimblePDF hakkında…
+Abort	FileInfoWindow		İptal et
+Restore window position and size	PreferencesWindow		Restore window position and size
 Find next	PDFWindow		Sonrakini bul
-Find next…	PDFWindow		Sonrakini bul…
-Find…	PDFWindow		Bul…
-First	PDFWindow		İlk
-Fit to page	PDFWindow		Sayfaya sığdır
-Fit to page width	PDFWindow		Sayfa genişliğine sığdır
-Forward	PDFWindow		İleri
-Forward in page history list	PDFWindow		Sayfa geçmişi listesinde ileri
-Fullscreen	PDFWindow		Tam ekran
-Fullscreen mode	PDFWindow		Tam ekran kipi
+All pages	PrintSettingsWindow		Tüm sayfalar
+Show annotation toolbar	PDFWindow		Ek açıklama araç çubuğunu göster
+File name	AttachmentView		Dosya adı
+Go to start of document	PDFWindow		Belgenin başlangıcına git
 Go back 10 pages	PDFWindow		10 sayfa geri git
 Go forward 10 pages	PDFWindow		10 sayfa ileri git
-Go to end of document	PDFWindow		Belgenin sonuna git
-Go to next page	PDFWindow		Sonraki sayfaya git
-Go to previous page	PDFWindow		Önceki sayfaya git
-Go to start of document	PDFWindow		Belgenin başlangıcına git
-Help	PDFWindow		Yardım
-Hide side bar	PDFWindow		Yan paneli gizle
-Issue tracker…	PDFWindow		Hata izleyicisi…
-Jump to page	PDFWindow		Sayfaya atla
-Last	PDFWindow		Son
-Leave annotation editing mode	PDFWindow		Düzenleme kipinden çık
-Next	PDFWindow		Sonraki
-of %d	PDFWindow		/%d
-OK	PDFWindow		Tamam
-Online help…	PDFWindow		Çevrimiçi yardım…
-Open file	PDFWindow		Dosya aç
-Open in new window…	PDFWindow		Yeni pencerede aç…
-Open…	PDFWindow		Aç…
-Page	PDFWindow		Sayfa
-Page %d	PDFWindow		Sayfa %d
-Page setup…	PDFWindow		Sayfa yapısı…
-PDF file successfully written!	PDFWindow		PDF dosyası başarıyla yazıldı!
-Preferences…	PDFWindow		Tercihler…
-Previous	PDFWindow		Önceki
-Print	PDFWindow		Yazdır
-Print…	PDFWindow		Yazdır…
-Quit	PDFWindow		Çık
-Reload	PDFWindow		Yeniden yükle
-Reload file	PDFWindow		Dosyayı yeniden yükle
-Rotate clockwise	PDFWindow		Saat yönünde döndür
-Rotate counter-clockwise	PDFWindow		Saat yönünün tersine döndür
-Rotation	PDFWindow		Döndürme
-Save as…	PDFWindow		Farklı kaydet…
-Save file as	PDFWindow		Dosyayı farklı kaydet
-Saving copy of PDF file:	PDFWindow		PDF dosyasının bir kopyası kaydediliyor:
-Search	PDFWindow		Arama
-Select all	PDFWindow		Tümünü seç
-Select none	PDFWindow		Hiçbirini seçme
+Add file attachment annotation	PDFWindow		Dosya eki
+System fonts	PreferencesWindow		System fonts
 Show annotation tool bar	PDFWindow		Ek açıklama araç çubuğunu göster
-Show annotation toolbar	PDFWindow		Ek açıklama araç çubuğunu göster
-Show attachments	PDFWindow		Ekleri göster
+Fit to page width	PDFWindow		Sayfa genişliğine sığdır
+DPI	PrintSettingsWindow		DPI
+Find…	PDFWindow		Bul…
+Odd pages	PrintSettingsWindow		Tek numaralı sayfalar
+Add sound annotation	PDFWindow		Ses
 Show bookmarks	PDFWindow		Yer imlerini göster
-Show error messages	PDFWindow		Hata iletilerini göster
-Show help…	PDFWindow		Yardımı göster…
-Show page list	PDFWindow		Sayfa listesini göster
-View	PDFWindow		Görüntü
-Visit homepage…	PDFWindow		Ana sayfayı ziyaret et
-Warning	PDFWindow		Uyarı
-Zoom	PDFWindow		Yakınlaştırma
-Zoom in	PDFWindow		Yakınlaştır
-Zoom out	PDFWindow		Uzaklaştır
-Align:	AnnotationWindow		Hizala:
-Annotation	AnnotationWindow		Ek açıklama
-Asian fonts	AnnotationWindow		Asya yazıtipleri
-Author	AnnotationWindow		Yazar
-Automatic	AnnotationWindow		Otomatik
-current	AnnotationWindow		şu anki
-Date:	AnnotationWindow		Tarih:
-Display	AnnotationWindow		Görüntüleme
-Document	AnnotationWindow		Belge
-Filled rectangle	AnnotationWindow		Dolu dikdörtgen
-Font:	AnnotationWindow		Yazıtipi:
-Fullscreen mode	AnnotationWindow		Tam ekran kipi
-Invert vertical mouse scrolling	AnnotationWindow		Dikey fare kaydırmasını tersine çevir
-Open in workspace:	AnnotationWindow		Şu çalışma alanında aç:
-Preferences	AnnotationWindow		Tercihler
-Restore page number	AnnotationWindow		Sayfa numarasını hatırla
-Restore window position and size	AnnotationWindow		Pencere konumunu ve boyutunu hatırla
-Selection rectangle	AnnotationWindow		Seçim dörtgeni
-Show document view only	AnnotationWindow		Yalnızca belgeyi göster
-Show toolbar, statusbar and scrollbars, too	AnnotationWindow		Araç, durum ve kaydırma çubuklarını da göster
-Size:	AnnotationWindow		Boyut:
-Stroked rectangle	AnnotationWindow		Çerçeveli dikdörtgen
-System fonts	AnnotationWindow		Sistem yazıtipleri
-Title:	AnnotationWindow		Başlık:
-User fonts	AnnotationWindow		Kullanıcı yazıtipleri
-Will take effect at next program launch.	AnnotationWindow		Bir sonraki başlatmada geçerli olacaktır.
-Alpha	NimblePDFApplication		Alfa
-NimblePDF is based on XPDF %s, %s.	NimblePDFApplication	XPDF version, copyright	NimblePDF, XPDF %s temellidir, %s.
-NimblePDF: Error opening file!	NimblePDFApplication		NimblePDF: Dosya açılamadı!
-Beta	NimblePDFApplication		Beta
-Close	NimblePDFApplication		Kapat
-Development	NimblePDFApplication		Geliştirme
-Error	NimblePDFApplication		Hata
-Final	NimblePDFApplication		Final
-Gamma	NimblePDFApplication		Gama
-Golden Master	NimblePDFApplication		Altın kopya
-Unknown	NimblePDFApplication		Bilinmeyen
-Version	NimblePDFApplication		Sürüm
-Auto open	TraceWindow		Kendiliğinden aç
+Max. printer resolution	PrintSettingsWindow		En çok yazıcı çözünürlüğü
+Quit	PDFWindow		Çık
+Options	FindTextWindow		Seçenekler
+File	PDFWindow		Dosya
+Fullscreen mode	PDFWindow		Tam ekran kipi
+Find text	FindTextWindow		Metin bul
 Clear	TraceWindow		Temizle
-Error messages	TraceWindow		Hata iletileri
-Floating	TraceWindow		Yüzen pencere
-NimblePDF status	StatusWindow		NimblePDF durumu
+Print	PrintSettingsWindow		Yazdır
 Enter Password	PasswordWindow		Parola girin
-OK	PasswordWindow		Tamam
-Owner password	PasswordWindow		Sahip şifresi
+Online help…	PDFWindow		Çevrimiçi yardım…
+Filename:	FileInfoWindow		Dosya adı:
+Document	PreferencesWindow		Document
+Embedded name	FileInfoWindow		Gömülü ad
+Close	NimblePDFApplication		Kapat
+Copy link	PDFView		Bağlantıyı kopyala
+First	PDFWindow		İlk
+Add	PDFWindow		Ekle
+<empty>	AttachmentView		<boş>
+Open in new window…	PDFWindow		Yeni pencerede aç…
+Preferences…	PDFWindow		Tercihler…
+Beta	NimblePDFApplication		Beta
+OK	PDFSearch		Tamam
+Delete	PDFView		Sil
+Zoom (%)	PrintSettingsWindow		Yakınlaştırma (%)
+Type	FileInfoWindow		Tür
+Custom zoom factor (%d%%)	PDFWindow		Özel yakınlaştırma çarpanı (%d%%)
+Add stamp annotation	PDFWindow		Damga
+Abort	PrintingProgressWindow		İptal et
+Align:	AnnotationWindow		Hizala:
+Go to end of document	PDFWindow		Belgenin sonuna git
+Auto open	TraceWindow		Kendiliğinden aç
+Back	PDFWindow		Geri
+Pages	PrintSettingsWindow		Sayfalar
+Add movie annotation	PDFWindow		Film
+Add circle annotation	PDFWindow		Daire
+Show error messages	PDFWindow		Hata iletilerini göster
+Golden Master	NimblePDFApplication		Altın kopya
+Document	FileInfoWindow		Belge
+Width: 	PrintSettingsWindow		Genişlik:
+Author:	FileInfoWindow		Yazar:
+Add highlight annotation	PDFWindow		Vurgulama
+Add new paragraph text annotation	PDFWindow		Yeni paragraf metni
+of %d	PDFWindow		/%d
+Security	FileInfoWindow		Güvenlik
+Denied	FileInfoWindow		İzin verilmiyor
+Save file as	PDFWindow		Dosyayı farklı kaydet
+Order	PrintSettingsWindow		Sıra
+Properties	PDFView		Özellikler
+Add comment text annotation	PDFWindow		Metin
+Description	AttachmentView		Açıklama
+Add underline annotation	PDFWindow		Altını çiz
+Development	NimblePDFApplication		Geliştirme
+Saving copy of PDF file:	PDFWindow		PDF dosyasının bir kopyası kaydediliyor:
+Page: %d	FindTextWindow		Sayfa: %d
+Page	PDFWindow		Sayfa
+Add squiggly annotation	PDFWindow		Dalgalı alt çizgiler
+Annotation	PDFView		Ek açıklama
+Add trapnet annotation	PDFWindow		Kapan ağı
+Producer:	FileInfoWindow		Prodüktör:
+Keywords:	FileInfoWindow		Anahtar sözcükler:
+Forward in page history list	PDFWindow		Sayfa geçmişi listesinde ileri
+Page:	PrintingProgressWindow		Sayfa:
+Error getting page number!	NimblePDFApplication		Error getting page number!
+Find next…	PDFWindow		Sonrakini bul…
+Visit homepage…	PDFWindow		Ana sayfayı ziyaret et
+Even pages	PrintSettingsWindow		Çift numaralı sayfalar
+Stop	FindTextWindow		Dur
+Print	PDFWindow		Yazdır
+Add link annotation	PDFWindow		Bağlantı
+ in	PrintSettingsWindow		içinde
+Fullscreen mode	PreferencesWindow		Fullscreen mode
+[link type 'movie' not supported]	PDFView		['film' bağlantı türü desteklenmiyor]
+Annotation	AnnotationWindow		Ek açıklama
+Bookmark	PDFWindow		Yer İmleri
+Next	PDFWindow		Sonraki
+Reverse	PrintSettingsWindow		Tersi
+Page: %d	PrintingProgressWindow		Sayfa: %d
+Select none	PDFWindow		Hiçbirini seçme
+Rotate counter-clockwise	PDFWindow		Saat yönünün tersine döndür
+<empty>	OutlinesWindow		<boş>
+Error	NimblePDFApplication		Hata
+Add key text annotation	PDFWindow		Anahtar metin
+Forward	PDFWindow		İleri
+Size:	AnnotationWindow		Boyut:
+Zoom out	PDFWindow		Uzaklaştır
+Display	PreferencesWindow		Display
+Modified:	FileInfoWindow		Değiştirilme:
+License	NimblePDFApplication		License
+Preferences	PreferencesWindow		Preferences
+Go to page %d	PDFView		%d. sayfaya git
+OK	OutlinesWindow		Tamam
+Copy selection	PDFWindow		Seçimi kopyala
+Final	NimblePDFApplication		Final
+Annotations:	FileInfoWindow		Ek açıklamalar:
+Select all	PDFWindow		Tümünü seç
+PDF file successfully written!	PDFWindow		PDF dosyası başarıyla yazıldı!
+OK	PDFWindow		Tamam
+Previous	PDFWindow		Önceki
+File info	FileInfoWindow		Dosya bilgisi
+Gamma	NimblePDFApplication		Gama
+Search	PDFWindow		Arama
+Leave annotation editing mode	PDFView		Düzenleme kipinden çık
+Edit	PDFView		Düzenle
+Saving attachment(s):	AttachmentView		Ek(ler) kaydediliyor:
+Leave annotation editing mode	PDFWindow		Düzenleme kipinden çık
+OK	PrintSettingsWindow		Tamam
+Add free text annotation	PDFWindow		Serbest metin
+Open file	PDFWindow		Dosya aç
+Print settings	PrintSettingsWindow		Yazdırma ayarları
+Back in page history list	PDFWindow		Sayfa geçmişi listesinde geri
+Find	PDFWindow		Bul
+Yes	FileInfoWindow		Evet
+[unknown link]	PDFView		[bilinmeyen bağlantı]
+Floating	TraceWindow		Yüzen pencere
+Add help text annotation	PDFWindow		Yardım metni
+Stop	PrintingProgressWindow		Durdur
+Add popup annotation	PDFWindow		Açılır pencere
+Show attachments	PDFWindow		Ekleri göster
+Edit	PDFWindow		Düzen
+Show help…	PDFWindow		Yardımı göster…
+Add printer mark annotation	PDFWindow		Yazıcı imi
+Search backwards	FindTextWindow		Geriye doğru ara
+Reload	PDFWindow		Yeniden yükle
+Add line annotation	PDFWindow		Çizgi
+Help	PDFWindow		Yardım
+Will take effect at next program launch.	PreferencesWindow		Will take effect at next program launch.
+NimblePDF is a fork of BePDF, the long-running Haiku PDF reader, with the original xpdf engine replaced by poppler.	NimblePDFApplication		NimblePDF is a fork of BePDF, the long-running Haiku PDF reader, with the original xpdf engine replaced by poppler.
+Rotation	PDFWindow		Döndürme
+Encrypted:	FileInfoWindow		Şifrelenmiş:
+Gray scale	PrintSettingsWindow		Gri tonlu
+Save file attachment as…	PDFView		Dosya ekini farklı kaydet…
+Show toolbar, statusbar and scrollbars, too	PreferencesWindow		Show toolbar, statusbar and scrollbars, too
+Close	PDFWindow		Kapat
+No title	OutlinesWindow		Başlık yok
+Page	PrintSettingsWindow		Sayfa
+current	PreferencesWindow		current
+Created:	FileInfoWindow		Oluşturulma:
+Title:	AnnotationWindow		Başlık:
+Saving file attachment:	PDFView		Dosya eki kaydediliyor:
+Open in new window	PDFView		Yeni pencerede aç
+Height: 	PrintSettingsWindow		Yükseklik:
+File info…	PDFWindow		Dosya bilgisi …
+Allowed	FileInfoWindow		İzin veriliyor
+Add paragraph text annotation	PDFWindow		Paragraf metni
+Selection rectangle	PreferencesWindow		Selection rectangle
+Linearized:	FileInfoWindow		Doğrusallaştırılmış:
+No	FileInfoWindow		Hayır
+NimblePDF: Launch	PDFView		NimblePDF: Çalıştır
+Fit to page	PDFWindow		Sayfaya sığdır
+Reload file	PDFWindow		Dosyayı yeniden yükle
+Path:	FileInfoWindow		Yol:
+Print…	PDFWindow		Yazdır…
+Copy & paste:	FileInfoWindow		Kopyala ve yapıştır:
+Page %d	PDFWindow		Sayfa %d
+Edit title for bookmark	OutlinesWindow		Yer imi başlığını düzenle
+Version:	FileInfoWindow		Sürüm:
+English.pdf	PDFWindow	Replace with the PDF name of the help document, if there is one for your language.	English.pdf
+Automatic	AnnotationWindow		Otomatik
+Title:	FileInfoWindow		Başlık:
+Warning	PDFWindow		Uyarı
+User defined	OutlinesWindow		Kullanıcı tanımlı
+Fullscreen	PDFWindow		Tam ekran
+Invert vertical mouse scrolling	PreferencesWindow		Invert vertical mouse scrolling
+Save selected attachment to file	AttachmentView		Seçili eki dosyaya kaydet
+Add note text annotation	PDFWindow		Not metni
+Editing:	FileInfoWindow		Düzenleniyor:
 User password	PasswordWindow		Kullanıcı şifresi
 Find	FindTextWindow		Bul
-Find text	FindTextWindow		Metin bul
-Find: 	FindTextWindow		Bul:
+Could not write PDF file!	PDFWindow		PDF dosyası yazılamadı!
+Filled rectangle	PreferencesWindow		Filled rectangle
 Ignore case	FindTextWindow		BÜYÜK/küçük harf yoksay
-Options	FindTextWindow		Seçenekler
-Page:	FindTextWindow		Sayfa:
-Page: %d	FindTextWindow		Sayfa: %d
-Search backwards	FindTextWindow		Geriye doğru ara
-Stop	FindTextWindow		Dur
-OK	PDFSearch		Tamam
-Search string not found.	PDFSearch		Arama dizisi bulunamadı.
+Creator:	FileInfoWindow		Oluşturan:
+Invalid file reference received!	NimblePDFApplication		Invalid file reference received!
+Save selected attachments into directory	AttachmentView		Seçili ekleri dizine kaydet
+Wrong parameter!	PrintSettingsWindow		Yanlış parametre!
+Rotate clockwise	PDFWindow		Saat yönünde döndür
+Stroked rectangle	PreferencesWindow		Stroked rectangle
+Show all fonts	FileInfoWindow		Tüm yazıtiplerini göster

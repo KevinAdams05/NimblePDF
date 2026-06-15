@@ -1,254 +1,261 @@
-1	Swedish	application/x-vnd.Haiku-NimblePDF	1765081836
- in	PrintSettingsWindow		i
-All pages	PrintSettingsWindow		Alla sidor
-Color	PrintSettingsWindow		Färg
-DPI	PrintSettingsWindow		DPI
-Even pages	PrintSettingsWindow		Jämna sidor
-Gray scale	PrintSettingsWindow		Gråskala
-Height: 	PrintSettingsWindow		Höjd:
-Max. printer resolution	PrintSettingsWindow		Högsta skrivarupplösning
-Mode	PrintSettingsWindow		Läge
-Normal	PrintSettingsWindow		Normal
-Odd pages	PrintSettingsWindow		Ojämna sidor
-OK	PrintSettingsWindow		OK
-Order	PrintSettingsWindow		Ordning
-Page	PrintSettingsWindow		Sida
-Pages	PrintSettingsWindow		Sidor
-Print	PrintSettingsWindow		Skriv ut
-Print settings	PrintSettingsWindow		Utskriftsinställningar
-Reverse	PrintSettingsWindow		Omkasta
-Rotation	PrintSettingsWindow		Rotation
-Width: 	PrintSettingsWindow		Bredd:
-Wrong parameter!	PrintSettingsWindow		Fel parameter!
-Zoom (%)	PrintSettingsWindow		Zoom (%)
-Zoom must be between 25 and 400!	PrintSettingsWindow		Zoomläget måste vara mellan 25 och 400!
-[internal link]	PDFView		[intern länk]
-[link type 'movie' not supported]	PDFView		[länktypen 'video' stöds inte]
-[unknown link]	PDFView		[okänd länk]
-Annotation	PDFView		Kommentar
-NimblePDF reading file: 	PDFView		NimblePDF läser fil:
-NimblePDF: Launch	PDFView		NimblePDF: Starta
-Cancel	PDFView		Avbryt
-Copy link	PDFView		Kopiera länk
-Delete	PDFView		Ta bort
-Edit	PDFView		Redigera
-Execute the command:	PDFView		Kör kommandot:
-Go to page %d	PDFView		Gå till sida %d
-Leave annotation editing mode	PDFView		Lämna redigeringsläge för kommentar
-OK	PDFView		OK
-Open in new window	PDFView		Öppna i nytt fönster
-Properties	PDFView		Alternativ
-Save file attachment as…	PDFView		Spara bifogad fil som...
-Saving file attachment:	PDFView		Sparar bifogad fil:
-Unknown link action type: '%s'	PDFView		Okänd åtgärdstyp för länk: '%s'
-<empty>	OutlinesWindow		<tomt>
-Document	OutlinesWindow		Dokument
-Edit title for bookmark	OutlinesWindow		Ändra titel för bokmärke
-No title	OutlinesWindow		Ingen titel
-OK	OutlinesWindow		OK
-User defined	OutlinesWindow		Användaredefinerad
-<empty>	AttachmentView		<tom>
-Description	AttachmentView		Beskrivning
-File name	AttachmentView		Filnamn
-Save attachment(s) as	AttachmentView		Spara bilagor som
-Save selected attachment to file	AttachmentView		Spara markerad bilaga till fil
-Save selected attachments into directory	AttachmentView		Spara markerad bilaga till mapp
-Saving attachment(s):	AttachmentView		Sparar bilagor:
-Abort	PrintingProgressWindow		Avbryt
-NimblePDF printing	PrintingProgressWindow		NimblePDF skriver ut
-NimblePDF printing document: 	PrintingProgressWindow		NimblePDF skriver ut dokument
-Page:	PrintingProgressWindow		Sida:
-Page: %d	PrintingProgressWindow		Sida: %d
-Stop	PrintingProgressWindow		Stoppa
-Abort	FileInfoWindow		Avbryt
-Allowed	FileInfoWindow		Tillåtet
-Annotations:	FileInfoWindow		Annotationer:
-Author:	FileInfoWindow		Författare:
-Copy & paste:	FileInfoWindow		Kopiera och klistra in:
-Created:	FileInfoWindow		Skapad:
-Creator:	FileInfoWindow		Skapare:
-Denied	FileInfoWindow		Nekad
-Document	FileInfoWindow		Dokument
-Editing:	FileInfoWindow		Redigering:
-Embedded name	FileInfoWindow		Inbäddat namn
-Encrypted:	FileInfoWindow		Kryptering:
-File info	FileInfoWindow		Filinformation
-Filename:	FileInfoWindow		Filnamn:
-Fonts of this page	FileInfoWindow		Typsnitt på denna sida
-Keywords:	FileInfoWindow		Nyckelord:
-Linearized:	FileInfoWindow		Linjäriserad:
-Modified:	FileInfoWindow		Modifierad:
-Name	FileInfoWindow		Namn
-No	FileInfoWindow		Nej
-Path:	FileInfoWindow		Sökväg:
-Printing:	FileInfoWindow		Utskrift:
-Producer:	FileInfoWindow		Producent:
-Security	FileInfoWindow		Säkerhet
-Show all fonts	FileInfoWindow		Visa alla typsnitt
-Subject:	FileInfoWindow		Ämne:
-Title:	FileInfoWindow		Titel:
-Type	FileInfoWindow		Typ
-Version:	FileInfoWindow		Version:
-Yes	FileInfoWindow		Ja
-About NimblePDF…	PDFWindow		Om NimblePDF…
-Add	PDFWindow		Lägg till
-Add circle annotation	PDFWindow		Lägg till cirkelannotation
-Add comment text annotation	PDFWindow		Lägg till kommentar för textannotation
-Add file attachment annotation	PDFWindow		Lägg till annotation för bifogad fil
-Add free text annotation	PDFWindow		Lägg till annotation för fritext
-Add help text annotation	PDFWindow		Lägg till annotation för hjälptext
-Add highlight annotation	PDFWindow		Lägg till annotation för överstrykning
-Add ink annotation	PDFWindow		Lägg till bläckannotation
-Add insert text annotation	PDFWindow		Lägg till textannotation
-Add key text annotation	PDFWindow		Lägg till nyckeltextannotation
-Add line annotation	PDFWindow		Lägg till linjeannotation
-Add link annotation	PDFWindow		Lägg till länkannotation
-Add movie annotation	PDFWindow		Lägg till filmannotation
-Add new paragraph text annotation	PDFWindow		Lägg till annotation för ny textparagraf
-Add note text annotation	PDFWindow		Lägg till annotation för textanteckning
-Add paragraph text annotation	PDFWindow		Lägg till annotation för textparagraf
-Add popup annotation	PDFWindow		Lägg till popup-annotation
-Add printer mark annotation	PDFWindow		Lägg till annotation för boktryckarmärke
-Add sound annotation	PDFWindow		Lägg till ljudannotation
-Add square annotation	PDFWindow		Lägg till rektangulär annotation
-Add squiggly annotation	PDFWindow		Lägg till annotation för snirklig linje
-Add stamp annotation	PDFWindow		Lägg till stämpelannotation
-Add strikeout annotation	PDFWindow		Lägg till överstrykningsannotation
-Add trapnet annotation	PDFWindow		Lägg till fältsnittsannotation
-Add underline annotation	PDFWindow		Lägg till ‎understruken annotering
-Add widget annotation	PDFWindow		Lägg till komponentannotation
-Back	PDFWindow		Bakåt
-Back in page history list	PDFWindow		Tillbaka i sidohistorikslistan
-Bookmark	PDFWindow		Bokmärke
-Can not overwrite a PDF file that's currently opened in NimblePDF! Please choose another file name.	PDFWindow		Kan inte skriva över en PDF-fil som för närvarande är öppnad i NimblePDF! Vänligen välj ett annat filnamn.
-Close	PDFWindow		Stäng
-Copy selection	PDFWindow		Kopiera markering
-Could not write PDF file!	PDFWindow		Kunde inte skriva PDF-fil!
-Custom zoom factor (%d%%)	PDFWindow		Anpassad zoomfaktor (%d%%)
-Delete	PDFWindow		Ta bort
-Edit	PDFWindow		Redigera
+1	Swedish	application/x-vnd.Haiku-NimblePDF	777513411
 Editing of annotations in an encrypted PDF file isn't supported yet!	PDFWindow		Redigering av annotationer i en krypterad PDF-fil stöds inte.
-English.pdf	PDFWindow	Replace with the PDF name of the help document, if there is one for your language.	English.pdf
-File	PDFWindow		Arkiv
-File info…	PDFWindow		Filinformation…
-Find	PDFWindow		Sök
+Cancel	PDFView		Avbryt
+NimblePDF printing document: 	PrintingProgressWindow		NimblePDF skriver ut dokument
+Go to previous page	PDFWindow		Gå till föregående sida
+Subject:	FileInfoWindow		Ämne:
+Add strikeout annotation	PDFWindow		Lägg till överstrykningsannotation
+Owner password	PasswordWindow		Ägarlösenord
+NimblePDF: Error opening file!	NimblePDFApplication		NimblePDF: Fel vid öppnande av fil!
+Alpha	NimblePDFApplication		Alfa
+Show document view only	PreferencesWindow		Show document view only
+NimblePDF printing	PrintingProgressWindow		NimblePDF skriver ut
+Rendering engine	NimblePDFApplication		Rendering engine
+NimblePDF is free software under the GNU General Public License, version 2 or (at your option) any later version.	NimblePDFApplication		NimblePDF is free software under the GNU General Public License, version 2 or (at your option) any later version.
+Add insert text annotation	PDFWindow		Lägg till textannotation
+Unknown	NimblePDFApplication		Okänd
+Delete	PDFWindow		Ta bort
+A fast, full-featured PDF reader for Haiku.	NimblePDFApplication		A fast, full-featured PDF reader for Haiku.
+Color	PrintSettingsWindow		Färg
+View	PDFWindow		Visa
+Search string not found.	PDFSearch		Söksträngen hittades inte.
+Normal	PrintSettingsWindow		Normal
+Add widget annotation	PDFWindow		Lägg till komponentannotation
+Rendering by poppler %s.	NimblePDFApplication	poppler version	Rendering by poppler %s.
+Asian fonts	PreferencesWindow		Asian fonts
+Zoom in	PDFWindow		Zooma in
+Page:	FindTextWindow		Sida:
+Rotation	PrintSettingsWindow		Rotation
+Error messages	TraceWindow		Felmeddelanden
+Jump to page	PDFWindow		Hoppa till sida
+Mode	PrintSettingsWindow		Läge
+Save as…	PDFWindow		Spara som…
+Execute the command:	PDFView		Kör kommandot:
+Open in workspace:	PreferencesWindow		Open in workspace:
+Author	PreferencesWindow		Author
+Issue tracker…	PDFWindow		Felrapporteringssystem...
+NimblePDF status	StatusWindow		NimblePDF status
+Can not overwrite a PDF file that's currently opened in NimblePDF! Please choose another file name.	PDFWindow		Kan inte skriva över en PDF-fil som för närvarande är öppnad i NimblePDF! Vänligen välj ett annat filnamn.
+Printing:	FileInfoWindow		Utskrift:
+Font:	AnnotationWindow		Typsnitt:
+User fonts	PreferencesWindow		User fonts
+Zoom must be between 25 and 400!	PrintSettingsWindow		Zoomläget måste vara mellan 25 och 400!
+Save attachment(s) as	AttachmentView		Spara bilagor som
+Open…	PDFWindow		Öppna…
+NimblePDF reading file: 	PDFView		NimblePDF läser fil:
+OK	PDFView		OK
+Date:	AnnotationWindow		Datum:
+Show page list	PDFWindow		Visa sidlistan
+Restore page number	PreferencesWindow		Restore page number
+OK	PasswordWindow		OK
+Name	FileInfoWindow		Namn
+Document	OutlinesWindow		Dokument
+Hide side bar	PDFWindow		Göm statusfältet
+Page setup…	PDFWindow		Utskriftsformat...
+Add ink annotation	PDFWindow		Lägg till bläckannotation
+Source code	NimblePDFApplication		Source code
+Find: 	FindTextWindow		Sök:
+Zoom	PDFWindow		Zooma
+Based on BePDF	NimblePDFApplication		Based on BePDF
+Go to next page	PDFWindow		Gå till nästa sida
+Add square annotation	PDFWindow		Lägg till rektangulär annotation
+[internal link]	PDFView		[intern länk]
+Fonts of this page	FileInfoWindow		Typsnitt på denna sida
+Last	PDFWindow		Sista
+About NimblePDF…	PDFWindow		Om NimblePDF…
+Abort	FileInfoWindow		Avbryt
+Restore window position and size	PreferencesWindow		Restore window position and size
 Find next	PDFWindow		Sök nästa
-Find next…	PDFWindow		Sök nästa…
-Find…	PDFWindow		Sök…
-First	PDFWindow		Första
-Fit to page	PDFWindow		Anpassa till sidan
-Fit to page width	PDFWindow		Anpassa till sidans bredd
-Forward	PDFWindow		Framåt
-Forward in page history list	PDFWindow		Framåt i sidhistoriken
-Fullscreen	PDFWindow		Fullskärm
-Fullscreen mode	PDFWindow		Fullskärmsläge
+All pages	PrintSettingsWindow		Alla sidor
+Show annotation toolbar	PDFWindow		Visa annotationsverktygsfältet
+File name	AttachmentView		Filnamn
+Go to start of document	PDFWindow		Gå till början av dokumentet
 Go back 10 pages	PDFWindow		Gå tillbaka 10 sidor
 Go forward 10 pages	PDFWindow		Gå framåt 10 sidor
-Go to end of document	PDFWindow		Gå till slutet av dokumentet
-Go to next page	PDFWindow		Gå till nästa sida
-Go to previous page	PDFWindow		Gå till föregående sida
-Go to start of document	PDFWindow		Gå till början av dokumentet
-Help	PDFWindow		Hjälp
-Hide side bar	PDFWindow		Göm statusfältet
-Issue tracker…	PDFWindow		Felrapporteringssystem...
-Jump to page	PDFWindow		Hoppa till sida
-Last	PDFWindow		Sista
-Leave annotation editing mode	PDFWindow		Lämna läge för annotationsredigering
-Next	PDFWindow		Nästa
-of %d	PDFWindow		av %d
-OK	PDFWindow		OK
-Online help…	PDFWindow		Onlinehjälp...
-Open file	PDFWindow		Öppna fil
-Open in new window…	PDFWindow		Öppna i nytt fönster...
-Open…	PDFWindow		Öppna…
-Page	PDFWindow		Sida
-Page %d	PDFWindow		Sida %d
-Page setup…	PDFWindow		Utskriftsformat...
-PDF file successfully written!	PDFWindow		PDF-filen skrevs framgångsrikt!
-Preferences…	PDFWindow		Inställningar...
-Previous	PDFWindow		Föregående
-Print	PDFWindow		Skriv ut
-Print…	PDFWindow		Skriv ut...
-Quit	PDFWindow		Avsluta
-Reload	PDFWindow		Ladda om
-Reload file	PDFWindow		Ladda om fil
-Rotate clockwise	PDFWindow		Rotera medurs
-Rotate counter-clockwise	PDFWindow		Rotera moturs
-Rotation	PDFWindow		Rotation
-Save as…	PDFWindow		Spara som…
-Save file as	PDFWindow		Spara fil som
-Saving copy of PDF file:	PDFWindow		Sparar kopia av PDF-filen:
-Search	PDFWindow		Sök
-Select all	PDFWindow		Markera alla
-Select none	PDFWindow		Markera ingen
+Add file attachment annotation	PDFWindow		Lägg till annotation för bifogad fil
+System fonts	PreferencesWindow		System fonts
 Show annotation tool bar	PDFWindow		Visa annotationsverktygsfältet
-Show annotation toolbar	PDFWindow		Visa annotationsverktygsfältet
-Show attachments	PDFWindow		Visa bilagor
+Fit to page width	PDFWindow		Anpassa till sidans bredd
+DPI	PrintSettingsWindow		DPI
+Find…	PDFWindow		Sök…
+Odd pages	PrintSettingsWindow		Ojämna sidor
+Add sound annotation	PDFWindow		Lägg till ljudannotation
 Show bookmarks	PDFWindow		Visa bokmärken
-Show error messages	PDFWindow		Visa felmeddelanden
-Show help…	PDFWindow		Visa hjälpen…
-Show page list	PDFWindow		Visa sidlistan
-View	PDFWindow		Visa
-Visit homepage…	PDFWindow		Besök hemsidan...
-Warning	PDFWindow		Varning
-Zoom	PDFWindow		Zooma
-Zoom in	PDFWindow		Zooma in
-Zoom out	PDFWindow		Zooma ut
-Align:	AnnotationWindow		Justera:
-Annotation	AnnotationWindow		Annotation
-Asian fonts	AnnotationWindow		Asiatiska fonter
-Author	AnnotationWindow		Upphovman
-Automatic	AnnotationWindow		Automatiskt
-current	AnnotationWindow		aktuell
-Date:	AnnotationWindow		Datum:
-Display	AnnotationWindow		Visa
-Document	AnnotationWindow		Dokument
-Filled rectangle	AnnotationWindow		Fylld rektangel
-Font:	AnnotationWindow		Typsnitt:
-Fullscreen mode	AnnotationWindow		Fullskärmsläge
-Invert vertical mouse scrolling	AnnotationWindow		Invertera vertikal muskskrollning
-Open in workspace:	AnnotationWindow		Öppna på arbetsyta:
-Preferences	AnnotationWindow		Inställningar
-Restore page number	AnnotationWindow		Återställ sidnumrering
-Restore window position and size	AnnotationWindow		Återställ fönsterposition och storlek
-Selection rectangle	AnnotationWindow		Markeringsrektangel
-Show document view only	AnnotationWindow		Visa endast dokumentvyn
-Show toolbar, statusbar and scrollbars, too	AnnotationWindow		Visa verktygsfält, statusfält och rullningslist
-Size:	AnnotationWindow		Storlek:
-Stroked rectangle	AnnotationWindow		Streckad rektangel
-System fonts	AnnotationWindow		Systemteckensnitt
-Title:	AnnotationWindow		Titel:
-User fonts	AnnotationWindow		Användarvalda fonter
-Will take effect at next program launch.	AnnotationWindow		Kommer att ta effekt vid nästa programstart.
-Alpha	NimblePDFApplication		Alfa
-NimblePDF is based on XPDF %s, %s.	NimblePDFApplication	XPDF version, copyright	NimblePDF är baserad på XPDF %s, %s.
-NimblePDF: Error opening file!	NimblePDFApplication		NimblePDF: Fel vid öppnande av fil!
-Beta	NimblePDFApplication		Beta
-Close	NimblePDFApplication		Stäng
-Development	NimblePDFApplication		Utveckling
-Error	NimblePDFApplication		Fel
-Final	NimblePDFApplication		Slutgiltig
-Gamma	NimblePDFApplication		Gamma
-Golden Master	NimblePDFApplication		Gyllene Master
-Unknown	NimblePDFApplication		Okänd
-Version	NimblePDFApplication		Version
-Auto open	TraceWindow		Öppna automatiskt
+Max. printer resolution	PrintSettingsWindow		Högsta skrivarupplösning
+Quit	PDFWindow		Avsluta
+Options	FindTextWindow		Alternativ
+File	PDFWindow		Arkiv
+Fullscreen mode	PDFWindow		Fullskärmsläge
+Find text	FindTextWindow		Sök efter text
 Clear	TraceWindow		Rensa
-Error messages	TraceWindow		Felmeddelanden
-Floating	TraceWindow		Flytande
-NimblePDF status	StatusWindow		NimblePDF status
+Print	PrintSettingsWindow		Skriv ut
 Enter Password	PasswordWindow		Ange lösenord
-OK	PasswordWindow		OK
-Owner password	PasswordWindow		Ägarlösenord
+Online help…	PDFWindow		Onlinehjälp...
+Filename:	FileInfoWindow		Filnamn:
+Document	PreferencesWindow		Document
+Embedded name	FileInfoWindow		Inbäddat namn
+Close	NimblePDFApplication		Stäng
+Copy link	PDFView		Kopiera länk
+First	PDFWindow		Första
+Add	PDFWindow		Lägg till
+<empty>	AttachmentView		<tom>
+Open in new window…	PDFWindow		Öppna i nytt fönster...
+Preferences…	PDFWindow		Inställningar...
+Beta	NimblePDFApplication		Beta
+OK	PDFSearch		OK
+Delete	PDFView		Ta bort
+Zoom (%)	PrintSettingsWindow		Zoom (%)
+Type	FileInfoWindow		Typ
+Custom zoom factor (%d%%)	PDFWindow		Anpassad zoomfaktor (%d%%)
+Add stamp annotation	PDFWindow		Lägg till stämpelannotation
+Abort	PrintingProgressWindow		Avbryt
+Align:	AnnotationWindow		Justera:
+Go to end of document	PDFWindow		Gå till slutet av dokumentet
+Auto open	TraceWindow		Öppna automatiskt
+Back	PDFWindow		Bakåt
+Pages	PrintSettingsWindow		Sidor
+Add movie annotation	PDFWindow		Lägg till filmannotation
+Add circle annotation	PDFWindow		Lägg till cirkelannotation
+Show error messages	PDFWindow		Visa felmeddelanden
+Golden Master	NimblePDFApplication		Gyllene Master
+Document	FileInfoWindow		Dokument
+Width: 	PrintSettingsWindow		Bredd:
+Author:	FileInfoWindow		Författare:
+Add highlight annotation	PDFWindow		Lägg till annotation för överstrykning
+Add new paragraph text annotation	PDFWindow		Lägg till annotation för ny textparagraf
+of %d	PDFWindow		av %d
+Security	FileInfoWindow		Säkerhet
+Denied	FileInfoWindow		Nekad
+Save file as	PDFWindow		Spara fil som
+Order	PrintSettingsWindow		Ordning
+Properties	PDFView		Alternativ
+Add comment text annotation	PDFWindow		Lägg till kommentar för textannotation
+Description	AttachmentView		Beskrivning
+Add underline annotation	PDFWindow		Lägg till ‎understruken annotering
+Development	NimblePDFApplication		Utveckling
+Saving copy of PDF file:	PDFWindow		Sparar kopia av PDF-filen:
+Page: %d	FindTextWindow		Sida: %d
+Page	PDFWindow		Sida
+Add squiggly annotation	PDFWindow		Lägg till annotation för snirklig linje
+Annotation	PDFView		Kommentar
+Add trapnet annotation	PDFWindow		Lägg till fältsnittsannotation
+Producer:	FileInfoWindow		Producent:
+Keywords:	FileInfoWindow		Nyckelord:
+Forward in page history list	PDFWindow		Framåt i sidhistoriken
+Page:	PrintingProgressWindow		Sida:
+Error getting page number!	NimblePDFApplication		Error getting page number!
+Find next…	PDFWindow		Sök nästa…
+Visit homepage…	PDFWindow		Besök hemsidan...
+Even pages	PrintSettingsWindow		Jämna sidor
+Stop	FindTextWindow		Stopp
+Print	PDFWindow		Skriv ut
+Add link annotation	PDFWindow		Lägg till länkannotation
+ in	PrintSettingsWindow		i
+Fullscreen mode	PreferencesWindow		Fullscreen mode
+[link type 'movie' not supported]	PDFView		[länktypen 'video' stöds inte]
+Annotation	AnnotationWindow		Annotation
+Bookmark	PDFWindow		Bokmärke
+Next	PDFWindow		Nästa
+Reverse	PrintSettingsWindow		Omkasta
+Page: %d	PrintingProgressWindow		Sida: %d
+Select none	PDFWindow		Markera ingen
+Rotate counter-clockwise	PDFWindow		Rotera moturs
+<empty>	OutlinesWindow		<tomt>
+Error	NimblePDFApplication		Fel
+Add key text annotation	PDFWindow		Lägg till nyckeltextannotation
+Forward	PDFWindow		Framåt
+Size:	AnnotationWindow		Storlek:
+Zoom out	PDFWindow		Zooma ut
+Display	PreferencesWindow		Display
+Modified:	FileInfoWindow		Modifierad:
+License	NimblePDFApplication		License
+Preferences	PreferencesWindow		Preferences
+Go to page %d	PDFView		Gå till sida %d
+OK	OutlinesWindow		OK
+Copy selection	PDFWindow		Kopiera markering
+Final	NimblePDFApplication		Slutgiltig
+Annotations:	FileInfoWindow		Annotationer:
+Select all	PDFWindow		Markera alla
+PDF file successfully written!	PDFWindow		PDF-filen skrevs framgångsrikt!
+OK	PDFWindow		OK
+Previous	PDFWindow		Föregående
+File info	FileInfoWindow		Filinformation
+Gamma	NimblePDFApplication		Gamma
+Search	PDFWindow		Sök
+Leave annotation editing mode	PDFView		Lämna redigeringsläge för kommentar
+Edit	PDFView		Redigera
+Saving attachment(s):	AttachmentView		Sparar bilagor:
+Leave annotation editing mode	PDFWindow		Lämna läge för annotationsredigering
+OK	PrintSettingsWindow		OK
+Add free text annotation	PDFWindow		Lägg till annotation för fritext
+Open file	PDFWindow		Öppna fil
+Print settings	PrintSettingsWindow		Utskriftsinställningar
+Back in page history list	PDFWindow		Tillbaka i sidohistorikslistan
+Find	PDFWindow		Sök
+Yes	FileInfoWindow		Ja
+[unknown link]	PDFView		[okänd länk]
+Floating	TraceWindow		Flytande
+Add help text annotation	PDFWindow		Lägg till annotation för hjälptext
+Stop	PrintingProgressWindow		Stoppa
+Add popup annotation	PDFWindow		Lägg till popup-annotation
+Show attachments	PDFWindow		Visa bilagor
+Edit	PDFWindow		Redigera
+Show help…	PDFWindow		Visa hjälpen…
+Add printer mark annotation	PDFWindow		Lägg till annotation för boktryckarmärke
+Search backwards	FindTextWindow		Sök baklänges
+Reload	PDFWindow		Ladda om
+Add line annotation	PDFWindow		Lägg till linjeannotation
+Help	PDFWindow		Hjälp
+Will take effect at next program launch.	PreferencesWindow		Will take effect at next program launch.
+NimblePDF is a fork of BePDF, the long-running Haiku PDF reader, with the original xpdf engine replaced by poppler.	NimblePDFApplication		NimblePDF is a fork of BePDF, the long-running Haiku PDF reader, with the original xpdf engine replaced by poppler.
+Rotation	PDFWindow		Rotation
+Encrypted:	FileInfoWindow		Kryptering:
+Gray scale	PrintSettingsWindow		Gråskala
+Save file attachment as…	PDFView		Spara bifogad fil som...
+Show toolbar, statusbar and scrollbars, too	PreferencesWindow		Show toolbar, statusbar and scrollbars, too
+Close	PDFWindow		Stäng
+No title	OutlinesWindow		Ingen titel
+Page	PrintSettingsWindow		Sida
+current	PreferencesWindow		current
+Created:	FileInfoWindow		Skapad:
+Title:	AnnotationWindow		Titel:
+Saving file attachment:	PDFView		Sparar bifogad fil:
+Open in new window	PDFView		Öppna i nytt fönster
+Height: 	PrintSettingsWindow		Höjd:
+File info…	PDFWindow		Filinformation…
+Allowed	FileInfoWindow		Tillåtet
+Add paragraph text annotation	PDFWindow		Lägg till annotation för textparagraf
+Selection rectangle	PreferencesWindow		Selection rectangle
+Linearized:	FileInfoWindow		Linjäriserad:
+No	FileInfoWindow		Nej
+NimblePDF: Launch	PDFView		NimblePDF: Starta
+Fit to page	PDFWindow		Anpassa till sidan
+Reload file	PDFWindow		Ladda om fil
+Path:	FileInfoWindow		Sökväg:
+Print…	PDFWindow		Skriv ut...
+Copy & paste:	FileInfoWindow		Kopiera och klistra in:
+Page %d	PDFWindow		Sida %d
+Edit title for bookmark	OutlinesWindow		Ändra titel för bokmärke
+Version:	FileInfoWindow		Version:
+English.pdf	PDFWindow	Replace with the PDF name of the help document, if there is one for your language.	English.pdf
+Automatic	AnnotationWindow		Automatiskt
+Title:	FileInfoWindow		Titel:
+Warning	PDFWindow		Varning
+User defined	OutlinesWindow		Användaredefinerad
+Fullscreen	PDFWindow		Fullskärm
+Invert vertical mouse scrolling	PreferencesWindow		Invert vertical mouse scrolling
+Save selected attachment to file	AttachmentView		Spara markerad bilaga till fil
+Add note text annotation	PDFWindow		Lägg till annotation för textanteckning
+Editing:	FileInfoWindow		Redigering:
 User password	PasswordWindow		Användarlösenord
 Find	FindTextWindow		Sök
-Find text	FindTextWindow		Sök efter text
-Find: 	FindTextWindow		Sök:
+Could not write PDF file!	PDFWindow		Kunde inte skriva PDF-fil!
+Filled rectangle	PreferencesWindow		Filled rectangle
 Ignore case	FindTextWindow		Ignorera skiftläge
-Options	FindTextWindow		Alternativ
-Page:	FindTextWindow		Sida:
-Page: %d	FindTextWindow		Sida: %d
-Search backwards	FindTextWindow		Sök baklänges
-Stop	FindTextWindow		Stopp
-OK	PDFSearch		OK
-Search string not found.	PDFSearch		Söksträngen hittades inte.
+Creator:	FileInfoWindow		Skapare:
+Invalid file reference received!	NimblePDFApplication		Invalid file reference received!
+Save selected attachments into directory	AttachmentView		Spara markerad bilaga till mapp
+Wrong parameter!	PrintSettingsWindow		Fel parameter!
+Rotate clockwise	PDFWindow		Rotera medurs
+Stroked rectangle	PreferencesWindow		Stroked rectangle
+Show all fonts	FileInfoWindow		Visa alla typsnitt

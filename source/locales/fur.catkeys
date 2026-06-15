@@ -1,254 +1,261 @@
-1	Friulian	application/x-vnd.Haiku-NimblePDF	1765081836
- in	PrintSettingsWindow		in
-All pages	PrintSettingsWindow		Dutis lis pagjinis
-Color	PrintSettingsWindow		Colôr
-DPI	PrintSettingsWindow		DPI
-Even pages	PrintSettingsWindow		Pagjinis pâr
-Gray scale	PrintSettingsWindow		Scjale di grîs
-Height: 	PrintSettingsWindow		Altece:
-Max. printer resolution	PrintSettingsWindow		Risoluzion stampadore massime
-Mode	PrintSettingsWindow		Modalitât
-Normal	PrintSettingsWindow		Normâl
-Odd pages	PrintSettingsWindow		Pagjinis dispar
-OK	PrintSettingsWindow		Va ben
-Order	PrintSettingsWindow		Ordin
-Page	PrintSettingsWindow		Pagjine
-Pages	PrintSettingsWindow		Pagjinis
-Print	PrintSettingsWindow		Stampe
-Print settings	PrintSettingsWindow		Impostazions di stampe
-Reverse	PrintSettingsWindow		Contrari
-Rotation	PrintSettingsWindow		Rotazion
-Width: 	PrintSettingsWindow		Largjece:
-Wrong parameter!	PrintSettingsWindow		Parametri sbaliât!
-Zoom (%)	PrintSettingsWindow		Ingrandiment (%)
-Zoom must be between 25 and 400!	PrintSettingsWindow		L'ingrandiment al scugne jessi tra 25 e 400!
-[internal link]	PDFView		[colegament interni]
-[link type 'movie' not supported]	PDFView		[gjenar di colegament 'movie' no supuartât]
-[unknown link]	PDFView		[colegament no cognossût]
-Annotation	PDFView		Note
-NimblePDF reading file: 	PDFView		NimblePDF leture file:
-NimblePDF: Launch	PDFView		NimblePDF: Invie
-Cancel	PDFView		Anule
-Copy link	PDFView		Copie colegament
-Delete	PDFView		Elimine
-Edit	PDFView		Modifiche
-Execute the command:	PDFView		Eseguìs il comant:
-Go to page %d	PDFView		Va ae pagjine %d
-Leave annotation editing mode	PDFView		Lasse la modalitât di modifiche notis
-OK	PDFView		Va ben
-Open in new window	PDFView		Vierç intun gnûf barcon
-Properties	PDFView		Proprietâts
-Save file attachment as…	PDFView		Salve la zonte dal file come…
-Saving file attachment:	PDFView		Salvament alegât dal file:
-Unknown link action type: '%s'	PDFView		Gjenar di azion dal colegament no cognossût: '%s'
-<empty>	OutlinesWindow		<vueit>
-Document	OutlinesWindow		Document
-Edit title for bookmark	OutlinesWindow		Modifiche titul pal segnelibri
-No title	OutlinesWindow		Nissun titul
-OK	OutlinesWindow		Va ben
-User defined	OutlinesWindow		Definît dal utent
-<empty>	AttachmentView		<vueit>
-Description	AttachmentView		Descrizion
-File name	AttachmentView		Non dal file
-Save attachment(s) as	AttachmentView		Salve alegât(s) come
-Save selected attachment to file	AttachmentView		Salve la zonte selezionade sul file
-Save selected attachments into directory	AttachmentView		Salve lis zontis selezionadis inte cartele
-Saving attachment(s):	AttachmentView		Salvament alegât(s):
-Abort	PrintingProgressWindow		Interomp
-NimblePDF printing	PrintingProgressWindow		Stampe NimblePDF
-NimblePDF printing document: 	PrintingProgressWindow		Stampe di document NimblePDF:
-Page:	PrintingProgressWindow		Pagjine:
-Page: %d	PrintingProgressWindow		Pagjine: %d
-Stop	PrintingProgressWindow		Ferme
-Abort	FileInfoWindow		Cancele
-Allowed	FileInfoWindow		Permetût
-Annotations:	FileInfoWindow		Notis:
-Author:	FileInfoWindow		Autôr:
-Copy & paste:	FileInfoWindow		Copie e tache:
-Created:	FileInfoWindow		Creât:
-Creator:	FileInfoWindow		Creadôr:
-Denied	FileInfoWindow		Dineât
-Document	FileInfoWindow		Document
-Editing:	FileInfoWindow		Modifiche:
-Embedded name	FileInfoWindow		Non incorporât
-Encrypted:	FileInfoWindow		Cifrât:
-File info	FileInfoWindow		Informazions file
-Filename:	FileInfoWindow		Non file:
-Fonts of this page	FileInfoWindow		Caratars di cheste pagjine
-Keywords:	FileInfoWindow		Peraulis clâf:
-Linearized:	FileInfoWindow		Linearizât:
-Modified:	FileInfoWindow		Modificât:
-Name	FileInfoWindow		Non
-No	FileInfoWindow		No
-Path:	FileInfoWindow		Percors:
-Printing:	FileInfoWindow		Stampe:
-Producer:	FileInfoWindow		Produtôr:
-Security	FileInfoWindow		Sigurece
-Show all fonts	FileInfoWindow		Mostre ducj i caratars
-Subject:	FileInfoWindow		Ogjet:
-Title:	FileInfoWindow		Titul:
-Type	FileInfoWindow		Gjenar
-Version:	FileInfoWindow		Version:
-Yes	FileInfoWindow		Sì
-About NimblePDF…	PDFWindow		Informazions su NimblePDF…
-Add	PDFWindow		Zonte
-Add circle annotation	PDFWindow		Zonte note circolâr
-Add comment text annotation	PDFWindow		Zonte note di coment testuâl
-Add file attachment annotation	PDFWindow		Zonte note di alegât di file
-Add free text annotation	PDFWindow		Zonte note di test libar
-Add help text annotation	PDFWindow		Zonte note di test di jutori
-Add highlight annotation	PDFWindow		Zonte note evidenziade
-Add ink annotation	PDFWindow		Zonte note di ingjustri
-Add insert text annotation	PDFWindow		Zonte note di test inserît
-Add key text annotation	PDFWindow		Zonte note di test clâf
-Add line annotation	PDFWindow		Zonte note di linie
-Add link annotation	PDFWindow		Zonte note di colegament
-Add movie annotation	PDFWindow		Zonte note di animazion
-Add new paragraph text annotation	PDFWindow		Zonte note di test di gnûf paragraf
-Add note text annotation	PDFWindow		Zonte note di note testuâl
-Add paragraph text annotation	PDFWindow		Zonte note di paragraf testuâl
-Add popup annotation	PDFWindow		Zonte note di popup
-Add printer mark annotation	PDFWindow		Zonte note di segn di stampe
-Add sound annotation	PDFWindow		Zonte note sonore
-Add square annotation	PDFWindow		Zonte note di cuadrât
-Add squiggly annotation	PDFWindow		Zonte note sotlineade a ondis
-Add stamp annotation	PDFWindow		Zonte note di stampe
-Add strikeout annotation	PDFWindow		Zonte note stricade
-Add trapnet annotation	PDFWindow		Zonte notis 'trapnet'
-Add underline annotation	PDFWindow		Zonte note sotlineade
-Add widget annotation	PDFWindow		Zonte note di widget
-Back	PDFWindow		Indaûr
-Back in page history list	PDFWindow		Indaûr te liste de cronologjie des pagjinis
-Bookmark	PDFWindow		Segnelibri
-Can not overwrite a PDF file that's currently opened in NimblePDF! Please choose another file name.	PDFWindow		No si pues sorescrivi un file PDF che al è ancjemò viert in NimblePDF! Par plasê sielç un altri non pal file.
-Close	PDFWindow		Siere
-Copy selection	PDFWindow		Copie selezion
-Could not write PDF file!	PDFWindow		Impussibil scrivi il file PDF!
-Custom zoom factor (%d%%)	PDFWindow		Fatôr di ingrandiment personalizât (%d%%)
-Delete	PDFWindow		Elimine
-Edit	PDFWindow		Modifiche
+1	Friulian	application/x-vnd.Haiku-NimblePDF	777513411
 Editing of annotations in an encrypted PDF file isn't supported yet!	PDFWindow		La modifiche des notis intun PDF cifrât no je ancjemò supuartade!
-English.pdf	PDFWindow	Replace with the PDF name of the help document, if there is one for your language.	English.pdf
-File	PDFWindow		File
-File info…	PDFWindow		Informazions file…
-Find	PDFWindow		Cjate
+Cancel	PDFView		Anule
+NimblePDF printing document: 	PrintingProgressWindow		Stampe di document NimblePDF:
+Go to previous page	PDFWindow		Va ae pagjine precedente
+Subject:	FileInfoWindow		Ogjet:
+Add strikeout annotation	PDFWindow		Zonte note stricade
+Owner password	PasswordWindow		Password proprietari
+NimblePDF: Error opening file!	NimblePDFApplication		NimblePDF: Erôr tal vierzi il file!
+Alpha	NimblePDFApplication		Alfa
+Show document view only	PreferencesWindow		Show document view only
+NimblePDF printing	PrintingProgressWindow		Stampe NimblePDF
+Rendering engine	NimblePDFApplication		Rendering engine
+NimblePDF is free software under the GNU General Public License, version 2 or (at your option) any later version.	NimblePDFApplication		NimblePDF is free software under the GNU General Public License, version 2 or (at your option) any later version.
+Add insert text annotation	PDFWindow		Zonte note di test inserît
+Unknown	NimblePDFApplication		No cognossût
+Delete	PDFWindow		Elimine
+A fast, full-featured PDF reader for Haiku.	NimblePDFApplication		A fast, full-featured PDF reader for Haiku.
+Color	PrintSettingsWindow		Colôr
+View	PDFWindow		Visualize
+Search string not found.	PDFSearch		Stringhe di ricercje no cjatade.
+Normal	PrintSettingsWindow		Normâl
+Add widget annotation	PDFWindow		Zonte note di widget
+Rendering by poppler %s.	NimblePDFApplication	poppler version	Rendering by poppler %s.
+Asian fonts	PreferencesWindow		Asian fonts
+Zoom in	PDFWindow		Ingrandìs
+Page:	FindTextWindow		Pagjine:
+Rotation	PrintSettingsWindow		Rotazion
+Error messages	TraceWindow		Messaçs di erôr
+Jump to page	PDFWindow		Va ae pagjine
+Mode	PrintSettingsWindow		Modalitât
+Save as…	PDFWindow		Salve come…
+Execute the command:	PDFView		Eseguìs il comant:
+Open in workspace:	PreferencesWindow		Open in workspace:
+Author	PreferencesWindow		Author
+Issue tracker…	PDFWindow		Inseguiment erôrs…
+NimblePDF status	StatusWindow		Stât di NimblePDF
+Can not overwrite a PDF file that's currently opened in NimblePDF! Please choose another file name.	PDFWindow		No si pues sorescrivi un file PDF che al è ancjemò viert in NimblePDF! Par plasê sielç un altri non pal file.
+Printing:	FileInfoWindow		Stampe:
+Font:	AnnotationWindow		Caratar:
+User fonts	PreferencesWindow		User fonts
+Zoom must be between 25 and 400!	PrintSettingsWindow		L'ingrandiment al scugne jessi tra 25 e 400!
+Save attachment(s) as	AttachmentView		Salve alegât(s) come
+Open…	PDFWindow		Vierç…
+NimblePDF reading file: 	PDFView		NimblePDF leture file:
+OK	PDFView		Va ben
+Date:	AnnotationWindow		Date:
+Show page list	PDFWindow		Mostre liste des pagjinis
+Restore page number	PreferencesWindow		Restore page number
+OK	PasswordWindow		Va ben
+Name	FileInfoWindow		Non
+Document	OutlinesWindow		Document
+Hide side bar	PDFWindow		Plat sbare laterâl
+Page setup…	PDFWindow		Impostazions pagjine…
+Add ink annotation	PDFWindow		Zonte note di ingjustri
+Source code	NimblePDFApplication		Source code
+Find: 	FindTextWindow		Cjate:
+Zoom	PDFWindow		Ingrandiment
+Based on BePDF	NimblePDFApplication		Based on BePDF
+Go to next page	PDFWindow		Va ae prossime pagjine
+Add square annotation	PDFWindow		Zonte note di cuadrât
+[internal link]	PDFView		[colegament interni]
+Fonts of this page	FileInfoWindow		Caratars di cheste pagjine
+Last	PDFWindow		Ultin
+About NimblePDF…	PDFWindow		Informazions su NimblePDF…
+Abort	FileInfoWindow		Cancele
+Restore window position and size	PreferencesWindow		Restore window position and size
 Find next	PDFWindow		Cjate prossim
-Find next…	PDFWindow		Cjate il prossim…
-Find…	PDFWindow		Cjate…
-First	PDFWindow		Prin
-Fit to page	PDFWindow		Jemple la pagjine
-Fit to page width	PDFWindow		Jemple la pagjine in largjece
-Forward	PDFWindow		Indenant
-Forward in page history list	PDFWindow		Indenant te liste de cronologjie des pagjinis
-Fullscreen	PDFWindow		Plen visôr
-Fullscreen mode	PDFWindow		Modalitât plen visôr
+All pages	PrintSettingsWindow		Dutis lis pagjinis
+Show annotation toolbar	PDFWindow		Mostre sbare struments notis
+File name	AttachmentView		Non dal file
+Go to start of document	PDFWindow		Va al inizi dal document
 Go back 10 pages	PDFWindow		Va indaûr di 10 pagjinis
 Go forward 10 pages	PDFWindow		Va indenant di 10 pagjinis
-Go to end of document	PDFWindow		Va ae fin dal document
-Go to next page	PDFWindow		Va ae prossime pagjine
-Go to previous page	PDFWindow		Va ae pagjine precedente
-Go to start of document	PDFWindow		Va al inizi dal document
-Help	PDFWindow		Jutori
-Hide side bar	PDFWindow		Plat sbare laterâl
-Issue tracker…	PDFWindow		Inseguiment erôrs…
-Jump to page	PDFWindow		Va ae pagjine
-Last	PDFWindow		Ultin
-Leave annotation editing mode	PDFWindow		Lasse modalitât modifiche notis
-Next	PDFWindow		Prossim
-of %d	PDFWindow		di %d
-OK	PDFWindow		Va ben
-Online help…	PDFWindow		Jutori online…
-Open file	PDFWindow		Vierç file
-Open in new window…	PDFWindow		Vierç intun gnûf barcon…
-Open…	PDFWindow		Vierç…
-Page	PDFWindow		Pagjine
-Page %d	PDFWindow		Pagjine %d
-Page setup…	PDFWindow		Impostazions pagjine…
-PDF file successfully written!	PDFWindow		File PDF scrit cun sucès!
-Preferences…	PDFWindow		Preferencis…
-Previous	PDFWindow		Precedent
-Print	PDFWindow		Stampe
-Print…	PDFWindow		Stampe…
-Quit	PDFWindow		Jes
-Reload	PDFWindow		Torne cjarie
-Reload file	PDFWindow		Torne cjarie il file
-Rotate clockwise	PDFWindow		Volte in sens orari
-Rotate counter-clockwise	PDFWindow		Volte in sens anti-orari
-Rotation	PDFWindow		Rotazion
-Save as…	PDFWindow		Salve come…
-Save file as	PDFWindow		Salve file come
-Saving copy of PDF file:	PDFWindow		Salvament copie dal file PDF:
-Search	PDFWindow		Cîr
-Select all	PDFWindow		Selezione dut
-Select none	PDFWindow		No sta selezionâ nie
+Add file attachment annotation	PDFWindow		Zonte note di alegât di file
+System fonts	PreferencesWindow		System fonts
 Show annotation tool bar	PDFWindow		Mostre sbare dai struments des notis
-Show annotation toolbar	PDFWindow		Mostre sbare struments notis
-Show attachments	PDFWindow		Mostre alegâts
+Fit to page width	PDFWindow		Jemple la pagjine in largjece
+DPI	PrintSettingsWindow		DPI
+Find…	PDFWindow		Cjate…
+Odd pages	PrintSettingsWindow		Pagjinis dispar
+Add sound annotation	PDFWindow		Zonte note sonore
 Show bookmarks	PDFWindow		Mostre segnelibris
-Show error messages	PDFWindow		Mostre messaçs di erôr
-Show help…	PDFWindow		Mostre jutori…
-Show page list	PDFWindow		Mostre liste des pagjinis
-View	PDFWindow		Visualize
-Visit homepage…	PDFWindow		Visite pagjine iniziâl…
-Warning	PDFWindow		Avertiment
-Zoom	PDFWindow		Ingrandiment
-Zoom in	PDFWindow		Ingrandìs
-Zoom out	PDFWindow		Impiçulìs
-Align:	AnnotationWindow		Met in rie:
-Annotation	AnnotationWindow		Note
-Asian fonts	AnnotationWindow		Caratars asiatics
-Author	AnnotationWindow		Autôr
-Automatic	AnnotationWindow		Automatic
-current	AnnotationWindow		atuâl
-Date:	AnnotationWindow		Date:
-Display	AnnotationWindow		Visualize
-Document	AnnotationWindow		Document
-Filled rectangle	AnnotationWindow		Retangul jemplât
-Font:	AnnotationWindow		Caratar:
-Fullscreen mode	AnnotationWindow		Modalitât plen visôr
-Invert vertical mouse scrolling	AnnotationWindow		Invertìs scoriment verticâl dal mouse
-Open in workspace:	AnnotationWindow		Vierç tal spazi di lavôr:
-Preferences	AnnotationWindow		Preferencis
-Restore page number	AnnotationWindow		Ripristine numar di pagjine
-Restore window position and size	AnnotationWindow		Ripristine posizion e dimension dal barcon
-Selection rectangle	AnnotationWindow		Retangul di selezion
-Show document view only	AnnotationWindow		Mostre dome la viodude dal document
-Show toolbar, statusbar and scrollbars, too	AnnotationWindow		Mostre ancje la sbare dai struments, chê di stât e chês di scoriment
-Size:	AnnotationWindow		Dimension:
-Stroked rectangle	AnnotationWindow		Retangul lizêr
-System fonts	AnnotationWindow		Caratars di sisteme
-Title:	AnnotationWindow		Titul:
-User fonts	AnnotationWindow		Caratars dal utent
-Will take effect at next program launch.	AnnotationWindow		Si varan i efiets al prossim inviament di program.
-Alpha	NimblePDFApplication		Alfa
-NimblePDF is based on XPDF %s, %s.	NimblePDFApplication	XPDF version, copyright	NimblePDF al è basât su XPDF %s, %s.
-NimblePDF: Error opening file!	NimblePDFApplication		NimblePDF: Erôr tal vierzi il file!
-Beta	NimblePDFApplication		Beta
-Close	NimblePDFApplication		Siere
-Development	NimblePDFApplication		Disvilup
-Error	NimblePDFApplication		Erôr
-Final	NimblePDFApplication		Finâl
-Gamma	NimblePDFApplication		Gamma
-Golden Master	NimblePDFApplication		Golden Master
-Unknown	NimblePDFApplication		No cognossût
-Version	NimblePDFApplication		Version
-Auto open	TraceWindow		Auto-vierç
+Max. printer resolution	PrintSettingsWindow		Risoluzion stampadore massime
+Quit	PDFWindow		Jes
+Options	FindTextWindow		Opzions
+File	PDFWindow		File
+Fullscreen mode	PDFWindow		Modalitât plen visôr
+Find text	FindTextWindow		Cjate test
 Clear	TraceWindow		Nete
-Error messages	TraceWindow		Messaçs di erôr
-Floating	TraceWindow		Flutuant
-NimblePDF status	StatusWindow		Stât di NimblePDF
+Print	PrintSettingsWindow		Stampe
 Enter Password	PasswordWindow		Inserìs Password
-OK	PasswordWindow		Va ben
-Owner password	PasswordWindow		Password proprietari
+Online help…	PDFWindow		Jutori online…
+Filename:	FileInfoWindow		Non file:
+Document	PreferencesWindow		Document
+Embedded name	FileInfoWindow		Non incorporât
+Close	NimblePDFApplication		Siere
+Copy link	PDFView		Copie colegament
+First	PDFWindow		Prin
+Add	PDFWindow		Zonte
+<empty>	AttachmentView		<vueit>
+Open in new window…	PDFWindow		Vierç intun gnûf barcon…
+Preferences…	PDFWindow		Preferencis…
+Beta	NimblePDFApplication		Beta
+OK	PDFSearch		Va ben
+Delete	PDFView		Elimine
+Zoom (%)	PrintSettingsWindow		Ingrandiment (%)
+Type	FileInfoWindow		Gjenar
+Custom zoom factor (%d%%)	PDFWindow		Fatôr di ingrandiment personalizât (%d%%)
+Add stamp annotation	PDFWindow		Zonte note di stampe
+Abort	PrintingProgressWindow		Interomp
+Align:	AnnotationWindow		Met in rie:
+Go to end of document	PDFWindow		Va ae fin dal document
+Auto open	TraceWindow		Auto-vierç
+Back	PDFWindow		Indaûr
+Pages	PrintSettingsWindow		Pagjinis
+Add movie annotation	PDFWindow		Zonte note di animazion
+Add circle annotation	PDFWindow		Zonte note circolâr
+Show error messages	PDFWindow		Mostre messaçs di erôr
+Golden Master	NimblePDFApplication		Golden Master
+Document	FileInfoWindow		Document
+Width: 	PrintSettingsWindow		Largjece:
+Author:	FileInfoWindow		Autôr:
+Add highlight annotation	PDFWindow		Zonte note evidenziade
+Add new paragraph text annotation	PDFWindow		Zonte note di test di gnûf paragraf
+of %d	PDFWindow		di %d
+Security	FileInfoWindow		Sigurece
+Denied	FileInfoWindow		Dineât
+Save file as	PDFWindow		Salve file come
+Order	PrintSettingsWindow		Ordin
+Properties	PDFView		Proprietâts
+Add comment text annotation	PDFWindow		Zonte note di coment testuâl
+Description	AttachmentView		Descrizion
+Add underline annotation	PDFWindow		Zonte note sotlineade
+Development	NimblePDFApplication		Disvilup
+Saving copy of PDF file:	PDFWindow		Salvament copie dal file PDF:
+Page: %d	FindTextWindow		Pagjine: %d
+Page	PDFWindow		Pagjine
+Add squiggly annotation	PDFWindow		Zonte note sotlineade a ondis
+Annotation	PDFView		Note
+Add trapnet annotation	PDFWindow		Zonte notis 'trapnet'
+Producer:	FileInfoWindow		Produtôr:
+Keywords:	FileInfoWindow		Peraulis clâf:
+Forward in page history list	PDFWindow		Indenant te liste de cronologjie des pagjinis
+Page:	PrintingProgressWindow		Pagjine:
+Error getting page number!	NimblePDFApplication		Error getting page number!
+Find next…	PDFWindow		Cjate il prossim…
+Visit homepage…	PDFWindow		Visite pagjine iniziâl…
+Even pages	PrintSettingsWindow		Pagjinis pâr
+Stop	FindTextWindow		Ferme
+Print	PDFWindow		Stampe
+Add link annotation	PDFWindow		Zonte note di colegament
+ in	PrintSettingsWindow		in
+Fullscreen mode	PreferencesWindow		Fullscreen mode
+[link type 'movie' not supported]	PDFView		[gjenar di colegament 'movie' no supuartât]
+Annotation	AnnotationWindow		Note
+Bookmark	PDFWindow		Segnelibri
+Next	PDFWindow		Prossim
+Reverse	PrintSettingsWindow		Contrari
+Page: %d	PrintingProgressWindow		Pagjine: %d
+Select none	PDFWindow		No sta selezionâ nie
+Rotate counter-clockwise	PDFWindow		Volte in sens anti-orari
+<empty>	OutlinesWindow		<vueit>
+Error	NimblePDFApplication		Erôr
+Add key text annotation	PDFWindow		Zonte note di test clâf
+Forward	PDFWindow		Indenant
+Size:	AnnotationWindow		Dimension:
+Zoom out	PDFWindow		Impiçulìs
+Display	PreferencesWindow		Display
+Modified:	FileInfoWindow		Modificât:
+License	NimblePDFApplication		License
+Preferences	PreferencesWindow		Preferences
+Go to page %d	PDFView		Va ae pagjine %d
+OK	OutlinesWindow		Va ben
+Copy selection	PDFWindow		Copie selezion
+Final	NimblePDFApplication		Finâl
+Annotations:	FileInfoWindow		Notis:
+Select all	PDFWindow		Selezione dut
+PDF file successfully written!	PDFWindow		File PDF scrit cun sucès!
+OK	PDFWindow		Va ben
+Previous	PDFWindow		Precedent
+File info	FileInfoWindow		Informazions file
+Gamma	NimblePDFApplication		Gamma
+Search	PDFWindow		Cîr
+Leave annotation editing mode	PDFView		Lasse la modalitât di modifiche notis
+Edit	PDFView		Modifiche
+Saving attachment(s):	AttachmentView		Salvament alegât(s):
+Leave annotation editing mode	PDFWindow		Lasse modalitât modifiche notis
+OK	PrintSettingsWindow		Va ben
+Add free text annotation	PDFWindow		Zonte note di test libar
+Open file	PDFWindow		Vierç file
+Print settings	PrintSettingsWindow		Impostazions di stampe
+Back in page history list	PDFWindow		Indaûr te liste de cronologjie des pagjinis
+Find	PDFWindow		Cjate
+Yes	FileInfoWindow		Sì
+[unknown link]	PDFView		[colegament no cognossût]
+Floating	TraceWindow		Flutuant
+Add help text annotation	PDFWindow		Zonte note di test di jutori
+Stop	PrintingProgressWindow		Ferme
+Add popup annotation	PDFWindow		Zonte note di popup
+Show attachments	PDFWindow		Mostre alegâts
+Edit	PDFWindow		Modifiche
+Show help…	PDFWindow		Mostre jutori…
+Add printer mark annotation	PDFWindow		Zonte note di segn di stampe
+Search backwards	FindTextWindow		Cîr indaûr
+Reload	PDFWindow		Torne cjarie
+Add line annotation	PDFWindow		Zonte note di linie
+Help	PDFWindow		Jutori
+Will take effect at next program launch.	PreferencesWindow		Will take effect at next program launch.
+NimblePDF is a fork of BePDF, the long-running Haiku PDF reader, with the original xpdf engine replaced by poppler.	NimblePDFApplication		NimblePDF is a fork of BePDF, the long-running Haiku PDF reader, with the original xpdf engine replaced by poppler.
+Rotation	PDFWindow		Rotazion
+Encrypted:	FileInfoWindow		Cifrât:
+Gray scale	PrintSettingsWindow		Scjale di grîs
+Save file attachment as…	PDFView		Salve la zonte dal file come…
+Show toolbar, statusbar and scrollbars, too	PreferencesWindow		Show toolbar, statusbar and scrollbars, too
+Close	PDFWindow		Siere
+No title	OutlinesWindow		Nissun titul
+Page	PrintSettingsWindow		Pagjine
+current	PreferencesWindow		current
+Created:	FileInfoWindow		Creât:
+Title:	AnnotationWindow		Titul:
+Saving file attachment:	PDFView		Salvament alegât dal file:
+Open in new window	PDFView		Vierç intun gnûf barcon
+Height: 	PrintSettingsWindow		Altece:
+File info…	PDFWindow		Informazions file…
+Allowed	FileInfoWindow		Permetût
+Add paragraph text annotation	PDFWindow		Zonte note di paragraf testuâl
+Selection rectangle	PreferencesWindow		Selection rectangle
+Linearized:	FileInfoWindow		Linearizât:
+No	FileInfoWindow		No
+NimblePDF: Launch	PDFView		NimblePDF: Invie
+Fit to page	PDFWindow		Jemple la pagjine
+Reload file	PDFWindow		Torne cjarie il file
+Path:	FileInfoWindow		Percors:
+Print…	PDFWindow		Stampe…
+Copy & paste:	FileInfoWindow		Copie e tache:
+Page %d	PDFWindow		Pagjine %d
+Edit title for bookmark	OutlinesWindow		Modifiche titul pal segnelibri
+Version:	FileInfoWindow		Version:
+English.pdf	PDFWindow	Replace with the PDF name of the help document, if there is one for your language.	English.pdf
+Automatic	AnnotationWindow		Automatic
+Title:	FileInfoWindow		Titul:
+Warning	PDFWindow		Avertiment
+User defined	OutlinesWindow		Definît dal utent
+Fullscreen	PDFWindow		Plen visôr
+Invert vertical mouse scrolling	PreferencesWindow		Invert vertical mouse scrolling
+Save selected attachment to file	AttachmentView		Salve la zonte selezionade sul file
+Add note text annotation	PDFWindow		Zonte note di note testuâl
+Editing:	FileInfoWindow		Modifiche:
 User password	PasswordWindow		Password utent
 Find	FindTextWindow		Cjate
-Find text	FindTextWindow		Cjate test
-Find: 	FindTextWindow		Cjate:
+Could not write PDF file!	PDFWindow		Impussibil scrivi il file PDF!
+Filled rectangle	PreferencesWindow		Filled rectangle
 Ignore case	FindTextWindow		Ignore maiusculis/minusculis
-Options	FindTextWindow		Opzions
-Page:	FindTextWindow		Pagjine:
-Page: %d	FindTextWindow		Pagjine: %d
-Search backwards	FindTextWindow		Cîr indaûr
-Stop	FindTextWindow		Ferme
-OK	PDFSearch		Va ben
-Search string not found.	PDFSearch		Stringhe di ricercje no cjatade.
+Creator:	FileInfoWindow		Creadôr:
+Invalid file reference received!	NimblePDFApplication		Invalid file reference received!
+Save selected attachments into directory	AttachmentView		Salve lis zontis selezionadis inte cartele
+Wrong parameter!	PrintSettingsWindow		Parametri sbaliât!
+Rotate clockwise	PDFWindow		Volte in sens orari
+Stroked rectangle	PreferencesWindow		Stroked rectangle
+Show all fonts	FileInfoWindow		Mostre ducj i caratars

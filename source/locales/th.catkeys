@@ -1,254 +1,261 @@
-1	Thai	application/x-vnd.Haiku-NimblePDF	1765081836
- in	PrintSettingsWindow		ใน
-All pages	PrintSettingsWindow		ทุกหน้า
-Color	PrintSettingsWindow		สี
-DPI	PrintSettingsWindow		DPI
-Even pages	PrintSettingsWindow		แม้แต่หน้า
-Gray scale	PrintSettingsWindow		ระดับสีเทา
-Height: 	PrintSettingsWindow		ความสูง: 
-Max. printer resolution	PrintSettingsWindow		ความละเอียดของเครื่องพิมพ์สูงสุด
-Mode	PrintSettingsWindow		โหมด
-Normal	PrintSettingsWindow		ปกติ
-Odd pages	PrintSettingsWindow		หน้าคี่
-OK	PrintSettingsWindow		ตกลง
-Order	PrintSettingsWindow		สั่ง
-Page	PrintSettingsWindow		หน้า
-Pages	PrintSettingsWindow		หน้า
-Print	PrintSettingsWindow		พิมพ์
-Print settings	PrintSettingsWindow		การตั้งค่าการพิมพ์
-Reverse	PrintSettingsWindow		ย้อนกลับ
-Rotation	PrintSettingsWindow		หมุน
-Width: 	PrintSettingsWindow		ความกว้าง: 
-Wrong parameter!	PrintSettingsWindow		พารามิเตอร์ผิด!
-Zoom (%)	PrintSettingsWindow		ขยาย (%)
-Zoom must be between 25 and 400!	PrintSettingsWindow		การขยายจะต้องอยู่ระหว่าง 25 ถึง 400!
-[internal link]	PDFView		[ลิงค์ภายใน]
-[link type 'movie' not supported]	PDFView		ไม่รองรับประเภทลิงก์ 'ภาพยนตร์']
-[unknown link]	PDFView		[ลิงค์ที่ไม่รู้จัก]
-Annotation	PDFView		คำอธิบายประกอบ
-NimblePDF reading file: 	PDFView		อ่านไฟล์ NimblePDF:
-NimblePDF: Launch	PDFView		NimblePDF: เปิด
-Cancel	PDFView		ยกเลิก
-Copy link	PDFView		คัดลอกลิงค์
-Delete	PDFView		ลบ
-Edit	PDFView		แก้ไข
-Execute the command:	PDFView		ดำเนินการคำสั่ง:
-Go to page %d	PDFView		ไปที่หน้า %d
-Leave annotation editing mode	PDFView		ออกจากโหมดแก้ไขคำอธิบายประกอบ
-OK	PDFView		ตกลง
-Open in new window	PDFView		เปิดในหน้าต่างใหม่
-Properties	PDFView		คุณสมบัติ
-Save file attachment as…	PDFView		บันทึกไฟล์แนบเป็น ...
-Saving file attachment:	PDFView		กำลังบันทึกไฟล์แนบ:
-Unknown link action type: '%s'	PDFView		ลิงค์ประเภทการกระทำที่ไม่รู้จัก:'%s'
-<empty>	OutlinesWindow		<ว่าง>
-Document	OutlinesWindow		เอกสาร
-Edit title for bookmark	OutlinesWindow		แก้ไขชื่อสำหรับบุ๊คมาร์ค
-No title	OutlinesWindow		ไม่มีชื่อ
-OK	OutlinesWindow		ตกลง
-User defined	OutlinesWindow		ผู้ใช้กำหนด
-<empty>	AttachmentView		<ว่างเปล่า>
-Description	AttachmentView		รายละเอียด
-File name	AttachmentView		ชื่อไฟล์
-Save attachment(s) as	AttachmentView		บันทึกเอกสารแนบเป็น
-Save selected attachment to file	AttachmentView		บันทึกไฟล์แนบที่เลือกไปยังไฟล์
-Save selected attachments into directory	AttachmentView		บันทึกไฟล์แนบที่เลือกไว้ในไดเรกทอรี
-Saving attachment(s):	AttachmentView		กำลังบันทึกไฟล์แนบ:
-Abort	PrintingProgressWindow		ยกเลิก
-NimblePDF printing	PrintingProgressWindow		การพิมพ์ NimblePDF
-NimblePDF printing document: 	PrintingProgressWindow		เอกสารการพิมพ์ NimblePDF:
-Page:	PrintingProgressWindow		หน้า:
-Page: %d	PrintingProgressWindow		หน้า: %d
-Stop	PrintingProgressWindow		หยุด
-Abort	FileInfoWindow		ยกเลิก
-Allowed	FileInfoWindow		อนุญาต
-Annotations:	FileInfoWindow		คำอธิบายประกอบ:
-Author:	FileInfoWindow		ผู้เขียน:
-Copy & paste:	FileInfoWindow		คัดลอก & วาง:
-Created:	FileInfoWindow		สร้าง:
-Creator:	FileInfoWindow		ผู้สร้าง:
-Denied	FileInfoWindow		ปฎิเสธ
-Document	FileInfoWindow		เอกสาร
-Editing:	FileInfoWindow		กำลังแก้ไข:
-Embedded name	FileInfoWindow		ชื่อที่แนบมา
-Encrypted:	FileInfoWindow		เข้ารหัส:
-File info	FileInfoWindow		ข้อมูลไฟล์
-Filename:	FileInfoWindow		ชื่อไฟล์:
-Fonts of this page	FileInfoWindow		แบบอักษรของหน้านี้
-Keywords:	FileInfoWindow		คำสำคัญ:
-Linearized:	FileInfoWindow		Linearized:
-Modified:	FileInfoWindow		แก้ไข:
-Name	FileInfoWindow		ชื่อ
-No	FileInfoWindow		ไม่
-Path:	FileInfoWindow		พาธ:
-Printing:	FileInfoWindow		กำลังพิมพ์:
-Producer:	FileInfoWindow		ผู้จัดทำ:
-Security	FileInfoWindow		ความปลอดภัย
-Show all fonts	FileInfoWindow		แสดงแบบอักษรทั้งหมด
-Subject:	FileInfoWindow		เรื่อง:
-Title:	FileInfoWindow		ชื่อ:
-Type	FileInfoWindow		ชนิด
-Version:	FileInfoWindow		เวอร์ชั่น:
-Yes	FileInfoWindow		ใช่
-About NimblePDF…	PDFWindow		เกี่ยวกับ NimblePDF…
-Add	PDFWindow		เพิ่ม
-Add circle annotation	PDFWindow		เพิ่มคำอธิบายประกอบวงกลม
-Add comment text annotation	PDFWindow		เพิ่มคำอธิบายประกอบข้อความความคิดเห็น
-Add file attachment annotation	PDFWindow		เพิ่มคำอธิบายประกอบไฟล์
-Add free text annotation	PDFWindow		เพิ่มคำอธิบายประกอบข้อความแบบอิสระ
-Add help text annotation	PDFWindow		เพิ่มคำอธิบายประกอบข้อความช่วยเหลือ
-Add highlight annotation	PDFWindow		เพิ่มคำอธิบายประกอบไฮไลต์
-Add ink annotation	PDFWindow		เพิ่มคำอธิบายประกอบแบบหมึก
-Add insert text annotation	PDFWindow		เพิ่มคำอธิบายประกอบแทรกข้อความ
-Add key text annotation	PDFWindow		เพิ่มคำอธิบายประกอบข้อความสำคัญ
-Add line annotation	PDFWindow		เพิ่มคำอธิบายประกอบบรรทัด
-Add link annotation	PDFWindow		เพิ่มคำอธิบายประกอบลิงค์
-Add movie annotation	PDFWindow		เพิ่มคำอธิบายประกอบภาพยนตร์
-Add new paragraph text annotation	PDFWindow		เพิ่มคำอธิบายประกอบข้อความย่อหน้าใหม่
-Add note text annotation	PDFWindow		เพิ่มหมายเหตุประกอบข้อความโน้ต
-Add paragraph text annotation	PDFWindow		เพิ่มคำอธิบายประกอบข้อความในย่อหน้า
-Add popup annotation	PDFWindow		เพิ่มคำอธิบายประกอบป๊อปอัพ
-Add printer mark annotation	PDFWindow		เพิ่มคำอธิบายประกอบเครื่องหมายเครื่องพิมพ์
-Add sound annotation	PDFWindow		เพิ่มคำอธิบายประกอบเสียง
-Add square annotation	PDFWindow		เพิ่มคำอธิบายประกอบสี่เหลี่ยม
-Add squiggly annotation	PDFWindow		เพิ่มคำอธิบายประกอบเส้นหยัก
-Add stamp annotation	PDFWindow		เพิ่มคำอธิบายประกอบแสตมป์
-Add strikeout annotation	PDFWindow		เพิ่มหมายเหตุประกอบการขีดฆ่า
-Add trapnet annotation	PDFWindow		เพิ่มคำอธิบายประกอบTrapnet
-Add underline annotation	PDFWindow		เพิ่มหมายเหตุประกอบแบบขีดเส้นใต้
-Add widget annotation	PDFWindow		เพิ่มคำอธิบายประกอบวิดเจ็ต
-Back	PDFWindow		ย้อนกลับ
-Back in page history list	PDFWindow		ย้อนกลับไปในรายการประวัติหน้า
-Bookmark	PDFWindow		คั่นหน้า
-Can not overwrite a PDF file that's currently opened in NimblePDF! Please choose another file name.	PDFWindow		ไม่สามารถเขียนทับไฟล์ PDF ที่เปิดอยู่ใน NimblePDF ได้ในขณะนี้! กรุณาเลือกชื่อไฟล์อื่น
-Close	PDFWindow		ปิด
-Copy selection	PDFWindow		คัดลอกส่วนที่เลือก
-Could not write PDF file!	PDFWindow		ไม่สามารถเขียนไฟล์ PDF ได้!
-Custom zoom factor (%d%%)	PDFWindow		ปัจจัยการซูมที่กำหนดเอง (%d%%)
-Delete	PDFWindow		ลบ
-Edit	PDFWindow		แก้ไข
+1	Thai	application/x-vnd.Haiku-NimblePDF	777513411
 Editing of annotations in an encrypted PDF file isn't supported yet!	PDFWindow		การแก้ไขคำอธิบายประกอบในไฟล์ PDF ที่เข้ารหัสยังไม่ได้รับการสนับสนุน!
-English.pdf	PDFWindow	Replace with the PDF name of the help document, if there is one for your language.	Thai.pdf
-File	PDFWindow		ไฟล์
-File info…	PDFWindow		ข้อมูลไฟล์
-Find	PDFWindow		ค้นหา
+Cancel	PDFView		ยกเลิก
+NimblePDF printing document: 	PrintingProgressWindow		เอกสารการพิมพ์ NimblePDF:
+Go to previous page	PDFWindow		ไปหน้าก่อนหน้า
+Subject:	FileInfoWindow		เรื่อง:
+Add strikeout annotation	PDFWindow		เพิ่มหมายเหตุประกอบการขีดฆ่า
+Owner password	PasswordWindow		รหัสผ่านของเจ้าของ
+NimblePDF: Error opening file!	NimblePDFApplication		NimblePDF: เกิดข้อผิดพลาดในการเปิดไฟล์!
+Alpha	NimblePDFApplication		อัลฟา
+Show document view only	PreferencesWindow		Show document view only
+NimblePDF printing	PrintingProgressWindow		การพิมพ์ NimblePDF
+Rendering engine	NimblePDFApplication		Rendering engine
+NimblePDF is free software under the GNU General Public License, version 2 or (at your option) any later version.	NimblePDFApplication		NimblePDF is free software under the GNU General Public License, version 2 or (at your option) any later version.
+Add insert text annotation	PDFWindow		เพิ่มคำอธิบายประกอบแทรกข้อความ
+Unknown	NimblePDFApplication		ไม่ทราบ
+Delete	PDFWindow		ลบ
+A fast, full-featured PDF reader for Haiku.	NimblePDFApplication		A fast, full-featured PDF reader for Haiku.
+Color	PrintSettingsWindow		สี
+View	PDFWindow		ดู
+Search string not found.	PDFSearch		ไม่พบสตริงการค้นหา
+Normal	PrintSettingsWindow		ปกติ
+Add widget annotation	PDFWindow		เพิ่มคำอธิบายประกอบวิดเจ็ต
+Rendering by poppler %s.	NimblePDFApplication	poppler version	Rendering by poppler %s.
+Asian fonts	PreferencesWindow		Asian fonts
+Zoom in	PDFWindow		ขยายเข้า
+Page:	FindTextWindow		หน้า:
+Rotation	PrintSettingsWindow		หมุน
+Error messages	TraceWindow		ข้อความผิดพลาด
+Jump to page	PDFWindow		ข้ามไปที่หน้า
+Mode	PrintSettingsWindow		โหมด
+Save as…	PDFWindow		บันทึกเป็น
+Execute the command:	PDFView		ดำเนินการคำสั่ง:
+Open in workspace:	PreferencesWindow		Open in workspace:
+Author	PreferencesWindow		Author
+Issue tracker…	PDFWindow		ติดตามปัญหา ...
+NimblePDF status	StatusWindow		สถานะ NimblePDF
+Can not overwrite a PDF file that's currently opened in NimblePDF! Please choose another file name.	PDFWindow		ไม่สามารถเขียนทับไฟล์ PDF ที่เปิดอยู่ใน NimblePDF ได้ในขณะนี้! กรุณาเลือกชื่อไฟล์อื่น
+Printing:	FileInfoWindow		กำลังพิมพ์:
+Font:	AnnotationWindow		ตัวอักษร
+User fonts	PreferencesWindow		User fonts
+Zoom must be between 25 and 400!	PrintSettingsWindow		การขยายจะต้องอยู่ระหว่าง 25 ถึง 400!
+Save attachment(s) as	AttachmentView		บันทึกเอกสารแนบเป็น
+Open…	PDFWindow		เปิด…
+NimblePDF reading file: 	PDFView		อ่านไฟล์ NimblePDF:
+OK	PDFView		ตกลง
+Date:	AnnotationWindow		วันที่:
+Show page list	PDFWindow		แสดงรายการหน้า
+Restore page number	PreferencesWindow		Restore page number
+OK	PasswordWindow		ตกลง
+Name	FileInfoWindow		ชื่อ
+Document	OutlinesWindow		เอกสาร
+Hide side bar	PDFWindow		ซ่อนแถบด้านข้าง
+Page setup…	PDFWindow		ตั้งค่าหน้า…
+Add ink annotation	PDFWindow		เพิ่มคำอธิบายประกอบแบบหมึก
+Source code	NimblePDFApplication		Source code
+Find: 	FindTextWindow		ค้นหา: 
+Zoom	PDFWindow		ขยาย
+Based on BePDF	NimblePDFApplication		Based on BePDF
+Go to next page	PDFWindow		ไปหน้าถัดไป
+Add square annotation	PDFWindow		เพิ่มคำอธิบายประกอบสี่เหลี่ยม
+[internal link]	PDFView		[ลิงค์ภายใน]
+Fonts of this page	FileInfoWindow		แบบอักษรของหน้านี้
+Last	PDFWindow		สุดท้าย
+About NimblePDF…	PDFWindow		เกี่ยวกับ NimblePDF…
+Abort	FileInfoWindow		ยกเลิก
+Restore window position and size	PreferencesWindow		Restore window position and size
 Find next	PDFWindow		ค้นหาถัดไป
-Find next…	PDFWindow		ค้นหาถัดไป
-Find…	PDFWindow		ค้นหา
-First	PDFWindow		ลำดับแรก
-Fit to page	PDFWindow		พอดีกับหน้า
-Fit to page width	PDFWindow		พอดีกับความกว้างของหน้า
-Forward	PDFWindow		ส่งต่อ
-Forward in page history list	PDFWindow		ส่งต่อในรายการประวัติหน้า
-Fullscreen	PDFWindow		เต็มจอ
-Fullscreen mode	PDFWindow		โหมดเต็มจอ
+All pages	PrintSettingsWindow		ทุกหน้า
+Show annotation toolbar	PDFWindow		แสดงแถบเครื่องมือคำอธิบายประกอบ
+File name	AttachmentView		ชื่อไฟล์
+Go to start of document	PDFWindow		ไปหน้าเริ่มต้น
 Go back 10 pages	PDFWindow		ย้อนไป 10 หน้า
 Go forward 10 pages	PDFWindow		ไปข้างหน้า 10 หน้า
-Go to end of document	PDFWindow		ไปหน้าสุดท้ายของเอกสาร
-Go to next page	PDFWindow		ไปหน้าถัดไป
-Go to previous page	PDFWindow		ไปหน้าก่อนหน้า
-Go to start of document	PDFWindow		ไปหน้าเริ่มต้น
-Help	PDFWindow		ช่วยเหลือ
-Hide side bar	PDFWindow		ซ่อนแถบด้านข้าง
-Issue tracker…	PDFWindow		ติดตามปัญหา ...
-Jump to page	PDFWindow		ข้ามไปที่หน้า
-Last	PDFWindow		สุดท้าย
-Leave annotation editing mode	PDFWindow		ออกจากโหมดแก้ไขคำอธิบายประกอบ
-Next	PDFWindow		ถัดไป
-of %d	PDFWindow		ของ %d
-OK	PDFWindow		ตกลง
-Online help…	PDFWindow		ความช่วยเหลือออนไลน์ ...
-Open file	PDFWindow		เปิดไฟล์
-Open in new window…	PDFWindow		เปิดหน้าต่างใหม่…
-Open…	PDFWindow		เปิด…
-Page	PDFWindow		หน้า
-Page %d	PDFWindow		หน้า %d
-Page setup…	PDFWindow		ตั้งค่าหน้า…
-PDF file successfully written!	PDFWindow		เขียนไฟล์ PDF สำเร็จ!
-Preferences…	PDFWindow		การตั้งค่า ...
-Previous	PDFWindow		ก่อนหน้า
-Print	PDFWindow		พิมพ์
-Print…	PDFWindow		พิมพ์…
-Quit	PDFWindow		ออก
-Reload	PDFWindow		รีโหลด
-Reload file	PDFWindow		รีโหลดไฟล์
-Rotate clockwise	PDFWindow		หมุนตามเข็มนาฬิกา
-Rotate counter-clockwise	PDFWindow		หมุนทวนเข็มนาฬิกา
-Rotation	PDFWindow		หมุน
-Save as…	PDFWindow		บันทึกเป็น
-Save file as	PDFWindow		บันทึกไฟล์เป็น
-Saving copy of PDF file:	PDFWindow		กำลังบันทึกสำเนาของไฟล์ PDF:
-Search	PDFWindow		ค้นหา
-Select all	PDFWindow		เลือกทั้งหมด
-Select none	PDFWindow		ไม่เลือก
+Add file attachment annotation	PDFWindow		เพิ่มคำอธิบายประกอบไฟล์
+System fonts	PreferencesWindow		System fonts
 Show annotation tool bar	PDFWindow		แสดงแถบเครื่องมือคำอธิบายประกอบ
-Show annotation toolbar	PDFWindow		แสดงแถบเครื่องมือคำอธิบายประกอบ
-Show attachments	PDFWindow		แสดงไฟล์แนบ
+Fit to page width	PDFWindow		พอดีกับความกว้างของหน้า
+DPI	PrintSettingsWindow		DPI
+Find…	PDFWindow		ค้นหา
+Odd pages	PrintSettingsWindow		หน้าคี่
+Add sound annotation	PDFWindow		เพิ่มคำอธิบายประกอบเสียง
 Show bookmarks	PDFWindow		แสดงบุ๊กมาร์ก
-Show error messages	PDFWindow		แสดงข้อความผิดพลาด
-Show help…	PDFWindow		แสดงความช่วยเหลือ ...
-Show page list	PDFWindow		แสดงรายการหน้า
-View	PDFWindow		ดู
-Visit homepage…	PDFWindow		ไปที่หน้าแรก ...
-Warning	PDFWindow		เตือน
-Zoom	PDFWindow		ขยาย
-Zoom in	PDFWindow		ขยายเข้า
-Zoom out	PDFWindow		ขยายออก
-Align:	AnnotationWindow		แนวตรง:
-Annotation	AnnotationWindow		คำอธิบายประกอบ
-Asian fonts	AnnotationWindow		ตัวอักษรเอเชีย
-Author	AnnotationWindow		ผู้เขียน
-Automatic	AnnotationWindow		อัตโนมัติ
-current	AnnotationWindow		ปัจจุบัน
-Date:	AnnotationWindow		วันที่:
-Display	AnnotationWindow		แสดง
-Document	AnnotationWindow		เอกสาร
-Filled rectangle	AnnotationWindow		สี่เหลี่ยมผืนผ้าที่เต็ม
-Font:	AnnotationWindow		ตัวอักษร
-Fullscreen mode	AnnotationWindow		โหมดเต็มหน้าจอ
-Invert vertical mouse scrolling	AnnotationWindow		สลับการเลื่อนเมาส์แนวตั้ง
-Open in workspace:	AnnotationWindow		เปิดในพื้นที่ทำงาน:
-Preferences	AnnotationWindow		การตั้งค่า
-Restore page number	AnnotationWindow		คืนค่าหมายเลขหน้า
-Restore window position and size	AnnotationWindow		กู้คืนตำแหน่งและขนาดของหน้าต่าง
-Selection rectangle	AnnotationWindow		สี่เหลี่ยมผืนผ้าที่เลือก
-Show document view only	AnnotationWindow		แสดงมุมมองเอกสารเท่านั้น
-Show toolbar, statusbar and scrollbars, too	AnnotationWindow		แสดงแถบเครื่องมือ แถบสถานะและแถบเลื่อนด้วย
-Size:	AnnotationWindow		ขนาด:
-Stroked rectangle	AnnotationWindow		กรอบสี่เหลี่ยมผืนผ้า
-System fonts	AnnotationWindow		แบบอักษรของระบบ
-Title:	AnnotationWindow		ชื่อ:
-User fonts	AnnotationWindow		แบบอักษรของผู้ใช้
-Will take effect at next program launch.	AnnotationWindow		จะมีผลเมื่อเปิดตัวโปรแกรมครั้งต่อไป
-Alpha	NimblePDFApplication		อัลฟา
-NimblePDF is based on XPDF %s, %s.	NimblePDFApplication	XPDF version, copyright	NimblePDF ขึ้นอยู่กับ XPDF %s, %s.
-NimblePDF: Error opening file!	NimblePDFApplication		NimblePDF: เกิดข้อผิดพลาดในการเปิดไฟล์!
-Beta	NimblePDFApplication		เบต้า
-Close	NimblePDFApplication		ปิด
-Development	NimblePDFApplication		พัฒนา
-Error	NimblePDFApplication		ผิดพลาด
-Final	NimblePDFApplication		สุดท้าย
-Gamma	NimblePDFApplication		แกมม่า
-Golden Master	NimblePDFApplication		Golden Master
-Unknown	NimblePDFApplication		ไม่ทราบ
-Version	NimblePDFApplication		เวอร์ชั่น
-Auto open	TraceWindow		เปิดอัตโนมัติ
+Max. printer resolution	PrintSettingsWindow		ความละเอียดของเครื่องพิมพ์สูงสุด
+Quit	PDFWindow		ออก
+Options	FindTextWindow		ทางเลือก
+File	PDFWindow		ไฟล์
+Fullscreen mode	PDFWindow		โหมดเต็มจอ
+Find text	FindTextWindow		ค้นหาข้อความ
 Clear	TraceWindow		ลบ
-Error messages	TraceWindow		ข้อความผิดพลาด
-Floating	TraceWindow		ลอยตัว
-NimblePDF status	StatusWindow		สถานะ NimblePDF
+Print	PrintSettingsWindow		พิมพ์
 Enter Password	PasswordWindow		ใส่รหัสผ่าน
-OK	PasswordWindow		ตกลง
-Owner password	PasswordWindow		รหัสผ่านของเจ้าของ
+Online help…	PDFWindow		ความช่วยเหลือออนไลน์ ...
+Filename:	FileInfoWindow		ชื่อไฟล์:
+Document	PreferencesWindow		Document
+Embedded name	FileInfoWindow		ชื่อที่แนบมา
+Close	NimblePDFApplication		ปิด
+Copy link	PDFView		คัดลอกลิงค์
+First	PDFWindow		ลำดับแรก
+Add	PDFWindow		เพิ่ม
+<empty>	AttachmentView		<ว่างเปล่า>
+Open in new window…	PDFWindow		เปิดหน้าต่างใหม่…
+Preferences…	PDFWindow		การตั้งค่า ...
+Beta	NimblePDFApplication		เบต้า
+OK	PDFSearch		ตกลง
+Delete	PDFView		ลบ
+Zoom (%)	PrintSettingsWindow		ขยาย (%)
+Type	FileInfoWindow		ชนิด
+Custom zoom factor (%d%%)	PDFWindow		ปัจจัยการซูมที่กำหนดเอง (%d%%)
+Add stamp annotation	PDFWindow		เพิ่มคำอธิบายประกอบแสตมป์
+Abort	PrintingProgressWindow		ยกเลิก
+Align:	AnnotationWindow		แนวตรง:
+Go to end of document	PDFWindow		ไปหน้าสุดท้ายของเอกสาร
+Auto open	TraceWindow		เปิดอัตโนมัติ
+Back	PDFWindow		ย้อนกลับ
+Pages	PrintSettingsWindow		หน้า
+Add movie annotation	PDFWindow		เพิ่มคำอธิบายประกอบภาพยนตร์
+Add circle annotation	PDFWindow		เพิ่มคำอธิบายประกอบวงกลม
+Show error messages	PDFWindow		แสดงข้อความผิดพลาด
+Golden Master	NimblePDFApplication		Golden Master
+Document	FileInfoWindow		เอกสาร
+Width: 	PrintSettingsWindow		ความกว้าง: 
+Author:	FileInfoWindow		ผู้เขียน:
+Add highlight annotation	PDFWindow		เพิ่มคำอธิบายประกอบไฮไลต์
+Add new paragraph text annotation	PDFWindow		เพิ่มคำอธิบายประกอบข้อความย่อหน้าใหม่
+of %d	PDFWindow		ของ %d
+Security	FileInfoWindow		ความปลอดภัย
+Denied	FileInfoWindow		ปฎิเสธ
+Save file as	PDFWindow		บันทึกไฟล์เป็น
+Order	PrintSettingsWindow		สั่ง
+Properties	PDFView		คุณสมบัติ
+Add comment text annotation	PDFWindow		เพิ่มคำอธิบายประกอบข้อความความคิดเห็น
+Description	AttachmentView		รายละเอียด
+Add underline annotation	PDFWindow		เพิ่มหมายเหตุประกอบแบบขีดเส้นใต้
+Development	NimblePDFApplication		พัฒนา
+Saving copy of PDF file:	PDFWindow		กำลังบันทึกสำเนาของไฟล์ PDF:
+Page: %d	FindTextWindow		หน้า: %d
+Page	PDFWindow		หน้า
+Add squiggly annotation	PDFWindow		เพิ่มคำอธิบายประกอบเส้นหยัก
+Annotation	PDFView		คำอธิบายประกอบ
+Add trapnet annotation	PDFWindow		เพิ่มคำอธิบายประกอบTrapnet
+Producer:	FileInfoWindow		ผู้จัดทำ:
+Keywords:	FileInfoWindow		คำสำคัญ:
+Forward in page history list	PDFWindow		ส่งต่อในรายการประวัติหน้า
+Page:	PrintingProgressWindow		หน้า:
+Error getting page number!	NimblePDFApplication		Error getting page number!
+Find next…	PDFWindow		ค้นหาถัดไป
+Visit homepage…	PDFWindow		ไปที่หน้าแรก ...
+Even pages	PrintSettingsWindow		แม้แต่หน้า
+Stop	FindTextWindow		หยุด
+Print	PDFWindow		พิมพ์
+Add link annotation	PDFWindow		เพิ่มคำอธิบายประกอบลิงค์
+ in	PrintSettingsWindow		ใน
+Fullscreen mode	PreferencesWindow		Fullscreen mode
+[link type 'movie' not supported]	PDFView		ไม่รองรับประเภทลิงก์ 'ภาพยนตร์']
+Annotation	AnnotationWindow		คำอธิบายประกอบ
+Bookmark	PDFWindow		คั่นหน้า
+Next	PDFWindow		ถัดไป
+Reverse	PrintSettingsWindow		ย้อนกลับ
+Page: %d	PrintingProgressWindow		หน้า: %d
+Select none	PDFWindow		ไม่เลือก
+Rotate counter-clockwise	PDFWindow		หมุนทวนเข็มนาฬิกา
+<empty>	OutlinesWindow		<ว่าง>
+Error	NimblePDFApplication		ผิดพลาด
+Add key text annotation	PDFWindow		เพิ่มคำอธิบายประกอบข้อความสำคัญ
+Forward	PDFWindow		ส่งต่อ
+Size:	AnnotationWindow		ขนาด:
+Zoom out	PDFWindow		ขยายออก
+Display	PreferencesWindow		Display
+Modified:	FileInfoWindow		แก้ไข:
+License	NimblePDFApplication		License
+Preferences	PreferencesWindow		Preferences
+Go to page %d	PDFView		ไปที่หน้า %d
+OK	OutlinesWindow		ตกลง
+Copy selection	PDFWindow		คัดลอกส่วนที่เลือก
+Final	NimblePDFApplication		สุดท้าย
+Annotations:	FileInfoWindow		คำอธิบายประกอบ:
+Select all	PDFWindow		เลือกทั้งหมด
+PDF file successfully written!	PDFWindow		เขียนไฟล์ PDF สำเร็จ!
+OK	PDFWindow		ตกลง
+Previous	PDFWindow		ก่อนหน้า
+File info	FileInfoWindow		ข้อมูลไฟล์
+Gamma	NimblePDFApplication		แกมม่า
+Search	PDFWindow		ค้นหา
+Leave annotation editing mode	PDFView		ออกจากโหมดแก้ไขคำอธิบายประกอบ
+Edit	PDFView		แก้ไข
+Saving attachment(s):	AttachmentView		กำลังบันทึกไฟล์แนบ:
+Leave annotation editing mode	PDFWindow		ออกจากโหมดแก้ไขคำอธิบายประกอบ
+OK	PrintSettingsWindow		ตกลง
+Add free text annotation	PDFWindow		เพิ่มคำอธิบายประกอบข้อความแบบอิสระ
+Open file	PDFWindow		เปิดไฟล์
+Print settings	PrintSettingsWindow		การตั้งค่าการพิมพ์
+Back in page history list	PDFWindow		ย้อนกลับไปในรายการประวัติหน้า
+Find	PDFWindow		ค้นหา
+Yes	FileInfoWindow		ใช่
+[unknown link]	PDFView		[ลิงค์ที่ไม่รู้จัก]
+Floating	TraceWindow		ลอยตัว
+Add help text annotation	PDFWindow		เพิ่มคำอธิบายประกอบข้อความช่วยเหลือ
+Stop	PrintingProgressWindow		หยุด
+Add popup annotation	PDFWindow		เพิ่มคำอธิบายประกอบป๊อปอัพ
+Show attachments	PDFWindow		แสดงไฟล์แนบ
+Edit	PDFWindow		แก้ไข
+Show help…	PDFWindow		แสดงความช่วยเหลือ ...
+Add printer mark annotation	PDFWindow		เพิ่มคำอธิบายประกอบเครื่องหมายเครื่องพิมพ์
+Search backwards	FindTextWindow		ค้นหาย้อนหลัง
+Reload	PDFWindow		รีโหลด
+Add line annotation	PDFWindow		เพิ่มคำอธิบายประกอบบรรทัด
+Help	PDFWindow		ช่วยเหลือ
+Will take effect at next program launch.	PreferencesWindow		Will take effect at next program launch.
+NimblePDF is a fork of BePDF, the long-running Haiku PDF reader, with the original xpdf engine replaced by poppler.	NimblePDFApplication		NimblePDF is a fork of BePDF, the long-running Haiku PDF reader, with the original xpdf engine replaced by poppler.
+Rotation	PDFWindow		หมุน
+Encrypted:	FileInfoWindow		เข้ารหัส:
+Gray scale	PrintSettingsWindow		ระดับสีเทา
+Save file attachment as…	PDFView		บันทึกไฟล์แนบเป็น ...
+Show toolbar, statusbar and scrollbars, too	PreferencesWindow		Show toolbar, statusbar and scrollbars, too
+Close	PDFWindow		ปิด
+No title	OutlinesWindow		ไม่มีชื่อ
+Page	PrintSettingsWindow		หน้า
+current	PreferencesWindow		current
+Created:	FileInfoWindow		สร้าง:
+Title:	AnnotationWindow		ชื่อ:
+Saving file attachment:	PDFView		กำลังบันทึกไฟล์แนบ:
+Open in new window	PDFView		เปิดในหน้าต่างใหม่
+Height: 	PrintSettingsWindow		ความสูง: 
+File info…	PDFWindow		ข้อมูลไฟล์
+Allowed	FileInfoWindow		อนุญาต
+Add paragraph text annotation	PDFWindow		เพิ่มคำอธิบายประกอบข้อความในย่อหน้า
+Selection rectangle	PreferencesWindow		Selection rectangle
+Linearized:	FileInfoWindow		Linearized:
+No	FileInfoWindow		ไม่
+NimblePDF: Launch	PDFView		NimblePDF: เปิด
+Fit to page	PDFWindow		พอดีกับหน้า
+Reload file	PDFWindow		รีโหลดไฟล์
+Path:	FileInfoWindow		พาธ:
+Print…	PDFWindow		พิมพ์…
+Copy & paste:	FileInfoWindow		คัดลอก & วาง:
+Page %d	PDFWindow		หน้า %d
+Edit title for bookmark	OutlinesWindow		แก้ไขชื่อสำหรับบุ๊คมาร์ค
+Version:	FileInfoWindow		เวอร์ชั่น:
+English.pdf	PDFWindow	Replace with the PDF name of the help document, if there is one for your language.	Thai.pdf
+Automatic	AnnotationWindow		อัตโนมัติ
+Title:	FileInfoWindow		ชื่อ:
+Warning	PDFWindow		เตือน
+User defined	OutlinesWindow		ผู้ใช้กำหนด
+Fullscreen	PDFWindow		เต็มจอ
+Invert vertical mouse scrolling	PreferencesWindow		Invert vertical mouse scrolling
+Save selected attachment to file	AttachmentView		บันทึกไฟล์แนบที่เลือกไปยังไฟล์
+Add note text annotation	PDFWindow		เพิ่มหมายเหตุประกอบข้อความโน้ต
+Editing:	FileInfoWindow		กำลังแก้ไข:
 User password	PasswordWindow		รหัสผ่านผู้ใช้
 Find	FindTextWindow		ค้นหา
-Find text	FindTextWindow		ค้นหาข้อความ
-Find: 	FindTextWindow		ค้นหา: 
+Could not write PDF file!	PDFWindow		ไม่สามารถเขียนไฟล์ PDF ได้!
+Filled rectangle	PreferencesWindow		Filled rectangle
 Ignore case	FindTextWindow		เพิกเฉย
-Options	FindTextWindow		ทางเลือก
-Page:	FindTextWindow		หน้า:
-Page: %d	FindTextWindow		หน้า: %d
-Search backwards	FindTextWindow		ค้นหาย้อนหลัง
-Stop	FindTextWindow		หยุด
-OK	PDFSearch		ตกลง
-Search string not found.	PDFSearch		ไม่พบสตริงการค้นหา
+Creator:	FileInfoWindow		ผู้สร้าง:
+Invalid file reference received!	NimblePDFApplication		Invalid file reference received!
+Save selected attachments into directory	AttachmentView		บันทึกไฟล์แนบที่เลือกไว้ในไดเรกทอรี
+Wrong parameter!	PrintSettingsWindow		พารามิเตอร์ผิด!
+Rotate clockwise	PDFWindow		หมุนตามเข็มนาฬิกา
+Stroked rectangle	PreferencesWindow		Stroked rectangle
+Show all fonts	FileInfoWindow		แสดงแบบอักษรทั้งหมด
