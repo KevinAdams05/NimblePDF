@@ -1,6 +1,3 @@
-> [!NOTE]
-> An LLM was used to aid in development of this code.
-
 <img src="assets/logo_lightmode.png" alt="Alt Text">
 
 # NimblePDF
