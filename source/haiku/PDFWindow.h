@@ -259,6 +259,7 @@ public:
 	BToolBar* BuildToolBar();
 	BCardView* BuildLeftPanel();
 	void SetUpViews(entry_ref* ref, const char* ownerPassword, const char* userPassword, bool* encrypted);
+	bool CreateMainView(entry_ref* ref, const char* ownerPassword, const char* userPassword, bool* encrypted);
 	void CleanUpBeforeLoad();
 	bool IsCurrentFile(entry_ref* ref) const;
 	bool LoadFile(entry_ref* ref, const char* ownerPassword, const char* userPassword, bool* encrypted);

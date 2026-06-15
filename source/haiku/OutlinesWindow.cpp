@@ -364,7 +364,7 @@ void OutlinesView::Activate()
 		Object obj;
 		fList->AddItem(new OutlineListItem(B_TRANSLATE("Document"), 0, true, GetDefaultStyle()));
 		gPdfLock->Lock();
-		if (fCatalog->getOutline()->isDict() && !(obj = fCatalog->getOutline()->dictLookup("First")).isNull()) {
+		if (fCatalog != NULL && fCatalog->getOutline()->isDict() && !(obj = fCatalog->getOutline()->dictLookup("First")).isNull()) {
 			ReadOutlines(&obj, 1);
 		}
 		gPdfLock->Unlock();

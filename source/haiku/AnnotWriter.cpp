@@ -264,14 +264,15 @@ Ref AnnotWriter::WriteAS(Annotation* a)
 	// (unlike the old hand-rolled writer) we do not add it here.
 
 	// Hand the dictionary and stream bytes to poppler's stream-object factory.
-	// addStreamObject takes ownership of one reference to the Dict, so bump the
-	// refcount to balance xobj's own reference (released at end of scope).
-	// VERIFY(VM): Dict::incRef visibility, addStreamObject ownership + /Length.
+	// addStreamObject takes ownership of one reference to the Dict. Since xobj
+	// owns and releases its own Dict at end of scope, hand addStreamObject a fresh
+	// copy rather than the shared pointer (Dict::incRef is private to Object in
+	// poppler 25.12, so the old refcount-balancing trick no longer compiles).
+	// /Length is filled in by poppler when the stream is serialized.
 	GooString* stream = as.GetStream();
 	std::vector<char> buffer(stream->c_str(), stream->c_str() + as.GetLength());
 	Dict* dict = xobj.getDict();
-	dict->incRef();
-	return fXRef->addStreamObject(dict, std::move(buffer), StreamCompression::None);
+	return fXRef->addStreamObject(dict->copy(fXRef), std::move(buffer), StreamCompression::None);
 }
 
 

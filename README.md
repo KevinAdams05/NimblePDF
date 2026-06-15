@@ -1,6 +1,8 @@
 > [!NOTE]
 > An LLM was used to aid in development of this code.
 
+<img src="assets/logo_lightmode.png" alt="Alt Text">
+
 # NimblePDF
 
 A native [Haiku](https://www.haiku-os.org/) PDF viewer, derived from
@@ -13,8 +15,14 @@ A Linux port is a possible future goal once the Haiku version is stable.
 
 🚧 **Active development.** NimblePDF was forked from BePDF and its xpdf
 rendering backend has been replaced by [poppler](https://poppler.freedesktop.org/).
-The migration compiles and links; runtime verification on Haiku (rendering,
-navigation, search, and annotation save) is in progress.
+
+
+## Logging Bugs / How to Help
+
+Bugs are welcome! To log a bug, [please log it here in github as an issue](https://github.com/KevinAdams05/NimblePDF/issues), and include as much detail as possible. Please attach the PDF that is causing the error, if possible. Also attach your syslog and state which version/hrev of Haiku you are running.
+
+PRs are welcome! However, please test all code changes on Beta5 and the latest nightly before opening the PR!
+
 
 ## Repository layout
 

@@ -330,7 +330,8 @@ void PDFWindow::StoreFileAttributes()
 bool PDFWindow::QuitRequested()
 {
 	gApp->WindowClosed();
-	fMainView->WaitForPage(true);
+	if (fMainView != NULL)
+		fMainView->WaitForPage(true);
 	StoreFileAttributes();
 	be_app->PostMessage(B_QUIT_REQUESTED);
 	return true;
@@ -354,17 +355,27 @@ bool PDFWindow::IsCurrentFile(entry_ref* ref) const
 ///////////////////////////////////////////////////////////
 bool PDFWindow::LoadFile(entry_ref* ref, const char* ownerPassword, const char* userPassword, bool* encrypted)
 {
-	if (fMainView != NULL) {
-		StoreFileAttributes();
-		CleanUpBeforeLoad();
-		// load new file
-		if (fMainView->LoadFile(ref, &fFileAttributes, ownerPassword, userPassword, false, encrypted)) {
-			fEntryChangedMonitor.StartWatching(ref);
-			be_roster->AddToRecentDocuments(ref, NIMBLEPDF_APP_SIG);
-			fCurrentFile.SetTo(ref);
-			InitAfterOpen();
-			return true;
-		}
+	if (fMainView == NULL) {
+		// First document opened into a blank window: build the view now and wire
+		// up everything that the reload path below gets from PDFView::LoadFile().
+		if (!CreateMainView(ref, ownerPassword, userPassword, encrypted))
+			return false;
+		be_roster->AddToRecentDocuments(ref, NIMBLEPDF_APP_SIG);
+		NewDoc(fMainView->GetPDFDoc());
+		fMainView->Redraw();
+		InitAfterOpen();
+		return true;
+	}
+
+	StoreFileAttributes();
+	CleanUpBeforeLoad();
+	// load new file
+	if (fMainView->LoadFile(ref, &fFileAttributes, ownerPassword, userPassword, false, encrypted)) {
+		fEntryChangedMonitor.StartWatching(ref);
+		be_roster->AddToRecentDocuments(ref, NIMBLEPDF_APP_SIG);
+		fCurrentFile.SetTo(ref);
+		InitAfterOpen();
+		return true;
 	}
 	return false;
 }
@@ -768,9 +779,11 @@ BCardView* PDFWindow::BuildLeftPanel()
 {
 	BCardView* layerView = new BCardView("layers");
 
-	// PageList
+	// PageList -- on a blank window there is no document yet, so the outline
+	// starts with a NULL catalog and is populated by NewDoc() once a file opens.
+	Catalog* catalog = (fMainView != NULL) ? fMainView->GetPDFDoc()->getCatalog() : NULL;
 	fOutlinesView =
-	    new OutlinesView(fMainView->GetPDFDoc()->getCatalog(), fFileAttributes.GetBookmarks(), gApp->GetSettings(), this, B_FRAME_EVENTS);
+	    new OutlinesView(catalog, fFileAttributes.GetBookmarks(), gApp->GetSettings(), this, B_FRAME_EVENTS);
 
 	fAttachmentView = new AttachmentView(gApp->GetSettings(), this, 0);
 
@@ -794,24 +807,19 @@ void PDFWindow::SetUpViews(entry_ref* ref, const char* ownerPassword, const char
 	fMenuBar = BuildMenu();
 	BuildToolBar();
 
-	fMainView =
-	    new PDFView(ref, &fFileAttributes, "mainView", B_WILL_DRAW | B_NAVIGABLE | B_FRAME_EVENTS, ownerPassword, userPassword, encrypted);
-
-	fCurrentFile.SetTo(ref);
-	if (!fMainView->IsOk()) {
-		delete fMainView;
-		fMainView = NULL;
-		return; // ERROR!
-	}
-	fEntryChangedMonitor.StartWatching(ref);
-
+	// The document view lives inside this container. It starts out empty so the
+	// window can come up blank (no document); CreateMainView() installs the
+	// scrolled PDFView once a document is opened -- either now, or later through
+	// LoadFile() when the user opens a file from a blank window.
 	fMainContainer = new BView("ScrollContainer", 0);
-	BScrollView* mainScrollView = new BScrollView("scrollView", fMainView, 0, true, true, B_FANCY_BORDER);
-	mainScrollView->SetViewUIColor(B_PANEL_BACKGROUND_COLOR);
-	mainScrollView->SetExplicitMinSize(BSize(0, 0));
-
-	BLayoutBuilder::Group<>(fMainContainer, B_VERTICAL, 0).SetInsets(0, 0, -1, -1).Add(mainScrollView).End();
+	fMainContainer->SetViewUIColor(B_PANEL_BACKGROUND_COLOR);
+	BLayoutBuilder::Group<>(fMainContainer, B_VERTICAL, 0).SetInsets(0, 0, -1, -1);
 	fMainContainer->SetExplicitMinSize(BSize(0, 0));
+
+	// When a document was supplied, create its view now -- before the left panel
+	// so the outline picks up the document catalog directly, as on a normal open.
+	if (ref != NULL)
+		CreateMainView(ref, ownerPassword, userPassword, encrypted);
 
 	// left view of SplitView is a LayerView
 	fLayerView = BuildLeftPanel();
@@ -825,8 +833,6 @@ void PDFWindow::SetUpViews(entry_ref* ref, const char* ownerPassword, const char
 
 	BLayoutBuilder::Group<>(this, B_VERTICAL, 0).SetInsets(0, 0, -1, -1).Add(fMenuBar).Add(fToolBar).Add(fSplitView).End();
 
-	SetTotalPageNumber(fMainView->GetNumPages());
-
 	GlobalSettings* s = gApp->GetSettings();
 
 	// show or hide panel that is stored in settings
@@ -836,8 +842,38 @@ void PDFWindow::SetUpViews(entry_ref* ref, const char* ownerPassword, const char
 		ToggleLeftPanel();
 	}
 
-	// set focus to PDFView, so it receives mouse and keyboard events
-	fMainView->MakeFocus();
+	if (fMainView != NULL) {
+		SetTotalPageNumber(fMainView->GetNumPages());
+		// set focus to PDFView, so it receives mouse and keyboard events
+		fMainView->MakeFocus();
+	} else {
+		// blank window: no document loaded yet
+		SetTitle("NimblePDF");
+	}
+}
+
+
+// Creates the scrolled PDFView for a document and installs it in the container.
+// Returns false (and leaves fMainView NULL) if the document could not be opened.
+bool PDFWindow::CreateMainView(entry_ref* ref, const char* ownerPassword, const char* userPassword, bool* encrypted)
+{
+	fMainView =
+	    new PDFView(ref, &fFileAttributes, "mainView", B_WILL_DRAW | B_NAVIGABLE | B_FRAME_EVENTS, ownerPassword, userPassword, encrypted);
+
+	fCurrentFile.SetTo(ref);
+	if (!fMainView->IsOk()) {
+		delete fMainView;
+		fMainView = NULL;
+		return false;
+	}
+	fEntryChangedMonitor.StartWatching(ref);
+
+	BScrollView* mainScrollView = new BScrollView("scrollView", fMainView, 0, true, true, B_FANCY_BORDER);
+	mainScrollView->SetViewUIColor(B_PANEL_BACKGROUND_COLOR);
+	mainScrollView->SetExplicitMinSize(BSize(0, 0));
+	fMainContainer->GetLayout()->AddView(mainScrollView);
+
+	return true;
 }
 
 
@@ -964,10 +1000,38 @@ void PDFWindow::MessageReceived(BMessage* message)
 	if (CancelCommand(message))
 		return;
 
+	// On a blank window (no document loaded yet) most commands operate on the
+	// document and would dereference a NULL view. Allow only the commands that
+	// are meaningful without a document; ignore the rest until a file is opened.
+	if (fMainView == NULL) {
+		switch (message->what) {
+		case OPEN_FILE_CMD:
+		case OPEN_IN_NEW_WINDOW_CMD:
+		case NEW_WINDOW_CMD:
+		case CLOSE_FILE_CMD:
+		case QUIT_APP_CMD:
+		case ABOUT_APP_CMD:
+		case KEYBOARD_SHORTCUTS_CMD:
+		case PREFERENCES_FILE_CMD:
+		case HELP_CMD:
+		case ONLINE_HELP_CMD:
+		case BUG_REPORT_CMD:
+		case HOME_PAGE_CMD:
+		case CHECK_FOR_UPDATE_CMD:
+		case SHOW_TRACER_CMD:
+			break;
+		default:
+			BWindow::MessageReceived(message);
+			return;
+		}
+	}
+
 	switch (message->what) {
 	case OPEN_FILE_CMD:
-		fMainView->WaitForPage();
-		EditAnnotation(false);
+		if (fMainView != NULL) {
+			fMainView->WaitForPage();
+			EditAnnotation(false);
+		}
 		gApp->OpenFilePanel();
 		break;
 	case NEW_WINDOW_CMD:
@@ -990,7 +1054,8 @@ void PDFWindow::MessageReceived(BMessage* message)
 		gApp->OpenSaveFilePanel(this, GetPdfFilter());
 		break;
 	case CLOSE_FILE_CMD:
-		fMainView->WaitForPage(true);
+		if (fMainView != NULL)
+			fMainView->WaitForPage(true);
 		PostMessage(B_QUIT_REQUESTED);
 		break;
 	case QUIT_APP_CMD:
@@ -1546,7 +1611,7 @@ void PDFWindow::OpenInWindow(const char* file)
 void PDFWindow::ActivateOutlines()
 {
 	// fMainView->WaitForPage();
-	if (fLayerView->CardLayout()->VisibleIndex() == BOOKMARKS_PANEL && fShowLeftPanel) {
+	if (fMainView != NULL && fLayerView->CardLayout()->VisibleIndex() == BOOKMARKS_PANEL && fShowLeftPanel) {
 		fMainView->WaitForPage();
 		fOutlinesView->Activate();
 	}
@@ -1595,7 +1660,8 @@ void PDFWindow::ToggleLeftPanel()
 		fSplitView->SetFlags((~B_NAVIGABLE) & fSplitView->Flags());
 	}
 	UpdateInputEnabler();
-	fMainView->Resize();
+	if (fMainView != NULL)
+		fMainView->Resize();
 }
 
 

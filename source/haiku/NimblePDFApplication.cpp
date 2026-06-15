@@ -32,6 +32,7 @@
 #include <StorageKit.h>
 #include <Deskbar.h>
 #include <Alert.h>
+#include <AboutWindow.h>
 
 #include "Trace.h"
 // xpdf "config.h" and "Error.h" replaced by poppler headers; pkg-config
@@ -53,14 +54,6 @@
 
 #undef B_TRANSLATION_CONTEXT
 #define B_TRANSLATION_CONTEXT "NimblePDFApplication"
-
-static const char* nimblePDFCopyright = "© 1997 Benoit Triquet\n"
-                                    "© 1998-2000 Hubert Figuiere\n"
-                                    "© 2000-2011 Michael Pfeiffer\n"
-                                    "© 2013-2017 waddlesplash\n";
-
-static const char* GPLCopyright = "\n\n"
-                                  "This program is free software under the GNU GPL v2, or any later version.\n";
 
 static const char* PAGE_NUM_MSG_KEY = "nimblepdf:page_num";
 
@@ -358,17 +351,12 @@ void NimblePDFApplication::ReadyToRun()
 
 	Initialize();
 	if (!fGotSomething) {
-		// open start document
-		entry_ref defaultDocument;
-		BMessage msg(B_REFS_RECEIVED);
-		get_ref_for_path(fDefaultPDF.Path(), &defaultDocument);
-		msg.AddRef("refs", &defaultDocument);
-		RefsReceived(&msg);
-
-		if (!fGotSomething) {
-			// on error open file open dialog
-			OpenFilePanel();
-		}
+		// No document was passed on launch: come up with a blank window so the
+		// user can open a file via File > Open... NimblePDF, unlike BePDF, does
+		// not auto-open a bundled welcome document.
+		BRect rect(fSettings->GetWindowRect());
+		fWindow = new PDFWindow(NULL, rect, NULL, NULL, NULL);
+		fWindow->Show();
 	}
 }
 
@@ -376,34 +364,48 @@ void NimblePDFApplication::ReadyToRun()
 void NimblePDFApplication::AboutRequested()
 {
 	BString version;
-	BString str("NimblePDF\n");
-	str += B_TRANSLATE("Version");
-	str += " ";
-	str += GetVersion(version);
-	str += "\n";
+	GetVersion(version);
 
-	str += nimblePDFCopyright;
-	str += "\n";
+	// The window picks up the application icon (BEOS:ICON) from our resources
+	// automatically, so we only need to supply the text.
+	BAboutWindow* about = new BAboutWindow("NimblePDF", NIMBLEPDF_APP_SIG);
+	about->SetVersion(version.String());
+	about->AddDescription(
+	    B_TRANSLATE("A fast, full-featured PDF reader for Haiku."));
 
-	str +=
-	    BString().SetToFormat(B_TRANSLATE_COMMENT("NimblePDF is based on poppler %s.", "poppler version"), POPPLER_VERSION);
+	// Kevin's copyright is primary; the original BePDF copyright holders are
+	// preserved as required by the GNU GPL (NimblePDF is a fork of BePDF).
+	const char* bePdfCopyrights[] = {
+	    "1997 Benoit Triquet",
+	    "1998-2000 Hubert Figuiere",
+	    "2000-2011 Michael Pfeiffer",
+	    "2013-2017 waddlesplash",
+	    NULL};
+	about->AddCopyright(2026, "Kevin Adams", bePdfCopyrights);
 
-	str += GPLCopyright;
+	const char* origin[] = {
+	    B_TRANSLATE("NimblePDF is a fork of BePDF, the long-running Haiku PDF "
+	                "reader, with the original xpdf engine replaced by poppler."),
+	    NULL};
+	about->AddText(B_TRANSLATE("Based on BePDF"), origin);
 
-	BAlert* about = new BAlert("About", str.String(), "OK");
-	BTextView* v = about->TextView();
-	if (v) {
-		v->SetStylable(true);
-		char* text = (char*)v->Text();
+	BString poppler;
+	poppler.SetToFormat(
+	    B_TRANSLATE_COMMENT("Rendering by poppler %s.", "poppler version"), POPPLER_VERSION);
+	const char* engine[] = {poppler.String(), NULL};
+	about->AddText(B_TRANSLATE("Rendering engine"), engine);
 
-		// Enlarge the product-name line (the first line) of the About text.
-		char* s = strchr(text, '\n');
-		BFont font;
-		v->GetFontAndColor(0, &font);
-		font.SetSize(16);
-		v->SetFontAndColor(0, s - text + 1, &font, B_FONT_SIZE);
-	};
-	about->Go();
+	const char* license[] = {
+	    B_TRANSLATE("NimblePDF is free software under the GNU General Public "
+	                "License, version 2 or (at your option) any later version."),
+	    NULL};
+	about->AddText(B_TRANSLATE("License"), license);
+
+	// Clickable in the About window's text view.
+	const char* source[] = {"https://github.com/KevinAdams05/NimblePDF", NULL};
+	about->AddText(B_TRANSLATE("Source code"), source);
+
+	about->Show();
 }
 
 /*
