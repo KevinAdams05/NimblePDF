@@ -134,7 +134,7 @@ swap.
 
 ---
 
-## 5. Toolkit decision for Linux + Windows: **Qt 6** (recommended)
+## 5. Toolkit decision for Linux + Windows: **Qt 6** (DECIDED 2026-06-15)
 
 | | Qt 6 | wxWidgets |
 |---|---|---|
@@ -147,9 +147,30 @@ swap.
 | Dependency weight | heavier (ship Qt libs) | lighter |
 | License vs GPLv2+ | LGPL — compatible | wxWindows licence — compatible |
 
-**Pick Qt 6.** The custom page view, annotation overlays, i18n, and printing all
-map cleanly, and it's the most productive for the dialog-heavy UI. wxWidgets is a
-fine fallback if Qt's footprint is unwanted.
+**Decision: Qt 6.** The custom page view, annotation overlays, i18n, and printing
+all map cleanly, and it's the most productive for the dialog-heavy UI. The
+footprint cost (§5.1) was reviewed and accepted. wxWidgets is recorded only as
+the fallback had footprint been the deciding factor.
+
+### 5.1 Footprint cost (Windows x64, accepted)
+
+Qt makes the bundled Windows product ~30–45 MB larger than wxWidgets; that was
+weighed and is fine. Approximate uncompressed install sizes:
+
+| Layer | Qt 6 | wxWidgets |
+|---|---|---|
+| Shared baseline (exe + core + poppler & deps + MSVC rt) | ~12–17 MB | ~12–17 MB |
+| Toolkit | ~30 MB lean (≈55 MB if the GL software fallback is bundled) | ~6–12 MB (often static into the exe) |
+| **Total installed** | **~45–75 MB** | **~20–30 MB** |
+| Installer (compressed) | ~20–35 MB | ~10–15 MB |
+
+Keep the Qt number lean:
+- `windeployqt --no-opengl-sw` — drops `opengl32sw.dll`/`d3dcompiler` (~20–25 MB);
+  a 2D widget app doesn't need the software GL fallback.
+- Qt 6 needs **no ICU** on Windows (native APIs), avoiding the old Qt 5 ~30 MB
+  `icudt` blob.
+- Ship Qt as DLLs (LGPL-clean: dynamic-link so users can relink). Don't static-link
+  Qt — that triggers the LGPL relink-enablement obligation.
 
 **poppler-qt6 caveat — decision: do NOT use it.** It's tempting (less code), but
 it would fork the render path away from the Haiku/KevRexOS `SplashRenderer`. Keep
