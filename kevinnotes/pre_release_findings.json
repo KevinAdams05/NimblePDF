@@ -1,0 +1,870 @@
+[
+  {
+    "file": "PDFWindow.cpp",
+    "line": "1468-1479",
+    "severity": "high",
+    "category": "correctness",
+    "title": "Missing break causes fall-through from BOOKMARK_ENTERED_NOTIFY into AnnotationWindow::QUIT_NOTIFY",
+    "detail": "The case block for BookmarkWindow::BOOKMARK_ENTERED_NOTIFY (lines 1468-1475) has no break statement before the next case label AnnotationWindow::QUIT_NOTIFY (line 1476). After a user enters a bookmark, control falls through and executes the QUIT_NOTIFY handler, which does `delete fAWMessenger; fAWMessenger = NULL;`. This silently destroys the messenger to any open annotation window every time the user adds a user-defined bookmark, leaving the annotation window orphaned (GetAnnotationWindow/ShowAnnotationWindow will then create a second one, and the original is leaked / unreachable). This is a real logic bug, not style.",
+    "fix": "Add a `break;` statement at the end of the BOOKMARK_ENTERED_NOTIFY case, after the closing brace of the `if` block on line 1474 (i.e. before line 1476).",
+    "verdict": {
+      "isReal": true,
+      "reasoning": "Lines 1468-1475 of PDFWindow.cpp define the BookmarkWindow::BOOKMARK_ENTERED_NOTIFY case with a closing brace on line 1475 but no break statement. Execution falls through directly into the AnnotationWindow::QUIT_NOTIFY handler at line 1476, which deletes fAWMessenger and sets it to NULL. If an AnnotationWindow is open when the user adds a bookmark, PDFWindow loses its BMessenger to that window. The window (a BWindow/BLooper) keeps running but becomes unreachable \u2014 GetAnnotationWindow() returns NULL and ShowAnnotationWindow() creates a second one, leaking the original. The fall-through is visible in the source: no break or return between the closing brace on line 1475 and the next case label on line 1476. This is a genuine logic defect, not a style issue. Severity is downgraded from critical to high: no security implication and no guaranteed crash, but it causes a window resource leak and broken annotation-window state whenever the user adds a bookmark while an AnnotationWindow is open.",
+      "adjustedSeverity": "high"
+    }
+  },
+  {
+    "file": "PDFWindow.cpp",
+    "line": "1954-1969",
+    "severity": "medium",
+    "category": "threading",
+    "title": "SaveFileThread touches PDFDoc/PageRenderer and runs BAlert off the window thread without locking",
+    "detail": "SaveFileThread::Run() executes on a detached background thread. It calls fMainView->GetPDFDoc(), fMainView->GetPageRenderer()->GetAnnotsList() and fMainView->GetNimblePDFAcroForm() and then constructs an AnnotWriter that walks the XRef \u2014 all without holding gPdfLock. The render/page thread can be mutating the same PDFDoc/XRef concurrently (the rest of the file is careful to take gPdfLock around getXRef()/getCatalog() access, e.g. UpdatePageList and SaveFile's own SyncAnnotation call). The pre-save SyncAnnotation is locked (1986-1988) but the actual WriteTo traversal on the thread is not, so a render in flight races the writer. Additionally alert->Go() (a modal run) is invoked from this worker thread rather than the looper thread.",
+    "fix": "Hold gPdfLock for the duration of writer.WriteTo() inside SaveFileThread::Run(), or snapshot/serialize the document under the lock before spawning the thread. Post the success/error result back to the window via BMessage and show the BAlert from the looper thread instead of calling Go() on the worker.",
+    "verdict": {
+      "isReal": true,
+      "reasoning": "The XRef/PDFDoc race is confirmed. `SaveFileThread::Run()` calls `AnnotWriter::WriteTo()` on a background thread without holding `gPdfLock`. `WriteTo()` calls `fDoc->getCatalog()->getPageRef()`, `fXRef->setModifiedObject()`, `fXRef->removeIndirectObject()`, and `fDoc->saveAs()` \u2014 all mutating the shared XRef/Catalog. Meanwhile `PageRenderer::Render()` (lines 329-358 of PageRenderer.cpp) holds `gPdfLock` for its entire rendering pass which also touches `fDoc->getCatalog()` and the same `fAnnotations` list. The pre-save `SyncAnnotation` call is correctly locked (lines 1986-1988), but the lock is released before the thread is spawned, so any rendering that starts after the unlock races the writer. This is a genuine unsynchronized concurrent mutation of shared poppler data structures.\n\nThe `BAlert::Go()` from the worker thread (line 1966) is NOT a defect. In Haiku, `BAlert::Go()` runs the alert's own internal event loop and is explicitly designed to be called from any thread \u2014 this is standard Haiku idiom and the rest of the file does it the same way (line 1999 calls it from the window looper). The claim about `Go()` being wrong is incorrect and should be ignored, but it does not invalidate the real threading bug.\n\nSeverity is downgraded from high to medium: the race window requires a render to be in-flight concurrently with a save-as operation (the user has to trigger Save Copy while the viewer is actively rendering a page). Possible but not a hair-trigger crash condition. The fix is straightforward: hold `gPdfLock` for the duration of `WriteTo()` inside `SaveFileThread::Run()`.",
+      "adjustedSeverity": "medium"
+    }
+  },
+  {
+    "file": "PDFWindow.cpp",
+    "line": "253-267",
+    "severity": "medium",
+    "category": "resource",
+    "title": "Object allocated for PageLabels is leaked in UpdatePageList",
+    "detail": "UpdatePageList allocates `Object* pageLabels = new Object(catDict.dictLookup(\"PageLabels\"));` (line 258) and passes it to labels.Parse(); it is never deleted on any path. UpdatePageList is invoked on every document load and on pending-action handling, so this leaks a poppler Object (and the dictLookup'd object it wraps) per reload. The surrounding code holds gPdfLock, so the leak is deterministic.",
+    "fix": "Delete the Object after use (e.g. allocate on the stack as a local `Object pageLabels = catDict.dictLookup(\"PageLabels\");` and pass &pageLabels, or `delete pageLabels;` before the Unlock). Confirm Parse does not retain the pointer.",
+    "verdict": {
+      "isReal": true,
+      "reasoning": "At PDFWindow.cpp line 258, `Object* pageLabels = new Object(catDict.dictLookup(\"PageLabels\"))` allocates a heap object that is passed to `labels.Parse(pageLabels)` and never deleted. Inspection of TreeParser::Parse confirms it does not store the pointer \u2014 it only calls methods on it to extract locally-scoped Objects. Neither PageLabels nor NumberTreeParser retain the pointer either. The catDict on line 257 is a stack Object (fine), but pageLabels is explicitly heap-allocated via `new` and purely orphaned. UpdatePageList is called on every document load (and via HandlePendingActions), so this leaks one poppler Object per invocation. The fix is straightforward: declare pageLabels as a stack Object and pass its address, or add `delete pageLabels` before the Unlock().",
+      "adjustedSeverity": "medium"
+    }
+  },
+  {
+    "file": "PDFWindow.cpp",
+    "line": "940-944",
+    "severity": "low",
+    "category": "correctness",
+    "title": "AnnotationWindow messenger left stale after NewDoc quits the window",
+    "detail": "In NewDoc, the third messenger branch locks fAWMessenger->LockTarget(), gets w, and calls w->Quit() but (unlike the FIW/PSW branches above it) never resets fAWMessenger to NULL. After Quit() the BLooper is destroyed, so fAWMessenger now targets a dead looper. Subsequent GetAnnotationWindow()/ShowAnnotationWindow() calls will test fAWMessenger->LockTarget() on a stale messenger; while LockTarget should fail for a dead target, the pointer is never freed and ShowAnnotationWindow's `delete fAWMessenger` path is the only cleanup \u2014 meaning the window is reloaded into the same PDFWindow and a future annotation-edit may operate against assumptions of a fresh messenger. Also note the looper is left locked (no Unlock) before Quit, which is acceptable for Quit but inconsistent with the sibling branches.",
+    "fix": "After w->Quit(), set `delete fAWMessenger; fAWMessenger = NULL;` (mirroring the QUIT_NOTIFY handler) so the stale messenger is not retained.",
+    "verdict": {
+      "isReal": true,
+      "reasoning": "The defect is real but narrower than claimed. In NewDoc (lines 940-944), after calling w->Quit(), fAWMessenger is left non-null pointing at a destroyed looper. The heap-allocated BMessenger object is never freed in this code path because: (1) the destructor (~PDFWindow, line 183) does not delete fAWMessenger, (2) the QUIT_NOTIFY handler is not triggered when NewDoc forcibly calls Quit(), and (3) ShowAnnotationWindow() only cleans it up if the user opens annotations again. This is a genuine memory leak of the BMessenger object. The claimed \"stale messenger causes bad behavior\" is overstated \u2014 GetAnnotationWindow() uses LockTarget() which fails for a dead looper and returns NULL, and ShowAnnotationWindow() has a defensive `delete fAWMessenger` before re-creating. So there is no use-after-free or correctness hazard beyond the leak. The \"looper left locked\" sub-claim is wrong \u2014 calling Quit() on a locked looper is standard Haiku idiom and the sibling branches do unlock only because they continue using the looper after the call. Severity is low (small fixed-size leak, only in the new-doc-while-annotation-open path), not medium.",
+      "adjustedSeverity": "low"
+    }
+  },
+  {
+    "file": "PDFWindow.cpp",
+    "line": "242-250",
+    "severity": "low",
+    "category": "correctness",
+    "title": "sprintf into fixed page-number buffer in FillPageList/AddBookmark",
+    "detail": "FillPageList uses sprintf(pageNo, \"%5.0d\", ...) into a 20-byte stack buffer (lines 241-242) and AddBookmark uses sprintf(buffer, B_TRANSLATE(\"Page %d\"), ...) into char buffer[256] (lines 1731-1732). The page-number case is safe for plausible page counts, but the AddBookmark case formats a *translated* format string into a fixed 256-byte buffer: a translator-supplied catkey could contain a longer literal or a malformed %-spec, overflowing the buffer or mis-formatting. Same risk applies to SetTotalPageNumber's B_TRANSLATE(\"of %d\") (handled there with a computed length, which is the correct pattern).",
+    "fix": "Use snprintf with sizeof(buffer) in AddBookmark (and FillPageList) instead of sprintf, and validate/escape translated format strings, matching the safer approach already used in SetTotalPageNumber.",
+    "verdict": {
+      "isReal": true,
+      "reasoning": "The AddBookmark sprintf at line 1732 uses a translated format string (\"Page %d\") with sprintf into a 256-byte buffer. The buffer overflow angle is essentially nil \u2014 a page number formatted as %d cannot overflow 256 bytes under any realistic page count. However, the translated-format-string UB risk is real in principle: if a translator supplies a second %-specifier (e.g. \"Seite %d von %d\") the second %d reads garbage from the stack, producing undefined behavior. That is a genuine (if low-probability) correctness issue, not merely a style nit. The concern is reinforced by the inconsistency: SetTotalPageNumber (line 195-198) in the same file already uses the correct snprintf-with-computed-length pattern for an identical translated-format-string situation, so the safer idiom is already established. Line 895 has the same issue with B_TRANSLATE(\"Custom zoom factor (%d%%)\"). The finding is real but the severity is low \u2014 it requires a malformed translation to trigger, and the practical impact is a garbled label rather than a exploitable overflow.",
+      "adjustedSeverity": "low"
+    }
+  },
+  {
+    "file": "PDFWindow.cpp",
+    "line": "1107-1132",
+    "severity": "low",
+    "category": "error-handling",
+    "title": "GOTO_PAGE_CMD reads 'page' uninitialized when source is a non-TextControl",
+    "detail": "In the GOTO_PAGE_CMD handler, if FindPointer(\"source\") succeeds (result==B_OK) but the dynamic_cast to BTextControl fails (control==NULL), the inner block is skipped and `page` is never assigned, yet the outer `if (result == B_OK)` at line 1125 still fires and calls fMainView->MoveToPage(page) with an uninitialized stack value. `page` (declared line 997) is not initialized. This is a latent garbage-page navigation / potential out-of-range jump.",
+    "fix": "Initialize `int32 page = 0;` at declaration and/or only call MoveToPage when a page value was actually parsed (gate on a separate hasPage flag rather than reusing result).",
+    "verdict": {
+      "isReal": true,
+      "reasoning": "The logic flaw is real. At line 1112, `result = message->FindPointer(\"source\", ...)` sets `result = B_OK`. At line 1114, the dynamic_cast to `BTextControl*` can return NULL (e.g., if the message source is a different control type, or a crafted message). The inner guard on line 1115 uses `control != NULL`, so if the cast fails, `page` (declared at line 997 with no initializer) is never assigned. The outer `else` branch (lines 1119-1123) is only reached when `FindPointer` failed, not when the cast fails. So when FindPointer succeeds but cast fails: `result == B_OK` at line 1125 is true, and `MoveToPage(page)` is called with an uninitialized stack value. This is a genuine uninitialized-variable use, not a style concern. The consequence is garbage-page navigation; MoveToPage likely clamps out-of-range values so an outright crash is unlikely, keeping severity low rather than higher.",
+      "adjustedSeverity": "low"
+    }
+  },
+  {
+    "file": "PDFView.cpp",
+    "line": "2660-2705",
+    "severity": "high",
+    "category": "threading",
+    "title": "Background save thread captures raw FileAttachmentAnnot* that can be freed by the window thread",
+    "detail": "SaveFileAttachment() spawns a SaveFileAttachmentThread that stores the annotation only as a raw pointer inside a copied BMessage (FindPointer \"fileAttachment\"). The thread later dereferences it and calls fileAttachment->Save(GetXRef(), ...) on a detached thread. Meanwhile the window thread can delete the annotation (DELETE_ANNOT_MSG sets SetDeleted/removes it), close/reload the document (LoadFile deletes fDoc and rebuilds the page/annotation list), or quit. There is no lifetime guarantee or lock coordinating the annotation list and XRef with the worker thread, so this is a use-after-free / dangling-XRef race. The code even admits it with the 'TODO validate pointer' comment. This matters because saving a large attachment is exactly when the user is likely to interact with or close the document.",
+    "fix": "Do not pass a raw annotation pointer across thread boundaries. Either resolve/serialize the attachment bytes on the window thread before spawning the worker, or have the worker hold a strong reference (e.g. a shared_ptr / a copy of the file stream) and a guarantee that the PDFDoc/XRef outlives it (e.g. ref-count the doc, or join the thread in the destructor / before LoadFile tears down fDoc).",
+    "verdict": {
+      "isReal": true,
+      "reasoning": "The defect is genuine and fully confirmed by the code.\n\nKey facts established by reading the source:\n\n1. **Thread lifecycle (Thread.cpp:61-67)**: `DoRun` calls `delete thread` after `Run()` returns. `Resume()` is fire-and-forget \u2014 there is no join, no cancellation, and no tracking of in-flight threads in `PDFView`.\n\n2. **Raw pointer transfer (PDFView.cpp:444-451, 2681-2690)**: In `SAVE_FILE_ATTACHMENT_ANNOT_MSG`, the current `fAnnotation` pointer is stuffed into a `BMessage` via `AddPointer`. The thread retrieves it with `FindPointer` and casts it to `FileAttachmentAnnot*`, then calls `fileAttachment->Save(GetXRef(), path)`. No lock is held across this dereference.\n\n3. **Annotation ownership (Annotation.cpp:1476-1482)**: `Annotations::~Annotations()` calls `delete fAnnots[i]` for every annotation it holds. Annotations live inside `CachedPage`, which is owned by the page renderer / `fPage`.\n\n4. **Document teardown races**:\n   - `LoadFile` (PDFView.cpp:282, 386) calls `delete fDoc`, which also frees the `XRef` the thread was given. This happens whenever the user opens a different file.\n   - `~PDFView` (PDFView.cpp:384-391) calls `delete fDoc` on window close.\n   - `EndDoc()` (PDFView.cpp:214-217) only resets `fSelected` \u2014 it does not drain save threads.\n   - `WaitForPage` only synchronizes the page-renderer thread, not save threads.\n\n5. **Developer acknowledgment**: The `// TODO validate pointer` comment at line 2686 shows the original author knew the pointer could be invalid.\n\nThe result is a classic use-after-free: if the user triggers \"Save file attachment\", then opens a new document (or closes the window) before the save thread finishes, the thread dereferences a freed `FileAttachmentAnnot` and a freed `XRef`. This is not speculative \u2014 the two code paths (save thread dereference and LoadFile/destructor free) share no lock and have no ordering guarantee.\n\nSeverity is high rather than critical because: (a) exploitation requires a race between a user-initiated file save and a document close/reload \u2014 uncommon but realistic for large attachments; (b) the consequence is a crash (SIGSEGV/heap corruption), not an arbitrary write primitive in the security sense. Still a genuine high-severity memory-safety bug.",
+      "adjustedSeverity": "high"
+    }
+  },
+  {
+    "file": "PDFView.cpp",
+    "line": "341-350",
+    "severity": "medium",
+    "category": "threading",
+    "title": "LoadFile unlocks the window during a long load while the looper keeps dispatching to the view",
+    "detail": "To stay responsive, LoadFile() unlocks the window (Window()->Unlock(), line 345) for the entire duration of OpenFile() (poppler PDFDoc construction, which can take seconds on a large/encrypted file), then re-locks. While unlocked, the window looper continues dispatching messages to this view (MessageReceived, Draw, MouseMoved, MoveToPage from the wheel, etc.). Several of those touch fDoc / fPage / fNimblePDFAcroForm, but during this window fDoc is mid-replacement: OpenFile() deletes the old fDoc and assigns the new one (lines 282-283), and fNimblePDFAcroForm is deleted/rebuilt afterward (lines 360-361). The only guard is fLoading, which Draw() honors but the link/annotation/page-move paths do not. A message processed during the gap can dereference a half-freed fDoc. This is a classic data race that will surface as intermittent crashes on slow loads.",
+    "fix": "Guard every fDoc/fPage/fNimblePDFAcroForm access on the window thread with the fLoading flag (early-return like Draw does), or better, do the heavy PDFDoc load on a dedicated worker thread and post a completion message, keeping all fDoc mutation on the window thread. At minimum, stop processing input (DisplayLink/OnLink/MoveToPage) while fLoading is true.",
+    "verdict": {
+      "isReal": true,
+      "reasoning": "The bug is genuine. LoadFile() runs on the application thread (the code comment at lines 337-340 makes this explicit). When it unlocks the window at line 345, the window's looper thread is free to dispatch any queued message to the view. OpenFile() then executes `delete fDoc; fDoc = newDoc;` (lines 282-283) with the window unlocked. While fDoc is mid-replacement, the looper thread can dispatch OnMouseWheelChanged (\u2192 MoveToPage \u2192 fDoc->findPage), ScrollVertical (\u2192 fDoc->getNumPages()), MouseDown (line 1076: fDoc->okToCopy()), OnLink (\u2192 fDoc->getNumPages(), fPage->CvtDevToUser), and DisplayLink (\u2192 fPage->CvtDevToUser, fPage->GetAnnotations). None of these check fLoading \u2014 only Draw() does. fLoading is also a plain (non-atomic) member written by the app thread and read by the window thread without the lock held, so even the flag check in Draw() is technically racy. The severity claim of \"high\" is slightly generous: the race window is brief for typical PDFs and requires a simultaneous user input to trigger, making crashes intermittent rather than reliably reproducible. That keeps it real but not critical. Medium is the more accurate practical severity.",
+      "adjustedSeverity": "medium"
+    }
+  },
+  {
+    "file": "PDFView.cpp",
+    "line": "724-731",
+    "severity": "high",
+    "category": "correctness",
+    "title": "SetViewCursor called from constructor before the view is attached can deadlock or NULL-deref Window()",
+    "detail": "The constructor calls SetViewCursor(gApp->handCursor, true) at line 180 after a successful LoadFile. SetViewCursor (lines 724-731) unconditionally calls Window()->Lock(). If the view is not yet attached to a window at construction time, Window() returns NULL and this is a NULL dereference. The constructor already assumes attachment (LoadFile dereferences Window() at line 342), so the codebase relies on PDFView being constructed while already a child of a locked window \u2014 a fragile, Haiku-specific invariant. The same unconditional Window()->Lock() pattern appears in InitViewCursor (1179), SetSelection (2167), etc. Any of these invoked before AttachedToWindow will crash.",
+    "fix": "Null-check Window() before locking in SetViewCursor/InitViewCursor/SetSelection, or defer the initial cursor set to AttachedToWindow (which already calls SetViewCursor). Audit the construction sequence to confirm the view is added to the window before the constructor body runs, and document that invariant.",
+    "verdict": {
+      "isReal": true,
+      "reasoning": "The defect is genuine and confirmed by code inspection.\n\nPDFView is constructed at PDFWindow.cpp:861 inside CreateMainView(). At that point the view has no window: fMainContainer (its eventual parent) has not yet been added to the window \u2014 BLayoutBuilder adds fSplitView to `this` at line 834, but CreateMainView is called at line 822, before that line is reached. So Window() returns NULL for the entire PDFView constructor body.\n\nWithin the constructor, LoadFile() is called (PDFView.cpp:179). LoadFile unconditionally calls Window()->IsLocked() at line 342 with no null guard. This is a guaranteed NULL dereference on every successful PDF open, not merely a theoretical risk.\n\nIf LoadFile succeeds, SetViewCursor() is then called (line 180), which also unconditionally calls Window()->Lock() at line 726 \u2014 a second NULL dereference on the same path.\n\nThe claim that LoadFile also dereferences Window() (line 342) is correct and is actually the first crash site, preceding the SetViewCursor call.\n\nThe code has survived this long in BePDF because the original BePDF construction sequence was different. The 63326ac commit (\"blank-window launch\") refactored SetUpViews to call CreateMainView lazily, but both the old and new sequences share the same root problem: PDFView's constructor runs Window()-dependent code before the view is attached to any window.\n\nThis is not a style issue or speculative concern \u2014 it is a concrete NULL dereference that fires on every document open. Severity should remain high (it crashes the app on the primary use-case path).",
+      "adjustedSeverity": "high"
+    }
+  },
+  {
+    "file": "PDFView.cpp",
+    "line": "1846-1858",
+    "severity": "medium",
+    "category": "threading",
+    "title": "PostRedraw clears fRendering without verifying the bitmap/id matches the current render",
+    "detail": "PostRedraw() handles the FINISH_MSG posted by the renderer thread. Unlike RedrawAborted() (line 1863), which checks fRendererID == id before clearing state, PostRedraw only checks id != -1 and then unconditionally sets fRendering=false and fRendererID=-1. If a stale FINISH_MSG from a previously-aborted render is still queued when a new render has started (Abort()/Wait() in WaitForPage races with an in-flight Notify), PostRedraw will wrongly mark the new render as finished and Invalidate() against a page that isn't ready, producing a torn/blank page or reading fPage->GetBitmap() mid-render.",
+    "fix": "Mirror RedrawAborted: in PostRedraw, only act when id == fRendererID. Compare the posted thread id (and ideally the bitmap pointer) against the current render before clearing fRendering/fRendererID and invalidating.",
+    "verdict": {
+      "isReal": true,
+      "reasoning": "The defect is real, though the exact scenario described in the finding needs one adjustment.\n\nA stale FINISH_MSG from a previously-aborted render is not possible: Start() calls Abort()+Wait(), and Abort() sets fDoRendering=false, so the old thread always sends ABORT_MSG (not FINISH_MSG) when aborted. That specific race is therefore a non-issue.\n\nHowever, the genuine race involves stale UPDATE_MSGs. RedrawCallback() (called incrementally during rendering) calls Notify(UPDATE_MSG), which posts the current fRenderingThread id into the looper message queue. Wait() blocks until the thread exits but does NOT drain the BLooper's message queue. Stale UPDATE_MSGs posted by the old thread before it exited can remain queued when Start() completes and sets a new fRendererID. PDFWindow.cpp line 1365-1370 dispatches both UPDATE_MSG and FINISH_MSG to the same PostRedraw() call. PostRedraw() only checks id != -1, not fRendererID == id. So a stale UPDATE_MSG from the old thread (with the old thread's id != -1) will enter PostRedraw(), set fRendering=false, and call Invalidate(), incorrectly declaring the new render finished and potentially displaying an incomplete or blank page.\n\nThe // TODO comment at line 1848 confirms this code is acknowledged as incomplete. RedrawAborted() (line 1863) already shows the correct pattern: guard with (fRendererID == id) && (id != -1). PostRedraw() simply lacks that guard. The asymmetry is a genuine defect, not a style preference.",
+      "adjustedSeverity": "medium"
+    }
+  },
+  {
+    "file": "PDFView.cpp",
+    "line": "1461-1481",
+    "severity": "medium",
+    "category": "portability",
+    "title": "actionLaunch executes link target via system() with a shell '&' suffix",
+    "detail": "HandleLink's actionLaunch branch builds 'filename params &' and runs it through system() (line 1477). This is POSIX-shell specific: the trailing ' &' to background the process is meaningless/broken on Windows cmd, and system() invokes /bin/sh which doesn't exist on Windows. It is also a command-injection vector (filename comes from the untrusted PDF) and will need a complete rewrite for the Qt port. Even on Haiku, embedding the raw filename with appended params into a shell string is unsafe.",
+    "fix": "Replace system() with a portable launcher (QProcess / BRoster::Launch / be_roster) that takes argv as a vector rather than a shell string, drop the ' &' shell idiom, and keep the confirmation alert. Guard the whole feature behind a setting given the injection risk.",
+    "verdict": {
+      "isReal": true,
+      "reasoning": "The Windows and Qt-port portability framing is wrong \u2014 this code lives exclusively in source/haiku/ and runs only on Haiku (a POSIX-like OS with /bin/sh). Those concerns do not apply here.\n\nHowever, the underlying defect is real and applies directly to Haiku: fileName is built by concatenating the raw PDF-supplied filename (from LinkLaunch::getFileName()) and params (from LinkLaunch::getParams()) with no shell escaping, then passed verbatim to system(). On Haiku, system() invokes /bin/sh -c, which processes all shell metacharacters. A PDF author can embed a filename or params string containing semicolons, backticks, $(), pipes, etc. (e.g., \"foo; rm -rf /boot/home\") to run arbitrary commands. The user-confirmation alert (line 1475) shows the raw string, so a crafted string that looks harmless to the user still executes the injected commands on approval.\n\nThe correct Haiku fix is to replace system() with be_roster->Launch() (BRoster::Launch) passing the executable path and an explicit argv array, bypassing the shell entirely. The ' &' backgrounding suffix is also a shell-ism that is unnecessary with BRoster (which launches asynchronously by default).",
+      "adjustedSeverity": "medium"
+    }
+  },
+  {
+    "file": "PDFView.cpp",
+    "line": "2404-2405",
+    "severity": "medium",
+    "category": "error-handling",
+    "title": "BFile write of selected text ignores the result and InitCheck",
+    "detail": "In SendDataMessage, the drag-to-file path constructs BFile file(&d, name.String(), B_WRITE_ONLY) and calls file.Write(...) (lines 2404-2405) without checking the constructor/InitCheck status or the Write return value. If the file can't be created (permission, full disk, bad name) the failure is silent and the user believes the text was saved. The bitmap-save path at 2461-2462 has the same issue with roster->Translate.",
+    "fix": "Check file.InitCheck() == B_OK before writing and verify Write()/Translate() return values; surface an error (BAlert / status) on failure.",
+    "verdict": {
+      "isReal": true,
+      "reasoning": "The defect is real and slightly worse than reported. Both BFile constructions at lines 2404 and 2461 use only B_WRITE_ONLY, omitting B_CREATE_FILE | B_ERASE_FILE. The drag-to-file protocol (B_MIME_DATA target) is specifically for dropping selected content onto a new file; the file will not pre-exist in the normal use-case. Without B_CREATE_FILE, BFile::InitCheck() returns an error and Write()/Translate() silently no-ops. The user gets no feedback and believes the data was saved. This is a functional correctness bug, not just a missing error-check style issue. The missing error-check on Write() and Translate() return values is a secondary concern stacked on top of the root cause (missing creation flags).",
+      "adjustedSeverity": "medium"
+    }
+  },
+  {
+    "file": "PDFView.cpp",
+    "line": "1372-1376",
+    "severity": "medium",
+    "category": "error-handling",
+    "title": "IsLinkToPDF dereferences getFileName() without a NULL check",
+    "detail": "In the actionGoToR branch, s = ((LinkGoToR*)action)->getFileName()->c_str() (line 1372) and grabPath(fDoc->getFileName()->c_str()) (line 1376) assume getFileName() returns non-NULL. A malformed GoToR link can have a missing/empty file specification, and poppler can return null here; dereferencing it crashes on a crafted PDF. The dest/namedDest were carefully fetched just above but only to be discarded (cast to void), so the NULL case is unhandled.",
+    "fix": "NULL-check the GooString* returned by getFileName() before calling c_str(); return false (not a PDF link) when absent.",
+    "verdict": {
+      "isReal": true,
+      "reasoning": "Confirmed genuine defect. Poppler's `LinkGoToR::getFileName()` returns `fileName.get()` where `fileName` is a `std::unique_ptr<GooString>`. The `isOk()` predicate is `fileName && (dest || namedDest)`, explicitly proving `fileName` can be null. At line 1372, `((LinkGoToR*)action)->getFileName()->c_str()` dereferences the pointer with no NULL guard, causing a crash on any PDF with a GoToR link whose file specification is absent. No `isOk()` check appears at either call site (`HandleLink` line 1421 or `ShowLinkMenu` line 1628). The same unguarded dereference also appears at line 1684 in `LinkToString`. `PDFDoc::getFileName()` likewise returns `fileName.get()` and can be null for in-memory docs, though that is less likely in practice. The `isAbsolutePath()` helper at line 92 already contains an explicit `path != NULL` guard, suggesting the author was aware of the possibility but missed the upstream dereference. This is a real NULL-deref crash reachable from a crafted PDF, not a style issue or speculation.",
+      "adjustedSeverity": "medium"
+    }
+  },
+  {
+    "file": "Settings.h",
+    "line": "35-40",
+    "severity": "critical",
+    "category": "correctness",
+    "title": "Setter dirty-flag logic inverted (== instead of !=) \u2014 settings changes silently lost",
+    "detail": "DEFINE_SETTER sets `fChanged = fChanged || (_##name == name);` then assigns the new value. The comparison is backwards: it marks the settings dirty only when the new value EQUALS the old (i.e. nothing changed), and does NOT mark dirty when the value actually differs. Because GlobalSettings::Save() only writes the file when HasChanged() is true (Settings.cpp:145), any setting changed exclusively through these generated setters (zoom, rotation, DPI, all window positions/sizes, panel flags, etc.) will fail to persist unless some other code path happens to flip fChanged. Note the hand-written SetPanelDirectory (Settings.cpp:58) correctly uses `!=`, which makes the macro bug stand out as a regression. This is a real, broad data-loss bug for nearly every persisted preference.",
+    "fix": "Change the comparison in DEFINE_SETTER to `fChanged = fChanged || (_##name != name);` and likewise in DEFINE_STRING_SETTER (Settings.h:157) to `(_##name != string)`.",
+    "verdict": {
+      "isReal": true,
+      "reasoning": "The bug is confirmed. Both DEFINE_SETTER (Settings.h:38) and DEFINE_STRING_SETTER (Settings.h:157) use `==` instead of `!=` when updating `fChanged`. This logic is inverted: it marks the settings object dirty only when the new value equals the old value (i.e., nothing actually changed), and leaves `fChanged` false when the value genuinely differs. Because GlobalSettings::Save() (Settings.cpp:145) gates the file write on `HasChanged()`, any preference that goes exclusively through these generated setters \u2014 zoom, rotation, DPI, all window positions/sizes, print settings, etc. \u2014 will silently fail to persist. The hand-written SetPanelDirectory at Settings.cpp:58 uses `!=` correctly, which confirms the macro is wrong relative to the intended pattern. This is a real, broad data-loss defect, not a style issue.",
+      "adjustedSeverity": "critical"
+    }
+  },
+  {
+    "file": "Settings.h",
+    "line": "154-159",
+    "severity": "high",
+    "category": "correctness",
+    "title": "String setter dirty-flag logic also inverted",
+    "detail": "DEFINE_STRING_SETTER has the same inverted comparison as the numeric setter: `fChanged = fChanged || (_##name == string);`. The Author string setter (the only STRING_SETTINGS entry) will therefore mark the object dirty only when the new value is identical to the old, and never when it actually changes, so a changed author is not saved. Same root cause and impact as the numeric setter bug.",
+    "fix": "Use `fChanged = fChanged || (_##name != string);`.",
+    "verdict": {
+      "isReal": true,
+      "reasoning": "Line 157 of Settings.h contains `fChanged = fChanged || (_##name == string);` \u2014 using `==` instead of `!=`. This is the identical inverted-comparison bug as the numeric setter on line 38. The condition evaluates to true only when the new value is identical to the old value, which is the opposite of the intended dirty-flag behavior. `HasChanged()` at Settings.cpp:145 gates whether settings are persisted to disk, so with this inversion, changing the Author string (the only STRING_SETTINGS entry) will not set `fChanged` to true and the change will not be saved \u2014 unless some other setting happened to already mark the object dirty. The correct code in Settings.cpp line 58 (`fChanged = fChanged || (fPanelDirectory != dir)`) confirms the intended idiom uses `!=`, making the `==` in the macro a clear copy-paste error. This is a genuine correctness defect, not a style issue.",
+      "adjustedSeverity": "high"
+    }
+  },
+  {
+    "file": "NimblePDFApplication.cpp",
+    "line": "634-646",
+    "severity": "high",
+    "category": "correctness",
+    "title": "NULL dereference of fWindow after a failed/encrypted open",
+    "detail": "In RefsReceived, when opening the first document fails (`!ok`) and fWindow was NULL, the freshly-created `win` is deleted (line 635) and fWindow remains NULL. Execution then falls through to the page-jump block at line 642-646, which unconditionally does `fWindow->MessageReceived(&goToPageMsg)` whenever pageNum != 0. Since pageNum defaults to the value from the message (ArgvReceived sends pg=1 by default, line 716/725), this dereferences a NULL fWindow and crashes. The encrypted path (line 632 creates a PasswordWindow but leaves fWindow NULL) hits the same crash. The page-jump must be guarded on a successful open / non-NULL fWindow.",
+    "fix": "Only perform the page jump when the open succeeded and fWindow is non-NULL, e.g. wrap lines 641-646 in `if (ok && fWindow != NULL && pageNum != 0)`, and place it inside the success branch.",
+    "verdict": {
+      "isReal": true,
+      "reasoning": "The code at lines 641-646 unconditionally dereferences fWindow when pageNum != 0, with no guard. Two crash paths exist:\n\n1. Error path (line 617-635): if fWindow was NULL before the open attempt and the open fails (!ok, !encrypted), the error alert is shown and fWindow stays NULL. The page-jump block then calls fWindow->MessageReceived(...) on a NULL pointer.\n\n2. Encrypted path (line 631-632): a PasswordWindow is created but fWindow is never set. Same NULL dereference follows.\n\nThe ArgvReceived function (line 715) always sets pg=1 when no page argument is given, so pageNum will be 1 (not 0) in the common launch-from-Tracker-double-click-or-command-line path. That means the guard `if (pageNum != 0)` does not protect against this \u2014 it will be true (1 != 0) and the crash fires.\n\nThe fix is straightforward: wrap lines 641-646 in `if (ok && fWindow != NULL && pageNum != 0)` or equivalently place the page-jump inside the success branch (lines 637-640). The defect is real and reachable on any failed or encrypted open when launched via command line (or ArgvReceived-triggered RefsReceived).",
+      "adjustedSeverity": "high"
+    }
+  },
+  {
+    "file": "NimblePDFApplication.cpp",
+    "line": "642-646",
+    "severity": "medium",
+    "category": "threading",
+    "title": "Window method called directly from the application thread instead of posting to its looper",
+    "detail": "The page-jump calls `fWindow->MessageReceived(&goToPageMsg)` directly (line 645). RefsReceived runs on the BApplication looper thread, not the PDFWindow's looper thread. Invoking a BWindow's MessageReceived directly from another thread bypasses the window's message loop and its implicit looper lock, racing with the window's own thread (which renders/updates UI) and touching window/view state off-thread. This is exactly the kind of cross-thread UI access that corrupts app_server state. The success branch just above it (line 612-615) correctly takes the window lock around LoadFile, underscoring the inconsistency.",
+    "fix": "Post the message asynchronously: `fWindow->PostMessage(&goToPageMsg);` (PostMessage is thread-safe and delivers on the window's own thread).",
+    "verdict": {
+      "isReal": true,
+      "reasoning": "The defect is genuine. RefsReceived runs on the BApplication looper thread. At line 645 it calls fWindow->MessageReceived(&goToPageMsg) directly, bypassing PDFWindow's message queue and its looper lock. The GOTO_PAGE_CMD handler at line 1126 calls LockLooper()/UnlockLooper() internally around MoveToPage, which provides some protection for the fMainView->MoveToPage call itself, but the surrounding code (CancelCommand check at line 1000, fMainView NULL check at line 1006, and the overall function entry) all run without any lock being held, racing with whatever the window's own looper thread may be doing. The inconsistency is underscored by the immediately preceding code at lines 612-614, which properly wraps LoadFile in win->Lock()/win->Unlock(). The standard Haiku fix is fWindow->PostMessage(&goToPageMsg), which is thread-safe and delivers on the window's own looper thread. HandlePendingActions (lines 281-302) also calls MessageReceived directly, but that is called only from within the window's own looper context during document load, so it is not analogous. The severity is real but not catastrophic in practice (it's a page-jump on open, which runs once, and the GOTO_PAGE_CMD handler does grab the looper lock before touching views) \u2014 so medium rather than high is more accurate.",
+      "adjustedSeverity": "medium"
+    }
+  },
+  {
+    "file": "NimblePDFApplication.cpp",
+    "line": "730",
+    "severity": "medium",
+    "category": "correctness",
+    "title": "Array allocated with new[] freed with scalar delete (undefined behavior)",
+    "detail": "argvCopy is allocated as an array: `char** argvCopy = new char*[argc];` (line 702) but freed with the scalar form `delete argvCopy;` (line 730). Mismatched new[]/delete is undefined behavior and a (small, per-invocation) leak/heap-corruption risk. The array also serves no purpose since it only shallow-copies the argv pointers, but at minimum the deallocation form is wrong.",
+    "fix": "Use `delete[] argvCopy;`. Better, drop argvCopy entirely and read argv directly since the elements are never modified or freed.",
+    "verdict": {
+      "isReal": true,
+      "reasoning": "The defect is confirmed by reading lines 702-730 of NimblePDFApplication.cpp. Line 702 allocates with `new char*[argc]` (array form) and line 730 frees with `delete argvCopy` (scalar form). Mismatched new[]/delete[] is undefined behavior per C++ standard \u2014 the scalar delete does not invoke the correct deallocation path for array-allocated memory. This is a genuine correctness bug, not speculative. The severity is medium rather than high because: (1) `char*` has a trivial destructor so in practice most implementations won't corrupt the heap from the missing destructor calls, but the deallocation size passed to the allocator is wrong and behavior is technically undefined; (2) the function is called once per app launch (ArgvReceived), not in a loop, so the leak/corruption impact is very small per run; (3) there is also a genuine secondary leak on the early-return path at line 711 where the array is allocated but never freed. The fix is straightforward: either use `delete[] argvCopy` or, better, remove the entire argvCopy indirection since it only shallow-copies pointers and argv can be read directly.",
+      "adjustedSeverity": "medium"
+    }
+  },
+  {
+    "file": "EntryChangedMonitor.cpp",
+    "line": "61-87",
+    "severity": "medium",
+    "category": "correctness",
+    "title": "Node-monitor handler never notifies the listener \u2014 feature is dead",
+    "detail": "EntryChangedMonitor watches the open file for B_STAT_CHANGED to detect on-disk changes, but MessageReceived returns without ever calling NotifyListener() (the body after the comment at line 73-79 is empty). As a result the entire change-notification feature is inert: NotifyListener() is dead code and EntryChangedListener::EntryChanged() is never invoked. The accompanying comment explains the original concern (attribute writes by NimblePDF itself re-trigger B_STAT_CHANGED causing a loop) but the fix (distinguishing a genuine content change, e.g. comparing stored stat/mtime/size) was left as a TODO, leaving the feature broken rather than guarded.",
+    "fix": "Record the file's stat (size + modification time) at StartWatching, and in MessageReceived re-stat fEntryRef; only call NotifyListener() when size or mtime actually changed, ignoring pure attribute-only stat changes.",
+    "verdict": {
+      "isReal": true,
+      "reasoning": "The code is unambiguously broken. MessageReceived() (lines 61-80) correctly filters the message down to B_STAT_CHANGED opcodes but then exits without ever calling NotifyListener(). The TODO comment at lines 78-79 explicitly records that the author knew the call was missing but deferred it. The rest of the feature is fully wired: PDFWindow implements EntryChangedListener, registers itself via SetEntryChangedListener, calls StartWatching at two points (PDFWindow.cpp lines 374 and 869), and has a real EntryChanged() handler at line 394. NotifyListener() is compilable and correct code \u2014 it simply can never be reached from any call path. The on-disk-change reload feature is structurally present but functionally dead. This is a concrete correctness defect, not speculation or style. Severity is medium rather than high because the failure mode is a missing feature (silent non-reload) rather than data loss or a crash, but it is a real bug.",
+      "adjustedSeverity": "medium"
+    }
+  },
+  {
+    "file": "Settings.cpp",
+    "line": "181-299",
+    "severity": "low",
+    "category": "portability",
+    "title": "Per-document state stored in BFS extended attributes \u2014 no Linux/Windows equivalent",
+    "detail": "FileAttributes::Read/Write persist per-document state (page, zoom, rotation, window frame, and a flattened BMessage of bookmarks) via node.ReadAttr/WriteAttr on attributes like 'nimblepdf:page' and 'nimblepdf:bookmarks'. BFS extended attributes are a Haiku filesystem feature; ext4/NTFS/exFAT do not provide arbitrary named typed attributes of this kind (Linux xattrs are limited and namespaced; FAT/exFAT have none; Windows ADS only on NTFS). NimblePDFApplication::UpdateFileAttributes (NimblePDFApplication.cpp:771-822) writes META:/PDF: attributes the same way. On the cross-platform port none of this state will round-trip, so resume-on-reopen and saved bookmarks silently vanish. This is the single largest portability landmine in these files.",
+    "fix": "Introduce a portable sidecar store for per-document state \u2014 e.g. a hash-of-path keyed entry in the existing settings/SQLite/JSON store, or a sidecar file \u2014 and route Read/Write/UpdateFileAttributes through it; keep BFS attributes only as the Haiku backend behind that abstraction.",
+    "verdict": {
+      "isReal": true,
+      "reasoning": "The code at Settings.cpp lines 181-299 (FileAttributes::Read/Write) and NimblePDFApplication::UpdateFileAttributes (lines 771-822) store all per-document state \u2014 page position, zoom, rotation, window frame, and user bookmarks \u2014 exclusively via BNode::ReadAttr/WriteAttr on BFS extended attributes. There is no abstraction layer, no fallback, and no portable alternative path. On Linux (ext4/tmpfs/exFAT) and Windows (FAT32/exFAT, and NTFS outside of ADS which has different semantics and no typed attributes), this state will silently not persist. The finding is technically accurate.\n\nHowever, two mitigating facts reduce the severity substantially:\n\n1. NimblePDF is a Haiku-only application today. The multi-platform port is explicitly a future planned phase with status \"scoping / strategy, no port work started\" (MULTIPLATFORM_PORT_PLAN.md, 2026-06-15). The code is correct for its current shipping target.\n\n2. The project's own planning document (MULTIPLATFORM_PORT_PLAN.md \u00a74, ISettingsStore row) already identifies this exact issue and prescribes exactly the fix the finding recommends: an ISettingsStore seam with a \"central store keyed by file path/hash (sidecar or a per-user DB) as the default, with xattrs as a Haiku-only optimization.\" The finding is already on the roadmap.\n\nThis makes it a real portability landmine to address before the Qt/KevRexOS port begins, but not a defect in the current code and not a surprise \u2014 the project already knows about it. Severity is low rather than high: nothing is broken now, and the fix path is documented.",
+      "adjustedSeverity": "low"
+    }
+  },
+  {
+    "file": "Settings.cpp",
+    "line": "229-247",
+    "severity": "high",
+    "category": "resource",
+    "title": "realloc failure leaks the original buffer in the bookmark-read loop",
+    "detail": "The bookmark-read loop grows the buffer with `buffer = (char*)realloc(buffer, buf_size);` (line 235). If realloc fails it returns NULL, the loop terminates (the while condition becomes false), and the original allocation is lost \u2014 a leak. Additionally, if the first malloc fails the loop body never runs and attr_size stays 0, which is handled, but the realloc-overwrite pattern is the classic leak. Low frequency (needs >64KB bookmarks plus OOM) but a genuine defect.",
+    "fix": "realloc into a temporary: `char* tmp = (char*)realloc(buffer, buf_size); if (!tmp) { free(buffer); buffer = NULL; break; } buffer = tmp;`",
+    "verdict": {
+      "isReal": true,
+      "reasoning": "The code at lines 229-247 of Settings.cpp contains the exact pattern described. Line 235 overwrites `buffer` directly with the `realloc` return value: `buffer = (char*)realloc(buffer, buf_size)`. On failure, `realloc` returns NULL and the original allocation is lost \u2014 a confirmed memory leak.\n\nHowever, the defect is actually worse than the report claims. When `realloc` fails: (1) `buffer` becomes NULL, (2) the while-loop exits, (3) `attr_size` still holds the value from the last successful `ReadAttr` call, which was exactly equal to the previous `buf_size` (that equality is what triggered the resize branch \u2014 `if (attr_size == buf_size)`). The old `buf_size` was at least 65536, so `attr_size > 0`. The `if (attr_size <= 0)` guard on line 241 does NOT fire, so execution reaches line 244: `bookmarks.Unflatten(buffer)` with `buffer == NULL` \u2014 a null pointer dereference crash. The `if (buffer)` check on line 246 correctly skips the free, but by that point the program has already crashed or invoked undefined behaviour.\n\nThe fix proposed in the report (realloc into a temporary, free original on failure, break) is correct and would prevent both the leak and the downstream null-dereference. Severity is at least medium; the null-dereference path makes it arguably high for any file that has >64KB of saved bookmarks and hits OOM.",
+      "adjustedSeverity": "high"
+    }
+  },
+  {
+    "file": "Settings.cpp",
+    "line": "244",
+    "severity": "low",
+    "category": "error-handling",
+    "title": "BMessage::Unflatten return value ignored when loading bookmarks",
+    "detail": "In FileAttributes::Read the result of `bookmarks.Unflatten(buffer)` is not checked. If the 'nimblepdf:bookmarks' attribute is truncated or corrupt (e.g. partially written, or written by a different/older format), Unflatten can fail and leave `bookmarks` in an indeterminate/partial state that is later treated as valid by GetBookmarks(). Combined with the attribute being filesystem-backed and user-modifiable, this can propagate garbage into the bookmark UI.",
+    "fix": "Check the status: `if (bookmarks.Unflatten(buffer) != B_OK) bookmarks.MakeEmpty();`",
+    "verdict": {
+      "isReal": true,
+      "reasoning": "The return value of `BMessage::Unflatten(buffer)` at line 244 is genuinely discarded. On a corrupt or truncated `nimblepdf:bookmarks` attribute, Unflatten can fail mid-parse, leaving the BMessage in a partially-populated state. That partial message is then returned directly via `GetBookmarks()` and rendered in the bookmark UI with no further validation. The trigger is realistic: the attribute is filesystem-backed and can be truncated by a crash or a full filesystem during the write path. The same codebase already uses the correct pattern (`if (message.Unflatten(...) == B_OK)`) in ResourceLoader.cpp line 84, confirming this is an oversight rather than an intentional design. The nearby `archive.Unflatten` at line 131 also ignores the return value but has an implicit recovery (Instantiate returns NULL on a bad archive). The bookmarks path has no such fallback. The defect is real and the suggested fix is correct.",
+      "adjustedSeverity": "low"
+    }
+  },
+  {
+    "file": "NimblePDFApplication.cpp",
+    "line": "726",
+    "severity": "low",
+    "category": "error-handling",
+    "title": "get_ref_for_path return value ignored; invalid path still posted as a ref",
+    "detail": "ArgvReceived calls `get_ref_for_path(argvCopy[1], &fileToOpen);` without checking the status. If the path does not exist or cannot be resolved, fileToOpen is left in whatever state get_ref_for_path produced and is still added to the B_REFS_RECEIVED message and posted. RefsReceived will then attempt to open a bogus ref and surface a generic 'Error opening file' alert (or worse, given the NULL-deref noted above). A bad command-line path should be reported clearly and not enqueued.",
+    "fix": "Check the return: `if (get_ref_for_path(argvCopy[1], &fileToOpen) != B_OK) { Trace(LOG_ERR, ...); be_app->PostMessage(B_QUIT_REQUESTED); delete[] argvCopy; return; }` before building the message.",
+    "verdict": {
+      "isReal": true,
+      "reasoning": "The return value of get_ref_for_path at line 726 is genuinely ignored. When the path does not exist or cannot be resolved, get_ref_for_path leaves fileToOpen in an invalid/zeroed state (entry_ref default-constructs to device=-1, directory=-1, name=NULL on Haiku), yet the code unconditionally adds it to the B_REFS_RECEIVED message and posts it. RefsReceived does not validate the ref before passing it to PDFWindow or LoadFile \u2014 it only checks the BMessage field type, which will be B_REF_TYPE regardless of validity since AddRef serializes the struct unconditionally. The result is the generic \"NimblePDF: Error opening file!\" alert at line 619 rather than any indication that the command-line path was bad. The file panel is then opened (line 629), which is confusing for a CLI invocation with an explicit bad path. However, the code does NOT crash or corrupt data \u2014 the RefsReceived error path catches the failure gracefully. The claim of a potential NULL-deref as a consequence is not demonstrated by this code path; RefsReceived handles !ok cleanly. Severity should be low rather than medium: this is a real but benign error-handling gap producing poor diagnostics, not a crash or security issue.",
+      "adjustedSeverity": "low"
+    }
+  },
+  {
+    "file": "NimblePDFApplication.cpp",
+    "line": "628-635",
+    "severity": "low",
+    "category": "correctness",
+    "title": "Acknowledged stale-fWindow logic in error path (always-true comment)",
+    "detail": "The error branch checks `if (fWindow == NULL)` at line 628 with the author's own comment 'fixme: always true even if a PDF window is already open!'. Because the loop only handles the first ref and the reuse path (fWindow != NULL) takes the LoadFile branch, the open-file-panel fallback and the `delete win` at line 635 only run for the fresh-window case. When an existing window's LoadFile fails, the user gets the error alert but no recovery action and the now-empty/partially-loaded existing window is left as-is. Worth resolving the documented fixme before release.",
+    "fix": "Track success per branch: on LoadFile failure in the reuse path, decide explicitly whether to keep the previous document or offer the open panel, rather than gating recovery on fWindow==NULL.",
+    "verdict": {
+      "isReal": true,
+      "reasoning": "The defect is real but the description has inaccuracies. The author's own \"fixme\" comment at line 628 acknowledges the gap. When fWindow != NULL and LoadFile fails, the `if (fWindow == NULL)` guard at line 628 correctly evaluates to false, so OpenFilePanel() is never called for the reuse-path failure. The finding is correct on that point.\n\nHowever, the severity is overstated. PDFView::LoadFile (PDFView.cpp line 352-358) explicitly handles its own failure: it calls Invalidate() with a \"show previous document\" comment, meaning the existing window gracefully redisplays the previously-loaded PDF. The window is not left empty, corrupted, or in an undefined state. The only real gap is that the user receives an error alert but is not prompted with the open-file panel to choose a different file \u2014 a UX inconvenience, not data loss or a crash.\n\nThe author's comment calling it \"always true\" is also inaccurate \u2014 the condition is false in exactly the reuse path \u2014 which suggests the comment was written carelessly or the logic was changed after the comment was written. The fixme is a documented known UX limitation pre-release, not a silent correctness bug.",
+      "adjustedSeverity": "low"
+    }
+  },
+  {
+    "file": "PageRenderer.cpp",
+    "line": "62-69, 363-374",
+    "severity": "medium",
+    "category": "threading",
+    "title": "RedrawCallback posts UPDATE_MSG while bitmap is mid-render and shared with window thread",
+    "detail": "RedrawCallback runs on the background rendering thread (called from poppler during displayPage), calls outputDev->redraw() into fBitmap, then Notify(UPDATE_MSG) which posts fBitmap by pointer to the window looper. The window's handler will read/blit that same BBitmap concurrently with the still-running render thread that keeps drawing into it. Although gPdfLock is held for the whole Render(), the window looper does NOT take gPdfLock when it processes the posted UPDATE_MSG and touches the bitmap, so this is a genuine data race / torn-frame read on the shared BBitmap. It matters more post-port: Qt's QImage/QPixmap is not thread-safe and app_server's implicit per-bitmap locking will not exist, so this latent race becomes a hard crash.",
+    "fix": "Have the window-thread handler acquire gPdfLock (or a dedicated bitmap lock) before reading the bitmap pointer carried in UPDATE_MSG/FINISH_MSG, and document that the bitmap is owned by the renderer until READY. On the Qt port, snapshot/copy the rendered region into a thread-owned buffer before posting, rather than sharing the live render target.",
+    "verdict": {
+      "isReal": true,
+      "reasoning": "The data race is real but the severity and framing overstate the risk on Haiku.\n\nWhat the code actually does: PageRenderer::Render() holds gPdfLock and fBitmap->Lock() from lines 329-347 in PageRenderer.cpp. During that window, displayPage() fires RedrawCallback repeatedly. Each callback calls outputDev->redraw() (writing pixels into fBitmap's pixel buffer) and then immediately posts UPDATE_MSG to the window looper. The window's PDFWindow::MessageReceived handler (PDFWindow.cpp:1365) processes UPDATE_MSG by calling PDFView::PostRedraw, which calls Invalidate(), which queues a Draw() -> DrawPage() -> DrawBitmap(fBitmap). That DrawBitmap call goes through app_server and reads fBitmap's shared memory pixel buffer. Neither PostRedraw nor DrawPage takes gPdfLock or fBitmap->Lock().\n\nSo there IS a concurrent write (render thread via BeSplashOutputDev::redraw) and read (window thread via BView::DrawBitmap / app_server) on the same pixel buffer. fBitmap->Lock() only serializes BView attachment to the bitmap; it does not prevent app_server from reading the shared memory via DrawBitmap from another view. gPdfLock is not taken by the window-side handlers.\n\nHowever, the practical impact on Haiku is limited: app_server reads the bitmap memory as a plain blit; the worst outcome is a torn frame (partially-stale row), not a crash or heap corruption. This is a deliberate incremental-render UX pattern inherited from BePDF, and Haiku's app_server handles the read gracefully. The \"hard crash\" claim is only valid for the future Qt/KevRexOS port where QImage/QPixmap are not thread-safe and no app_server buffer layer cushions the race. Calling this \"high\" severity on the current Haiku target is an overstatement; it is a real latent race that produces visual tearing and becomes a genuine crash risk on the planned port. Medium severity is more accurate.",
+      "adjustedSeverity": "medium"
+    }
+  },
+  {
+    "file": "PageRenderer.cpp",
+    "line": "363-373",
+    "severity": "medium",
+    "category": "error-handling",
+    "title": "Notify() dereferences fLooper without a NULL check (NULL in release build)",
+    "detail": "Notify() does fLooper->PostMessage(&msg). fLooper is only set via SetListener(); the constructor initializes it to NULL. RedrawCallback -> Notify can fire as soon as rendering starts. In the DEBUG build the code at least guards the return value, but it still dereferences fLooper unconditionally; in the release build (#else branch) there is no guard at all. If a render is ever started before SetListener() is called, or after the listener window has been torn down, this is a NULL dereference / use-after-free of the looper. Posting to a BLooper that has been deleted is also undefined.",
+    "fix": "Guard with `if (fLooper != NULL)` before PostMessage in both branches, and ensure the renderer is aborted+waited before the listener looper is destroyed. Consider holding a BMessenger (which validates the target) instead of a raw BLooper*.",
+    "verdict": {
+      "isReal": true,
+      "reasoning": "The defect is real but the severity is lower than claimed. Both the DEBUG and release branches of Notify() call fLooper->PostMessage() without any NULL check, and fLooper is initialized to NULL in the constructor (line 93). The rendering thread (and thus Notify/RedrawCallback) can only fire after PageRenderer::Start() is called, which happens inside PDFView::Redraw(). In the constructor path, Redraw() is guarded by `!init` (line 371) so fLooper is never NULL when rendering actually runs today. However, the NULL guard is only coincidental \u2014 it is an artifact of the `init` parameter, not an explicit invariant enforced at the Notify() level. Any future call path that invokes Start() before SetListener() (e.g., a refactor, a test harness, or the PageCache path) would produce an immediate NULL dereference. The RedrawCallback -> Notify(UPDATE_MSG) path fires mid-render on every tile, so the crash would be deterministic once triggered. The fix is straightforward: add `if (fLooper == NULL) return;` at the top of Notify(). The \"use-after-free if the looper is destroyed while rendering\" sub-claim is also real \u2014 there is no synchronization ensuring the BLooper outlives the render thread, and BMessenger would be the correct mitigation. Severity is medium rather than high: no currently reachable crash path exists in the normal app flow, but the missing guard is a genuine defect that will bite on any structural change to the initialization order.",
+      "adjustedSeverity": "medium"
+    }
+  },
+  {
+    "file": "PageRenderer.cpp",
+    "line": "178-190, 181-183",
+    "severity": "medium",
+    "category": "resource",
+    "title": "ResizeBitmap can leave CachedPage holding a freed bitmap on allocation reuse logic",
+    "detail": "ResizeBitmap sets fBitmap = fPage->GetBitmap(); if it decides to recreate, it `delete fBitmap` then `new BBitmap(...)` and SetBitmap(). But BBitmap construction is not checked for validity (IsValid()/InitCheck()) \u2014 a failed large allocation yields an invalid bitmap that is then Locked and drawn into in Render() (fBitmap->Lock(); AddChild; FillRect), which will crash. The BitmapPool class in this same module exists precisely to guard against oversized-allocation crashes, yet PageRenderer bypasses it and constructs BBitmap directly with no size/validity guard.",
+    "fix": "After `new BBitmap(...)`, check fBitmap->IsValid(); on failure, set CachedPage state to an error/empty state, post ABORT_MSG, and bail out of Start() instead of proceeding to Render(). Better, route the allocation through BitmapPool.",
+    "verdict": {
+      "isReal": true,
+      "reasoning": "The defect is genuine. ResizeBitmap (lines 178-190) allocates BBitmap directly via `new BBitmap(BRect(0, 0, width, height), fColorSpace, true, false)` with no validity guard. BitmapPool.cpp's comment and implementation make the intent explicit: it exists to prevent crashes caused by over-large BBitmap allocations on BeOS/Haiku by checking `freeMemorySize()` before allocating. ResizeBitmap bypasses that pre-check entirely. On Haiku, BBitmap construction talks to the app_server; if the backing area allocation fails, the object is constructed but IsValid() returns false. The non-NULL invalid fBitmap is then passed to fBitmap->Lock() and fBitmap->AddChild() in Render(), which will crash. BitmapPool.cpp line 138 shows BitmapPool itself also does a bare `new BBitmap` after the memory pre-check \u2014 so the protection mechanism is the pre-check, and ResizeBitmap lacks it. The severity is real but slightly lower than \"high\" since it requires memory pressure with large pages; \"medium\" is more accurate.",
+      "adjustedSeverity": "medium"
+    }
+  },
+  {
+    "file": "BitmapPool.cpp",
+    "line": "112-144",
+    "severity": "low",
+    "category": "correctness",
+    "title": "BitmapPool::getBitmap does not validate the constructed BBitmap",
+    "detail": "After passing the freeMemorySize() guard, `bitmap = new BBitmap(BRect(0,0,width,height), cs)` is returned with no IsValid()/InitCheck() check. The freeMemorySize() heuristic can be stale or wrong (other allocations between the check and the construction), so the BBitmap can still fail to allocate. Callers treat non-NULL as success and will draw into an invalid bitmap.",
+    "fix": "After construction, `if (bitmap->InitCheck() != B_OK) { delete bitmap; item->bitmap = NULL; ...; return NULL; }` so the documented 'returns NULL if bitmap could not be created' contract actually holds.",
+    "verdict": {
+      "isReal": true,
+      "reasoning": "The defect is logically genuine. `BitmapPool::getBitmap` constructs `new BBitmap(BRect(0,0,width,height), cs)` at line 138 and returns it without any `InitCheck()`/`IsValid()` check, directly violating the documented contract in the header comment (\"getBitmap returns NULL if bitmap could not be created\"). The `freeMemorySize()` heuristic (using `get_system_info()` pages) is explicitly acknowledged with a \"TODO: reserve some free space\" comment, confirming the authors knew it was approximate. The rest of the codebase demonstrates awareness that BBitmap construction can fail silently \u2014 `BeSplashOutputDev.cpp` line 243 checks `InitCheck() != B_OK || !bitmap->IsValid()` immediately after its own `new BBitmap(...)`. So the pattern of checking is established; `BitmapPool` simply omits it. That said, `BitmapPool` and the `Bitmap` wrapper class are currently dead code: no source file outside `BitmapPool.cpp`/`.h` includes or instantiates the class. There is no call site that could actually trigger the bug today. The severity is therefore low rather than medium \u2014 the logic flaw is real and the fix is clearly warranted if the class ever gets wired up, but there is zero runtime exposure in the current codebase.",
+      "adjustedSeverity": "low"
+    }
+  },
+  {
+    "file": "CachedPage.cpp",
+    "line": "159-167, 34-41",
+    "severity": "medium",
+    "category": "correctness",
+    "title": "MakeEmpty does not clear fAnnotations; renderer reassigns it but lifetime is murky",
+    "detail": "MakeEmpty() frees fLinks and decRefs fText but leaves fAnnotations untouched (and the destructor never frees fAnnotations either). The Annotations objects are owned by PageRenderer::fAnnotations (AnnotsList) and merely pointed-to by CachedPage via SetAnnotations(). That cross-ownership means a CachedPage can hold a dangling Annotations* if the owning AnnotsList is resized/cleared (e.g. on SetDoc, which calls fAnnotations.SetSize(numPages)) while a CachedPage still references an old entry. There is no clear invariant tying the two lifetimes together.",
+    "fix": "Document and enforce that CachedPage::fAnnotations is a non-owning borrow valid only while the current doc is loaded, and clear it (SetAnnotations(NULL)) in MakeEmpty() and whenever PageRenderer::SetDoc rebuilds fAnnotations, so stale pointers are not retained.",
+    "verdict": {
+      "isReal": true,
+      "reasoning": "The defect is real. `AnnotsList::SetSize()` calls `MakeEmpty()` which `delete`s every `Annotations*` it owns. `PageRenderer::SetDoc()` calls `fAnnotations.SetSize(doc->getNumPages())`, so all previously-allocated `Annotations` objects are freed. Any `CachedPage` still holding a stale `fAnnotations` pointer now has a dangling pointer to freed memory.\n\nThe code has no mechanism to clear `CachedPage::fAnnotations` across a doc switch. `MakeEmpty()` does not touch `fAnnotations`, and neither does the destructor. After `SetDoc` returns, the window can dispatch mouse-movement or annotation-edit events that reach `fPage->GetAnnotations()->OverAnnotation(...)` (PDFView.cpp lines 806 and 1723) with no guard other than the `fEditAnnot` flag. The `DrawAnnotations` call path has a `!fRendering && fEditAnnot` guard, but the `OverAnnotation` call sites lack any such guard. If `fEditAnnot` is true, a mouse-move between `SetDoc` and the first completed new render will dereference the freed pointer.\n\nThe `WaitForPage` + window-lock/unlock interleaving (lines 343\u2013349 of PDFView.cpp) narrows the window significantly in practice, but does not close it: the window is re-locked before `SetDoc` is called (line 362), and event dispatch resumes immediately after \u2014 so any queued BMessages handled from the window looper between the unlock/relock cycle and the first new FINISH_MSG could trigger the use-after-free path.\n\nThe fix described in the finding (null out `fAnnotations` in `MakeEmpty()` and when `SetDoc` rebuilds the list, and guard `GetAnnotations()` callers against NULL) is correct. Severity is medium rather than high because it requires `fEditAnnot` to be true and a mouse event to race with the doc-load sequence, which is an unusual but possible user action (opening a new document while in annotation-edit mode).",
+      "adjustedSeverity": "medium"
+    }
+  },
+  {
+    "file": "AnnotationRenderer.cpp",
+    "line": "193-227, 211-215",
+    "severity": "low",
+    "category": "portability",
+    "title": "ColorBitmap assumes 32-bit BGRA byte order and little-endian uint32 punning",
+    "detail": "ColorBitmap builds `rgb_color r = {0,0,255,255}` then `uint32 red = *(uint32*)&r` and compares raw pixels `*(uint32*)d == red`, with a manual byte-swizzle `rgb_color n = {color.blue, color.green, color.red, color.alpha}`. This bakes in both 32-bit B_RGBA32 layout AND host endianness (the code itself says 'Hope this also works on PPC!'). The source bitmap is not verified to be 32bpp before the pixel loop reads it as uint32*. On a Qt port (and on big-endian) the channel order and the type-pun differ, so red-pixel replacement silently produces wrong colors or reads past rows.",
+    "fix": "Read channels via explicit byte indexing (b=p[0],g=p[1],r=p[2],a=p[3]) instead of uint32 punning, assert/convert the source to B_RGBA32 first, and on the Qt port use QImage::Format_ARGB32 with QRgb accessors. Remove the type-pun entirely.",
+    "verdict": {
+      "isReal": true,
+      "reasoning": "The code at lines 211-215 performs uint32 type-punning on rgb_color to compare and replace pixels in a B_RGBA32 bitmap. The logic is internally consistent and correct on little-endian x86/x86_64: rgb_color{0,0,255,255} (red=0,green=0,blue=255,alpha=255) happens to produce the same 4-byte memory pattern [0x00,0x00,0xFF,0xFF] as a B_RGBA32 pure-red pixel (BGRA memory order: B=0,G=0,R=255,A=255), and the channel-swapped replacement color `{color.blue,color.green,color.red,color.alpha}` correctly maps RGBA struct order to BGRA B_RGBA32 memory order. The dst bitmap is explicitly created as B_RGBA32 and the src is drawn into it via BView::DrawBitmap+Sync, so the source format is always normalized before the pixel loop \u2014 that part of the claim is wrong.\n\nHowever, the code genuinely is endian-sensitive: on big-endian (PPC), the uint32 pun reads bytes in reversed order, so the sentinel comparison would compare the wrong value against the pixel words and silently produce incorrect output. The author knew this \u2014 \"Hope this also works on PPC!\" is right there. This is a real portability defect in the sense that the code would break on a big-endian Haiku port.\n\nIn practice, Haiku has been x86/x86_64-only for over a decade; PPC support was abandoned before R1. For this Haiku-native project there is no immediate risk. The Qt-port framing in the finding is irrelevant (this is BBitmap/BView code). The defect is real but the severity is low, not high \u2014 it's a dormant big-endian bug in a platform that has no big-endian targets.",
+      "adjustedSeverity": "low"
+    }
+  },
+  {
+    "file": "AnnotationRenderer.cpp",
+    "line": "670-679",
+    "severity": "low",
+    "category": "correctness",
+    "title": "DoInk allocates BPoint array sized by GetLength() but indexes points[0] without emptiness check",
+    "detail": "In DoInk, `const int n = path->GetLength(); BPoint* points = new BPoint[n];` then `fView->MovePenTo(points[0]);`. If a path has zero points (n==0), `new BPoint[0]` is valid but points[0] is an out-of-bounds read, and the subsequent loop is skipped. Malformed/empty Ink annotation paths would cause an OOB read.",
+    "fix": "Guard with `if (n <= 0) continue;` before allocating/dereferencing points[0].",
+    "verdict": {
+      "isReal": true,
+      "reasoning": "The defect is genuine. The parsing code in InkAnnot::InkAnnot(Dict*) at Annotation.cpp:1113 checks `obj2.arrayGetLength() % 2 == 0` before computing `n = obj2.arrayGetLength() / 2`. An empty inner array (length 0) satisfies that condition, so `n = 0`, `p->SetLength(0)` is called (allocates `new PDFPoint[0]`, sets `fLength = 0`), and the annotation proceeds to `SetValid()`. It is not marked deleted, so it passes the `DrawAnnotation` guard in DoInk (which only checks `IsDeleted()`, not `IsValid()`). In DoInk at line 673-675, `new BPoint[n]` with n==0 is legal C++ but `fView->MovePenTo(points[0])` is an unconditional out-of-bounds read \u2014 undefined behavior. There is no emptiness guard between the allocation and the dereference. The fix (guard with `if (n <= 0) continue;`) is correct. Severity is low because triggering it requires a malformed PDF with an empty ink-path sub-array, but the defect is a real UB OOB read, not a style issue or speculation.",
+      "adjustedSeverity": "low"
+    }
+  },
+  {
+    "file": "PDFSearch.cpp",
+    "line": "244",
+    "severity": "high",
+    "category": "correctness",
+    "title": "Mismatched delete on array allocated with new[] (heap corruption)",
+    "detail": "FindThread::Run() obtains the Unicode buffer via Utf8ToUnicode() (line 102), which allocates the array with `new Unicode[*length]` (TextConversion.cpp:130). At the `done:` label it frees it with scalar `delete u;` instead of `delete[] u;`. Mismatched new[]/delete is undefined behaviour: it does not run array bookkeeping and on most allocators corrupts the heap. This will be hit on every single Find operation, and is a real crash/corruption risk across all three target platforms.",
+    "fix": "Change line 244 to `delete[] u;`.",
+    "verdict": {
+      "isReal": true,
+      "reasoning": "Confirmed by reading both files. TextConversion.cpp line 130 allocates with `new Unicode[*length]` (array new). PDFSearch.cpp line 244 frees with scalar `delete u` instead of `delete[] u`. This is a genuine new[]/delete mismatch \u2014 undefined behaviour per the C++ standard. It fires on every Find operation (every search path through Run() converges on the `done:` label). On Haiku's allocator and most others this corrupts heap metadata, which can manifest as silent corruption, a delayed crash, or occasionally go unnoticed if the allocator happens to store no per-block bookkeeping before the first element. Regardless of observed behaviour it is UB and needs fixing with `delete[] u`.",
+      "adjustedSeverity": "high"
+    }
+  },
+  {
+    "file": "PDFSearch.cpp",
+    "line": "224-247",
+    "severity": "high",
+    "category": "threading",
+    "title": "Window() dereferenced without NULL check from the find thread; window may be gone",
+    "detail": "FindThread runs on a background thread spawned in PDFView::Find(). It calls Window() (which returns fMainView->Window()) and immediately dereferences it: Window()->Lock() at 224, and unconditionally Window()->PostMessage(...) at 245. If the document window is closed (or the view detached) while the search thread is still running, BView::Window() returns NULL and these become NULL dereferences. The StopFind() path only flips a bool; it does not join the thread, so the window can be torn down underneath an in-flight search. The fStopFindThread bool is also read across threads with no synchronization or memory barrier.",
+    "fix": "Capture a BMessenger to the window/find window up front (valid even after the looper is gone, PostMessage just fails) and post through it; or guard every Window() use with a NULL check and only proceed under a successful Lock(). Better, have the window block-join the find thread before it quits (e.g. wait on the thread_id) so the view/window cannot be destroyed mid-search.",
+    "verdict": {
+      "isReal": true,
+      "reasoning": "The defect is confirmed. Two concrete paths lead to a crash:\n\n1. NULL dereference at lines 224 and 245: `PDFWindow::QuitRequested()` (line 330) calls `fMainView->WaitForPage(true)` which waits only for the *page renderer* thread, not the find thread. It never calls `StopFind()` and never joins the FindThread via `wait_for_thread`. After `QuitRequested()` returns true, Haiku calls `Quit()` on the BWindow/BLooper which self-destructs the window object. The still-running FindThread then calls `Window()->Lock()` (line 224) or `Window()->PostMessage()` (line 245) where `Window()` is now either NULL (view detached) or a dangling pointer (window destroyed). Both are NULL/dangling dereferences.\n\n2. The unsynchronized `fStopFindThread` bool: it is a plain non-atomic `bool` declared in PDFView.h, written by `StopFind()` on the window thread and read by `CanContinue()` on the find thread with no memory barrier, mutex, or `std::atomic`. This is a formal data race (UB under C++11 and later), though in practice on x86 it rarely causes visible misbehavior.\n\nThe claim's description of the root cause and the missing thread join is accurate and verified. The `fFindWindow->PostMessage()` in `SendPageMsg` (line 80) is safer because BMessenger/PostMessage on a BLooper that has already been destroyed is handled gracefully in Haiku, but the direct `Window()->...` calls are not.",
+      "adjustedSeverity": "high"
+    }
+  },
+  {
+    "file": "PDFSearch.cpp",
+    "line": "229-231",
+    "severity": "medium",
+    "category": "threading",
+    "title": "GetPage()->FindText / SetSelection / CopySelection touch window-owned state off the window lock",
+    "detail": "After SetPage()/WaitForPage() under the lock (224-228), the code calls GetPage()->FindText() at 229, then SetSelection() (236) and CopySelection() (239) \u2014 all OUTSIDE any Window()->Lock(). These manipulate the PDFView's current page, selection rectangle, and clipboard from the background find thread while the window looper thread may simultaneously draw/scroll/relayout, a classic data race on shared view state. The `found:` fast path (current-page hit) likewise never takes the lock before SetSelection/CopySelection.",
+    "fix": "Wrap all PDFView/CachedPage state mutations (FindText against the live page, SetSelection, CopySelection) in Window()->Lock()/Unlock(), or marshal the final selection to the window thread via a BMessage and perform the selection/copy there.",
+    "verdict": {
+      "isReal": true,
+      "reasoning": "The defect is partially real, but the claimed finding is inaccurate in its specifics.\n\n`GetPage()->FindText()` at line 229: Not a real race. `fPage` is a singleton `CachedPage*` allocated once at construction. Its `fText` field is populated by `PageRenderer` under `gPdfLock` before the page enters `READY` state, and `WaitForPage()` at line 226 waits for exactly that READY state. By the time `FindText()` runs, `fText` is stable.\n\n`SetSelection()` at line 236: Not a real race. `PDFView::SetSelection()` internally calls `Window()->Lock()` / `Window()->Unlock()` around all mutations to `fSelection`, `fSelected`, `Invalidate()`, and `ScrollTo()`. The find thread calling it unlocked is fine because the method self-locks.\n\n`CopySelection()` at line 239 \u2014 **this is the genuine defect**. `PDFView::CopySelection()` (line 2244) reads `fRendering`, `fSelected`, `fSelection`, `fBitmap`, `fWidth`, and `fHeight` with NO window lock held. These fields are all owned by the window looper thread. A concurrent render triggered by, e.g., a zoom or rotation message in the looper queue could reassign `fBitmap` or toggle `fRendering` at any time. This is an unguarded read of window-owned state from the find background thread.\n\nThe same vulnerability exists on the `found:` fast-path (line 234), which also calls `CopySelection()` without a lock.\n\nThe severity is real but somewhat lower than \"high\" in practice: in the normal code path, the find thread has just navigated to the page and set the selection, making a concurrent render unlikely at that exact instant. But the code is architecturally incorrect \u2014 there is no invariant preventing it. The fix is to wrap the `CopySelection()` call (or the read of `fRendering`/`fBitmap` inside it) in `Window()->Lock()`/`Unlock()`.",
+      "adjustedSeverity": "medium"
+    }
+  },
+  {
+    "file": "PDFPrint.cpp",
+    "line": "291-296",
+    "severity": "medium",
+    "category": "correctness",
+    "title": "Integer division when computing fallback print scale",
+    "detail": "When fScale==0 the code computes fScale = xdpi / 72 (291), ydpi / 72 (293), or 300 / 72 (296). fScale is a double but the operands are int32, so this is integer division: 300/72 yields 4 (not 4.166), and e.g. 100 dpi yields 1. The print output is rendered at a coarser/incorrect DPI than intended.",
+    "fix": "Use floating-point division: fScale = xdpi / 72.0; (and 300.0 / 72.0).",
+    "verdict": {
+      "isReal": true,
+      "reasoning": "fScale is declared as double (line 92). The normal initialization path at line 114 correctly uses `/ 72.0`. However, lines 291, 293, and 296 all perform integer division because both operands (xdpi, ydpi, and the literal 300) are int32. The int32 division result is computed first, then widened to double \u2014 so `300 / 72` stores `4.0` instead of `4.1666...`, and `100 / 72` stores `1.0` instead of `1.388...`. The truncation is silent and produces a materially coarser scale than intended. The fix is straightforward: use `/ 72.0` on all three lines, matching the already-correct line 114.",
+      "adjustedSeverity": "medium"
+    }
+  },
+  {
+    "file": "PDFPrint.cpp",
+    "line": "110",
+    "severity": "medium",
+    "category": "correctness",
+    "title": "const char* title cast away and stored as char* fTitle without ownership/lifetime guarantee",
+    "detail": "The constructor stores `fTitle = (char*)title;` \u2014 casting away const on the caller's string and keeping a bare pointer. PDFView::Print() passes fTitle->String() (line 410), a pointer into the PDFView's BString. The PrintView lives on a detached printing thread that outlives the Print() call; if the PDFView's title BString is reassigned or the view is destroyed while printing, fTitle dangles and BPrintJob(fTitle) (252) reads freed memory. fTitle is never freed either, so if intended to own it leaks; if not owning it is a lifetime hazard.",
+    "fix": "Copy the title into an owned BString member in the constructor and free/destruct it in PrintView's destructor (PrintView has no destructor currently \u2014 add one).",
+    "verdict": {
+      "isReal": true,
+      "reasoning": "The finding is confirmed. `PrintView` stores `fTitle = (char*)title` \u2014 a raw pointer into the internal buffer of `PDFView::fTitle` (a heap-allocated `BString*`). The printing thread is spawned detached (no join, no synchronization). If the user opens a new PDF while printing, `PDFView::MakeTitleString()` executes `delete fTitle; fTitle = new BString(...)` on the UI thread, freeing the buffer that `PrintView::fTitle` still points at. If the PDFView is destroyed (window closes mid-print), `PDFView::~PDFView()` deletes `fTitle` with the same effect. Either path leaves `PrintView::fTitle` dangling before `BPrintJob(fTitle)` (line 252) and `new PrintingProgressWindow(fTitle, ...)` (line 332) read it. The cast-away of `const` is a secondary symptom of the same mistake: the constructor should have copied the string into an owned `BString` member and used `fTitle.String()` throughout `PrintView`. The race is realistic (opening another PDF is a common action, especially for a slow print job), making this a genuine use-after-free hazard rather than a purely theoretical concern.",
+      "adjustedSeverity": "medium"
+    }
+  },
+  {
+    "file": "PDFPrint.cpp",
+    "line": "133-134",
+    "severity": "low",
+    "category": "correctness",
+    "title": "Redundant startDoc(nullptr) call on output device",
+    "detail": "The constructor calls fOutputDev->startDoc(nullptr) immediately followed by startDoc(doc). The first call is dead/contradictory and may reset internal state poppler then re-initializes; at best wasted work, at worst it masks a missing-doc guard. Likely a copy-paste artifact from the poppler migration.",
+    "fix": "Remove the startDoc(nullptr) line; keep only startDoc(doc).",
+    "verdict": {
+      "isReal": true,
+      "reasoning": "The two consecutive calls at PDFPrint.cpp lines 133-134 are confirmed in the source. Poppler's SplashOutputDev::startDoc stores docA into doc, deletes and recreates the font engine, and clears the T3 font cache. Calling startDoc(nullptr) immediately before startDoc(doc) causes the font engine to be allocated and freed an extra time for no purpose, and stores nullptr into doc only to immediately overwrite it. The legitimate use of this two-phase pattern (constructor gets NULL, SetDoc() gets the real doc later) is visible in PageRenderer.cpp lines 100 and 118, where the calls are separated by lifecycle. In PDFPrint.cpp the doc is already available in the constructor, so the nullptr call is purely redundant. There is no correctness hazard \u2014 the second call fully restores correct state \u2014 but it is a real code defect (dead/wasted work), not merely a style issue. Severity is low because the only runtime cost is one extra heap alloc/free of the font engine at print-job setup, with zero risk of incorrect behavior.",
+      "adjustedSeverity": "low"
+    }
+  },
+  {
+    "file": "History.cpp",
+    "line": "110-116",
+    "severity": "medium",
+    "category": "resource",
+    "title": "SetFile leaks the previous HistoryFile when it still has referencing positions, and can leave fFile dangling",
+    "detail": "SetFile() deletes the old fFile only when GetUseCount()==0. When the old file's use count is >0 (history positions still reference it) the code simply overwrites fFile with a new HistoryFile. That is the intended refcount handoff, BUT note HistoryFile::DecreaseUseCount() does `delete this` when the count hits 0 (History.h:68-73). When the last referencing HistoryPosition is later destroyed (e.g. via Add's truncation at History.cpp:89/100 or MakeEmpty), the file self-deletes. If fFile still points at that same object (because no new SetFile happened) fFile becomes dangling and a subsequent AddPosition() (107) constructs HistoryPosition(fFile,...) calling fFile->IncreaseUseCount() on freed memory. The new-HistoryFile path also never validates the entry_ref.",
+    "fix": "Make History hold its own reference: call fFile->IncreaseUseCount() when assigning fFile and DecreaseUseCount() when replacing it, so the current-file pointer always owns a count. Then remove the manual `delete fFile` in SetFile and rely on the refcount.",
+    "verdict": {
+      "isReal": true,
+      "reasoning": "The defect is real, but the report's framing is slightly off. The leak claim for SetFile (use count > 0 path) is actually correct design: the old HistoryFile is kept alive by the existing HistoryPosition objects that hold counts on it, and self-deletes when the last position is destroyed. No leak there.\n\nThe actual bug is in UpdateFile() (History.cpp:150-157): after Back() or Forward() navigates to a position for an old file, fFile is set to pos->GetFile() \u2014 a raw pointer into a HistoryFile that is entirely owned by HistoryPosition refcounts. History::fFile holds no count of its own. When Add()'s 100-item truncation (line 95) or any other deletion destroys the last HistoryPosition referencing that file, HistoryFile::DecreaseUseCount() calls `delete this`, leaving fFile dangling. A subsequent AddPosition() call then asserts fFile != NULL (passes \u2014 it's non-null but freed), constructs a new HistoryPosition(fFile, ...) and calls fFile->IncreaseUseCount() on freed memory \u2014 a use-after-free.\n\nConcrete reproducer path: open file A, add a position (FileA.useCount=1), open file B, add enough positions to evict the FileA position via the 101-item cap (FileA.useCount\u21920 \u2192 FileA deleted), but fFile was set to FileA by UpdateFile() during a Back() call before the eviction. fFile is now dangling. The next AddPosition() is a UAF.\n\nMakeEmpty() does defensively set fFile = NULL afterward, which protects the destructor path, but Add()'s truncation does not reset fFile, leaving the dangling-pointer window open in the steady-state usage loop.\n\nThe fix described in the report (have History hold its own reference count on fFile) is correct: IncreaseUseCount when assigning fFile (both in SetFile and UpdateFile), DecreaseUseCount when overwriting it, and drop the manual `delete fFile` in SetFile.",
+      "adjustedSeverity": "medium"
+    }
+  },
+  {
+    "file": "PDFSearch.cpp",
+    "line": "43-73",
+    "severity": "medium",
+    "category": "threading",
+    "title": "FindThread captures raw PDFDoc*/PDFView*/FindTextWindow* shared across threads with no lifetime ownership",
+    "detail": "FindThread stores raw pointers to the PDFView, FindTextWindow and (via GetPDFDoc) the PDFDoc, and calls doc->displayPage()/getNumPages() on the worker thread (140,148,168,176) while the window thread can reload or close the document. There is no lock held around the PDFDoc access and no guarantee the doc outlives the search. If the user opens a different file or closes the document mid-search, the worker dereferences a freed PDFDoc. This is the same root lifetime problem as the Window() races and is a likely intermittent crash.",
+    "fix": "Hold the document lock (the app's PDFLock, referenced in the commented-out code) around all PDFDoc/page access on the worker thread, and ensure the document/view cannot be freed until the find thread has joined.",
+    "verdict": {
+      "isReal": true,
+      "reasoning": "The defect is real. The race path is confirmed by tracing the code:\n\n1. `FindThread::Run()` captures `fDoc` via `GetPDFDoc()` at line 94 and calls `doc->displayPage()` at lines 148/176 on the worker thread with no lock held around the PDFDoc.\n\n2. When a new file is opened (via drag-drop, recent-docs menu, or file panel), `NimblePDFApplication::RefsReceived` calls `fWindow->LoadFile()`, which calls `fMainView->LoadFile()`. That function calls `EndDoc()` (which only clears the selection state) and `WaitForPage(true)` (which waits for the page renderer, not the find thread), then calls `OpenFile()` which does `delete fDoc; fDoc = newDoc` (PDFView.cpp lines 282\u2013283). There is no `StopFind()` call anywhere in this path.\n\n3. `StopFind()` only sets `fStopFindThread = true`. The find thread checks `CanContinue()` between pages (lines 142, 170) but not *inside* `doc->displayPage()`, which can be a long-running call. Even if the flag were checked, there is no `wait_for_thread` / join \u2014 `Thread::Resume()` gives thread ownership to the Haiku thread and deletes the Thread object on exit, with no way for the caller to block until it finishes. So even in the `FIND_STOP_NOTIFY_MSG` handler that does call `StopFind()`, the find thread can still be executing `doc->displayPage()` when the handler returns.\n\n4. `PDFView::~PDFView()` also calls `delete fDoc` directly with no guard.\n\nThe concrete crash scenario: user opens file A \u2192 search starts \u2192 user opens file B (or drags a new PDF onto the window) \u2192 `fDoc` is deleted \u2192 find thread calls `doc->displayPage()` on the freed pointer \u2192 crash. This is an intermittent but real use-after-free. The severity is medium (not high/critical) because it requires the uncommon coincidence of a find in progress at the moment a new file is opened, but it is a genuine UAF, not speculative.",
+      "adjustedSeverity": "medium"
+    }
+  },
+  {
+    "file": "OutlinesWindow.cpp",
+    "line": "104-109",
+    "severity": "medium",
+    "category": "correctness",
+    "title": "fLink union left uninitialized in OutlineListItem constructor",
+    "detail": "The constructor initializes fType to linkUndefined but never initializes the fLink union. The destructor (lines 111-117) only deletes fLink.dest/fLink.string when fType is linkDest/linkString, so for a normally-typed item this is safe. However, SetLink(LinkDest*) at line 150 calls dest->isOk() BEFORE checking fType, and SetPageNum/SetLink rely on fType==linkUndefined gating. The real exposure: if an item is constructed and never has a link/page set (e.g. the 'Document', '<empty>', 'User defined', and 'No title' header items created at lines 202/205/208/325/365/372/374), fType stays linkUndefined and the union is never read, so it is benign today. But the uninitialized union is fragile: any future code path that reads fLink without first checking fType (or a reordering of the type checks) dereferences garbage. The MessageReceived dispatch at line 542 (`else if (link && link->isPageRef())`) is already dead code because the preceding `if (link != NULL)` at line 529 consumes every non-NULL link, so the page-ref branch can never run \u2014 a latent logic bug that masks how easily the union can be misread.",
+    "fix": "Initialize the union in the constructor initializer list, e.g. add `fLink.dest = NULL` (zero the union) so any stray read is a NULL deref rather than a wild pointer, and reorder/restructure the MessageReceived dispatch so the isPageRef() branch is reachable (check link->isPageRef() before the generic getDest handling).",
+    "verdict": {
+      "isReal": true,
+      "reasoning": "The finding is partially real. The uninitialized union concern is speculative: fType is always checked before fLink is read or written, and the destructor is correct, so there is no actual exposure today. That part should be downgraded to a style/latent concern.\n\nHowever, the dead-code claim about MessageReceived at line 542 is a genuine correctness bug. The logic is:\n\n1. link is set only inside `if (item->isDest())` (lines 526-528).\n2. The next statement is `if (link != NULL)` (line 529), which fires immediately whenever isDest() was true and getDest() returned non-NULL, consuming that branch entirely.\n3. The `else if (link && link->isPageRef())` at line 542 is reached only when link==NULL (i.e., isDest() was false, or getDest() returned NULL). link==NULL makes the condition trivially false, so this branch is structurally unreachable.\n\nIn practice, PDFs that use indirect page-reference destinations (isPageRef()==true) will silently fall through to the final else block, which checks isPageNum() \u2014 a different representation. Depending on whether poppler normalises these, navigation for those PDFs may silently do nothing rather than jumping to the right page. This is a real logic defect, not just a style issue.\n\nThe claimed severity of \"high\" is inflated: there is no memory corruption, crash, or data loss \u2014 it is a silent navigation failure for a subset of PDFs that use indirect page refs. Medium is more accurate.",
+      "adjustedSeverity": "medium"
+    }
+  },
+  {
+    "file": "OutlinesWindow.cpp",
+    "line": "529-565",
+    "severity": "medium",
+    "category": "correctness",
+    "title": "Unreachable page-ref branch and dead deleteLink flag in MessageReceived",
+    "detail": "At line 524-525 `link` and `deleteLink` are declared; link is set only from item->getDest() at line 527. The branch order is: `if (link != NULL)` (529) handles DEST_NOTIFY for every non-NULL link and sets msgSent; the `else if (item->isString())` and the `else if (link && link->isPageRef())` (542) follow. Because the first branch already captured all non-NULL links, the isPageRef branch at 542 is unreachable. deleteLink is never set true anywhere, so the `if (deleteLink) delete link;` at 564 is dead. The intent was presumably to route page-reference destinations to REF_NOTIFY, but as written a GoTo dest that is a page reference is posted as a raw LinkDest pointer via DEST_NOTIFY instead, and the receiver must handle the page-ref case itself.",
+    "fix": "Restructure so a non-NULL link is inspected: if link->isPageRef() post REF_NOTIFY, else post DEST_NOTIFY. Remove the unused deleteLink variable or wire it to the lifetime decision the receiver expects.",
+    "verdict": {
+      "isReal": true,
+      "reasoning": "The logic is verifiably broken. `link` is assigned only inside `if (item->isDest())` (lines 526-528), so it is non-NULL only when `isDest()` is true. The first branch `if (link != NULL)` at line 529 therefore fires for every valid `isDest()` item, sets `msgSent = true`, and then the `else if` chain is skipped entirely. Consequently the `else if (link && link->isPageRef())` branch at line 542 is structurally unreachable: `link` can only be non-NULL if the first branch was already taken. A GoTo destination that is a page-reference (`LinkDest::isPageRef() == true`) silently falls into the DEST_NOTIFY path instead of the intended REF_NOTIFY path, meaning the receiver gets a raw `LinkDest*` pointer rather than the num/gen integer fields it would need if it expects REF_NOTIFY. `deleteLink` is also never set to `true`, making the cleanup guard at line 564 dead code. Both observations confirm the finding is genuine.",
+      "adjustedSeverity": "medium"
+    }
+  },
+  {
+    "file": "OutlinesWindow.cpp",
+    "line": "530-535",
+    "severity": "medium",
+    "category": "threading",
+    "title": "LinkDest pointer posted across threads with documented but unfixed lifetime race",
+    "detail": "DEST_NOTIFY posts a raw LinkDest* (owned by the OutlineListItem, lines 533-535) to fLooper. The in-source comment (530-532) admits the race: if a new PDF document is loaded before the looper handles the message, the OutlineListItem (and its LinkDest) may be destroyed, leaving the receiver with a dangling pointer. On Haiku BLooper message delivery is asynchronous, so this is a real use-after-free window, not theoretical. This is also a portability landmine: passing raw heap pointers through asynchronous messages depends on the receiver running in the same address space and on careful manual lifetime coordination \u2014 it does not translate to a Qt signal/queued-connection model where you would copy the destination data into the event.",
+    "fix": "Do not pass the owning LinkDest pointer. Copy the resolved destination (page number / named dest string / page ref num+gen) into the BMessage value fields, or include a document-generation token in the message that the receiver validates before dereferencing. For the Qt port, serialize the destination into the event payload.",
+    "verdict": {
+      "isReal": true,
+      "reasoning": "The race is real and the code itself documents it with an XXX comment at lines 530-532. Here is the verified execution path:\n\n1. User clicks an outline item. BOutlineListView fires the 'Outl' selection message, which is dispatched to OutlinesView::MessageReceived while the BWindow lock is held.\n2. That handler calls item->getDest() to borrow the raw LinkDest* owned by the OutlineListItem, then posts it as a void* in a DEST_NOTIFY BMessage to fLooper (which is the PDFWindow itself, confirmed at PDFWindow.cpp:786).\n3. The handler returns, the BWindow lock is released, and the DEST_NOTIFY message sits in the window's message queue.\n4. On the application thread, NimblePDFApplication::RefsReceived (NimblePDFApplication.cpp:612-614) can call win->Lock() + fWindow->LoadFile() + win->Unlock(). The comment on line 601 explicitly notes this runs on the application thread. LoadFile calls NewDoc -> SetCatalog + MakeEmpty, which deletes all OutlineListItems. OutlineListItem::~OutlineListItem (OutlinesWindow.cpp:113-114) deletes fLink.dest \u2014 the exact pointer that was stashed in the queued message.\n5. The window thread then picks up DEST_NOTIFY and PDFWindow::MessageReceived (PDFWindow.cpp:1454-1459) dereferences the now-freed LinkDest* via fMainView->GotoDest(dest) \u2014 use-after-free.\n\nThis is confirmed by: the code's own XXX comment, OutlineListItem owning and deleting the LinkDest in its destructor, MakeEmpty deleting all list items on document load, and RefsReceived running on the app thread (its own comment says so) and acquiring the window lock explicitly. The race window between step 3 and step 5 is narrow (a few message-dispatch cycles) but real. The severity is reduced from the claimed high to medium because triggering it requires the user to both click an outline item and open a new document in the brief interval between two consecutive message dispatches \u2014 a very tight practical race that is unlikely but possible.",
+      "adjustedSeverity": "medium"
+    }
+  },
+  {
+    "file": "FindTextWindow.cpp",
+    "line": "180-184",
+    "severity": "low",
+    "category": "correctness",
+    "title": "Buffer delete via scalar delete instead of delete[] (mismatched new[]/delete)",
+    "detail": "SetPage allocates `char* buffer = new char[...]` (line 181) then frees it with `delete buffer` (line 184) instead of `delete[] buffer`. This is undefined behavior for array allocations; on Haiku's allocator it usually appears benign but is a real defect and will be flagged by sanitizers/MSVC on the Windows port. Additionally `sprintf(buffer, fmt, page)` (182) trusts that the translated catkey format string `fmt` (B_TRANSLATE(\"Page: %d\")) contains exactly one %d \u2014 a malformed/localized translation with extra or wrong conversion specifiers causes a format-string crash; the +30 slack does not protect against a translator inserting %s.",
+    "fix": "Use `delete[] buffer`, or better replace the manual buffer with a BString: `BString s; s.SetToFormat(fmt, page); fPage->SetText(s.String());`. Consider validating/anchoring the format string.",
+    "verdict": {
+      "isReal": true,
+      "reasoning": "Line 181 allocates with `new char[strlen(fmt) + 30]` (array form) and line 184 frees it with `delete buffer` (scalar form). This is a genuine C++ undefined-behavior defect: mismatching `new[]` with scalar `delete` is UB per the standard. On Haiku's allocator it is benign in practice (the allocator stores the block size regardless), but AddressSanitizer and UBSan will flag it, and it is a real defect regardless of observable behaviour. The fix is trivially `delete[] buffer`, or better yet replacing the whole buffer with `BString::SetToFormat`. The secondary format-string concern (translator inserting wrong specifiers) is speculative and not independently real \u2014 the translation key is owned by the project and is not a public/user-supplied string.",
+      "adjustedSeverity": "low"
+    }
+  },
+  {
+    "file": "FindTextWindow.cpp",
+    "line": "135-139",
+    "severity": "medium",
+    "category": "correctness",
+    "title": "fSearching set true and UI left half-mutated when find text is empty",
+    "detail": "In the FIND_MSG case, fSearching is set to true at line 136 before the empty-text check at 138. If the text is empty the handler returns immediately (139) WITHOUT resetting fSearching to false and without having changed the button/label \u2014 but fSearching now incorrectly reads true. A subsequent QuitRequested() (line 116) will then refuse to close the window and post FIND_ABORT_NOTIFY_MSG even though no search is running, leaving the Find window unclosable until another start/stop cycle resets the flag.",
+    "fix": "Move `fSearching = true;` to after the empty-text guard, or set it only once the FIND_START_NOTIFY_MSG has actually been posted.",
+    "verdict": {
+      "isReal": true,
+      "reasoning": "The defect is confirmed by direct code inspection. In the FIND_MSG handler (line 135-149), fSearching is unconditionally set to true at line 136, before the empty-text guard at lines 138-139. When the text field is empty, the handler executes `return` at line 139 without resetting fSearching. No FIND_START_NOTIFY_MSG is posted, so the normal reset path (FIND_STOP_NOTIFY_MSG handler at lines 157-162 which sets fSearching = false) will never fire. QuitRequested() at lines 114-121 checks fSearching and, if true, posts a spurious FIND_ABORT_NOTIFY_MSG and returns false (refuses close). The only other reset is FIND_QUIT_REQUESTED_MSG (line 170), which is an externally-posted message that may never arrive. The window is therefore stuck unclosable via the close button or Escape after a single empty-search click. The fix is clear and mechanical: move fSearching = true to after the empty-text guard, or add fSearching = false before the early return.",
+      "adjustedSeverity": "medium"
+    }
+  },
+  {
+    "file": "PreferencesWindow.cpp",
+    "line": "442-452",
+    "severity": "high",
+    "category": "correctness",
+    "title": "WORKSPACE_CHANGED reads non-existent 'index' field; workspace selection silently ignored",
+    "detail": "The workspace menu items are created with `new BMessage(WORKSPACE_CHANGED)` (lines 65/72) carrying no 'index' field. In MessageReceived the handler does `msg->FindInt32(\"index\", &index)` (line 444) and only acts if it returns B_OK. Since the menu messages never contain 'index', FindInt32 fails and the entire body (SetOpenInWorkspace/SetWorkspace/UpdateWorkspace) is skipped \u2014 selecting a workspace in Preferences does nothing. BMenuField/BPopUpMenu in radio mode does add an 'index' field automatically only for the invoke message of certain controls, not for arbitrary menu-item messages, so relying on it here is incorrect.",
+    "fix": "Add the index explicitly when building items (e.g. msg->AddInt32(\"index\", i)) or read the marked item from fOpenInWorkspace->Menu() in the handler instead of expecting an 'index' field.",
+    "verdict": {
+      "isReal": true,
+      "reasoning": "The bug is real. In BuildWorkspaceMenu (lines 63-76), all BMenuItem objects are constructed with a bare `new BMessage(WORKSPACE_CHANGED)` \u2014 no \"index\" field is ever added to any of those messages. In MessageReceived (lines 442-453), the WORKSPACE_CHANGED handler immediately calls `msg->FindInt32(\"index\", &index)` and wraps the entire body (SetOpenInWorkspace, SetWorkspace, UpdateWorkspace) in `if (...== B_OK)`. Haiku's BMenu/BMenuItem machinery does NOT automatically inject an \"index\" int32 into the invoke message of a radio-mode BPopUpMenu item \u2014 it adds a \"source\" pointer to the invoking BMenuItem, but not a positional index. Therefore FindInt32(\"index\", ...) always returns B_NAME_NOT_FOUND, the condition is never true, and every workspace selection in the Preferences window is silently discarded. The settings are never updated from the UI. The fix is straightforward: in the BuildWorkspaceMenu loop, call `msg->AddInt32(\"index\", i)` on each message before handing it to BMenuItem (with index=0 for \"current\", 1..n for the numbered entries), then adjust the handler's existing index-to-workspace arithmetic accordingly.",
+      "adjustedSeverity": "high"
+    }
+  },
+  {
+    "file": "PreferencesWindow.cpp",
+    "line": "80-83",
+    "severity": "low",
+    "category": "correctness",
+    "title": "workspace[3] buffer too small if workspace count reaches 100+",
+    "detail": "`char workspace[3]` then `sprintf(workspace, \"%d\", (int)settings->GetWorkspace())`. A workspace index of 100 or more produces 3 digits plus NUL = 4 bytes, overflowing the 3-byte buffer. Haiku supports up to 32 workspaces today so this is currently unreachable, and the `workspace` variable is in fact never used after being filled (dead code), making the overflow latent. Still a real fixed-size-buffer defect that a static analyzer will flag and that becomes live if the workspace cap rises.",
+    "fix": "Remove the unused workspace buffer entirely, or size it adequately and use snprintf.",
+    "verdict": {
+      "isReal": true,
+      "reasoning": "The code at lines 80-83 is confirmed exactly as described. `char workspace[3]` is declared and written via `sprintf(workspace, \"%d\", (int)settings->GetWorkspace())`, but `workspace` is never referenced again anywhere in the file \u2014 it is dead code. A workspace index >= 100 would overflow the 3-byte buffer (3 digits + NUL = 4 bytes). Haiku's current 32-workspace cap makes the overflow unreachable today, but the dead-code nature means the sprintf call is entirely pointless regardless. The defect is real: a latent stack buffer overflow in dead code. It should simply be deleted. Severity remains low because (a) Haiku hard-caps workspaces at 32 and (b) even if the overflow were triggered, the corrupted value is never read, so there is no exploitable control-flow consequence today.",
+      "adjustedSeverity": "low"
+    }
+  },
+  {
+    "file": "FileInfoWindow.cpp",
+    "line": "274-291",
+    "severity": "low",
+    "category": "threading",
+    "title": "Per-row Lock()/Unlock() around fFontList mutation races with fState checked outside the lock",
+    "detail": "In QueryFonts the loop checks `fState != STOP && fState != QUIT` (286) outside any lock, then takes Lock()/Unlock() (287-290) only around AddRow. fState is mutated from MessageReceived (STOP_MSG sets fState=STOP at 476, QuitRequested sets QUIT at 443) on the window thread, while QueryFonts (when called via QueryAllFonts) also runs on the window thread \u2014 so for the all-fonts path there is actually no concurrency on fState (single thread), making the Lock()/Unlock() of the BWindow around AddRow redundant self-locking (BWindow is already locked when handling its own messages? No \u2014 QueryAllFonts is reached via PostMessage, so it runs in MessageReceived context where the looper is already locked, meaning the explicit Lock() at 287 is a nested/redundant lock). The mixed assumption (sometimes treating this as cross-thread, sometimes not) is fragile.",
+    "fix": "Clarify the threading model: if font scanning runs on the window looper thread, remove the redundant Lock()/Unlock() (the looper is already locked); if it is meant to run on a separate worker, then fState must be read under the same lock and the scan must hold the PDF lock.",
+    "verdict": {
+      "isReal": true,
+      "reasoning": "The threading model is confirmed real but different from what the report describes. `QueryAllFonts` (and thus `QueryFonts`) runs on the PDFWindow looper thread, not the FileInfoWindow looper thread. The flow is: FileInfoWindow posts START_QUERY_ALL_FONTS_MSG to its fLooper (the PDFWindow); PDFWindow::MessageReceived handles it by calling w->QueryAllFonts() directly on the PDFWindow thread. Meanwhile fState is mutated only in FileInfoWindow::MessageReceived, which runs on the FileInfoWindow looper thread. So fState IS accessed from two different threads: read (unprotected) by QueryFonts on the PDFWindow thread, written by FileInfoWindow::MessageReceived on the FileInfoWindow thread. The Lock()/Unlock() around AddRow at lines 287-290 correctly locks the FileInfoWindow for the GUI mutation, but the fState check at line 286 is outside that lock and is unprotected against concurrent writes. This is a genuine data race. However, the practical severity is low: fState is an enum (int-sized), x86/x64 int reads are effectively atomic, and the worst outcome of a missed stop signal is one extra font row added before the stop is noticed \u2014 benign. The report's claim that this is single-threaded (both paths on the window looper) is wrong, which actually makes the race more real, not less. The Lock/Unlock redundancy concern in the report is also wrong for the same reason. The real defect is the unguarded fState read outside the lock, but the impact is negligible in practice.",
+      "adjustedSeverity": "low"
+    }
+  },
+  {
+    "file": "FileInfoWindow.cpp",
+    "line": "85-87",
+    "severity": "medium",
+    "category": "correctness",
+    "title": "ToDate returns pointer to function-local static char[80]; not reentrant and can overflow",
+    "detail": "ToDate uses `static char s[80]` (line 87) as its return buffer. Because it is static, two concurrent calls (or even nested formatting) clobber each other's result, and the returned pointer aliases the same buffer across calls \u2014 GetProperty (line 168) immediately copies it via TextToUtf8 so the single-threaded use is OK, but the static buffer is a thread-safety hazard if font/info querying ever runs concurrently, and is a portability smell. The COPYN macro writes into s[j++] with j advancing across many fields with no bound check against 80; a malformed date string with an unusually long digit run at line 104 (`COPYN(to - from - 10)` where to-from could be large) can overflow s.",
+    "fix": "Replace the static buffer with a caller-supplied buffer or BString and bound every COPYN write against the buffer size; validate to-from before COPYN(to-from-10).",
+    "verdict": {
+      "isReal": true,
+      "reasoning": "The buffer overflow is genuine. `ToDate` at line 85 uses `static char s[80]`. At lines 97-99, the digit-scanning loop `while (date[i] && isdigit(date[i])) i++` is unbounded \u2014 it will consume as many digits as appear in the date string, no matter how many. The computed length `to - from` is then used in `COPYN(to - from - 10)` or `COPYN(to - from - 4)` (lines 104/106) with no clamp against the 80-byte buffer. A malformed PDF date string with ~100+ consecutive digit characters would cause `COPYN` to write well past the end of `s[80]`, overflowing a stack-adjacent static buffer. Since NimblePDF parses untrusted PDF files, this is a reachable condition from malicious input, not merely theoretical. The thread-safety concern (static buffer aliasing across concurrent calls) is speculative because no concurrent callers exist today, but the overflow is a real defect. Severity is medium-to-high: stack overflow from attacker-controlled PDF metadata in a document viewer; crashable and potentially exploitable depending on stack layout, but requires the user to open a crafted PDF.",
+      "adjustedSeverity": "medium"
+    }
+  },
+  {
+    "file": "FileInfoWindow.cpp",
+    "line": "100-106",
+    "severity": "medium",
+    "category": "correctness",
+    "title": "ToDate digit-run length used unchecked for COPYN can overflow stack/static buffer",
+    "detail": "Lines 96-99 scan a run of digits (from..to) of arbitrary length from the untrusted PDF date string. Line 103-106 then does `if (to-from > 12) COPYN(to-from-10)` which copies (to-from-10) characters into s starting at j=0. A crafted PDF with, say, 200 leading digits makes to-from=200 and COPYN copies 190 bytes into the 80-byte buffer s \u2014 a buffer overflow driven directly by document content. This is a security-relevant defect reachable by opening a malicious PDF and viewing File Info.",
+    "fix": "Clamp the copy counts to the remaining space in s (sizeof(s)-1-j) on every COPYN, and reject/ truncate absurd digit runs before formatting.",
+    "verdict": {
+      "isReal": true,
+      "reasoning": "The overflow is genuine. `s` at line 87 is `static char s[80]`. The digit run `to-from` is entirely attacker-controlled via the PDF date string. When `to-from > 12`, line 104 calls `COPYN(to-from-10)`, which iterates up to `to-from-10` times, writing into `s[j++]` with no bounds check on `j`. A digit run of, say, 100 consecutive ASCII digits causes COPYN to attempt writing 90 bytes at j=0 into the 80-byte buffer. COPYN only terminates early if `date[i]` hits a null byte, but within a crafted long digit run the bytes are non-null throughout, so the full count fires. The subsequent fixed COPYN(2) calls add a few more bytes, making total writes exceed 80 easily. The finding is a real buffer overflow reachable from document content with no sanitisation. Severity is downgraded from high to medium because (a) this is a static buffer rather than a stack-local \u2014 it overflows into the BSS/data segment rather than smashing a saved return address directly, making reliable code execution harder; (b) exploitation requires the user to open a crafted PDF and then explicitly open the File Info window; (c) Haiku has a small attack surface. But it is unambiguously a memory-safety defect, not merely speculative or stylistic.",
+      "adjustedSeverity": "medium"
+    }
+  },
+  {
+    "file": "FileInfoWindow.cpp",
+    "line": "371-372",
+    "severity": "low",
+    "category": "resource",
+    "title": "fFontList recreated on every Refresh without destroying the previous view tree",
+    "detail": "Refresh() (called from the constructor and potentially again for a new document) unconditionally builds a fresh BTabView and a fresh fFontList (372) and adds them as children via the layout builder (397). If Refresh is ever called more than once on the same window (the method is public and named 'new document'), the previous tab view and font list are neither removed nor deleted, leaking the entire prior view hierarchy and overwriting fFontList/fShowAllFonts/fStop pointers (orphaning the old buttons whose messages still target this window). Show() is also called every Refresh.",
+    "fix": "Before rebuilding, remove and delete the existing top-level tab view (or guard Refresh to build the UI only once and update contents on subsequent calls); only call Show() on first construction.",
+    "verdict": {
+      "isReal": true,
+      "reasoning": "The defect is confirmed real. Refresh() is called both from the constructor (FileInfoWindow.cpp:429) and from PDFWindow::NewDoc() (PDFWindow.cpp:931) when a new PDF is loaded while the FileInfoWindow is still open. Each call unconditionally constructs a new BTabView, a new BColumnListView (fFontList), and new BButton objects (fShowAllFonts, fStop), then adds the new BTabView to the window via BLayoutBuilder::Group<>(this).Add(tabs) at line 397 \u2014 without first removing or deleting the previous tab view. This means every new-document event while the window is open leaks the entire prior view hierarchy (all BStringViews, BGridViews, BColumnListView, BButtons inside the tabs). The fFontList/fShowAllFonts/fStop member pointers are silently overwritten each time, orphaning the old BViews that are still attached to the window. The Show() call is harmless (no-op on an already-visible window) but the view accumulation and pointer abandonment are genuine bugs. Severity is low rather than medium because it only manifests when the user loads a second document while keeping FileInfoWindow open (a somewhat uncommon workflow), and there is no crash \u2014 just a memory/handle leak per reload.",
+      "adjustedSeverity": "low"
+    }
+  },
+  {
+    "file": "AnnotationWindow.cpp",
+    "line": "159-167",
+    "severity": "medium",
+    "category": "correctness",
+    "title": "FindMarked default-item logic is dead code; can return NULL message",
+    "detail": "FindMarked() calls item = menu->FindMarked(); if that returns NULL the code does `menu->ItemAt(0);` but discards the return value \u2014 `item` is never updated, so the intended 'use first item as default' fallback does nothing. When no item is marked, `item` stays NULL, the `if (item)` block is skipped, and the function returns NULL. WriteMessage() then silently omits the font/size/alignment attributes. More dangerously this masks a real fallback that callers may rely on, and combined with empty menus produces inconsistent annotation state on save.",
+    "fix": "Assign the fallback: `if (item == NULL) item = menu->ItemAt(0);` Then keep the `if (item)` guard for the truly-empty-menu case.",
+    "verdict": {
+      "isReal": true,
+      "reasoning": "The defect is real and confirmed by reading the code. At line 162, `menu->ItemAt(0)` is called but its return value is never assigned to `item`, so the \"use first item as default\" fallback is a no-op. When `Update()` is called with `font == NULL` (new annotation with no existing font data), none of the three BPopUpMenus (font, size, alignment) have any item marked. `FindMarked()` returns NULL for all three, the fallback silently does nothing, and `WriteMessage()` omits the font/size/alignment attributes from the saved annotation message. This is a genuine correctness bug \u2014 the code does not do what the comment says it does. It is not a style issue or speculative concern; the path is reachable any time a new annotation is created without pre-existing font metadata. Severity is medium rather than high because the guards in `WriteMessage()` prevent a crash and the consequence is silently missing annotation attributes (degraded behavior, not data corruption or a security issue), but it is still a real functional defect.",
+      "adjustedSeverity": "medium"
+    }
+  },
+  {
+    "file": "AnnotationWindow.cpp",
+    "line": "129",
+    "severity": "low",
+    "category": "portability",
+    "title": "gAlignment string literals assigned to non-const char* (writable-string / catkeys assumption)",
+    "detail": "`static char* gAlignment[] = {\"left\", \"centered\", \"right\"};` binds string literals to non-const char*. This is ill-formed in C++11+ and rejected by Clang/GCC on Linux/Windows in standards-conformant mode (the Qt/cross build will likely use -std=c++17 with stricter literal handling). Additionally these raw tokens are passed through B_TRANSLATE(gAlignment[i]) at line 136 \u2014 B_TRANSLATE generally requires string literals for catkey extraction, so the translation collector will not pick up runtime-variable strings, breaking localization on every platform.",
+    "fix": "Change to `static const char* const gAlignment[]`. For translation, translate explicit literals (B_TRANSLATE(\"left\") etc.) in a switch/array rather than passing a runtime variable to B_TRANSLATE.",
+    "verdict": {
+      "isReal": true,
+      "reasoning": "The `static char* gAlignment[] = {\"left\", \"centered\", \"right\"};` on line 129 is genuinely ill-formed in C++11+: assigning string literals to non-const `char*` is deprecated in C++03 and removed in C++11. GCC and Clang both warn under -Wwrite-strings (GCC) or treat it as an error with -Werror in strict-mode builds. Changing to `static const char* const gAlignment[]` is the correct fix.\n\nThe localization half of the finding is wrong, however. Haiku's own Catalog.h (lines 136-158) contains a canonical example that uses exactly this pattern \u2014 a `B_TRANSLATE_MARK()`-annotated array iterated with `B_TRANSLATE(*ch)` at runtime \u2014 and explains that `collectcatkeys` picks up the marks at compile time. The code in AnnotationWindow.cpp does NOT use `B_TRANSLATE_MARK`, so those strings will not appear in the catkeys file, but that is a pre-existing localization gap unrelated to the const-correctness issue. The finding incorrectly frames this as something the `const` change would fix.\n\nThe cross-platform/Qt framing in the finding is also inapplicable \u2014 NimblePDF is a Haiku-native project. But the core C++ defect (`char*` from string literals) is real and applies to the Haiku GCC4/Clang build. Severity is low: GCC historically emits a warning rather than a hard error for this, and the pointer is never written through, so it does not cause a runtime defect. Still, it is a genuine standards non-conformance that should be fixed.",
+      "adjustedSeverity": "low"
+    }
+  },
+  {
+    "file": "TraceWindow.cpp",
+    "line": "269-278",
+    "severity": "low",
+    "category": "threading",
+    "title": "OutputTracer::WriteData locks fLock then calls CreateWindow which re-locks fLock",
+    "detail": "WriteData() does fLock.Lock() (line 271) then calls CreateWindow(fSettings) (line 272), and CreateWindow() itself does fLock.Lock()/Unlock() (lines 260,264). BLocker on Haiku is recursive (benaphore-style) so this happens to work today, but it is fragile and non-portable: a straight std::mutex/QMutex (non-recursive) port to Linux/Windows will self-deadlock immediately. Also CreateWindow's outer `if (fWindow == NULL)` check at line 259 is performed WITHOUT the lock (classic broken double-checked locking), so two pipe threads can race to construct two TraceWindow objects, leaking one and corrupting the static fWindow.",
+    "fix": "Have WriteData call an internal _CreateWindowLocked() that assumes the lock is held, and remove the unlocked outer check in CreateWindow. On the Qt port replace BLocker with an explicitly recursive mutex or restructure so the lock is taken exactly once.",
+    "verdict": {
+      "isReal": true,
+      "reasoning": "Both sub-claims partially hold, but the severity is overstated.\n\n1. Recursive lock: Confirmed. WriteData acquires fLock (line 271), then calls CreateWindow (line 272), which at line 260 calls fLock.Lock() again. BLocker on Haiku is recursive (benaphore-style), so the current code works fine today. This is a portability/style fragility, not a live defect on Haiku.\n\n2. Double-checked locking (DCL) race: Confirmed as a real, if low-probability, defect. CreateWindow's outer check at line 259 (`if (fWindow == NULL)`) reads the static pointer without holding fLock. The inner check at line 261 is correctly guarded. Under the C++11 memory model, a concurrent unsynchronized read and write to a non-atomic variable is undefined behavior regardless of platform. The race window: ShowWindow (line 291-298) calls CreateWindow without holding fLock, while a pipe thread's WriteData simultaneously calls CreateWindow while holding fLock \u2014 both can pass the outer unguarded NULL check before either acquires the lock, and two TraceWindow objects can be constructed (one leaked). In practice x86 memory ordering makes this hard to trigger, and on Haiku the app is single-application-server so the race is extremely narrow, but the data race is technically present and undefined per the C++ standard. The claim that \"the outer check is performed without the lock\" is accurate for the ShowWindow call path.\n\nThe recursive-lock concern is really only a portability note; this is a Haiku-specific app using BLocker, so that is not a current defect. The DCL issue is a genuine race condition, but only exploitable in a very narrow window during first construction. Overall severity is low to medium \u2014 real, but not high.",
+      "adjustedSeverity": "low"
+    }
+  },
+  {
+    "file": "AttachmentView.cpp",
+    "line": "338-343",
+    "severity": "medium",
+    "category": "resource",
+    "title": "SaveAttachmentThread leaked and uses fDoc/fXRef without lifetime guarantee",
+    "detail": "Save() does `new SaveAttachmentThread(...); thread->Resume();` and never deletes it (line 341-342) \u2014 the thread object is leaked once Run() returns (unless SaveThread self-deletes, which is not shown). More seriously the thread captures fDoc (PDFDoc*) and fXRef by raw pointer and calls fDoc->getCatalog()->embeddedFile(...) on a background thread (ActuallySave, line 262-264). If the user closes the document or opens another file while the save runs, fDoc is destroyed under the worker \u2192 use-after-free. There is no PDFLock taken around the poppler calls in ActuallySave either, so it races with the render thread that also touches the same PDFDoc.",
+    "fix": "Confirm SaveThread self-deletes or delete it on completion. Hold a reference/lock on the document for the thread's lifetime (e.g. take PDFLock inside ActuallySave as PrintSettingsWindow::GetPageSize does at line 307), and prevent document teardown while a save thread is live.",
+    "verdict": {
+      "isReal": true,
+      "reasoning": "The memory-leak sub-claim is wrong: Thread.h explicitly documents that Resume() transfers ownership, and Thread.cpp DoRun() does `delete thread` after Run() returns, so there is no leak.\n\nThe threading/lifetime claims are real defects, however:\n\n1. ActuallySave (lines 262-264) calls fDoc->getCatalog()->embeddedFile() on the background thread with no PDFLock held. Every other poppler-touching path in the codebase (PageRenderer.cpp:329-358, PDFView.cpp:1663-1671, OutlinesWindow.cpp:366-370, PrintSettingsWindow.cpp:307, FileInfoWindow.cpp:297) takes gPdfLock before accessing the PDFDoc. AttachmentView::Save() does not, and neither does ActuallySave itself. This is an inconsistency with the established locking convention, not a speculative concern.\n\n2. fDoc is stored as a raw pointer (set in Fill() at line 185). There is no reference count, no guard, and no mechanism to block document teardown while the save thread is live. If the user opens a new file or closes the document while the attachment save is in progress, the PDFDoc pointed to by fDoc will be destroyed under the running worker, producing a use-after-free.\n\nThe severity is somewhat lower than \"high\" in practice because: (a) attachment saves tend to be fast I/O operations, (b) triggering the UAF requires the user to act during the save, and (c) the missing lock is primarily a race with the render thread that would cause corruption rather than an immediate crash in most runs. Nonetheless both issues are genuine defects, not style preferences.",
+      "adjustedSeverity": "medium"
+    }
+  },
+  {
+    "file": "AttachmentView.cpp",
+    "line": "233 and 297-327",
+    "severity": "medium",
+    "category": "correctness",
+    "title": "AttachmentItem pointers passed across threads in BMessage outlive their owner if list is refilled",
+    "detail": "AddSelectedAttachments stores raw AttachmentItem* into the save BMessage (line 233). That message is copied into SaveAttachmentThread::fMessage and dereferenced on the worker thread (GetAttachment at lines 297,303,327 -> item->GetFileName()/GetFileIndex()). AttachmentItem objects are owned by fList (BColumnListView); if Fill()/Empty()/Clear() runs (e.g. user navigates to another document) the rows are freed while the worker still holds the pointers \u2192 use-after-free. Passing live UI-owned object pointers to a detached thread is unsafe.",
+    "fix": "Copy the needed primitive data (file index and file name string) into the BMessage instead of the AttachmentItem pointer, and have the worker operate only on those copies.",
+    "verdict": {
+      "isReal": true,
+      "reasoning": "The defect is real. In AddSelectedAttachments (line 233), raw AttachmentItem* pointers owned by fList (a BColumnListView) are stored in a BMessage via AddPointer. That message is value-copied into SaveAttachmentThread::fMessage and the thread is detached via Resume() with no join. SaveAttachmentThread::Run() later extracts these pointers via GetAttachment and dereferences item->GetFileName() and item->GetFileIndex() on lines 297-327. If Fill() is called on the UI thread while the worker is running (e.g., user opens another PDF), fList->Clear() deletes all AttachmentItem rows, leaving the worker's pointers dangling \u2014 a use-after-free. There is no synchronization mechanism (no mutex, no reference counting, no join) between the worker thread and fList lifetime. The fix described (copy the primitive data \u2014 file index integer and file name string \u2014 into the BMessage instead of the pointer) is correct and straightforward. Severity is assessed as medium rather than high: the race window is narrow in practice because attachment saves are fast, and it requires the user to navigate to a new document mid-save, but the UAF is unambiguous when it does occur.",
+      "adjustedSeverity": "medium"
+    }
+  },
+  {
+    "file": "AttachmentView.cpp",
+    "line": "304-328",
+    "severity": "low",
+    "category": "correctness",
+    "title": "Multi-file save inner postfix loop can silently drop a file after 49 collisions",
+    "detail": "In the count>1 branch, for each attachment the inner loop tries postfix 1..49; if all 50 candidate names already exist on disk it falls through without saving and without any error, silently skipping that attachment. SetCurrent(i) progress also advances regardless. The user is given no indication a file was not written.",
+    "fix": "After the postfix loop, detect the no-slot-found case and report an error (or use a guaranteed-unique name). At minimum surface a failure through the status mechanism.",
+    "verdict": {
+      "isReal": true,
+      "reasoning": "The code at lines 304-328 is exactly as described. The inner postfix loop runs `postfix` from 1 to 49 (exclusive of 50), trying 49 candidate filenames. If every candidate already exists on disk, the loop ends without calling `ActuallySave` and without setting any error flag. Execution falls through to `item = GetAttachment(...)` for the next attachment, `SetCurrent(i)` has already advanced the progress display, and `Run()` returns 0 (success) unconditionally at line 330. There is no post-loop check for the exhausted case, no alert, and no status text change to indicate failure. The silent-drop behavior is a real correctness defect. Hitting 49 collisions is an unlikely edge case in ordinary use, but the missing failure path is genuine code that can silently discard user data with no feedback.",
+      "adjustedSeverity": "low"
+    }
+  },
+  {
+    "file": "StatusWindow.cpp",
+    "line": "77",
+    "severity": "low",
+    "category": "correctness",
+    "title": "Division by fTotal without guarding against zero/uninitialized",
+    "detail": "CURRENT_NOTIFY computes fStatus->SetTo(p / (float)fTotal). fTotal is initialized to -1 (line 40) and only set by a TOTAL_NOTIFY message. If a CURRENT_NOTIFY arrives before TOTAL_NOTIFY, fTotal is -1 producing a negative progress; if a sender ever passes total 0, this is a divide-by-zero producing inf/NaN fed into BStatusBar. Message ordering between SetTotal/SetCurrent is not guaranteed across the messenger.",
+    "fix": "Guard: `if (fTotal > 0) fStatus->SetTo(p / (float)fTotal);` and initialize/validate fTotal before use.",
+    "verdict": {
+      "isReal": true,
+      "reasoning": "The division `p / (float)fTotal` at line 77 has no guard, and `fTotal` is initialized to `-1`. Two theoretical hazards exist: (1) if CURRENT_NOTIFY arrives before TOTAL_NOTIFY, fTotal is -1 producing a negative progress fraction fed into BStatusBar; (2) if a caller passes total=0, fTotal becomes 0 and the division produces IEEE 754 inf/NaN. However, both scenarios are excluded by the current callers. All call sites (AttachmentView.cpp lines 292-307) send TOTAL_NOTIFY before CURRENT_NOTIFY from the same thread via the same BMessenger, and Haiku's BMessageQueue is FIFO, so ordering is guaranteed. The count=0 path in AttachmentView.cpp never reaches SetCurrent. The defect is therefore latent rather than actively triggered \u2014 the guard is simply absent, making the code fragile against any future caller that deviates from the established ordering convention or passes a zero total. Severity is low (not medium): it is a real missing-guard issue but causes no observable bug today.",
+      "adjustedSeverity": "low"
+    }
+  },
+  {
+    "file": "PrintSettingsWindow.cpp",
+    "line": "151,155,164,168,176",
+    "severity": "high",
+    "category": "correctness",
+    "title": "Menu marking dereferences ItemAt() without NULL check; DPI index mapping has unhandled cases",
+    "detail": "resolution->ItemAt(i)->SetMarked(true) (line 151) and similar at 155/164/168/176 assume ItemAt(i) is non-NULL. The DPI switch maps stored DPI 600->i=4 and 720->i=5, but the resolution menu only adds items at indices 0 (Max), 1 (separator), 2 (72), 3 (300) \u2014 there is no index 4 or 5. A persisted DPI of 600 or 720 yields ItemAt(4)==NULL and an immediate NULL dereference at line 151. The MessageReceived DPI switch (lines 213-221) similarly references indices 4/5/6 that the menu never produces.",
+    "fix": "Either add the 600/720/1440 menu items to match the index map, or clamp/validate the stored DPI and NULL-check every ItemAt() before SetMarked.",
+    "verdict": {
+      "isReal": true,
+      "reasoning": "The defect is real and confirmed. The resolution BPopUpMenu is built with exactly 4 items at indices 0\u20133 (Max, separator, 72, 300). The DPI-to-index switch maps DPI 600 \u2192 i=4 and DPI 720 \u2192 i=5. Line 151 then calls resolution->ItemAt(i)->SetMarked(true) with no NULL check. BPopUpMenu::ItemAt() returns NULL for an out-of-range index, so a persisted DPI of 600 or 720 causes an immediate NULL dereference in the constructor every time the window is opened. This is a genuine crash bug, not speculative. The claim about lines 155/164/168/176 is overstated \u2014 those all have either explicit bounds checks or arithmetic that keeps the index in range \u2014 and the MessageReceived indices 4/5/6 are dead code rather than crash paths. But the core defect at line 151 is real.",
+      "adjustedSeverity": "high"
+    }
+  },
+  {
+    "file": "Thread.cpp",
+    "line": "46-59",
+    "severity": "medium",
+    "category": "threading",
+    "title": "Resume() calls 'delete this' on a thread that may already be running -> use-after-free / double-free",
+    "detail": "The thread is spawned (suspended) in the constructor, and DoRun() unconditionally calls 'delete thread' when the worker function returns. Resume() then calls resume_thread(fThreadId), and on a non-B_OK return it executes 'delete this'. resume_thread can return an error even after the scheduler has begun running the thread (e.g. the thread was already resumed, or a transient error), in which case DoRun is already executing on the worker thread and owns the object. Deleting it from the calling thread races with / duplicates the delete in DoRun, producing a use-after-free and/or double-free. Even on the clean failure path, the contract is fragile: the worker thread's Run()/delete and the caller's delete are not synchronized. Because NimblePDF renders pages on a background Thread and posts results back to the window looper, a botched Resume can corrupt the heap mid-render.",
+    "fix": "Do not delete the object from Resume() once a thread has been spawned. Establish a single, unambiguous owner: if resume_thread() fails, kill_thread(fThreadId) the suspended thread BEFORE deleting (so DoRun never runs and never deletes), or better, have DoRun own the deletion exclusively and have Resume() only report status. Guard against double Resume() with a state flag.",
+    "verdict": {
+      "isReal": true,
+      "reasoning": "The claimed race condition is real but the severity is overstated and the mechanism is mischaracterized.\n\nThe double-free is genuine, but it requires calling Resume() twice on the same Thread object \u2014 not a transient kernel error on a freshly-suspended thread. Here is why:\n\n1. Haiku's resume_thread() is an atomic kernel state transition. For a thread created with spawn_thread() but not yet resumed, resume_thread() either moves it from B_THREAD_SUSPENDED to runnable (returns B_OK) or it does not (returns an error). If it returns an error, DoRun has never been entered and cannot be. There is no window where resume_thread() returns an error while DoRun is concurrently executing, because the thread cannot run until resume_thread() succeeds.\n\n2. The legitimate double-free path is via double-Resume(): first call succeeds, thread starts running and will call \"delete thread\" in DoRun; second call finds the thread no longer suspended (B_BAD_THREAD_STATE), then Resume() executes \"delete this\" on the already-running (or already-deleted) object. This is a real heap corruption bug.\n\n3. Thread.h documents \"You must not call this method more than one time,\" and every call site in the codebase (PDFSearch.cpp, AttachmentView.cpp, PDFView.cpp, PDFWindow.cpp) constructs a fresh Thread subclass instance and calls Resume() exactly once. So the bug is latent, not triggered by current code.\n\n4. The claim that \"resume_thread can return an error even after the scheduler has begun running the thread (e.g. the thread was already resumed, or a transient error)\" conflates the double-Resume scenario with a transient scheduler error. A transient error on a suspended thread would leave it permanently suspended and unowned \u2014 that is a resource leak, not a double-free, and the delete-this in the error path is actually correct for that case.\n\nThe real defect is the missing guard: there is no state flag preventing double-Resume(), and no kill_thread() before delete in the error path to ensure the thread never escapes. The double-free via double-Resume() is real. The severity is medium (requires API misuse that current callers avoid), not critical (not reachable on the normal success or single-failure path).",
+      "adjustedSeverity": "medium"
+    }
+  },
+  {
+    "file": "ResourceLoader.cpp",
+    "line": "95-97",
+    "severity": "high",
+    "category": "correctness",
+    "title": "LoadVectorIcon dereferences AppResources() without a NULL check",
+    "detail": "Every other loader in this file guards 'BResources* resources = BApplication::AppResources()' with 'if (resources != NULL)'. LoadVectorIcon omits the check and immediately calls resources->LoadResource(...). BApplication::AppResources() returns NULL if the app has no resource fork / before be_app is fully set up, causing a NULL dereference crash. This is the modern code path most likely to be exercised (vector icons), so the crash is realistic.",
+    "fix": "Add 'if (resources == NULL) return NULL;' (or wrap the body in the same NULL guard as the other functions) before calling LoadResource.",
+    "verdict": {
+      "isReal": true,
+      "reasoning": "LoadVectorIcon at line 95-97 of /home/kevin/Code/Haiku/NimblePDF/source/haiku/utils/ResourceLoader.cpp calls resources->LoadResource() on line 97 without first checking that the BResources pointer returned by BApplication::AppResources() is non-NULL. Every other function in the same file (LoadLargeIcon x2, LoadMiniIcon x2, LoadBitmap by name) wraps the resources pointer in an explicit NULL guard before use. The omission in LoadVectorIcon is real: if AppResources() returns NULL (no resource fork, or called before be_app is ready), line 97 is an unconditional null dereference. This is a genuine correctness defect, not a style preference. Severity is appropriately high because LoadVectorIcon is the current-generation icon path on Haiku (HVIF vector icons are the standard) and a crash at app startup is a realistic outcome.",
+      "adjustedSeverity": "high"
+    }
+  },
+  {
+    "file": "ResourceLoader.cpp",
+    "line": "98",
+    "severity": "medium",
+    "category": "correctness",
+    "title": "LoadVectorIcon allocates a bitmap one pixel too large (off-by-one in BRect)",
+    "detail": "The bitmap is created with BRect(0, 0, size, size), which yields a (size+1) x (size+1) pixel bitmap, whereas the icon loaders elsewhere correctly use 'dimension - 1' (e.g. B_LARGE_ICON - 1). With the default size=21 the destination is 22x22. BIconUtils::GetVectorIcon will render into the larger bounds, producing an unexpected size and wasting memory; callers expecting a 21x21 (or NxN) bitmap get N+1.",
+    "fix": "Use BRect(0, 0, size - 1, size - 1) so the bitmap is exactly size x size pixels, consistent with the other loaders and the documented 'size' parameter.",
+    "verdict": {
+      "isReal": true,
+      "reasoning": "The defect is confirmed. In Haiku/BeOS, BRect coordinates are fully inclusive on all four edges, so BRect(0, 0, N, N) yields a (N+1) x (N+1) pixel bitmap. LoadVectorIcon at line 98 uses BRect(0, 0, size, size), producing a (size+1)-square bitmap. Every other loader in the same file (LoadLargeIcon x2, LoadMiniIcon x2 at lines 17, 33, 49, 65) correctly writes BRect(0, 0, B_LARGE_ICON - 1, B_LARGE_ICON - 1) or the equivalent. With the default size=21 (from ResourceLoader.h), every toolbar icon in PDFWindow.cpp will be 22x22 instead of 21x21. This is a genuine off-by-one correctness bug, not a style preference. Severity is kept at medium because vector rendering into a slightly oversized bitmap degrades gracefully and causes no crash, but the bitmap is measurably the wrong size.",
+      "adjustedSeverity": "medium"
+    }
+  },
+  {
+    "file": "ResourceLoader.cpp",
+    "line": "84-86",
+    "severity": "low",
+    "category": "correctness",
+    "title": "LoadBitmap unflattens an archived BBitmap from a raw resource pointer without length validation",
+    "detail": "message.Unflatten((char*)bits) is called on the raw resource bytes with no use of the returned 'length', so a truncated or malformed resource can cause Unflatten to read past the buffer. Additionally, BBitmap::Instantiate may return NULL or (per BArchivable semantics) an object that is not actually a BBitmap; the result is cast with a C-style (BBitmap*) cast and returned without a NULL/type check, so a malformed resource yields either a crash later or a wrong-type pointer.",
+    "fix": "Validate 'length' is non-zero before unflattening, prefer message.Unflatten with a sized BMemoryIO, and null-check Instantiate's result (use cast_as / dynamic_cast or validate instance class) before returning.",
+    "verdict": {
+      "isReal": true,
+      "reasoning": "The defect is partially real but significantly overstated in severity.\n\nUnflatten length issue (genuine but low risk): BMessage::Unflatten(const char*) \u2014 as implemented in Haiku's Message.cpp line 1299 \u2014 wraps the pointer in BMemoryIO with SSIZE_MAX as the size, so the declared `length` variable on line 81 is genuinely unused and provides zero bounding. If the resource data is truncated, Unflatten reads its own embedded header size field and can attempt to read beyond the actual buffer. However, in practice these are compiled-in app resources (not user-supplied data), so truncation only happens from genuine corruption of the executable, not an external attack vector. The check `if (bits && message.Unflatten(...) == B_OK)` does catch malformed data in the common case.\n\nBBitmap::Instantiate NULL cast issue (not a real defect): BBitmap::Instantiate always returns either NULL or a freshly constructed `new BBitmap(data)` cast to BArchivable* \u2014 it never returns a non-BBitmap BArchivable*. The C-style cast is therefore type-safe for this specific callee. The NULL is correctly propagated to the caller via `return bitmap` \u2014 all callers are expected to null-check returns from LoadBitmap (consistent with every other function in the file returning NULL on failure).\n\nThe finding conflates a real but low-risk API usage pattern (unused length in Unflatten) with a non-issue (the cast). The actual risk of a crash from a malformed resource is real in principle but extremely low in practice for compiled-in resources. Severity medium is too high; low is more accurate.",
+      "adjustedSeverity": "low"
+    }
+  }
+]
