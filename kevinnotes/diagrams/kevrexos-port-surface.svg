@@ -1,0 +1,92 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="940" height="660" viewBox="0 0 940 660" font-family="DejaVu Sans, Verdana, sans-serif">
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L8,3 L0,6 Z" fill="#444"/>
+    </marker>
+    <style>
+      .title { font-size: 20px; font-weight: bold; fill: #1a1a1a; }
+      .sub { font-size: 12px; fill: #555; }
+      .band { font-size: 15px; font-weight: bold; }
+      .chip { font-size: 11px; fill: #1a1a1a; }
+      .pct { font-size: 12px; font-weight: bold; }
+      .note { font-size: 11px; fill: #222; }
+      .swap { font-size: 11px; font-weight: bold; fill: #b3261e; }
+    </style>
+  </defs>
+
+  <text x="24" y="34" class="title">NimblePDF → KevRexOS port surface</text>
+  <text x="24" y="54" class="sub">Haiku (B*) shell · poppler-interop glue · portable core.  Colour = porting cost.  poppler 25.12 port in progress on KevRexOS (lands before this port; core proven headless).</text>
+
+  <!-- Legend -->
+  <rect x="640" y="22" width="14" height="14" fill="#cdebd0" stroke="#3a9d4a"/>
+  <text x="660" y="34" class="chip">portable (recompile)</text>
+  <rect x="640" y="42" width="14" height="14" fill="#fde9c2" stroke="#d9952b"/>
+  <text x="660" y="54" class="chip">glue (rewrite target)</text>
+  <rect x="790" y="22" width="14" height="14" fill="#f8d0cc" stroke="#b3261e"/>
+  <text x="810" y="34" class="chip">Haiku-bound (port to os::)</text>
+
+  <!-- BAND 1: portable core -->
+  <rect x="24" y="84" width="892" height="120" rx="8" fill="#eef9ef" stroke="#3a9d4a"/>
+  <text x="40" y="108" class="band" fill="#2c7a3a">① Portable core — poppler + std C++ (no Haiku)</text>
+  <text x="845" y="108" class="pct" fill="#2c7a3a">~35%</text>
+  <text x="40" y="126" class="note">Recompile against the staged libpoppler.so.155.  This is the asset — keep it clean (style guide §9.3).</text>
+  <!-- chips -->
+  <g>
+    <rect x="40"  y="138" width="120" height="24" rx="4" fill="#cdebd0" stroke="#3a9d4a"/><text x="48" y="154" class="chip">AnnotWriter</text>
+    <rect x="168" y="138" width="120" height="24" rx="4" fill="#cdebd0" stroke="#3a9d4a"/><text x="176" y="154" class="chip">AnnotAppearance</text>
+    <rect x="296" y="138" width="120" height="24" rx="4" fill="#cdebd0" stroke="#3a9d4a"/><text x="304" y="154" class="chip">BeFontEncoding</text>
+    <rect x="424" y="138" width="120" height="24" rx="4" fill="#cdebd0" stroke="#3a9d4a"/><text x="432" y="154" class="chip">EmbeddedFileSpec</text>
+    <rect x="552" y="138" width="110" height="24" rx="4" fill="#cdebd0" stroke="#3a9d4a"/><text x="560" y="154" class="chip">TextConversion*</text>
+    <rect x="670" y="138" width="80"  height="24" rx="4" fill="#cdebd0" stroke="#3a9d4a"/><text x="678" y="154" class="chip">History</text>
+    <rect x="758" y="138" width="90"  height="24" rx="4" fill="#cdebd0" stroke="#3a9d4a"/><text x="766" y="154" class="chip">TreeParser</text>
+    <rect x="40"  y="168" width="110" height="24" rx="4" fill="#cdebd0" stroke="#3a9d4a"/><text x="48" y="184" class="chip">PageLabels</text>
+    <rect x="158" y="168" width="200" height="24" rx="4" fill="#cdebd0" stroke="#3a9d4a"/><text x="166" y="184" class="chip">Annotation (model logic only)</text>
+  </g>
+  <text x="370" y="186" class="note">* TextConversion is the correct BString↔GooString boundary — keep it there, don't let it creep up.</text>
+
+  <!-- BAND 2: glue -->
+  <rect x="24" y="220" width="892" height="118" rx="8" fill="#fef6e9" stroke="#d9952b"/>
+  <text x="40" y="244" class="band" fill="#b3760f">② Interop / render glue — rewrite the bitmap target</text>
+  <text x="845" y="244" class="pct" fill="#b3760f">~10%</text>
+  <text x="40" y="262" class="note">poppler logic stays; the OS-bitmap + threading + async-message bindings get swapped to os::.</text>
+  <g>
+    <rect x="40"  y="274" width="180" height="40" rx="4" fill="#fde9c2" stroke="#d9952b"/><text x="48" y="290" class="chip">BeSplashOutputDev</text><text x="48" y="306" class="swap">◀ key swap point</text>
+    <rect x="228" y="274" width="140" height="40" rx="4" fill="#fde9c2" stroke="#d9952b"/><text x="236" y="298" class="chip">PageRenderer</text>
+    <rect x="376" y="274" width="120" height="40" rx="4" fill="#fde9c2" stroke="#d9952b"/><text x="384" y="298" class="chip">BitmapPool</text>
+    <rect x="504" y="274" width="120" height="40" rx="4" fill="#fde9c2" stroke="#d9952b"/><text x="512" y="298" class="chip">CachedPage</text>
+    <rect x="632" y="274" width="120" height="40" rx="4" fill="#fde9c2" stroke="#d9952b"/><text x="640" y="298" class="chip">PDFSearch</text>
+    <rect x="760" y="274" width="88"  height="40" rx="4" fill="#fde9c2" stroke="#d9952b"/><text x="768" y="298" class="chip">PDFPrint</text>
+  </g>
+
+  <!-- BAND 3: haiku-bound -->
+  <rect x="24" y="354" width="892" height="150" rx="8" fill="#fdeeec" stroke="#b3261e"/>
+  <text x="40" y="378" class="band" fill="#992018">③ Haiku-bound shell — port B* → os::</text>
+  <text x="845" y="378" class="pct" fill="#992018">~55%</text>
+  <text x="40" y="396" class="note">Largest effort. Mechanical 1:1 for window/view/message; widget gaps (toolbar, outline-list, tabs, split) need custom builds.</text>
+  <g>
+    <rect x="40"  y="408" width="150" height="26" rx="4" fill="#f8d0cc" stroke="#b3261e"/><text x="48" y="425" class="chip">PDFWindow (1.6k)</text>
+    <rect x="198" y="408" width="140" height="26" rx="4" fill="#f8d0cc" stroke="#b3261e"/><text x="206" y="425" class="chip">PDFView (2k)</text>
+    <rect x="346" y="408" width="200" height="26" rx="4" fill="#f8d0cc" stroke="#b3261e"/><text x="354" y="425" class="chip">NimblePDFApplication</text>
+    <rect x="554" y="408" width="150" height="26" rx="4" fill="#f8d0cc" stroke="#b3261e"/><text x="562" y="425" class="chip">AnnotationRenderer</text>
+    <rect x="712" y="408" width="136" height="26" rx="4" fill="#f8d0cc" stroke="#b3261e"/><text x="720" y="425" class="chip">Settings (attrs)</text>
+    <rect x="40"  y="440" width="808" height="26" rx="4" fill="#f8d0cc" stroke="#b3261e"/>
+    <text x="48" y="457" class="chip">Dialogs: Outlines · FindText · Preferences · FileInfo · Password · PrintSettings · PrintingProgress · Status · Trace · AnnotationWindow · AttachmentView</text>
+    <rect x="40"  y="472" width="380" height="24" rx="4" fill="#f8d0cc" stroke="#b3261e"/><text x="48" y="488" class="chip">utils: Thread · ResourceLoader · EntryMenuItem  (good single seams)</text>
+    <rect x="428" y="472" width="420" height="24" rx="4" fill="#f8d0cc" stroke="#b3261e"/><text x="436" y="488" class="chip">EntryChangedMonitor · LayoutUtils · DisplayCIDFonts · BitmapPool</text>
+  </g>
+
+  <!-- Render pipeline arrow + swap callout -->
+  <text x="24" y="540" class="band" fill="#1a1a1a">Render pipeline (the one swap that unblocks everything):</text>
+  <g font-size="11.5">
+    <rect x="24"  y="554" width="150" height="34" rx="5" fill="#cdebd0" stroke="#3a9d4a"/><text x="32" y="569" class="chip">poppler Splash</text><text x="32" y="582" class="chip">→ SplashBitmap</text>
+    <line x1="174" y1="571" x2="214" y2="571" stroke="#444" stroke-width="1.6" marker-end="url(#arrow)"/>
+    <rect x="216" y="554" width="190" height="34" rx="5" fill="#fde9c2" stroke="#d9952b"/><text x="224" y="569" class="chip">BeSplashOutputDev::redraw()</text><text x="224" y="582" class="chip">scanline blit into raster</text>
+    <line x1="406" y1="571" x2="446" y2="571" stroke="#444" stroke-width="1.6" marker-end="url(#arrow)"/>
+    <rect x="448" y="554" width="190" height="34" rx="5" fill="#f8d0cc" stroke="#b3261e"/><text x="456" y="569" class="chip">BBitmap  →  os::Bitmap</text><text x="456" y="582" class="chip">LockRaster()+BytesPerRow</text>
+    <line x1="638" y1="571" x2="678" y2="571" stroke="#444" stroke-width="1.6" marker-end="url(#arrow)"/>
+    <rect x="680" y="554" width="170" height="34" rx="5" fill="#f8d0cc" stroke="#b3261e"/><text x="688" y="569" class="chip">BView::DrawBitmap →</text><text x="688" y="582" class="chip">os::View::DrawBitmap</text>
+  </g>
+  <text x="24" y="612" class="note">Good news: the blit already writes raw scanlines into the bitmap raster; os::Bitmap exposes the same direct-pointer model (LockRaster/GetBytesPerRow) with the same CS_RGB32 colour space — near 1:1.</text>
+  <text x="24" y="630" class="note" fill="#992018">Open unknown: KevRexOS appserver/GUI maturity. poppler core+FreeType pass HEADLESS (popplersmoke); on-screen os::Window has not been exercised by this project yet.</text>
+  <text x="24" y="648" class="sub">An LLM was used to aid in development of this analysis.</text>
+</svg>
