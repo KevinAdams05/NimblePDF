@@ -54,7 +54,7 @@ BeSplashOutputDev::BeSplashOutputDev(bool reverseVideoA,
 
 	// Create text object. Poppler's TextPage takes a simple bool
 	// rawOrder flag instead of xpdf's TextOutputControl struct.
-	fText = new TextPage(true /* rawOrder */);
+	fText = new TextPage(false /* rawOrder: reading order, matching the search worker */);
 }
 
 
@@ -103,6 +103,13 @@ void BeSplashOutputDev::startPage(int pageNum, GfxState* state, XRef* xref)
 void BeSplashOutputDev::endPage()
 {
 	SplashOutputDev::endPage();
+	// Finalize the text layer so it becomes searchable/selectable. poppler's
+	// TextPage only builds words/lines/flows when endPage()+coalesce() are
+	// called (TextOutputDev does this internally); without it FindText() and
+	// GetText() on the displayed page return nothing. Match the search
+	// worker's TextOutputDev settings (physLayout=true, fixedPitch=0, no HTML).
+	fText->endPage();
+	fText->coalesce(true, 0, false);
 	if (!fIncrementalUpdate) {
 		(*fRedrawCallback)(fRedrawCallbackData, 0, 0, getBitmapWidth(), getBitmapHeight(), true);
 	}
@@ -387,6 +394,6 @@ GooString* BeSplashOutputDev::getText(double xMin, double yMin, double xMax, dou
 TextPage* BeSplashOutputDev::acquireText()
 {
 	TextPage* textPage = fText;
-	fText = new TextPage(true /* rawOrder */);
+	fText = new TextPage(false /* rawOrder: reading order, matching the search worker */);
 	return textPage;
 }
