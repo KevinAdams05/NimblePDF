@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="660" viewBox="0 0 960 660" font-family="'DejaVu Sans','Segoe UI',Verdana,sans-serif">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#fbfdff"/><stop offset="1" stop-color="#eef2f7"/>
+    </linearGradient>
+    <linearGradient id="t1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#cfe4ff"/><stop offset="1" stop-color="#aecdf6"/></linearGradient>
+    <linearGradient id="t2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#d2efe0"/><stop offset="1" stop-color="#abdcc3"/></linearGradient>
+    <linearGradient id="t3" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fce8c8"/><stop offset="1" stop-color="#f2d199"/></linearGradient>
+    <linearGradient id="t4" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e6dcf3"/><stop offset="1" stop-color="#cbb8e6"/></linearGradient>
+    <filter id="sh" x="-4%" y="-4%" width="108%" height="116%"><feDropShadow dx="0" dy="1.5" stdDeviation="2" flood-color="#1a2a3a" flood-opacity="0.18"/></filter>
+    <marker id="dn" markerWidth="12" markerHeight="12" refX="5" refY="9" orient="0"><path d="M1,1 L5,9 L9,1" fill="none" stroke="#5a6b7b" stroke-width="1.6"/></marker>
+    <style>
+      .tier{rx:12;filter:url(#sh)}
+      .tl{font-size:15px;font-weight:bold;fill:#16222e}
+      .ts{font-size:11px;fill:#3c4b59}
+      .chip{fill:#ffffff;stroke:#2a3a4a;stroke-opacity:.28;stroke-width:1;rx:7}
+      .ct{font-size:12px;fill:#1c2a38}
+      .badge{font-size:10px;fill:#ffffff;font-weight:bold}
+      .h1{font-size:22px;font-weight:bold;fill:#11202e}
+      .h2{font-size:12.5px;fill:#5a6b7b}
+      .lk{font-size:11px;font-weight:bold;fill:#7a2e2e}
+      .lg{font-size:11px;fill:#33485e}
+    </style>
+  </defs>
+
+  <rect x="0" y="0" width="960" height="660" fill="url(#bg)"/>
+  <text x="40" y="44" class="h1">NimblePDF — architecture</text>
+  <text x="40" y="64" class="h2">A native Haiku PDF viewer (BeAPI UI) over the poppler rendering engine. GPL v2+.</text>
+
+  <!-- TIER 1: UI -->
+  <rect class="tier" x="40" y="86" width="700" height="104" fill="url(#t1)"/>
+  <text x="60" y="112" class="tl">Presentation — BeAPI (Interface Kit)</text>
+  <text x="60" y="129" class="ts">windows, views, dialogs · runs on window/looper threads</text>
+  <g>
+    <rect class="chip" x="60" y="140" width="120" height="34"/><text x="120" y="161" text-anchor="middle" class="ct">PDFWindow</text>
+    <rect class="chip" x="188" y="140" width="96" height="34"/><text x="236" y="161" text-anchor="middle" class="ct">PDFView</text>
+    <rect class="chip" x="292" y="140" width="120" height="34"/><text x="352" y="161" text-anchor="middle" class="ct">FindTextWindow</text>
+    <rect class="chip" x="420" y="140" width="124" height="34"/><text x="482" y="161" text-anchor="middle" class="ct">AnnotationWindow</text>
+    <rect class="chip" x="552" y="140" width="170" height="34"/><text x="637" y="161" text-anchor="middle" class="ct">Outlines · Attachments · dialogs</text>
+  </g>
+
+  <line x1="390" y1="190" x2="390" y2="206" stroke="#5a6b7b" stroke-width="1.6" marker-end="url(#dn)"/>
+
+  <!-- TIER 2: App / document logic -->
+  <rect class="tier" x="40" y="208" width="700" height="104" fill="url(#t2)"/>
+  <text x="60" y="234" class="tl">Application &amp; document logic</text>
+  <text x="60" y="251" class="ts">page rendering, annotations, settings — the BeAPI ⇄ poppler coordinator</text>
+  <g>
+    <rect class="chip" x="60" y="262" width="150" height="34"/><text x="135" y="283" text-anchor="middle" class="ct">NimblePDFApplication</text>
+    <rect class="chip" x="218" y="262" width="112" height="34"/><text x="274" y="283" text-anchor="middle" class="ct">PageRenderer</text>
+    <rect class="chip" x="338" y="262" width="150" height="34"/><text x="413" y="283" text-anchor="middle" class="ct">AnnotWriter · Annotations</text>
+    <rect class="chip" x="496" y="262" width="96" height="34"/><text x="544" y="283" text-anchor="middle" class="ct">Settings</text>
+    <rect class="chip" x="600" y="262" width="122" height="34"/><text x="661" y="283" text-anchor="middle" class="ct">History · Threads</text>
+  </g>
+
+  <line x1="390" y1="312" x2="390" y2="328" stroke="#5a6b7b" stroke-width="1.6" marker-end="url(#dn)"/>
+
+  <!-- TIER 3: poppler bridge -->
+  <rect class="tier" x="40" y="330" width="700" height="100" fill="url(#t3)"/>
+  <text x="60" y="356" class="tl">Rendering bridge  (poppler ⇄ BeAPI seam)</text>
+  <text x="60" y="373" class="ts">poppler OutputDev subclass painting into a BBitmap; kept diff-comparable for poppler upgrades</text>
+  <g>
+    <rect class="chip" x="60" y="384" width="150" height="34"/><text x="135" y="405" text-anchor="middle" class="ct">BeSplashOutputDev</text>
+    <rect class="chip" x="218" y="384" width="132" height="34"/><text x="284" y="405" text-anchor="middle" class="ct">BeFontEncoding</text>
+    <rect class="chip" x="358" y="384" width="110" height="34"/><text x="413" y="405" text-anchor="middle" class="ct">CachedPage</text>
+    <rect class="chip" x="476" y="384" width="110" height="34"/><text x="531" y="405" text-anchor="middle" class="ct">BitmapPool</text>
+  </g>
+
+  <line x1="390" y1="430" x2="390" y2="446" stroke="#5a6b7b" stroke-width="1.6" marker-end="url(#dn)"/>
+
+  <!-- TIER 4: poppler core -->
+  <rect class="tier" x="40" y="448" width="700" height="100" fill="url(#t4)"/>
+  <text x="60" y="474" class="tl">poppler core  +  font/image libraries  (GPL v2+)</text>
+  <text x="60" y="491" class="ts">PDF parsing, Splash rasterizer, text extraction — the unmodified upstream engine</text>
+  <g>
+    <rect class="chip" x="60" y="502" width="190" height="34"/><text x="155" y="523" text-anchor="middle" class="ct">PDFDoc · Catalog · XRef</text>
+    <rect class="chip" x="258" y="502" width="150" height="34"/><text x="333" y="523" text-anchor="middle" class="ct">Splash · TextOutputDev</text>
+    <rect class="chip" x="416" y="502" width="120" height="34"/><text x="476" y="523" text-anchor="middle" class="ct">FreeType</text>
+    <rect class="chip" x="544" y="502" width="178" height="34"/><text x="633" y="523" text-anchor="middle" class="ct">fontconfig · libpng · zlib …</text>
+  </g>
+
+  <!-- gPdfLock spanning tiers 2-4 -->
+  <rect x="752" y="208" width="168" height="340" rx="12" fill="#fff4f0" stroke="#c0584a" stroke-width="1.4" filter="url(#sh)"/>
+  <text x="836" y="234" text-anchor="middle" class="lk">gPdfLock</text>
+  <text x="836" y="252" text-anchor="middle" class="lg" font-size="10">(global BLocker)</text>
+  <text x="762" y="280" class="lg" font-size="10.5">poppler is not thread-safe,</text>
+  <text x="762" y="296" class="lg" font-size="10.5">so every access to the</text>
+  <text x="762" y="312" class="lg" font-size="10.5">shared PDFDoc/Catalog/XRef</text>
+  <text x="762" y="328" class="lg" font-size="10.5">is serialized through it.</text>
+  <text x="762" y="354" class="lg" font-size="10.5">Held by whichever thread</text>
+  <text x="762" y="370" class="lg" font-size="10.5">touches the document:</text>
+  <circle cx="770" cy="390" r="4" fill="#2c5f9e"/><text x="782" y="394" class="lg" font-size="10.5">window thread</text>
+  <circle cx="770" cy="410" r="4" fill="#2e7d32"/><text x="782" y="414" class="lg" font-size="10.5">page-render thread</text>
+  <circle cx="770" cy="430" r="4" fill="#b8860b"/><text x="782" y="434" class="lg" font-size="10.5">find worker</text>
+  <text x="762" y="462" class="lg" font-size="10">Invariant: never take the</text>
+  <text x="762" y="477" class="lg" font-size="10">window lock while holding</text>
+  <text x="762" y="492" class="lg" font-size="10">gPdfLock (gPdfLock is a leaf).</text>
+
+  <!-- concurrency legend -->
+  <rect x="40" y="568" width="880" height="64" rx="10" fill="#ffffff" stroke="#2a3a4a" stroke-opacity=".25"/>
+  <text x="56" y="590" class="tl" style="font-size:13px">Concurrency model</text>
+  <g>
+    <rect x="56" y="600" width="14" height="14" rx="3" fill="#2c5f9e"/><text x="76" y="611" class="lg"><tspan font-weight="bold">Window thread</tspan> — UI, selection, page navigation, find finalize</text>
+    <rect x="430" y="600" width="14" height="14" rx="3" fill="#2e7d32"/><text x="450" y="611" class="lg"><tspan font-weight="bold">Render thread</tspan> — rasterizes a page into the bitmap</text>
+    <rect x="730" y="600" width="14" height="14" rx="3" fill="#b8860b"/><text x="750" y="611" class="lg"><tspan font-weight="bold">Find worker</tspan> — scans pages</text>
+  </g>
+</svg>
