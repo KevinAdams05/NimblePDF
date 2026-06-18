@@ -281,7 +281,7 @@ bool PDFView::OpenFile(entry_ref* ref, const char* ownerPassword, const char* us
 		delete userStr;
 	}
 
-	PDFDoc* newDoc = new PDFDoc(std::move(fileName), owner, user, nullptr);
+	PDFDoc* newDoc = new PDFDoc(std::move(fileName), owner, user, NULL);
 
 	UpdatePanelDirectory(&path);
 

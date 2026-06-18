@@ -7,6 +7,11 @@
 // Pfeiffer (2004-2005). Moved into source/haiku/ and ported to poppler
 // 25.12 during the NimblePDF migration (Kevin Adams, 2026).
 //
+// This program is free software; you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation; either version 2 of the License, or
+// (at your option) any later version.
+//
 //========================================================================
 
 #ifndef BE_SPLASH_OUTPUT_DEV_H

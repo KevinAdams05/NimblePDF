@@ -140,8 +140,8 @@ int32 FindThread::Run()
 	}
 
 	// poppler 25.12: no TextOutputControl; headless text-extraction ctor
-	// (fileName=nullptr, physLayout, fixedPitch=0, rawOrder=false, append=false).
-	TextOutputDev* textOut = new TextOutputDev(nullptr, true, 0, false, false);
+	// (fileName=NULL, physLayout, fixedPitch=0, rawOrder=false, append=false).
+	TextOutputDev* textOut = new TextOutputDev(NULL, true, 0, false, false);
 	if (!textOut->isOk()) {
 		delete textOut;
 		delete[] u;
