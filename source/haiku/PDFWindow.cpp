@@ -1975,7 +1975,11 @@ public:
 		}
 
 		alert->Go();
-		delete this;
+		// Do NOT `delete this` here: Thread::DoRun() owns the Thread object
+		// and deletes it once Run() returns (see Thread.h). Deleting here too
+		// double-frees — DoRun's `delete thread` then dispatches the deleting
+		// destructor through the freed (zeroed) vtable and calls a null slot
+		// (segfault, rip=0). The sibling save threads correctly omit this.
 		return 0;
 	}
 
