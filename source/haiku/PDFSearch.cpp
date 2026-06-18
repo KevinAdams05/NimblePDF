@@ -22,6 +22,8 @@
 
 // Haiku
 #include <Alert.h>
+#include <Messenger.h>
+#include <Window.h>
 #include <locale/Catalog.h>
 
 // xpdf
@@ -29,6 +31,7 @@
 
 // NimblePDF
 #include "CachedPage.h"
+#include "NimblePDF.h"
 #include "PDFView.h"
 #include "TextConversion.h"
 #include "Thread.h"
@@ -37,224 +40,310 @@
 #define B_TRANSLATION_CONTEXT "PDFSearch"
 
 ///////////////////////////////////////////////////////////
+//
+// Threading model (batch-2 restructure):
+//
+//   The worker only SCANS pages that are not currently displayed, using its
+//   own headless TextOutputDev, and reads the shared PDFDoc under gPdfLock.
+//   It never locks the window and never touches fPage / the selection /
+//   the clipboard. When it finishes it posts FIND_RESULT_MSG and exits.
+//
+//   The window thread (PDFView) does everything that touches view state:
+//   the current-page search, jumping to the result page, setting the
+//   selection, and copying. That keeps fPage access single-threaded and
+//   lets the view join the worker with no window<->worker deadlock (the
+//   worker can never be blocked on the window lock).
+//
+//   Invariant preserved: never take the window lock while holding gPdfLock.
+//
+///////////////////////////////////////////////////////////
 
 
 class FindThread : public Thread {
 public:
-	FindThread(const char* s, bool ignoreCase, bool backward, PDFView* mainView, FindTextWindow* find, std::atomic<bool>* stopThread);
+	FindThread(PDFDoc* doc, int startPage, int numPages, std::atomic<bool>* stopThread,
+	    const BMessenger& findWindow, const BMessenger& view, int32 generation,
+	    const char* text, bool caseSensitive, bool backward)
+	    : Thread("find_thread", B_LOW_PRIORITY),
+	      fDoc(doc),
+	      fStartPage(startPage),
+	      fNumPages(numPages),
+	      fStopThread(stopThread),
+	      fFindWindow(findWindow),
+	      fView(view),
+	      fGeneration(generation),
+	      fFindText(text),
+	      fCaseSensitive(caseSensitive),
+	      fBackward(backward)
+	{
+	}
 
 	int32 Run();
 
 private:
-	bool CanContinue() { return !(*fStopThread); }
-	BWindow* Window() { return fMainView->Window(); }
-	CachedPage* GetPage() { return fMainView->GetPage(); }
-	PDFDoc* GetPDFDoc() { return fMainView->GetPDFDoc(); }
-	int CurrentPage() { return fMainView->Page(); }
+	bool CanContinue() { return !fStopThread->load(); }
+	void PostSetPage(int32 page);
+	void PostResult(bool found, int32 page, bool aborted);
+	bool ScanPage(TextOutputDev* textOut, Unicode* u, int len, int pg,
+	    double* xMin, double* yMin, double* xMax, double* yMax);
 
-	void SendPageMsg(int32 page);
-
-	PDFView* fMainView;
-	FindTextWindow* fFindWindow;
+	PDFDoc* fDoc;
+	int fStartPage;
+	int fNumPages;
+	std::atomic<bool>* fStopThread;
+	BMessenger fFindWindow;
+	BMessenger fView;
+	int32 fGeneration;
 	BString fFindText;
 	bool fCaseSensitive;
 	bool fBackward;
-	std::atomic<bool>* fStopThread;
 };
 
-FindThread::FindThread(const char* s, bool ignoreCase, bool backward, PDFView* mainView, FindTextWindow* find, std::atomic<bool>* stopThread)
-    : Thread("find_thread", B_LOW_PRIORITY)
-{
-	fFindText = s;
-	fCaseSensitive = !ignoreCase;
-	fBackward = backward;
-	fMainView = mainView;
-	fFindWindow = find;
-	fStopThread = stopThread;
-}
-
-void FindThread::SendPageMsg(int32 page)
+void FindThread::PostSetPage(int32 page)
 {
 	BMessage msg(FindTextWindow::FIND_SET_PAGE_MSG);
 	msg.AddInt32("page", page);
-	fFindWindow->PostMessage(&msg);
+	fFindWindow.SendMessage(&msg);
+}
+
+void FindThread::PostResult(bool found, int32 page, bool aborted)
+{
+	BMessage msg(FindTextWindow::FIND_RESULT_MSG);
+	msg.AddInt32("nimblepdf:generation", fGeneration);
+	msg.AddBool("found", found);
+	msg.AddInt32("page", page);
+	msg.AddBool("aborted", aborted);
+	fView.SendMessage(&msg);
+}
+
+// Render one page into the headless text device and search it. The PDFDoc is
+// shared with the render thread, so displayPage() runs under gPdfLock; the
+// TextOutputDev is thread-local and needs no lock.
+bool FindThread::ScanPage(TextOutputDev* textOut, Unicode* u, int len, int pg,
+    double* xMin, double* yMin, double* xMax, double* yMax)
+{
+	{
+		PDFLock lock;
+		fDoc->displayPage(textOut, pg, 72, 72, 0, false, true, false);
+	}
+	return textOut->findText(u, len, true, true, false, false, fCaseSensitive,
+	    fBackward, false /* TODO/FIXME: wordwise */, xMin, yMin, xMax, yMax);
 }
 
 int32 FindThread::Run()
 {
-	TextOutputDev* textOut = NULL;
-	double xMin, yMin, xMax, yMax;
-	int pg;
-	bool startAtTop, startAtLast, stopAtLast;
-
-	bool next = true;
-	bool backward = fBackward;
-	bool caseSensitive = fCaseSensitive;
-	int selectULX, selectLRX, selectULY, selectLRY;
-	PDFDoc* doc = GetPDFDoc();
-	bool found = false;
-	bool onePageOnly = false;
-	int topPage = CurrentPage();
-
-	fMainView->GetSelection(selectULX, selectLRX, selectULY, selectLRY);
-
 	int32 len;
 	Unicode* u = Utf8ToUnicode(fFindText.String(), &len);
 	if (u == NULL) {
-		goto done;
+		PostResult(false, 0, false);
+		return 0;
 	}
 
-	// Begin Code copied from PDFCore::FindU()
-
-	// search current page starting at previous result, current
-	// selection, or top/bottom of page
-	startAtTop = startAtLast = false;
-	xMin = yMin = xMax = yMax = 0;
-	pg = CurrentPage();
-	if (next) {
-		startAtLast = true;
-	} else if (selectULX != selectLRX && selectULY != selectLRY) {
-		if (backward) {
-			xMin = selectULX - 1;
-			yMin = selectULY - 1;
-		} else {
-			xMin = selectULX + 1;
-			yMin = selectULY + 1;
-		}
-	} else {
-		startAtTop = true;
-	}
-	if (GetPage()->FindText(u, len, startAtTop, true, startAtLast, false, caseSensitive, backward, &xMin, &yMin, &xMax, &yMax)) {
-		goto found;
-	}
-
-	if (!onePageOnly) {
-		// search following/previous pages
-		// poppler 25.12: no TextOutputControl; headless text-extraction ctor
-		// (fileName=nullptr, physLayout, fixedPitch=0, rawOrder=false, append=false).
-		textOut = new TextOutputDev(nullptr, true, 0, false, false);
-		if (!textOut->isOk()) {
-			delete textOut;
-			goto notFound;
-		}
-		for (pg = backward ? pg - 1 : pg + 1; backward ? pg >= 1 : pg <= doc->getNumPages(); pg += backward ? -1 : 1) {
-			// Begin NimblePDF
-			if (!CanContinue()) {
-				delete textOut;
-				goto notFound;
-			}
-			// End NimblePDF
-			SendPageMsg(pg);
-			doc->displayPage(textOut, pg, 72, 72, 0, false, true, false);
-			if (textOut->findText(u,
-			        len,
-			        true,
-			        true,
-			        false,
-			        false,
-			        caseSensitive,
-			        backward,
-			        false, // TODO/FIXME: wordwise
-			        &xMin,
-			        &yMin,
-			        &xMax,
-			        &yMax)) {
-				delete textOut;
-				goto foundPage;
-			}
-		}
-
-		// search previous/following pages
-		for (pg = backward ? doc->getNumPages() : 1; backward ? pg > topPage : pg < topPage; pg += backward ? -1 : 1) {
-			// Begin NimblePDF
-			if (!CanContinue()) {
-				delete textOut;
-				goto notFound;
-			}
-			// End NimblePDF
-			SendPageMsg(pg);
-			doc->displayPage(textOut, pg, 72, 72, 0, false, true, false);
-			if (textOut->findText(u,
-			        len,
-			        true,
-			        true,
-			        false,
-			        false,
-			        caseSensitive,
-			        backward,
-			        false, // TODO/FIXME wordwise
-			        &xMin,
-			        &yMin,
-			        &xMax,
-			        &yMax)) {
-				delete textOut;
-				goto foundPage;
-			}
-		}
+	// poppler 25.12: no TextOutputControl; headless text-extraction ctor
+	// (fileName=nullptr, physLayout, fixedPitch=0, rawOrder=false, append=false).
+	TextOutputDev* textOut = new TextOutputDev(nullptr, true, 0, false, false);
+	if (!textOut->isOk()) {
 		delete textOut;
+		delete[] u;
+		PostResult(false, 0, false);
+		return 0;
 	}
 
-	// search current page ending at previous result, current selection,
-	// or bottom/top of page
-	if (!startAtTop) {
-		xMin = yMin = xMax = yMax = 0;
-		if (next) {
-			stopAtLast = true;
-		} else {
-			stopAtLast = false;
-			xMax = selectLRX;
-			yMax = selectLRY;
+	double xMin, yMin, xMax, yMax;
+	bool found = false;
+	bool aborted = false;
+	int foundPage = 0;
+	int pg;
+
+	// Pages after (forward) / before (backward) the start page.
+	for (pg = fBackward ? fStartPage - 1 : fStartPage + 1;
+	     fBackward ? pg >= 1 : pg <= fNumPages;
+	     pg += fBackward ? -1 : 1) {
+		if (!CanContinue()) {
+			aborted = true;
+			goto done;
 		}
-		if (GetPage()->FindText(u, len, true, false, false, stopAtLast, caseSensitive, backward, &xMin, &yMin, &xMax, &yMax)) {
-			goto found;
+		PostSetPage(pg);
+		if (ScanPage(textOut, u, len, pg, &xMin, &yMin, &xMax, &yMax)) {
+			found = true;
+			foundPage = pg;
+			goto done;
 		}
 	}
 
-	// End Code copied from PDFCore::FindU()
-
-	// not found
-notFound: {
-	BAlert* alert = new BAlert("Error", B_TRANSLATE("Search string not found."), B_TRANSLATE("OK"), 0, 0, B_WIDTH_AS_USUAL, B_STOP_ALERT);
-	alert->Go();
-}
-	goto done;
-
-	// found on a different page
-foundPage:
-	if (Window()->Lock()) {
-		fMainView->SetPage(pg);
-		fMainView->WaitForPage();
-		Window()->Unlock();
+	// Wrap around: the remaining pages up to (but not including) the start page.
+	for (pg = fBackward ? fNumPages : 1;
+	     fBackward ? pg > fStartPage : pg < fStartPage;
+	     pg += fBackward ? -1 : 1) {
+		if (!CanContinue()) {
+			aborted = true;
+			goto done;
+		}
+		PostSetPage(pg);
+		if (ScanPage(textOut, u, len, pg, &xMin, &yMin, &xMax, &yMax)) {
+			found = true;
+			foundPage = pg;
+			goto done;
+		}
 	}
-	if (!GetPage()->FindText(u, len, true, true, false, false, fCaseSensitive, fBackward, &xMin, &yMin, &xMax, &yMax))
-		// this can happen if coalescing is bad
-		goto notFound;
-
-	// found: change the selection
-found:
-	found = true;
-	fMainView->SetSelection((int)floor(xMin), (int)floor(yMin), (int)ceil(xMax), (int)ceil(yMax), true);
-#ifndef NO_TEXT_SELECT
-	if (GetPDFDoc()->okToCopy()) {
-		fMainView->CopySelection();
-	}
-#endif
 
 done:
+	delete textOut;
 	delete[] u;
-	Window()->PostMessage((uint32)(found ? FindTextWindow::TEXT_FOUND_NOTIFY_MSG : FindTextWindow::TEXT_NOT_FOUND_NOTIFY_MSG));
-	return 0 /*found*/;
+	PostResult(found, foundPage, aborted);
+	return 0;
 }
 
 ///////////////////////////////////////////////////////////
+// PDFView find driver (all of this runs on the window thread).
+
+// Search the currently displayed page and, on a hit, set + copy the selection.
+// The flag quartet matches CachedPage::FindText (startAtTop, stopAtBottom,
+// startAtLast, stopAtLast).
+bool PDFView::FindTextHere(bool startAtTop, bool stopAtBottom, bool startAtLast, bool stopAtLast)
+{
+	int32 len;
+	Unicode* u = Utf8ToUnicode(fFindString.String(), &len);
+	if (u == NULL)
+		return false;
+
+	double xMin = 0, yMin = 0, xMax = 0, yMax = 0;
+	bool found = GetPage()->FindText(u, len, startAtTop, stopAtBottom, startAtLast,
+	    stopAtLast, fFindCaseSensitive, fFindBackward, &xMin, &yMin, &xMax, &yMax);
+	delete[] u;
+
+	if (found) {
+		SetSelection((int)floor(xMin), (int)floor(yMin), (int)ceil(xMax), (int)ceil(yMax), true);
+#ifndef NO_TEXT_SELECT
+		if (GetPDFDoc()->okToCopy())
+			CopySelection();
+#endif
+	}
+	return found;
+}
+
+void PDFView::ShowNotFoundAlert()
+{
+	BAlert* alert = new BAlert("Error", B_TRANSLATE("Search string not found."),
+	    B_TRANSLATE("OK"), 0, 0, B_WIDTH_AS_USUAL, B_STOP_ALERT);
+	// Asynchronous: this runs on the window thread, so a modal Go() would
+	// block the looper.
+	alert->Go(NULL);
+}
+
+void PDFView::NotifyFind(bool found)
+{
+	BWindow* window = Window();
+	if (window != NULL) {
+		window->PostMessage((uint32)(found ? FindTextWindow::TEXT_FOUND_NOTIFY_MSG
+		                                    : FindTextWindow::TEXT_NOT_FOUND_NOTIFY_MSG));
+	}
+}
+
+// Re-find on the currently displayed page for an accurate rectangle (the
+// headless scan and the displayed page can coalesce text differently), then
+// select/copy and notify. Runs on the window thread.
+void PDFView::FinalizeFindSelection()
+{
+	bool ok = FindTextHere(true, true, false, false);
+	if (!ok)
+		ShowNotFoundAlert();
+	NotifyFind(ok);
+}
+
+// Finalize a background scan on the window thread.
+void PDFView::HandleFindResult(BMessage* msg)
+{
+	int32 generation = -1;
+	msg->FindInt32("nimblepdf:generation", &generation);
+	if (generation != fFindGeneration) {
+		// Stale result from a worker that was already superseded/stopped.
+		return;
+	}
+	fFindThreadId = -1;
+
+	bool found = false;
+	bool aborted = false;
+	msg->FindBool("found", &found);
+	msg->FindBool("aborted", &aborted);
+
+	if (found) {
+		int32 page = 1;
+		msg->FindInt32("page", &page);
+		SetPage(page);
+		if (fRendering) {
+			// The result page is now rendering. Finalize from PostRedraw when
+			// it completes, instead of blocking the looper in WaitForPage().
+			fPendingFindSelect = true;
+		} else {
+			// Already current/rendered (no new render started) — finalize now.
+			FinalizeFindSelection();
+		}
+	} else if (aborted) {
+		// User pressed Stop; just let the dialog reset, no "not found" alert.
+		NotifyFind(false);
+	} else {
+		// Scanned everything; finish the wrap-around on the still-current page.
+		bool ok = FindTextHere(true, false, false, true);
+		if (!ok)
+			ShowNotFoundAlert();
+		NotifyFind(ok);
+	}
+}
+
+void PDFView::StopAndJoinFind()
+{
+	fStopFindThread = true;
+	if (fFindThreadId >= 0) {
+		thread_id id = fFindThreadId;
+		fFindThreadId = -1;
+		// Safe even though we may hold the window lock: the find worker never
+		// blocks on the window lock (it only takes gPdfLock briefly and posts
+		// async messages), and this thread does not hold gPdfLock here.
+		status_t result;
+		wait_for_thread(id, &result);
+	}
+}
+
 void PDFView::Find(const char* s, bool ignoreCase, bool backward, FindTextWindow* findWindow)
 {
+	// One search at a time: stop and join any previous worker before touching
+	// the shared search state or starting a new scan.
+	StopAndJoinFind();
+
+	fFindString = s;
+	fFindCaseSensitive = !ignoreCase;
+	fFindBackward = backward;
+	fFindGeneration++;
+
+	// Phase 1: search the current page (from the last match / selection) on the
+	// window thread. The common case finishes here with no worker at all.
+	if (FindTextHere(false, true, true, false)) {
+		NotifyFind(true);
+		return;
+	}
+
+	// Phase 2: scan the other pages on a background worker.
+	int numPages = 0;
+	{
+		PDFLock lock;
+		numPages = GetPDFDoc()->getNumPages();
+	}
+
 	fStopFindThread = false;
-	FindThread* thread = new FindThread(s, ignoreCase, backward, this, findWindow, &fStopFindThread);
+	BMessenger findMessenger(findWindow);
+	BMessenger viewMessenger(this);
+	FindThread* thread = new FindThread(GetPDFDoc(), Page(), numPages, &fStopFindThread,
+	    findMessenger, viewMessenger, fFindGeneration, s, fFindCaseSensitive, backward);
+	// Read the id before Resume(): once resumed, DoRun() owns and may delete
+	// the Thread object at any time.
+	fFindThreadId = thread->GetThreadId();
 	thread->Resume();
 }
 
 void PDFView::StopFind()
 {
+	// Non-blocking: the worker observes the atomic flag, bails, and posts its
+	// (aborted) result; the join happens at the next Find()/teardown.
 	fStopFindThread = true;
 }

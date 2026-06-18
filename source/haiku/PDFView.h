@@ -119,6 +119,30 @@ private:
 	// CanContinue(); atomic so the stop request is seen promptly and the
 	// cross-thread access isn't a data race.
 	std::atomic<bool> fStopFindThread;
+	// The in-flight find worker, or -1. Joined (StopAndJoinFind) before the
+	// document/page it scans can be freed or replaced.
+	thread_id fFindThreadId;
+	// Bumped per Find(); echoed in FIND_RESULT_MSG so a stale result from a
+	// just-joined worker is ignored instead of clobbering the new search.
+	int32 fFindGeneration;
+	// Search parameters, owned by the window thread; the worker gets copies.
+	BString fFindString;
+	bool fFindCaseSensitive;
+	bool fFindBackward;
+	// Set when a found-on-another-page result is waiting for that page to
+	// finish rendering; the finalize then runs from PostRedraw (so we never
+	// block the looper in WaitForPage and fRendering is already cleared).
+	bool fPendingFindSelect;
+
+	// All run on the window thread. The find worker only scans pages off-thread
+	// and posts FIND_RESULT_MSG; everything touching fPage/selection/clipboard
+	// (these) stays here.
+	void StopAndJoinFind();
+	void HandleFindResult(BMessage* msg);
+	void FinalizeFindSelection();
+	bool FindTextHere(bool startAtTop, bool stopAtBottom, bool startAtLast, bool stopAtLast);
+	void NotifyFind(bool found);
+	void ShowNotFoundAlert();
 
 	BPoint CorrectMousePos(const BPoint point);
 	PDFPoint CvtDevToUser(BPoint dev);

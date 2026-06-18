@@ -49,6 +49,9 @@ public:
 		TEXT_FOUND_NOTIFY_MSG = 'TFnd',
 		TEXT_NOT_FOUND_NOTIFY_MSG = 'TNFd',
 		FIND_SET_PAGE_MSG = 'FStP',
+		// Posted by the find worker to the PDFView when its background page
+		// scan finishes; the view finalizes (jump/select/copy) on its own thread.
+		FIND_RESULT_MSG = 'FRes',
 		FIND_QUIT_REQUESTED_MSG = 'QTrq',
 		FIND_MSG = 'Find',
 		FIND_STOP_MSG = 'Stop',

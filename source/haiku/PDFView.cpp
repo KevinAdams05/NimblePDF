@@ -153,6 +153,13 @@ PDFView::PDFView(entry_ref* ref,
 	fRendererID = -1;
 	fRendering = false;
 
+	fStopFindThread = false;
+	fFindThreadId = -1;
+	fFindGeneration = 0;
+	fFindCaseSensitive = false;
+	fFindBackward = false;
+	fPendingFindSelect = false;
+
 	fSelected = NOT_SELECTED;
 	fFilledSelection = settings->GetFilledSelection();
 
@@ -213,6 +220,9 @@ GooString* PDFView::ConvertPassword(const char* password)
 ///////////////////////////////////////////////////////////////////////////
 void PDFView::EndDoc()
 {
+	// Called from LoadFile() before the old fDoc is replaced; the find worker
+	// must not be scanning it across the swap.
+	StopAndJoinFind();
 	fSelected = NOT_SELECTED;
 }
 
@@ -387,6 +397,8 @@ bool PDFView::LoadFile(
 ///////////////////////////////////////////////////////////////////////////
 PDFView::~PDFView()
 {
+	// A find worker scans fDoc/its pages; join it before we free them.
+	StopAndJoinFind();
 	delete fDoc;
 	delete fTitle;
 	delete fPage;
@@ -459,6 +471,9 @@ void PDFView::MessageReceived(BMessage* msg)
 		break;
 	case B_SAVE_REQUESTED:
 		SaveFileAttachment(msg);
+		break;
+	case FindTextWindow::FIND_RESULT_MSG:
+		HandleFindResult(msg);
 		break;
 	default:
 		BView::MessageReceived(msg);
@@ -1863,6 +1878,13 @@ void PDFView::PostRedraw(thread_id id, BBitmap* bitmap)
 		uint32 buttons;
 		GetMouse(&mouse, &buttons);
 		DisplayLink(mouse);
+		if (fPendingFindSelect) {
+			// The page a background find landed on has finished rendering;
+			// finalize the selection now (fRendering is already cleared, so
+			// CopySelection works, and the looper was never blocked).
+			fPendingFindSelect = false;
+			FinalizeFindSelection();
+		}
 	}
 }
 
@@ -1872,6 +1894,10 @@ void PDFView::RedrawAborted(thread_id id, BBitmap* bitmap)
 	if ((fRendererID == id) && (id != -1)) {
 		fRendering = false;
 		fRendererID = -1;
+		// The render this find result was waiting on was superseded (e.g. the
+		// user navigated away); drop the pending finalize rather than fire it
+		// on the wrong page.
+		fPendingFindSelect = false;
 	}
 }
 
