@@ -23,6 +23,8 @@
 #ifndef PDF_VIEW_H
 #define PDF_VIEW_H
 
+#include <atomic>
+
 #include <Bitmap.h>
 #include <Menu.h>
 #include <View.h>
@@ -113,7 +115,10 @@ private:
 	BMessage* fPrintSettings;
 
 	// find
-	bool fStopFindThread;
+	// Written by StopFind() (window thread) and read by the find worker's
+	// CanContinue(); atomic so the stop request is seen promptly and the
+	// cross-thread access isn't a data race.
+	std::atomic<bool> fStopFindThread;
 
 	BPoint CorrectMousePos(const BPoint point);
 	PDFPoint CvtDevToUser(BPoint dev);

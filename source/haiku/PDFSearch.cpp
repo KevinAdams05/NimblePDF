@@ -41,7 +41,7 @@
 
 class FindThread : public Thread {
 public:
-	FindThread(const char* s, bool ignoreCase, bool backward, PDFView* mainView, FindTextWindow* find, bool* stopThread);
+	FindThread(const char* s, bool ignoreCase, bool backward, PDFView* mainView, FindTextWindow* find, std::atomic<bool>* stopThread);
 
 	int32 Run();
 
@@ -59,10 +59,10 @@ private:
 	BString fFindText;
 	bool fCaseSensitive;
 	bool fBackward;
-	bool* fStopThread;
+	std::atomic<bool>* fStopThread;
 };
 
-FindThread::FindThread(const char* s, bool ignoreCase, bool backward, PDFView* mainView, FindTextWindow* find, bool* stopThread)
+FindThread::FindThread(const char* s, bool ignoreCase, bool backward, PDFView* mainView, FindTextWindow* find, std::atomic<bool>* stopThread)
     : Thread("find_thread", B_LOW_PRIORITY)
 {
 	fFindText = s;
