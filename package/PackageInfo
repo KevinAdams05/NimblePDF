@@ -1,5 +1,5 @@
 name			nimblepdf
-version			2.2.0-1
+version			2.2.1-1
 architecture	x86_64
 summary			"A fast, full-featured PDF reader for Haiku"
 
@@ -24,8 +24,8 @@ copyrights {
 }
 
 provides {
-	nimblepdf = 2.2.0
-	app:NimblePDF = 2.2.0
+	nimblepdf = 2.2.1
+	app:NimblePDF = 2.2.1
 }
 
 requires {

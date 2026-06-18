@@ -11,6 +11,8 @@ PRs welcome for bug fixes, features, and ports to other operating systems.
 
 The PDF rendering backend is [poppler](https://poppler.freedesktop.org/), which is an upgrade from [xpdf](https://www.xpdfreader.com/) which was originally used by BePDF.
 
+See the [changelog](CHANGELOG.md) for the release history.
+
 
 ## Status
 
