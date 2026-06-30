@@ -3,9 +3,11 @@
 # NimblePDF
 
 NimblePDF is a fast, lightweight, cross-platform PDF viewer, derived from
-[BePDF](https://github.com/HaikuArchives/BePDF). Supported operating systems are [Haiku](https://www.haiku-os.org/), Linux, and Windows. A macOS version should not be a hard port if someone wants to take it on (I don't have a Mac to test on).
+[BePDF](https://github.com/HaikuArchives/BePDF). Supported operating system is [Haiku](https://www.haiku-os.org/).
 
-The Haiku version uses the native BeAPI and native controls. The Linux and Windows versions use Qt 6, which was chosen to make cross-platform builds easier.
+I am working on plans for Linux and Windows versions, but haven't gotten far into them yet.. A macOS version should not be a hard port if someone wants to take it on (I don't have a Mac to test on).
+
+The Haiku version uses the native BeAPI and native controls. The Linux and Windows versions will use Qt 6, which was chosen to make cross-platform builds easier.
 
 PRs welcome for bug fixes, features, and ports to other operating systems.
 
